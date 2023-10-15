@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.API.Dtos
 {
-    public class TouristClubJoinRequestDto
+    public class ClubJoinRequestDto
     {
         public long TouristId { get; set; }
         public long ClubId { get; set; }
