@@ -4,6 +4,7 @@ namespace Explorer.Tours.Core.Domain;
 
 public class Tour : Entity
 {
+    public long UserId { get; init; }
     public string Name { get; init; }
     public string Description { get; init; }
     public int Difficulty { get; init; }
@@ -12,15 +13,16 @@ public class Tour : Entity
     public double Price { get; init; }
     public bool IsDeleted { get; init; }
 
-    public Tour(string name, string description, int difficulty, List<string> tags)
+    public Tour(long userId, string name, string description, int difficulty, List<string> tags, TourStatus status = TourStatus.Draft,double price = 0, bool isDeleted = false)
     {
+        UserId = userId;
         Name = name;
         Description = description;
         Difficulty = difficulty;
         Tags = tags;
-        Status = TourStatus.Draft;
-        Price = 0;
-        IsDeleted = false;
+        Status = status;
+        Price = price;
+        IsDeleted = isDeleted;
         Validate();
     }
 
