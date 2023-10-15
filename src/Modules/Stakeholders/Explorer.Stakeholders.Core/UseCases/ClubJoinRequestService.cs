@@ -11,14 +11,15 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using System.Net;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
     public class ClubJoinRequestService : IClubJoinRequestService
     {
         private readonly IMapper _mapper;
-        private readonly ICrudRepository<ClubJoinRequest> _requestRepository;
-        public ClubJoinRequestService(IMapper mapper, ICrudRepository<ClubJoinRequest> requestRepository)
+        private readonly IClubJoinRequestRepository _requestRepository;
+        public ClubJoinRequestService(IMapper mapper, IClubJoinRequestRepository requestRepository)
         {
             _mapper = mapper;
             _requestRepository = requestRepository;
@@ -35,6 +36,39 @@ namespace Explorer.Stakeholders.Core.UseCases
             catch (ArgumentException e)
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+        public Result Respond(long id, ClubJoinRequestResponseDto response)
+        {
+            try
+            {
+                var request = _requestRepository.GetAsNoTracking(r => r.Id == id && r.Status == ClubJoinRequestStatus.Pending);
+
+                ClubJoinRequestStatus status = response.Accepted ? ClubJoinRequestStatus.Accepted : ClubJoinRequestStatus.Rejected;
+                var updatedRequest = new ClubJoinRequest(id, request.TouristId, request.ClubId, request.RequestedAt, status);
+                _requestRepository.Update(updatedRequest);
+                return Result.Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError("Club Join Request Not Found: " + id);
+            }
+        }
+
+        public Result Cancel(long id)
+        {
+            try
+            {
+                var request = _requestRepository.GetAsNoTracking(r => r.Id == id && r.Status == ClubJoinRequestStatus.Pending);
+
+                var updatedRequest = new ClubJoinRequest(id, request.TouristId, request.ClubId, request.RequestedAt, ClubJoinRequestStatus.Cancelled);
+                _requestRepository.Update(updatedRequest);
+                return Result.Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError("Club Join Request Not Found: " + id);
             }
         }
     }

@@ -11,5 +11,7 @@ namespace Explorer.Tours.API.Public.Administration
     public interface IClubJoinRequestService
     {
         Result<ClubJoinRequestDto> Send(ClubJoinRequestDto request);
+        Result Respond(long id, ClubJoinRequestResponseDto response);
+        Result Cancel(long id);
     }
 }

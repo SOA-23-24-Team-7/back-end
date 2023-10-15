@@ -22,5 +22,19 @@ namespace Explorer.API.Controllers.Tourist
             var result = _requestService.Send(request);
             return CreateResponse(result);
         }
+
+        [HttpPatch("respond/{id:long}")]
+        public ActionResult Respond(long id, [FromBody] ClubJoinRequestResponseDto response)
+        {
+            var result = _requestService.Respond(id, response);
+            return CreateResponse(result);
+        }
+
+        [HttpPatch("cancel/{id:long}")]
+        public ActionResult Cancel(long id)
+        {
+            var result = _requestService.Cancel(id);
+            return CreateResponse(result);
+        }
     }
 }

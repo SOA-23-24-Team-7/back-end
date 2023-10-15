@@ -17,6 +17,8 @@ public class StakeholdersContext : DbContext
 
         modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
 
+        modelBuilder.Entity<ClubJoinRequest>().HasKey(r => r.Id);
+
         ConfigureStakeholder(modelBuilder);
     }
 
