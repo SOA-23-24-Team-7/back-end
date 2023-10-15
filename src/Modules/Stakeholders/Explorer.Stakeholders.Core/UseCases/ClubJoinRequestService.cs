@@ -10,20 +10,23 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
     public class ClubJoinRequestService : IClubJoinRequestService
     {
-        public ClubJoinRequestService()
+        private readonly IMapper _mapper;
+        public ClubJoinRequestService(IMapper mapper)
         {
+            _mapper = mapper;
         }
 
         public Result<ClubJoinRequestDto> Send(ClubJoinRequestDto request)
         {
             try
             {
-                var joinRequest = new ClubJoinRequest(request.TouristId, request.ClubId, request.RequestedAt, ClubJoinRequestStatus.Pending);
+                var joinRequest = _mapper.Map<ClubJoinRequest>(request);
                 return request;
             }
             catch (ArgumentException e)
