@@ -17,9 +17,11 @@ namespace Explorer.Stakeholders.Core.UseCases
     public class ClubJoinRequestService : IClubJoinRequestService
     {
         private readonly IMapper _mapper;
-        public ClubJoinRequestService(IMapper mapper)
+        private readonly ICrudRepository<ClubJoinRequest> _requestRepository;
+        public ClubJoinRequestService(IMapper mapper, ICrudRepository<ClubJoinRequest> requestRepository)
         {
             _mapper = mapper;
+            _requestRepository = requestRepository;
         }
 
         public Result<ClubJoinRequestDto> Send(ClubJoinRequestDto request)
@@ -27,6 +29,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             try
             {
                 var joinRequest = _mapper.Map<ClubJoinRequest>(request);
+                _requestRepository.Create(joinRequest);
                 return request;
             }
             catch (ArgumentException e)
