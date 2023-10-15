@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Dtos;
-using Explorer.Tours.Core.Domain;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.Core.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Explorer.Tours.API.Public;
+using Explorer.Stakeholders.API.Public;
 
 namespace Explorer.Tours.Core.UseCases
 {
