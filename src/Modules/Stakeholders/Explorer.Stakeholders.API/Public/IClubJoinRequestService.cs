@@ -10,6 +10,6 @@ namespace Explorer.Tours.API.Public.Administration
 {
     public interface IClubJoinRequestService
     {
-        Result Send(ClubJoinRequestDto request);
+        Result<ClubJoinRequestDto> Send(ClubJoinRequestDto request);
     }
 }

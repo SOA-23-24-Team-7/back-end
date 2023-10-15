@@ -15,7 +15,7 @@ namespace Explorer.Stakeholders.Core.UseCases
 {
     public class ClubJoinRequestService : IClubJoinRequestService
     {
-        ClubJoinRequestService()
+        public ClubJoinRequestService()
         {
         }
 
