@@ -13,9 +13,9 @@ namespace Explorer.Stakeholders.Core.Domain
         public long TouristId { get; init; }
         public long ClubId { get; init; }
         public DateTime RequestedAt { get; init; }
-        public TouristClubJoinRequestStatus Status { get; init; }
+        public ClubJoinRequestStatus Status { get; init; }
 
-        public ClubJoinRequest(long touristId, long clubId, DateTime requestedAt, TouristClubJoinRequestStatus status)
+        public ClubJoinRequest(long touristId, long clubId, DateTime requestedAt, ClubJoinRequestStatus status)
         {
             TouristId = touristId;
             ClubId = clubId;
@@ -33,7 +33,7 @@ namespace Explorer.Stakeholders.Core.Domain
     }
 }
 
-public enum TouristClubJoinRequestStatus
+public enum ClubJoinRequestStatus
 {
     Pending,
     Accepted,
