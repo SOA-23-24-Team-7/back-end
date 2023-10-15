@@ -2,6 +2,6 @@
 
 public class ClubInvitationDto
 {
-    public long ClubId { get; init; }
-    public long TouristId { get; init; }
+    public long ClubId { get; set; }
+    public long TouristId { get; set; }
 }

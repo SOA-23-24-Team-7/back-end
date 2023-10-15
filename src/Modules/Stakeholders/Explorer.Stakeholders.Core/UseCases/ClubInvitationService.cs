@@ -1,5 +1,8 @@
-﻿using Explorer.Stakeholders.API.Dtos;
+﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -11,8 +14,26 @@ namespace Explorer.Stakeholders.Core.UseCases;
 
 public class ClubInvitationService : IClubInvitationService
 {
-    public Result<ClubInvitationDto> InviteTourist(ClubInvitationDto invitation)
+    private readonly IMapper _mapper;
+    private readonly ICrudRepository<ClubInvitation> _invitationRepository;
+
+    public ClubInvitationService(IMapper mapper, ICrudRepository<ClubInvitation> invitationRepository)
     {
-        throw new NotImplementedException();
+        _mapper = mapper;
+        _invitationRepository = invitationRepository;
+    }
+
+    public Result<ClubInvitationDto> InviteTourist(ClubInvitationDto invitationDto)
+    {
+        try
+        {
+            var invitation = _mapper.Map<ClubInvitation>(invitationDto);
+            _invitationRepository.Create(invitation);
+            return invitationDto;
+        }
+        catch (ArgumentException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
     }
 }

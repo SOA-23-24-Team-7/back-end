@@ -1,4 +1,5 @@
-﻿using Explorer.Stakeholders.API.Dtos;
+﻿using AutoMapper;
+using Explorer.Stakeholders.API.Dtos;
 using FluentResults;
 using System;
 using System.Collections.Generic;

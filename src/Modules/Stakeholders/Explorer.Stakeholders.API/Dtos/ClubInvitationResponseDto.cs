@@ -2,6 +2,5 @@
 
 public class ClubInvitationResponseDto
 {
-    public long ClubInvitationId { get; set; }
     public bool Accepted { get; set; }
 }
