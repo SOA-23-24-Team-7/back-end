@@ -7,10 +7,15 @@ public class StakeholdersContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Person> People { get; set; }
+    public DbSet<ClubInvitation> ClubInvitations { get; set; }
+    public DbSet<ClubMembership> ClubMemberships { get; set; }
     public DbSet<Club> Clubs { get; set; }
     public DbSet<ClubJoinRequest> ClubJoinRequests { get; set; }
-
-    public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
+    
+    public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) 
+    {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
