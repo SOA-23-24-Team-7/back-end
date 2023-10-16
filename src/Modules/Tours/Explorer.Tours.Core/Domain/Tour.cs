@@ -1,10 +1,11 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using System.Data;
 
 namespace Explorer.Tours.Core.Domain;
 
 public class Tour : Entity
 {
-    public long UserId { get; init; }
+    public long AuthorId { get; init; }
     public string Name { get; init; }
     public string Description { get; init; }
     public int Difficulty { get; init; }
@@ -13,9 +14,9 @@ public class Tour : Entity
     public double Price { get; init; }
     public bool IsDeleted { get; init; }
 
-    public Tour(long userId, string name, string description, int difficulty, List<string> tags, TourStatus status = TourStatus.Draft,double price = 0, bool isDeleted = false)
+    public Tour(long authorId, string name, string description, int difficulty, List<string> tags, TourStatus status = TourStatus.Draft,double price = 0, bool isDeleted = false)
     {
-        UserId = userId;
+        AuthorId = authorId;
         Name = name;
         Description = description;
         Difficulty = difficulty;
@@ -33,6 +34,11 @@ public class Tour : Entity
         if (Difficulty < 1 || Difficulty > 5) throw new ArgumentException("Invalid Difficulty");
         if (Tags == null) throw new ArgumentNullException("Tags cannot be null");
         if (Price < 0) throw new ArgumentException("Price cannot be negative");
+    }
+
+    public string GetStatusName()
+    {
+        return Status.ToString().ToLower();
     }
 
 }

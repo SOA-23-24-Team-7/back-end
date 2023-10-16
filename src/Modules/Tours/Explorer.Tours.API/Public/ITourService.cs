@@ -10,4 +10,5 @@ public interface ITourService
     Result<TourDto> Create(TourDto tour);
     Result<TourDto> Update(TourDto tour);
     Result Delete(int id);
+    Result<PagedResult<TourDto>> GetAuthorsPagedTours(long id,int page, int pageSize);
 }

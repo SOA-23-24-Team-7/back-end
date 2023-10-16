@@ -3,6 +3,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Author
 {
@@ -24,9 +25,23 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(result);
         }
 
+        [HttpGet("authors")]
+        public ActionResult<PagedResult<TourDto>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var id = long.Parse(identity.FindFirst("id").Value);
+            var result = _tourService.GetAuthorsPagedTours(id,page, pageSize);
+            return CreateResponse(result);
+        }
+
         [HttpPost]
         public ActionResult<TourDto> Create([FromBody] TourDto tour)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if(identity != null)
+            {
+                tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
+            }
             var result = _tourService.Create(tour);
             return CreateResponse(result);
         }
@@ -34,6 +49,11 @@ namespace Explorer.API.Controllers.Author
         [HttpPut("{id:int}")]
         public ActionResult<TourDto> Update([FromBody] TourDto tour)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
+            }
             var result = _tourService.Update(tour);
             return CreateResponse(result);
         }
