@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Stakeholders\Explorer.Stakeholders.Core\Explorer.Stakeholders.Core.csproj" />
     <ProjectReference Include="..\Explorer.Blog.API\Explorer.Blog.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Domain\RepositoryInterfaces\" />
-    <Folder Include="UseCases\" />
   </ItemGroup>
 
 </Project>
