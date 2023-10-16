@@ -27,10 +27,12 @@ public static class StakeholdersStartup
     {
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
+        services.AddScoped<ITourPreferencesService, TourPreferencesService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
+        services.AddScoped(typeof(ICrudRepository<TourPreferences>), typeof(CrudDatabaseRepository<TourPreferences, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
 
