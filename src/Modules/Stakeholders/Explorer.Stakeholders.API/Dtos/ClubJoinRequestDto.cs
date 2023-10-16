@@ -10,6 +10,5 @@ namespace Explorer.Stakeholders.API.Dtos
     {
         public long TouristId { get; set; }
         public long ClubId { get; set; }
-        public DateTime RequestedAt { get; set; }
     }
 }
