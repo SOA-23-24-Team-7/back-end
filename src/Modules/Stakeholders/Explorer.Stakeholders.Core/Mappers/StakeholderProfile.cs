@@ -11,7 +11,7 @@ public class StakeholderProfile : Profile
     public StakeholderProfile()
     {
         CreateMap<ClubJoinRequestDto, ClubJoinRequest>()
-            .ConstructUsing(src => new ClubJoinRequest(null, src.TouristId, src.ClubId, DateTime.Now, ClubJoinRequestStatus.Pending)).ReverseMap();
+            .ConstructUsing(src => new ClubJoinRequest(src.TouristId, src.ClubId, DateTime.Now, ClubJoinRequestStatus.Pending)).ReverseMap();
         CreateMap<ClubInvitation, ClubInvitationDto>().ReverseMap()
             .ConstructUsing(dto => new ClubInvitation(dto.ClubId, dto.TouristId));
         CreateMap<ClubDto, Club>().ReverseMap();

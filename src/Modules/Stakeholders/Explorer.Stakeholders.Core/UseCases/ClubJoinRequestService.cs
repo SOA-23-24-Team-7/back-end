@@ -45,9 +45,8 @@ namespace Explorer.Stakeholders.Core.UseCases
             {
                 var request = _requestRepository.GetAsNoTracking(r => r.Id == id && r.Status == ClubJoinRequestStatus.Pending);
 
-                ClubJoinRequestStatus status = response.Accepted ? ClubJoinRequestStatus.Accepted : ClubJoinRequestStatus.Rejected;
-                var updatedRequest = new ClubJoinRequest(id, request.TouristId, request.ClubId, request.RequestedAt, status);
-                _requestRepository.Update(updatedRequest);
+                request.Respond(response.Accepted);
+                _requestRepository.Update(request);
                 return Result.Ok();
             }
             catch (KeyNotFoundException e)
@@ -62,8 +61,8 @@ namespace Explorer.Stakeholders.Core.UseCases
             {
                 var request = _requestRepository.GetAsNoTracking(r => r.Id == id && r.Status == ClubJoinRequestStatus.Pending);
 
-                var updatedRequest = new ClubJoinRequest(id, request.TouristId, request.ClubId, request.RequestedAt, ClubJoinRequestStatus.Cancelled);
-                _requestRepository.Update(updatedRequest);
+                request.Cancel();
+                _requestRepository.Update(request);
                 return Result.Ok();
             }
             catch (KeyNotFoundException e)
