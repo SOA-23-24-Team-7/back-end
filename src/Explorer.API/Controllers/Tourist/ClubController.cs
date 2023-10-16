@@ -28,7 +28,7 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<ClubDto> Create([FromBody] ClubDto club)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null && identity.IsAuthenticated)
             {
                 club.OwnerId = long.Parse(identity.FindFirst("id").Value);
             }
@@ -39,7 +39,7 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<ClubDto> Update([FromBody] ClubDto club)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null && identity.IsAuthenticated)
             {
                 club.OwnerId = long.Parse(identity.FindFirst("id").Value);
             }
