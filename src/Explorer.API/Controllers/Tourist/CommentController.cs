@@ -20,6 +20,7 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<CommentDto> Create([FromBody] CommentDto comment)
         {
             comment.AuthorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            comment.CreatedAt = DateTime.Now.ToUniversalTime();
             var result = _commentService.Create(comment);
             return CreateResponse(result);
         }

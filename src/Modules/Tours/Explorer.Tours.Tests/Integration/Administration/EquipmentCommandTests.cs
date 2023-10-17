@@ -33,7 +33,7 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         result.ShouldNotBeNull();
         result.Id.ShouldNotBe(0);
         result.Name.ShouldBe(newEntity.Name);
-        
+
         // Assert - Database
         var storedEntity = dbContext.Equipment.FirstOrDefault(i => i.Name == newEntity.Name);
         storedEntity.ShouldNotBeNull();
@@ -129,7 +129,7 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         var storedCourse = dbContext.Equipment.FirstOrDefault(i => i.Id == -3);
         storedCourse.ShouldBeNull();
     }
-    
+
     [Fact]
     public void Delete_fails_invalid_id()
     {
@@ -144,7 +144,7 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(404);
     }
-    
+
     private static EquipmentController CreateController(IServiceScope scope)
     {
         return new EquipmentController(scope.ServiceProvider.GetRequiredService<IEquipmentService>())
