@@ -28,7 +28,7 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<ClubDto> Create([FromBody] ClubDto club)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null && identity.IsAuthenticated)
             {
                 club.OwnerId = long.Parse(identity.FindFirst("id").Value);
             }
@@ -39,9 +39,14 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<ClubDto> Update([FromBody] ClubDto club)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null && identity.IsAuthenticated)
             {
-                club.OwnerId = long.Parse(identity.FindFirst("id").Value);
+                //kompletna provera bi bila kada bih uzeo club na osnovu njegovog id-a
+                // i onda njegov OwnerId uporedio sa ulogovanim
+                if(club.OwnerId != long.Parse(identity.FindFirst("id").Value))
+                {
+                    return Forbid();
+                }
             }
             var result = _clubService.Update(club);
             return CreateResponse(result);
