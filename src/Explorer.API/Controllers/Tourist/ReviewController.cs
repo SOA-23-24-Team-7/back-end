@@ -33,7 +33,11 @@ namespace Explorer.API.Controllers.Tourist
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                review.TouristId = Int32.Parse(identity.FindFirst("id").Value);
+                var claimId = identity.FindFirst("id");
+                if(claimId != null) {
+                    review.TouristId = Int32.Parse(claimId.Value);
+                }
+                
             }
             review.CommentDate = DateOnly.FromDateTime(DateTime.Now);
             var result = _reviewService.Create(review);
@@ -46,7 +50,11 @@ namespace Explorer.API.Controllers.Tourist
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                review.TouristId = Int32.Parse(identity.FindFirst("id").Value);
+                var claimId = identity.FindFirst("id");
+                if (claimId != null)
+                {
+                    review.TouristId = Int32.Parse(claimId.Value);
+                }
             }
             var result = _reviewService.Update(review);
             return CreateResponse(result);

@@ -25,8 +25,8 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
             Rating = 2,
             Comment = "Not so good.",
             TouristId = 3,
-            TourVisitDate = new DateOnly(),
-            CommentDate = new DateOnly(),
+            TourVisitDate = DateOnly.MinValue,
+            CommentDate = DateOnly.MinValue,
             TourId = 2,
             Images = new List<string> { "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1697414400&semt=sph" }
         };
@@ -120,7 +120,13 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
         var updatedEntity = new ReviewDto
         {
             Id = -1000,
-            Comment = "Test"
+            Rating = 2,
+            Comment = "Not so good.",
+            TouristId = 3,
+            TourVisitDate = DateOnly.MinValue,
+            CommentDate = DateOnly.MinValue,
+            TourId = 2,
+            Images = new List<string> { "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1697414400&semt=sph" }
         };
 
         // Act
@@ -147,7 +153,7 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
         result.StatusCode.ShouldBe(200);
 
         // Assert - Database
-        var storedCourse = dbContext.Equipment.FirstOrDefault(i => i.Id == -3);
+        var storedCourse = dbContext.Reviews.FirstOrDefault(i => i.Id == -3);
         storedCourse.ShouldBeNull();
     }
 
