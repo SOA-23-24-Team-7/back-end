@@ -29,7 +29,7 @@ namespace Explorer.API.Controllers.Author
         public ActionResult<FacilityDto> Create([FromBody] FacilityDto facility)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null && identity.IsAuthenticated)
             {
                 facility.AuthorId = int.Parse(identity.FindFirst("id").Value);
             }
@@ -43,7 +43,7 @@ namespace Explorer.API.Controllers.Author
         public ActionResult<FacilityDto> Update([FromBody] FacilityDto facility)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null && identity.IsAuthenticated)
             {
                 facility.AuthorId = int.Parse(identity.FindFirst("id").Value);
             }
