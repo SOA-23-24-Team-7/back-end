@@ -33,10 +33,10 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
             var newEntity = new BlogDto
             {
-                Title = "Neki naslov",
-                Description = "Opis neki",
-                Date = DateTime.Now,
-                Pictures = new List<string> { "slika1.jpg", "slika2.jpg" }, // Primer slika
+                Title ="Predlog",
+                Description = "Test",
+                Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Pictures = new List<string> { },
                 Status = BlogStatus.Published
             };
 
@@ -44,13 +44,16 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as BlogDto;
             // Assert - Response
             result.ShouldNotBeNull();
+            
             result.Id.ShouldNotBe(0);
             result.Title.ShouldBe(newEntity.Title);
 
             // Assert - Database
-            var storedEntity = dbContext.Blogs.FirstOrDefault(i => i.Title == newEntity.Title);
-            storedEntity.ShouldNotBeNull();
-            storedEntity.Id.ShouldBe(result.Id);
+             var storedEntity = dbContext.Blogs.FirstOrDefault(i => i.Id == result.Id);
+             storedEntity.ShouldNotBeNull();
+             storedEntity.Id.ShouldBe(result.Id);
+            
+
 
         }
         [Fact]
@@ -61,7 +64,11 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var controller = CreateController(scope);
             var updatedEntity = new BlogDto
             {
-                Description = "Test"
+                //Title ="Predlog",
+                Description = "Test",
+                Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Pictures = new List<string> { },
+                Status = BlogStatus.Published
             };
 
             // Act
