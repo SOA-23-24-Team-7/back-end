@@ -14,5 +14,6 @@ namespace Explorer.Stakeholders.API.Public
         Result<PagedResult<ClubDto>> GetPaged(int page, int pageSize);
         Result<ClubDto> Create(ClubDto club);
         Result<ClubDto> Update(ClubDto club);
+        Result<PagedResult<ClubDto>> GetOwnerClubs(long ownerId);
     }
 }

@@ -24,6 +24,15 @@ namespace Explorer.API.Controllers.Tourist
             var result = _clubService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
+        [HttpGet]
+        [Route("ownerclubs")]
+        public ActionResult<PagedResult<ClubDto>> GetOwnerClubs()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long ownerId = long.Parse(identity.FindFirst("id").Value);
+            var result = _clubService.GetOwnerClubs(ownerId);
+            return CreateResponse(result);
+        }
         [HttpPost]
         public ActionResult<ClubDto> Create([FromBody] ClubDto club)
         {
