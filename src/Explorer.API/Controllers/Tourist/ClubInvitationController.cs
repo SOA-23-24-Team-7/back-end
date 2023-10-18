@@ -22,4 +22,11 @@ public class ClubInvitationController : BaseApiController
         var result = _clubInvitationService.InviteTourist(dto);
         return CreateResponse(result);
     }
+
+    [HttpPatch("/reject/{clubInvitationId:long}")]
+    public ActionResult<ClubInvitationResponseDto> Reject(long clubInvitationId)
+    {
+        var result = _clubInvitationService.Reject(clubInvitationId);
+        return CreateResponse(result);
+    }
 }

@@ -1,5 +1,7 @@
-﻿namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
 
-public class IClubMembershipRepository
+namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+
+public interface IClubMembershipRepository : ICrudRepository<ClubMembership>
 {
 }

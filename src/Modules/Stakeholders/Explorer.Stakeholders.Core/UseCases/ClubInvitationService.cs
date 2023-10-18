@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,16 @@ namespace Explorer.Stakeholders.Core.UseCases;
 public class ClubInvitationService : IClubInvitationService
 {
     private readonly IMapper _mapper;
-    private readonly ICrudRepository<ClubInvitation> _invitationRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IClubInvitationRepository _invitationRepository;
+    private readonly ICrudRepository<Club> _clubRepository;
 
-    public ClubInvitationService(IMapper mapper, ICrudRepository<ClubInvitation> invitationRepository)
+    public ClubInvitationService(IMapper mapper, IUserRepository userRepository, IClubInvitationRepository invitationRepository, ICrudRepository<Club> clubRepository)
     {
         _mapper = mapper;
+        _userRepository = userRepository;
         _invitationRepository = invitationRepository;
+        _clubRepository = clubRepository;
     }
 
     public Result<ClubInvitationDto> InviteTourist(ClubInvitationDto invitationDto)
@@ -28,12 +33,37 @@ public class ClubInvitationService : IClubInvitationService
         try
         {
             var invitation = _mapper.Map<ClubInvitation>(invitationDto);
+            var tourist = _userRepository.GetPersonId(invitationDto.TouristId);
+            var club = _clubRepository.Get(invitationDto.ClubId);
+
             _invitationRepository.Create(invitation);
+
             return invitationDto;
+        }
+        catch (KeyNotFoundException)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
         }
         catch (ArgumentException e)
         {
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+    }
+
+    public Result<ClubInvitationResponseDto> Reject(long clubInvitationId)
+    {
+        try
+        {
+            var invitation = _invitationRepository.Get(clubInvitationId);
+            invitation.Status = InvitationStatus.Declined;
+
+            _invitationRepository.Update(invitation);
+
+            return Result.Ok().WithSuccess("Club invitation rejected successfully.");
+        }
+        catch (KeyNotFoundException)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
         }
     }
 }
