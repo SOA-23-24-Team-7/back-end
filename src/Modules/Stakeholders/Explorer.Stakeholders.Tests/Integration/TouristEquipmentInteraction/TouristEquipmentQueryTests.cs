@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Explorer.Stakeholders.API.Public;
 using Explorer.API.Controllers.Tourist;
+using Explorer.Tours.API.Public.Administration;
 
 namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
 {
@@ -21,7 +22,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<TouristEquipmentDto>;
+            var result = ((ObjectResult)controller.GetAllTouristEquipment(0, 0).Result)?.Value as PagedResult<TouristEquipmentDto>;
 
             // Assert
             result.ShouldNotBeNull();
@@ -31,7 +32,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
 
         private static TouristEquipmentController CreateController(IServiceScope scope)
         {
-            return new TouristEquipmentController(scope.ServiceProvider.GetRequiredService<ITouristEquipmentService>())
+            return new TouristEquipmentController(scope.ServiceProvider.GetRequiredService<ITouristEquipmentService>(), scope.ServiceProvider.GetRequiredService<IEquipmentService>())
             {
                 ControllerContext = BuildContext("-1")
             };

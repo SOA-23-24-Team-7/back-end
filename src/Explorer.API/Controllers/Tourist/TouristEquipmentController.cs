@@ -2,6 +2,8 @@
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.Core.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +14,22 @@ namespace Explorer.API.Controllers.Tourist
     public class TouristEquipmentController : BaseApiController
     {
         private readonly ITouristEquipmentService _touristEquipmentService;
-        public TouristEquipmentController(ITouristEquipmentService touristEquipmentService)
+        private readonly IEquipmentService _equipmentService;
+        public TouristEquipmentController(ITouristEquipmentService touristEquipmentService, IEquipmentService equipmentService)
         {
             _touristEquipmentService = touristEquipmentService;
+            _equipmentService = equipmentService;
+        }
+
+        [HttpGet("/api/tourist/only_equipment")]
+        public ActionResult<PagedResult<EquipmentDto>> GetAllEquipment([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _equipmentService.GetPaged(page, pageSize);
+            return CreateResponse(result);
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<TouristEquipmentDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<TouristEquipmentDto>> GetAllTouristEquipment([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _touristEquipmentService.GetPaged(page, pageSize);
             return CreateResponse(result);
