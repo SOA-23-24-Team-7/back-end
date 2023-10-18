@@ -30,10 +30,10 @@ public class PersonController : BaseApiController
         return CreateResponse(result);
     }
 
-    [HttpGet("person/{userId}")]
-    public ActionResult<PersonDto> GetByUserId(int id)
+    [HttpGet("person/{userId:long}")]
+    public ActionResult<PersonDto> GetByUserId(long userId)
     {
-        var result = _personService.GetByUserId(id);
+        var result = _personService.GetByUserId(userId);
         return CreateResponse(result);
     }
 
