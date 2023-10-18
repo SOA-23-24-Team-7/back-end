@@ -10,7 +10,7 @@ namespace Explorer.Blog.Core.Domain
     public enum BlogStatus  { Draft, Published, Closed};
     public class Blog : Entity 
     {
-        public int Id { get ; init; }
+        
         public string Title { get; init; }
         public string Description { get; init; }
         public DateTime Date { get; init; }
