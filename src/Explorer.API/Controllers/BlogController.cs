@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers
 {
 
-    [Authorize(Policy = "_Author_Policy")]
+    [Authorize(Policy = "authorPolicy")]
     [Route("api/blog")]
     public class BlogController: BaseApiController
     {
