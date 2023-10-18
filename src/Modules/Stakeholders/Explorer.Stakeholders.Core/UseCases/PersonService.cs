@@ -1,8 +1,9 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.API.Public;
+﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
-using AutoMapper;
+using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
+using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
@@ -11,6 +12,11 @@ namespace Explorer.Stakeholders.Core.UseCases
         public PersonService(ICrudRepository<Person> repository, IMapper mapper) : base(repository, mapper)
         {
 
+        }
+
+        public Result<PersonDto> GetByUserId(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -22,4 +22,19 @@ public class PersonController : BaseApiController
         var result = _personService.Update(person);
         return CreateResponse(result);
     }
+
+    [HttpGet]
+    public ActionResult<PersonDto> GetPaged(int page, int pageSize)
+    {
+        var result = _personService.GetPaged(page, pageSize);
+        return CreateResponse(result);
+    }
+
+    [HttpGet("person/{userId}")]
+    public ActionResult<PersonDto> GetByUserId(int id)
+    {
+        var result = _personService.GetByUserId(id);
+        return CreateResponse(result);
+    }
+
 }
