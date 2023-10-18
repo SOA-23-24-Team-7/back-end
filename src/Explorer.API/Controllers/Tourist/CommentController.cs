@@ -1,5 +1,6 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,11 +18,17 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPost]
-        public ActionResult<CommentDto> Create([FromBody] CommentDto comment)
+        public ActionResult<CommentResponseDto> Create([FromBody] CommentRequestDto comment)
         {
-            comment.AuthorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            comment.CreatedAt = DateTime.Now.ToUniversalTime();
-            var result = _commentService.Create(comment);
+            var authorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _commentService.Create(comment, authorId);
+            return CreateResponse(result);
+        }
+
+        [HttpGet]
+        public ActionResult<PagedResult<CommentResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _commentService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
     }

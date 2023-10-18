@@ -9,7 +9,7 @@ using Shouldly;
 using System.Security.Claims;
 using Xunit;
 
-namespace Explorer.Blog.Tests.Integration
+namespace Explorer.Blog.Tests.Integration.Blog
 {
     public class CommentCommandTests : BaseBlogIntegrationTest
     {
@@ -35,26 +35,26 @@ namespace Explorer.Blog.Tests.Integration
             };
 
             var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
-            var newEntity = new CommentDto
+            var newEntity = new CommentRequestDto()
             {
                 BlogId = 1,
                 Text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id metus diam. Donec neque orci, laoreet a sollicitudin vitae, bibendum a mauris."
             };
 
             // Act
-            var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as CommentDto;
+            var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as CommentResponseDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);
-            result.AuthorId.ShouldBe(newEntity.AuthorId);
+            result.AuthorId.ShouldBe(-21);
             result.BlogId.ShouldBe(newEntity.BlogId);
             result.Text.ShouldBe(newEntity.Text);
 
             // Assert - Database
             var storedEntity = dbContext.Comments.FirstOrDefault(i => i.Id == result.Id);
             storedEntity.ShouldNotBeNull();
-            storedEntity.AuthorId.ShouldBe(newEntity.AuthorId);
+            storedEntity.AuthorId.ShouldBe(-21);
             storedEntity.BlogId.ShouldBe(newEntity.BlogId);
             storedEntity.Text.ShouldBe(newEntity.Text);
         }
@@ -79,7 +79,7 @@ namespace Explorer.Blog.Tests.Integration
             };
 
             var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
-            var newEntity = new CommentDto
+            var newEntity = new CommentRequestDto
             {
                 BlogId = 1,
                 Text = ""
@@ -87,7 +87,7 @@ namespace Explorer.Blog.Tests.Integration
 
             // Act
             var response = (ObjectResult)controller.Create(newEntity).Result;
-            var result = (response)?.Value as CommentDto;
+            var result = response?.Value as CommentResponseDto;
 
             // Assert - Response
             response.StatusCode.ShouldBe(400);

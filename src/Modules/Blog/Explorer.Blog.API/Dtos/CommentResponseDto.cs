@@ -1,6 +1,6 @@
 ﻿namespace Explorer.Blog.API.Dtos
 {
-    public class CommentDto
+    public class CommentResponseDto
     {
         public long Id { get; set; }
         public long AuthorId { get; set; }
