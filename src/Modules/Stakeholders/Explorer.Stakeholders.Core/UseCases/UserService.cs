@@ -3,13 +3,21 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
     public class UserService : CrudService<UserDto, User>, IUserService
     {
-        public UserService(ICrudRepository<User> repository, IMapper mapper) : base(repository, mapper) { }
+
+        private readonly IUserRepository _userRepository;
+
+        public UserService(ICrudRepository<User> repository, IUserRepository userRepository, IMapper mapper) : base(
+            repository, mapper)
+        {
+            _userRepository = userRepository;
+        }
 
         public Result<UserDto> DisableAccount(long userId)
         {
@@ -29,6 +37,11 @@ namespace Explorer.Stakeholders.Core.UseCases
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
+        }
+
+        public Result<PagedResult<UserDto>> GetPagedByAdmin(int page, int pageSize, long adminId)
+        {
+            return MapToDto(_userRepository.GetPagedByAdmin(page, pageSize, adminId));
         }
     }
 }

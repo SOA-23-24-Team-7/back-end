@@ -7,6 +7,6 @@ namespace Explorer.Stakeholders.API.Public
     public interface IUserService
     {
         Result<UserDto> DisableAccount(long userId);
-        Result<PagedResult<UserDto>> GetPaged(int page, int pageSize);
+        Result<PagedResult<UserDto>> GetPagedByAdmin(int page, int pageSize, long adminId);
     }
 }
