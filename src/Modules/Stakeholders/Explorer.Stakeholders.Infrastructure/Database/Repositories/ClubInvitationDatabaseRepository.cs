@@ -1,6 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using System.Collections.ObjectModel;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories;
 
@@ -8,8 +9,8 @@ public class ClubInvitationDatabaseRepository : CrudDatabaseRepository<ClubInvit
 {
     public ClubInvitationDatabaseRepository(StakeholdersContext dbContext) : base(dbContext) { }
 
-    public bool Exists(ClubInvitation clubInvitation)
+    public Collection<ClubInvitation> GetWaiting()
     {
-        return DbContext.ClubInvitations.Any(invitation => invitation == clubInvitation);
+        throw new NotImplementedException();
     }
 }

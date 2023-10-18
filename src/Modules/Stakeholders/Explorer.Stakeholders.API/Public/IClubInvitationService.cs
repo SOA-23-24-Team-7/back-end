@@ -12,5 +12,6 @@ namespace Explorer.Stakeholders.API.Public;
 public interface IClubInvitationService
 {
     Result<ClubInvitationDto> InviteTourist(ClubInvitationDto invitationDto);
-    Result<ClubInvitationResponseDto> Reject(long clubInvitationId);
+    Result Reject(long clubInvitationId);
+    Result Accept(long clubInvitationId);
 }

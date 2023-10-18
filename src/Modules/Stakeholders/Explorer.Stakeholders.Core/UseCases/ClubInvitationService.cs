@@ -18,14 +18,16 @@ public class ClubInvitationService : IClubInvitationService
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
     private readonly IClubInvitationRepository _invitationRepository;
+    private readonly IClubMembershipRepository _membershipRepository;
     private readonly ICrudRepository<Club> _clubRepository;
 
-    public ClubInvitationService(IMapper mapper, IUserRepository userRepository, IClubInvitationRepository invitationRepository, ICrudRepository<Club> clubRepository)
+    public ClubInvitationService(IMapper mapper, IUserRepository userRepository, IClubInvitationRepository invitationRepository, ICrudRepository<Club> clubRepository, IClubMembershipRepository membershipRepository)
     {
         _mapper = mapper;
         _userRepository = userRepository;
         _invitationRepository = invitationRepository;
         _clubRepository = clubRepository;
+        _membershipRepository = membershipRepository;
     }
 
     public Result<ClubInvitationDto> InviteTourist(ClubInvitationDto invitationDto)
@@ -50,7 +52,7 @@ public class ClubInvitationService : IClubInvitationService
         }
     }
 
-    public Result<ClubInvitationResponseDto> Reject(long clubInvitationId)
+    public Result Reject(long clubInvitationId)
     {
         try
         {
@@ -58,6 +60,24 @@ public class ClubInvitationService : IClubInvitationService
             invitation.Status = InvitationStatus.Declined;
 
             _invitationRepository.Update(invitation);
+
+            return Result.Ok().WithSuccess("Club invitation rejected successfully.");
+        }
+        catch (KeyNotFoundException)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
+        }
+    }
+
+    public Result Accept(long clubInvitationId)
+    {
+        try
+        {
+            var invitation = _invitationRepository.Get(clubInvitationId);
+            invitation.Status = InvitationStatus.Accepted;
+
+            _invitationRepository.Update(invitation);
+            _membershipRepository.Create(new ClubMembership(invitation.ClubId, invitation.TouristId));
 
             return Result.Ok().WithSuccess("Club invitation rejected successfully.");
         }
