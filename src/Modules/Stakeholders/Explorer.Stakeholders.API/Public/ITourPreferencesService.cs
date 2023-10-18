@@ -12,6 +12,6 @@ namespace Explorer.Stakeholders.API.Public
     public interface ITourPreferencesService
     {
         Result<TourPreferencesDto> Create(TourPreferencesDto tourPreferencesDto);
-        //Result<TourPreferencesDto> Get(int id);
+        Result<TourPreferencesDto> GetByUserId(int id);
     }
 }

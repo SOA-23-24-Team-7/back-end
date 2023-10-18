@@ -32,7 +32,7 @@ public static class StakeholdersStartup
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
-        services.AddScoped(typeof(ICrudRepository<TourPreferences>), typeof(CrudDatabaseRepository<TourPreferences, StakeholdersContext>));
+        services.AddScoped<ITourPreferenceRepository, TourPreferenceDatabaseRepository > ();
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
 

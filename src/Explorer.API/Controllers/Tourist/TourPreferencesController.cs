@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers.Tourist
 {
     [Authorize(Policy = "touristPolicy")]
-    [Route("api/tourist/tourPreferences")]
+    [Route("api/tourist/tour-preferences")]
     public class TourPreferencesController : BaseApiController
     {
         private readonly ITourPreferencesService _tourPreferencesService;
@@ -20,8 +20,15 @@ namespace Explorer.API.Controllers.Tourist
             _tourPreferencesService = tourPreferencesService;
         }
 
-        [HttpPost]
-        public ActionResult<TourPreferencesDto> Create([FromBody] TourPreferencesDto preferences)
+        [HttpGet]
+        public ActionResult<TourPreferencesDto> GetTourPreference([FromQuery] int id)
+        {
+            var result = _tourPreferencesService.GetByUserId(id);
+            return CreateResponse(result);
+        }
+
+        [HttpPost("create")]
+        public ActionResult<TourPreferencesDto> CreateTourPreference([FromBody] TourPreferencesDto preferences)
         {
             var result = _tourPreferencesService.Create(preferences);
             return CreateResponse(result);

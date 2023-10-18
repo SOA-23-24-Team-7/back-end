@@ -8,7 +8,7 @@ public class StakeholdersContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Person> People { get; set; }
-    public DbSet<TourPreferences> TourPreferences { get; set; }
+    public DbSet<TourPreference> TourPreferences { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
 

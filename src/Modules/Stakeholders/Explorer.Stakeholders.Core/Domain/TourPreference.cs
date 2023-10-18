@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.Domain
 {
-    public class TourPreferences : Entity
+    public class TourPreference : Entity
     {
         public long UserId { get; private set; }
         public int DifficultyLevel { get; private set; }
@@ -17,7 +17,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public int BoatRating { get; private set; }
         public List<string> SelectedTags { get; private set; }
 
-        public TourPreferences(long userId, int difficultyLevel, int walkingRating, int cyclingRating, int carRating, int boatRating, List<string> selectedTags) 
+        public TourPreference(long userId, int difficultyLevel, int walkingRating, int cyclingRating, int carRating, int boatRating, List<string> selectedTags) 
         {
             UserId = userId;
             if (difficultyLevel < 1 || difficultyLevel > 5) throw new Exception("Difficulty level must be in range between 1 and 5!");
