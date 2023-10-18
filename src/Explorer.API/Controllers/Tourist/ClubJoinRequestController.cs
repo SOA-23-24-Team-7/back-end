@@ -23,14 +23,14 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [HttpPatch("respond/{id:long}")]
+        [HttpPatch("{id:long}")]
         public ActionResult Respond(long id, [FromBody] ClubJoinRequestResponseDto response)
         {
             var result = _requestService.Respond(id, response);
             return CreateResponse(result);
         }
 
-        [HttpPatch("cancel/{id:long}")]
+        [HttpDelete("{id:long}")]
         public ActionResult Cancel(long id)
         {
             var result = _requestService.Cancel(id);

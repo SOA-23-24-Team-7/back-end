@@ -26,7 +26,7 @@ namespace Explorer.Stakeholders.Core.UseCases
         }
 
         public Result<ClubJoinRequestDto> Send(ClubJoinRequestDto request)
-        {
+        {// nije vec poslao i nije member
             try
             {
                 var joinRequest = _mapper.Map<ClubJoinRequest>(request);
@@ -40,14 +40,14 @@ namespace Explorer.Stakeholders.Core.UseCases
         }
 
         public Result Respond(long id, ClubJoinRequestResponseDto response)
-        {
+        {//vlasnik je
             try
             {
-                var request = _requestRepository.GetAsNoTracking(r => r.Id == id && r.Status == ClubJoinRequestStatus.Pending);
+                var request = _requestRepository.Get(r => r.Id == id && r.Status == ClubJoinRequestStatus.Pending);
 
                 request.Respond(response.Accepted);
                 _requestRepository.Update(request);
-                return Result.Ok();
+                return Result.Ok().WithSuccess("Club Join Request " + (response.Accepted ? "Accepted" : "Rejected"));
             }
             catch (KeyNotFoundException e)
             {
@@ -56,14 +56,14 @@ namespace Explorer.Stakeholders.Core.UseCases
         }
 
         public Result Cancel(long id)
-        {
+        {//on je poslao
             try
             {
-                var request = _requestRepository.GetAsNoTracking(r => r.Id == id && r.Status == ClubJoinRequestStatus.Pending);
+                var request = _requestRepository.Get(r => r.Id == id && r.Status == ClubJoinRequestStatus.Pending);
 
                 request.Cancel();
                 _requestRepository.Update(request);
-                return Result.Ok();
+                return Result.Ok().WithSuccess("Club Join Request Canceled");
             }
             catch (KeyNotFoundException e)
             {

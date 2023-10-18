@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.UseCases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
 {
-    public interface IClubJoinRequestRepository
+    public interface IClubJoinRequestRepository: ICrudRepository<ClubJoinRequest>
     {
         ClubJoinRequest Get(Expression<Func<ClubJoinRequest, bool>> filter);
-        ClubJoinRequest GetAsNoTracking(Expression<Func<ClubJoinRequest, bool>> filter);
         ClubJoinRequest Create(ClubJoinRequest request);
         ClubJoinRequest Update(ClubJoinRequest request);
     }
