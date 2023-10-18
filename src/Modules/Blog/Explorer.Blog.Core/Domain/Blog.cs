@@ -1,4 +1,6 @@
-﻿namespace Explorer.Blog.Core.Domain
+﻿using Explorer.BuildingBlocks.Core.Domain;
+
+namespace Explorer.Blog.Core.Domain
 {
     public enum BlogStatus { Draft, Published, Closed };
     public class Blog : Entity

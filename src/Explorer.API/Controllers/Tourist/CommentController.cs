@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist
 {
-    [Authorize(Policy = "touristPolicy")]
     [Route("api/tourist/comment")]
     public class CommentController : BaseApiController
     {
@@ -17,6 +16,7 @@ namespace Explorer.API.Controllers.Tourist
             _commentService = commentService;
         }
 
+        [Authorize(Policy = "touristPolicy")]
         [HttpPost]
         public ActionResult<CommentResponseDto> Create([FromBody] CommentRequestDto comment)
         {
@@ -25,10 +25,10 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [HttpGet]
-        public ActionResult<PagedResult<CommentResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        [HttpGet("{blogId:long}")]
+        public ActionResult<PagedResult<CommentResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize, long blogId)
         {
-            var result = _commentService.GetPaged(page, pageSize);
+            var result = _commentService.GetPagedByBlogId(page, pageSize, blogId);
             return CreateResponse(result);
         }
     }

@@ -7,7 +7,7 @@ namespace Explorer.Blog.API.Public
     public interface ICommentService
     {
         Result<CommentResponseDto> Create(CommentRequestDto commentData, long authorId);
-        Result<PagedResult<CommentResponseDto>> GetPaged(int page, int pageSize);
+        Result<PagedResult<CommentResponseDto>> GetPagedByBlogId(int page, int pageSize, long blogId);
 
     }
 }
