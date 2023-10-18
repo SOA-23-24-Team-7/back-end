@@ -47,7 +47,7 @@ namespace Explorer.Stakeholders.Core.UseCases
 
                 request.Respond(response.Accepted);
                 _requestRepository.Update(request);
-                return Result.Ok();
+                return Result.Ok().WithSuccess("Club Join Request " + (response.Accepted ? "Accepted" : "Rejected"));
             }
             catch (KeyNotFoundException e)
             {
@@ -63,7 +63,7 @@ namespace Explorer.Stakeholders.Core.UseCases
 
                 request.Cancel();
                 _requestRepository.Update(request);
-                return Result.Ok();
+                return Result.Ok().WithSuccess("Club Join Request Canceled");
             }
             catch (KeyNotFoundException e)
             {
