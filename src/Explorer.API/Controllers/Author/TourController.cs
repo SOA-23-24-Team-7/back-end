@@ -38,7 +38,7 @@ namespace Explorer.API.Controllers.Author
         public ActionResult<TourDto> Create([FromBody] TourDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if(identity != null)
+            if(identity != null && identity.IsAuthenticated)
             {
                 tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
@@ -50,7 +50,7 @@ namespace Explorer.API.Controllers.Author
         public ActionResult<TourDto> Update([FromBody] TourDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null  && identity.IsAuthenticated)
             {
                 tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
