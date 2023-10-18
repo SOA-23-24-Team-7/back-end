@@ -33,6 +33,7 @@ public static class StakeholdersStartup
         services.AddScoped<ITokenGenerator, JwtGenerator>();
         services.AddScoped<IClubJoinRequestService, ClubJoinRequestService>();
         services.AddScoped<IClubService, ClubService>();
+        services.AddScoped<IClubMemberManagementService, ClubMemberManagementService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)

@@ -10,12 +10,9 @@ public class ClubInvitation : Entity
     public InvitationStatus Status { get; set; }
 
     public ClubInvitation() : this(-1, -1) { }
-    public ClubInvitation(long clubId, long touristId) : this(-1, clubId, touristId) { }
-    public ClubInvitation(long id, long clubId, long touristId) : this(id, clubId, touristId, DateTime.Now, InvitationStatus.Waiting) { }
-    public ClubInvitation(long id, long clubId, long touristId, DateTime time, InvitationStatus status)
+    public ClubInvitation(long clubId, long touristId) : this(clubId, touristId, DateTime.Now, InvitationStatus.Waiting) { }
+    public ClubInvitation(long clubId, long touristId, DateTime time, InvitationStatus status)
     {
-        Id = id;
-        ClubId = clubId;
         TouristId = touristId;
         TimeCreated = time;
         Status = status;

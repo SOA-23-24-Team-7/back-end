@@ -5,5 +5,4 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 
 public interface IClubInvitationRepository : ICrudRepository<ClubInvitation>
 {
-    Collection<ClubInvitation> GetWaiting();
 }

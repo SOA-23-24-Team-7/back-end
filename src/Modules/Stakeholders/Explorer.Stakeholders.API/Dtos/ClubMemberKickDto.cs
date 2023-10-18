@@ -2,6 +2,5 @@
 
 public class ClubMemberKickDto
 {
-    public long ClubId { get; set; }
-    public long TouristId { get; set; }
+    public long MembershipId { get; set; }
 }

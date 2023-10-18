@@ -8,9 +8,4 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories;
 public class ClubInvitationDatabaseRepository : CrudDatabaseRepository<ClubInvitation, StakeholdersContext>, IClubInvitationRepository
 {
     public ClubInvitationDatabaseRepository(StakeholdersContext dbContext) : base(dbContext) { }
-
-    public Collection<ClubInvitation> GetWaiting()
-    {
-        throw new NotImplementedException();
-    }
 }

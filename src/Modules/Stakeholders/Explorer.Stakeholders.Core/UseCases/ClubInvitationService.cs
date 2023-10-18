@@ -5,11 +5,6 @@ using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.UseCases;
 
@@ -52,11 +47,22 @@ public class ClubInvitationService : IClubInvitationService
         }
     }
 
-    public Result Reject(long clubInvitationId)
+    public Result Reject(long clubInvitationId, long userId)
     {
         try
         {
             var invitation = _invitationRepository.Get(clubInvitationId);
+
+            if (!isWaiting(invitation))
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
+            }
+
+            if (userId != invitation.TouristId)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
+            }
+
             invitation.Status = InvitationStatus.Declined;
 
             _invitationRepository.Update(invitation);
@@ -69,11 +75,22 @@ public class ClubInvitationService : IClubInvitationService
         }
     }
 
-    public Result Accept(long clubInvitationId)
+    public Result Accept(long clubInvitationId, long userId)
     {
         try
         {
             var invitation = _invitationRepository.Get(clubInvitationId);
+
+            if (!isWaiting(invitation))
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
+            }
+
+            if (userId != invitation.TouristId)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
+            }
+
             invitation.Status = InvitationStatus.Accepted;
 
             _invitationRepository.Update(invitation);
@@ -85,5 +102,10 @@ public class ClubInvitationService : IClubInvitationService
         {
             return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
         }
+    }
+
+    private bool isWaiting(ClubInvitation clubInvitation)
+    {
+        return clubInvitation.Status == InvitationStatus.Waiting;
     }
 }
