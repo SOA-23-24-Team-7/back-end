@@ -34,6 +34,7 @@ public static class StakeholdersStartup
     {
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
+        services.AddScoped<IRatingRepository, RatingDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Rating>), typeof(CrudDatabaseRepository<Rating, StakeholdersContext>));
 
         services.AddDbContext<StakeholdersContext>(opt =>
