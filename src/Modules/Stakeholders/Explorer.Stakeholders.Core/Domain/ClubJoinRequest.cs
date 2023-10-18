@@ -44,6 +44,11 @@ namespace Explorer.Stakeholders.Core.Domain
             if (Status == ClubJoinRequestStatus.Pending)
                 Status = ClubJoinRequestStatus.Cancelled;
         }
+
+        public string GetPrimaryStatusName()
+        {
+            return Status.ToString().ToLower();
+        }
     }
 }
 

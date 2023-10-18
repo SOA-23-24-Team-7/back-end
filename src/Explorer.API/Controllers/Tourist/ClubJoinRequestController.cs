@@ -1,5 +1,8 @@
-﻿using Explorer.Stakeholders.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.Core.UseCases.Administration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +20,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPost]
-        public ActionResult<ClubJoinRequestDto> Send([FromBody] ClubJoinRequestDto request)
+        public ActionResult<ClubJoinRequestSendDto> Send([FromBody] ClubJoinRequestSendDto request)
         {
             var result = _requestService.Send(request);
             return CreateResponse(result);
@@ -34,6 +37,13 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult Cancel(long id)
         {
             var result = _requestService.Cancel(id);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("{id:long}")]
+        public ActionResult<PagedResult<ClubJoinRequestByTouristDto>> GetAllByTourist([FromQuery] long touristId, [FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _requestService.GetPagedByTourist(touristId, page, pageSize);
             return CreateResponse(result);
         }
     }

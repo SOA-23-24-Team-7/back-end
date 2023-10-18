@@ -30,14 +30,14 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-            var newEntity = new ClubJoinRequestDto
+            var newEntity = new ClubJoinRequestSendDto
             {
                 TouristId = -1,
                 ClubId = -1
             };
 
             // Act
-            var result = ((ObjectResult)controller.Send(newEntity).Result)?.Value as ClubJoinRequestDto;
+            var result = ((ObjectResult)controller.Send(newEntity).Result)?.Value as ClubJoinRequestSendDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -56,7 +56,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var newEntity = new ClubJoinRequestDto
+            var newEntity = new ClubJoinRequestSendDto
             {
                 TouristId = 0,
                 ClubId = 0

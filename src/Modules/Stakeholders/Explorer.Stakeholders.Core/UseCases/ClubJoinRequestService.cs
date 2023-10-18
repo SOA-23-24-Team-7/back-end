@@ -25,7 +25,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             _requestRepository = requestRepository;
         }
 
-        public Result<ClubJoinRequestDto> Send(ClubJoinRequestDto request)
+        public Result<ClubJoinRequestSendDto> Send(ClubJoinRequestSendDto request)
         {// nije vec poslao i nije member
             try
             {
@@ -69,6 +69,18 @@ namespace Explorer.Stakeholders.Core.UseCases
             {
                 return Result.Fail(FailureCode.NotFound).WithError("Club Join Request Not Found: " + id);
             }
+        }
+
+        public Result<PagedResult<ClubJoinRequestByTouristDto>> GetPagedByTourist(long id, int page, int pageSize)
+        {
+            var requests = _requestRepository.GetPagedByTourist(id, page, pageSize);
+            return MapToDto(requests);
+        }
+
+        private PagedResult<ClubJoinRequestByTouristDto> MapToDto(PagedResult<ClubJoinRequest> requests)
+        {
+            var requestsDto = requests.Results.Select(_mapper.Map<ClubJoinRequestByTouristDto>).ToList();
+            return new PagedResult<ClubJoinRequestByTouristDto>(requestsDto, requests.TotalCount);
         }
     }
 }

@@ -12,7 +12,6 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
     public interface IClubJoinRequestRepository: ICrudRepository<ClubJoinRequest>
     {
         ClubJoinRequest Get(Expression<Func<ClubJoinRequest, bool>> filter);
-        ClubJoinRequest Create(ClubJoinRequest request);
-        ClubJoinRequest Update(ClubJoinRequest request);
+        PagedResult<ClubJoinRequest> GetPagedByTourist(long id, int page, int pageSize);
     }
 }

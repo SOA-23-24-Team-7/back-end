@@ -1,4 +1,5 @@
-﻿using Explorer.BuildingBlocks.Infrastructure.Database;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
@@ -28,6 +29,13 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             var request = query.FirstOrDefault();
             if (request == null) throw new KeyNotFoundException("Club Join Request Not found");
             return request;
+        }
+
+        public PagedResult<ClubJoinRequest> GetPagedByTourist(long id, int page, int pageSize)
+        {
+            var task = _dbContext.ClubJoinRequests.Include(r => r.Club).Where(r => r.TouristId == id && r.Status != ClubJoinRequestStatus.Cancelled).GetPaged(page, pageSize);
+            task.Wait();
+            return task.Result;
         }
     }
 }
