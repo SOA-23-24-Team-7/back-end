@@ -1,4 +1,6 @@
-﻿using Explorer.Stakeholders.Core.Domain;
+﻿using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 {
-    public class ClubJoinRequestRepository : IClubJoinRequestRepository
+    public class ClubJoinRequestRepository : CrudDatabaseRepository<ClubJoinRequest, StakeholdersContext>, IClubJoinRequestRepository
     {
         private readonly StakeholdersContext _dbContext;
 
-        public ClubJoinRequestRepository(StakeholdersContext dbContext)
+        public ClubJoinRequestRepository(StakeholdersContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
@@ -25,29 +27,6 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             query = query.Where(filter);
             var request = query.FirstOrDefault();
             if (request == null) throw new KeyNotFoundException("Club Join Request Not found");
-            return request;
-        }
-
-        public ClubJoinRequest GetAsNoTracking(Expression<Func<ClubJoinRequest, bool>> filter)
-        {
-            IQueryable<ClubJoinRequest> query = _dbContext.ClubJoinRequests;
-            query = query.Where(filter);
-            var request = query.AsNoTracking().FirstOrDefault();
-            if (request == null) throw new KeyNotFoundException("Club Join Request Not found");
-            return request;
-        }
-
-        public ClubJoinRequest Create(ClubJoinRequest request)
-        {
-            _dbContext.ClubJoinRequests.Add(request);
-            _dbContext.SaveChanges();
-            return request;
-        }
-
-        public ClubJoinRequest Update(ClubJoinRequest request)
-        {
-            _dbContext.ClubJoinRequests.Update(request);
-            _dbContext.SaveChanges();
             return request;
         }
     }
