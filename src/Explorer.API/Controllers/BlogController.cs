@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers
 {
 
-    [Authorize(Policy = "authorPolicy")]
     [Route("api/blog")]
     public class BlogController : BaseApiController
     {
@@ -19,14 +18,13 @@ namespace Explorer.API.Controllers
         }
 
 
-
+        [Authorize(Policy = "userPolicy")]
         [HttpPost("create")]
         public ActionResult<BlogDto> Create([FromBody] BlogDto blog)
         {
             var result = _blogService.Create(blog);
             return CreateResponse(result);
         }
-
 
         [HttpGet]
         public ActionResult<PagedResult<BlogDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
