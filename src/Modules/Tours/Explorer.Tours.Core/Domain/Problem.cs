@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -19,7 +20,7 @@ namespace Explorer.Tours.Core.Domain
 
         public Problem(string category, string priority, string description, string reportedTime, int touristId, int tourId)
         {
-            Validate(category, priority, description, reportedTime);
+            Validate(category, priority, description,reportedTime);
             Category = category;
             Priority = priority;
             Description = description;
@@ -32,7 +33,7 @@ namespace Explorer.Tours.Core.Domain
             if (string.IsNullOrWhiteSpace(category)) throw new ArgumentException("Invalid Category.");
             if (string.IsNullOrWhiteSpace(priority)) throw new ArgumentException("Invalid Priority.");
             if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Invalid Description.");
-            if (string.IsNullOrWhiteSpace(reportedTime)) throw new ArgumentException("Invalid Reported Time.");
+            if (string.IsNullOrEmpty(reportedTime)) throw new ArgumentException("Invalid Reported Time.");
         }
     }
 }

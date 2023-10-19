@@ -39,7 +39,7 @@ namespace Explorer.API.Controllers.Tourist
                 if (idClaim != null)
                     problem.TouristId = int.Parse(idClaim.Value);
             }
-           
+            problem.ReportedTime = DateTime.Now.Hour.ToString()+":"+DateTime.Now.Minute.ToString();
             var result = _problemService.Create(problem);
             return CreateResponse(result);
         }
@@ -48,10 +48,6 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<ProblemDto> Update([FromBody] ProblemDto problem)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            /*if(problem.TouristId!= int.Parse(identity.FindFirst("id").Value)) //ovo bi radilo ali kada bi podaci bili popunjeni
-            {
-                return StatusCode(500, "Doslo je do greske.");
-            }*/
             if (identity != null)
             {
                 var idClaim = identity.FindFirst("id");
@@ -68,5 +64,6 @@ namespace Explorer.API.Controllers.Tourist
             var result = _problemService.Delete(id);
             return CreateResponse(result);
         }
+
     }
 }
