@@ -5,8 +5,8 @@ using FluentResults;
 namespace Explorer.Tours.API.Public
 {
     public interface IReviewService
-    {
-        Result<PagedResult<ReviewDto>> GetPaged(int page, int pageSize);
+    { 
+        Result<PagedResult<ReviewDto>> GetPagedByTourId(int page, int pageSize, int tourId);
         Result<ReviewDto> Create(ReviewDto review);
         Result<ReviewDto> Update(ReviewDto review);
         Result Delete(int id);

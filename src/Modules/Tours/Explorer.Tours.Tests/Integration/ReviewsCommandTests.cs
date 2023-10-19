@@ -38,11 +38,24 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
         result.ShouldNotBeNull();
         result.Id.ShouldNotBe(0);
         result.Rating.ShouldBe(newEntity.Rating);
+        result.Comment.ShouldBe(newEntity.Comment);
+        result.TouristId.ShouldBe(newEntity.TouristId);
+        result.TourVisitDate.ShouldBe(newEntity.TourVisitDate);
+        result.CommentDate.ShouldBe(newEntity.CommentDate);
+        result.TourId.ShouldBe(newEntity.TourId);
+        result.Images.ShouldBe(newEntity.Images);
 
         // Assert - Database
         var storedEntity = dbContext.Reviews.FirstOrDefault(i => i.Rating == newEntity.Rating);
         storedEntity.ShouldNotBeNull();
         storedEntity.Id.ShouldBe(result.Id);
+        storedEntity.Rating.ShouldBe(result.Rating);
+        storedEntity.Comment.ShouldBe(result.Comment);
+        storedEntity.TouristId.ShouldBe(result.TouristId);
+        storedEntity.TourVisitDate.ShouldBe(result.TourVisitDate);
+        storedEntity.CommentDate.ShouldBe(result.CommentDate);
+        storedEntity.TourId.ShouldBe(result.TourId);
+        storedEntity.Images.ShouldBe(result.Images);
     }
 
     [Fact]

@@ -9,6 +9,8 @@ using Explorer.Tours.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Infrastructure.Database.Repositories;
 
 namespace Explorer.Tours.Infrastructure;
 
@@ -33,6 +35,7 @@ public static class ToursStartup
     {
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<Review>), typeof(CrudDatabaseRepository<Review, ToursContext>));
+        services.AddScoped<IReviewRepository, ReviewDatabaseRepository>();
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),

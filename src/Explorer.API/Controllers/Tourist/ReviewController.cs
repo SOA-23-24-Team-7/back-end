@@ -19,13 +19,12 @@ namespace Explorer.API.Controllers.Tourist
             _reviewService = reviewService;
         }
 
-        [HttpGet]
-        public ActionResult<PagedResult<ReviewDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        [HttpGet("{tourId:int}")]
+        public ActionResult<PagedResult<ReviewDto>> GetAllByTourId([FromQuery] int page, [FromQuery] int pageSize, int tourId)
         {
-            var result = _reviewService.GetPaged(page, pageSize);
+            var result = _reviewService.GetPagedByTourId(page, pageSize, tourId);
             return CreateResponse(result);
         }
-
 
         [HttpPost]
         public ActionResult<ReviewDto> Create([FromBody] ReviewDto review)
@@ -34,9 +33,9 @@ namespace Explorer.API.Controllers.Tourist
             if (identity != null)
             {
                 var claimId = identity.FindFirst("id");
-                if(claimId != null) {
+
+                if(claimId != null)
                     review.TouristId = Int32.Parse(claimId.Value);
-                }
                 
             }
             review.CommentDate = DateOnly.FromDateTime(DateTime.Now);
