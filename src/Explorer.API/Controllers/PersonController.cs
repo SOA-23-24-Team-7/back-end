@@ -16,7 +16,7 @@ public class PersonController : BaseApiController
         _personService = personService;
     }
 
-    [HttpPost("update")]
+    [HttpPut("update")]
     public ActionResult<PersonDto> Update([FromBody] PersonDto person)
     {
         var result = _personService.Update(person);
