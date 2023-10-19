@@ -1,6 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
@@ -38,6 +39,11 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPost]
         public ActionResult<TouristEquipmentDto> Create([FromBody] TouristEquipmentDto touristEquipment)
         {
+            int touristId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            if (touristEquipment.TouristId != touristId)
+            {
+                return Unauthorized();
+            }
             var result = _touristEquipmentService.Create(touristEquipment);
             return CreateResponse(result);
         }
@@ -45,6 +51,11 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPut("{id:int}")]
         public ActionResult<TouristEquipmentDto> Update([FromBody] TouristEquipmentDto touristEquipment)
         {
+            int touristId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            if(touristEquipment.TouristId != touristId)
+            {
+                return Unauthorized();
+            }
             var result = _touristEquipmentService.Update(touristEquipment);
             return CreateResponse(result);
         }
@@ -52,8 +63,18 @@ namespace Explorer.API.Controllers.Tourist
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
+            int touristId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            if (GetForTourist(touristId) == null || GetForTourist(touristId)?.Id != id)
+            {
+                return Unauthorized();
+            }
             var result = _touristEquipmentService.Delete(id);
             return CreateResponse(result);
+        }
+
+        private TouristEquipmentDto GetForTourist(int touristId)
+        {
+            return ((GetAllTouristEquipment(0, 0).Result as OkObjectResult).Value as PagedResult<TouristEquipmentDto>).Results.Find(te => te.TouristId == touristId);
         }
     }
 }

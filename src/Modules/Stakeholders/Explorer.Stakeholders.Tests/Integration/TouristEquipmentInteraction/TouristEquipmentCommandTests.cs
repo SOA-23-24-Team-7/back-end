@@ -3,9 +3,11 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Tours.API.Public.Administration;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System.Security.Claims;
 
 namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
 {
@@ -27,6 +29,17 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
                 TouristId = 100,
                 EquipmentIds = new List<int> { 1, 3 }
             };
+
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "100") }, "test");
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
 
             // Act
             var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TouristEquipmentDto;
@@ -59,6 +72,16 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
                 EquipmentIds = new List<int> { 1, 3 }
             };
 
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "1") }, "test");
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
             // Act
             var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TouristEquipmentDto;
 
@@ -88,6 +111,16 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
                 EquipmentIds = new List<int>()
             };
 
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "1000") }, "test");
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
             // Act
             var result = (ObjectResult)controller.Update(updatedEntity).Result;
 
@@ -103,6 +136,17 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "10") }, "test");
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
 
             // Act
             var result = (OkResult)controller.Delete(-3);
@@ -123,12 +167,22 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
 
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-1") }, "test");
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
             // Act
-            var result = (ObjectResult)controller.Delete(-1000);
+            var result = (UnauthorizedResult)controller.Delete(-1000);
 
             // Assert
             result.ShouldNotBeNull();
-            result.StatusCode.ShouldBe(404);
+            result.StatusCode.ShouldBe(401);
         }
 
         private static TouristEquipmentController CreateController(IServiceScope scope)
