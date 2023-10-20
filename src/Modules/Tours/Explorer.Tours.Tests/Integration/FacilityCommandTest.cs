@@ -95,6 +95,7 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         var storedEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == "Apoteka");
         storedEntity.ShouldNotBeNull();
         storedEntity.Description.ShouldBe(updatedEntity.Description);
+        //storedEntity.Category.ShouldBe(updatedEntity.Category);  
         var oldEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == "Test");
         oldEntity.ShouldBeNull();
     }

@@ -25,6 +25,15 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(result);
         }
 
+        [HttpGet("authorsFacilities")]
+        public ActionResult<PagedResult<FacilityDto>> GetByAuthorId([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var loggedInAuthorId = int.Parse(identity.FindFirst("id").Value);
+            var result = _facilityService.GetPagedByAuthorId(page, pageSize, loggedInAuthorId);
+            return CreateResponse(result);
+        }
+
         [HttpPost]
         public ActionResult<FacilityDto> Create([FromBody] FacilityDto facility)
         {
