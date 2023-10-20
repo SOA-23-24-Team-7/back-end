@@ -5,6 +5,7 @@ using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System;
@@ -191,8 +192,121 @@ public class TourCommandTests : BaseToursIntegrationTest
         result.StatusCode.ShouldBe(404);
     }
 
+    [Fact]
+    public void Create_Tour_Equipment()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        int tourId = -3;
+        int equipmentId = -3;
 
+        //Act
+        var result = (OkResult)controller.AddEquipment(tourId, equipmentId);
 
+        //Assert
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(200);
+
+        //Assert-Database
+        var tour_eq = dbContext.Equipment
+                                .Where(e => e.Tours.Any(t => t.Id == tourId));
+        tour_eq.ShouldNotBeNull();
+        tour_eq.Count().ShouldBe(2);
+
+    }
+
+    [Fact]
+    public void Create_tour_equipment_fails_invalid_tourId()
+    {
+        //Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        int tourId = -50000;
+        int equipmentId = -3;
+
+        //Act
+        var result = (ObjectResult)controller.AddEquipment(tourId, equipmentId);
+
+        //Assert
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(404);
+    }
+
+    [Fact]
+    public void Create_tour_equipment_fails_invalid_equipmentId()
+    {
+        //Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        int tourId = -3;
+        int equipmentId = -40000;
+
+        //Act
+        var result = (ObjectResult)controller.AddEquipment(tourId, equipmentId);
+
+        //Assert
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(404);
+    }
+    [Fact]
+    public void Delete_Tour_Equipment()
+    {
+        //Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        int tourId = -1;
+        int equipmentId = -3;
+
+        //Act
+        var result = (OkResult)controller.DeleteEquipment(tourId, equipmentId);
+
+        //Assert
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(200);
+
+        //Assert-Database
+        var tour_eq = dbContext.Equipment
+                                .Where(e => e.Tours.Any(t => t.Id == tourId));
+        tour_eq.ShouldNotBeNull();
+        tour_eq.Count().ShouldBe(2);
+    }
+
+    [Fact]
+    public void Delete_tour_equipment_fails_invalid_tourId()
+    {
+        //Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        int tourId = -50000;
+        int equipmentId = -3;
+
+        //Act
+        var result = (ObjectResult)controller.DeleteEquipment(tourId, equipmentId);
+
+        //Assert
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(404);
+    }
+
+    [Fact]
+    public void Delete_tour_equipment_fails_invalid_equipmentId()
+    {
+        //Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        int tourId = -1;
+        int equipmentId = -30000;
+
+        //Act
+        var result = (ObjectResult)controller.DeleteEquipment(tourId, equipmentId);
+
+        //Assert
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(404);
+    }
     private static TourController CreateController(IServiceScope scope)
     {
         return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())
