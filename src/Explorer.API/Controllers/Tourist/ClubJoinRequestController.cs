@@ -1,10 +1,12 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.UseCases.Administration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -40,10 +42,19 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [HttpGet("{id:long}")]
-        public ActionResult<PagedResult<ClubJoinRequestByTouristDto>> GetAllByTourist([FromQuery] long touristId, [FromQuery] int page, [FromQuery] int pageSize)
+        [HttpGet("tourist")]
+        public ActionResult<PagedResult<ClubJoinRequestByTouristDto>> GetAllByTourist([FromQuery] int page, [FromQuery] int pageSize)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long touristId = long.Parse(identity.FindFirst("id").Value);
             var result = _requestService.GetPagedByTourist(touristId, page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("club/{id:long}")]
+        public ActionResult<PagedResult<ClubJoinRequestByClubDto>> GetAllByClub(long id, [FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _requestService.GetPagedByClub(id, page, pageSize);
             return CreateResponse(result);
         }
     }

@@ -11,6 +11,7 @@ namespace Explorer.Stakeholders.Core.Domain
     public class ClubJoinRequest : Entity
     {
         public long TouristId { get; init; }
+        public Person? Tourist { get; init; }
         public long ClubId { get; init; }
         public Club? Club { get; init; }
         public DateTime RequestedAt { get; init; }
@@ -29,7 +30,6 @@ namespace Explorer.Stakeholders.Core.Domain
         {
             if (TouristId == 0) throw new ArgumentException("Invalid TouristId");
             if (ClubId == 0) throw new ArgumentException("Invalid ClubId");
-            if (Club != null && Club.Id == 0) throw new ArgumentException("Invalid Club");
             if (RequestedAt > DateTime.Now) throw new ArgumentException("Invalid RequestedAt");
         }
 

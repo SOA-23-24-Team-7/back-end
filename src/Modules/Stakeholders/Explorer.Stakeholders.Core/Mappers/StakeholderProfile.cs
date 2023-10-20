@@ -12,11 +12,18 @@ public class StakeholderProfile : Profile
     {
         CreateMap<ClubJoinRequestSendDto, ClubJoinRequest>()
             .ConstructUsing(src => new ClubJoinRequest(src.TouristId, src.ClubId, DateTime.Now, ClubJoinRequestStatus.Pending)).ReverseMap();
+
         CreateMap<ClubJoinRequest, ClubJoinRequestByTouristDto>()
             .ConstructUsing(src => new ClubJoinRequestByTouristDto { Id = src.Id, ClubId = src.ClubId, ClubName = src.Club.Name, RequestedAt = src.RequestedAt, Status = src.GetPrimaryStatusName() });
+
+        CreateMap<ClubJoinRequest, ClubJoinRequestByClubDto>()
+            .ConstructUsing(src => new ClubJoinRequestByClubDto { Id = src.Id, TouristId = src.Tourist.UserId, TouristName = src.Tourist.Name + " " + src.Tourist.Surname, RequestedAt = src.RequestedAt, Status = src.GetPrimaryStatusName() });
+
         CreateMap<ClubInvitation, ClubInvitationDto>().ReverseMap()
             .ConstructUsing(dto => new ClubInvitation(dto.ClubId, dto.TouristId));
+
         CreateMap<ClubDto, Club>().ReverseMap();
+
         CreateMap<PersonDto, Person>().ReverseMap();
     }
 }

@@ -15,5 +15,6 @@ namespace Explorer.Tours.API.Public.Administration
         Result Respond(long id, ClubJoinRequestResponseDto response);
         Result Cancel(long id);
         Result<PagedResult<ClubJoinRequestByTouristDto>> GetPagedByTourist(long id, int page, int pageSize);
+        Result<PagedResult<ClubJoinRequestByClubDto>> GetPagedByClub(long id, int page, int pageSize);
     }
 }

@@ -33,9 +33,18 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 
         public PagedResult<ClubJoinRequest> GetPagedByTourist(long id, int page, int pageSize)
         {
-            var task = _dbContext.ClubJoinRequests.Include(r => r.Club).Where(r => r.TouristId == id && r.Status != ClubJoinRequestStatus.Cancelled).GetPaged(page, pageSize);
-            task.Wait();
-            return task.Result;
+            Expression<Func<ClubJoinRequest, bool>> filter = (r => r.TouristId == id && r.Status != ClubJoinRequestStatus.Cancelled);
+            var getTask = _dbContext.ClubJoinRequests.Include(r => r.Club).Where(filter).GetPaged(page, pageSize);
+            getTask.Wait();
+            return getTask.Result;
+        }
+
+        public PagedResult<ClubJoinRequest> GetPagedByClub(long id, int page, int pageSize)
+        {
+            Expression<Func<ClubJoinRequest, bool>> filter = (r => r.ClubId == id && r.Status != ClubJoinRequestStatus.Cancelled);
+            var getTask = _dbContext.ClubJoinRequests.Include(r => r.Tourist).Where(filter).GetPaged(page, pageSize);
+            getTask.Wait();
+            return getTask.Result;
         }
     }
 }
