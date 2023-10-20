@@ -18,10 +18,12 @@ namespace Explorer.API.Controllers.Tourist
 
         [Authorize(Policy = "touristPolicy")]
         [HttpPost]
-        public ActionResult<CommentResponseDto> Create([FromBody] CommentRequestDto comment)
+        public ActionResult<CommentResponseDto> Create([FromBody] CommentCreateDto comment)
         {
             var authorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _commentService.Create(comment, authorId);
+            comment.AuthorId = authorId;
+            comment.CreatedAt = DateTime.UtcNow;
+            var result = _commentService.Create(comment);
             return CreateResponse(result);
         }
 

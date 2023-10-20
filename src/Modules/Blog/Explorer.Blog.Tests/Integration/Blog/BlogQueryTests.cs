@@ -24,7 +24,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<BlogDto>;
+            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<BlogResponseDto>;
 
             // Assert
             result.ShouldNotBeNull();

@@ -18,26 +18,9 @@ namespace Explorer.Blog.Core.UseCases
             _commentRepository = commentRepository;
         }
 
-        public Result<CommentResponseDto> Create(CommentRequestDto commentData, long authorId)
-        {
-            try
-            {
-                var comment = _mapper.Map<CommentResponseDto>(commentData);
-                comment.AuthorId = authorId;
-                comment.CreatedAt = DateTime.Now.ToUniversalTime();
-
-                return MapToDto(CrudRepository.Create(_mapper.Map<Comment>(comment)));
-            }
-            catch (ArgumentException e)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
-            }
-
-        }
-
         public Result<PagedResult<CommentResponseDto>> GetPagedByBlogId(int page, int pageSize, long blogId)
         {
-            return MapToDto(_commentRepository.GetPagedByBlogId(page, pageSize, blogId));
+            return MapToDto<CommentResponseDto>(_commentRepository.GetPagedByBlogId(page, pageSize, blogId));
         }
     }
 }

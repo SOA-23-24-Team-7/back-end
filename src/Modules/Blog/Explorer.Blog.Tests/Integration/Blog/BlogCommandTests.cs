@@ -23,7 +23,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
-            var newEntity = new BlogDto
+            var newEntity = new BlogResponseDto
             {
                 Title = "Neki naslov",
                 Description = "Opis neki",
@@ -33,7 +33,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
             };
 
             // Act
-            var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as BlogDto;
+            var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as BlogResponseDto;
             // Assert - Response
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);
@@ -51,7 +51,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var updatedEntity = new BlogDto
+            var updatedEntity = new BlogResponseDto
             {
                 Description = "Test"
             };

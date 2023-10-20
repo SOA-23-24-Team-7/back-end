@@ -6,8 +6,8 @@ namespace Explorer.Blog.API.Public
 {
     public interface IBlogService
     {
-        Result<BlogDto> Create(BlogDto blog);
-        Result<PagedResult<BlogDto>> GetPaged(int page, int pageSize);
-        Result<BlogDto> Get(int id);
+        Result<BlogResponseDto> Create<BlogCreateDto>(BlogCreateDto blog);
+        Result<PagedResult<BlogResponseDto>> GetPaged(int page, int pageSize);
+        Result<BlogResponseDto> Get(long id);
     }
 }

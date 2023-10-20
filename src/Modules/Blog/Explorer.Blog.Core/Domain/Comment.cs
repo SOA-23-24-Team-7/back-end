@@ -11,7 +11,6 @@ namespace Explorer.Blog.Core.Domain
         public DateTime? UpdatedAt { get; init; }
         public string Text { get; init; }
 
-        public Comment() { }
         public Comment(long authorId, long blogId, DateTime createdAt, DateTime? updatedAt, string text)
         {
             if (string.IsNullOrWhiteSpace(text)) throw new ArgumentException("Invalid comment text.");
