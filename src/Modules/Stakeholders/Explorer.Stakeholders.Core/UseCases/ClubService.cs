@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Explorer.Stakeholders.API.Public;
+using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases
 {
@@ -15,6 +16,17 @@ namespace Explorer.Tours.Core.UseCases
     {
         public ClubService(ICrudRepository<Club> crudRepository, IMapper mapper) : base(crudRepository, mapper)
         {
+        }
+        public Result<PagedResult<ClubDto>> GetOwnerClubs(long ownerId)
+        {
+            PagedResult<ClubDto> ownerClubs = new PagedResult<ClubDto>(new List<ClubDto>(), 0);
+            var result = CrudRepository.GetPaged(0, 0);
+            foreach(var club in result.Results)
+            {
+                if(club.OwnerId == ownerId)
+                    ownerClubs.Results.Add(MapToDto(club));
+            }
+            return ownerClubs;
         }
     }
 }
