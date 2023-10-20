@@ -27,5 +27,9 @@ namespace Explorer.Tours.Core.UseCases
         {
             return MapToDto(_reviewRepository.GetPagedByTourId(page, pageSize, tourId));
         }
+        public bool ReviewExists(long touristId, int tourId)
+        {
+            return _reviewRepository.ReviewExists(touristId, tourId);
+        }
     }
 }

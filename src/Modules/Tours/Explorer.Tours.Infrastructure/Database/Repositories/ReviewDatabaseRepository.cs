@@ -29,5 +29,10 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             task.Wait();
             return task.Result;
         }
+        public bool ReviewExists(long touristId, int tourId)
+        {
+            var entity = _dbSet.Where(x => x.TouristId == touristId && x.TourId == tourId).FirstOrDefault();
+            return entity != null;
+        }
     }
 }

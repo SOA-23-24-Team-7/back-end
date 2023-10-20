@@ -12,12 +12,12 @@ namespace Explorer.Tours.Core.Domain
     {
         public int Rating { get; init; }
         public string Comment { get; init; }
-        public int TouristId { get; init; }
+        public long TouristId { get; init; }
         public DateOnly TourVisitDate { get; init; }
         public DateOnly CommentDate { get; init; }
         public int TourId { get; init; }
         public List<string> Images { get; init; }
-        public Review(int rating, string comment, int touristId, DateOnly tourVisitDate, DateOnly commentDate, int tourId, List<string> images)
+        public Review(int rating, string comment, long touristId, DateOnly tourVisitDate, DateOnly commentDate, int tourId, List<string> images)
         {
             if (rating < 1 || rating > 5) throw new ArgumentException("Invalid rating.");
             if (string.IsNullOrWhiteSpace(comment)) throw new ArgumentException("Invalid comment.");

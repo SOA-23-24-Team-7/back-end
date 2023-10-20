@@ -26,17 +26,20 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("{touristId:long}/{tourId:int}")]
+        public bool ReviewExists(long touristId, int tourId)
+        {
+            var result = _reviewService.ReviewExists(touristId, tourId);
+            return result;
+        }
+
         [HttpPost]
         public ActionResult<ReviewDto> Create([FromBody] ReviewDto review)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                var claimId = identity.FindFirst("id");
-
-                if(claimId != null)
-                    review.TouristId = Int32.Parse(claimId.Value);
-                
+            if (identity != null && identity.IsAuthenticated)
+            { 
+              review.TouristId = long.Parse(identity.FindFirst("id").Value);  
             }
             review.CommentDate = DateOnly.FromDateTime(DateTime.Now);
             var result = _reviewService.Create(review);
@@ -47,13 +50,10 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<ReviewDto> Update([FromBody] ReviewDto review)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null && identity.IsAuthenticated)
             {
-                var claimId = identity.FindFirst("id");
-                if (claimId != null)
-                {
-                    review.TouristId = Int32.Parse(claimId.Value);
-                }
+                if (long.Parse(identity.FindFirst("id").Value) != review.TouristId)
+                    return Forbid();
             }
             var result = _reviewService.Update(review);
             return CreateResponse(result);
