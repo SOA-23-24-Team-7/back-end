@@ -6,7 +6,7 @@ using Explorer.Tours.Core.Domain;
 
 namespace Explorer.Tours.Core.UseCases.Administration;
 
-public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipmentService
+public class EquipmentService : CrudService<EquipmentResponseDto, Equipment>, IEquipmentService
 {
-    public EquipmentService(ICrudRepository<Equipment> repository, IMapper mapper) : base(repository, mapper) {}
+    public EquipmentService(ICrudRepository<Equipment> repository, IMapper mapper) : base(repository, mapper) { }
 }
