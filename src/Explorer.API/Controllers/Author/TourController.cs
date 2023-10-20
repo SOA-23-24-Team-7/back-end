@@ -64,5 +64,26 @@ namespace Explorer.API.Controllers.Author
             var result = _tourService.Delete(id);
             return CreateResponse(result);
         }
+
+        [HttpGet("tourEquipment/{tourId:int}")]
+        public ActionResult GetEquipment(int tourId)
+        {
+            var result = _tourService.GetEquipment(tourId);
+            return CreateResponse(result);
+        }
+
+        [HttpPost("tourEquipment/{tourId:int}/{equipmentId:int}")]
+        public ActionResult AddEquipment(int tourId, int equipmentId)
+        {
+            var result = _tourService.AddEquipment(tourId, equipmentId);
+            return CreateResponse(result);
+        }
+
+        [HttpDelete("tourEquipment/{tourId:int}/{equipmentId:int}")]
+        public ActionResult DeleteEquipment(int tourId, int equipmentId)
+        {
+            var result = _tourService.DeleteEquipment(tourId, equipmentId);
+            return CreateResponse(result);
+        }
     }
 }
