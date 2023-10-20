@@ -29,6 +29,23 @@ public class ReviewsQueryTests : BaseToursIntegrationTest
         result.TotalCount.ShouldBe(3);
     }
 
+    [Fact]
+    public void Exists()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+
+        // Act
+        var result = controller.ReviewExists(3, 5);
+
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.ShouldBeOfType<ActionResult<Boolean>>();
+       
+    }
+
     private static ReviewController CreateController(IServiceScope scope)
     {
         return new ReviewController(scope.ServiceProvider.GetRequiredService<IReviewService>())

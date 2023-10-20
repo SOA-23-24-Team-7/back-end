@@ -27,7 +27,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("{touristId:long}/{tourId:int}")]
-        public bool ReviewExists(long touristId, int tourId)
+        public ActionResult<Boolean> ReviewExists(long touristId, int tourId)
         {
             var result = _reviewService.ReviewExists(touristId, tourId);
             return result;
