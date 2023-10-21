@@ -15,5 +15,6 @@ namespace Explorer.Tours.API.Public
         Result<ProblemDto> Create(ProblemDto problem);
         Result<ProblemDto> Update(ProblemDto problem);
         Result Delete(int id);
+        Result<PagedResult<ProblemDto>> GetByUser(int page, int pageSize,int id);
     }
 }

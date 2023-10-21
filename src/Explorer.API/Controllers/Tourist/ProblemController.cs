@@ -64,6 +64,12 @@ namespace Explorer.API.Controllers.Tourist
             var result = _problemService.Delete(id);
             return CreateResponse(result);
         }
-
+        [HttpGet("{id:int}")]
+        public ActionResult<PagedResult<ProblemDto>> GetByUserId([FromQuery] int page, [FromQuery] int pageSize, int id)
+        {
+            var result = _problemService.GetPaged(page, pageSize);
+            result = _problemService.GetByUser(page, pageSize, id);
+            return CreateResponse(result);
+        }
     }
 }
