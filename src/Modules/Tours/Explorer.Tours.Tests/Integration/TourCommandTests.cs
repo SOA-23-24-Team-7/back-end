@@ -26,7 +26,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new TourDto
+        var newEntity = new TourCreateDto
         {
             //AuthorId = 1,
             Name = "Tura Novog Sada",
@@ -73,7 +73,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new TourDto
+        var updatedEntity = new TourCreateDto
         {
             Description = "Test"
         };
@@ -93,7 +93,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var updatedEntity = new TourDto
+        var updatedEntity = new TourUpdateDto
         {
             Id = -1,
             AuthorId = 1,
@@ -139,7 +139,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new TourDto
+        var updatedEntity = new TourUpdateDto
         {
             Id = -1000,
             Name = "Test",

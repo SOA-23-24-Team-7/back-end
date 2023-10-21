@@ -21,6 +21,6 @@ public class TourService : CrudService<TourDto, Tour>, ITourService
         var allTours = _repository.GetPaged(page, pageSize);
         var toursByAuthor = allTours.Results.Where(t => t.AuthorId == authorId).ToList();
         var pagedResult = new PagedResult<Tour>(toursByAuthor, toursByAuthor.Count);
-        return MapToDto(pagedResult);
+        return MapToDto<TourDto>(pagedResult);
     }
 }
