@@ -61,7 +61,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.Difficulty.ShouldBe(result.Difficulty);
         storedEntity.Tags.ShouldBe(result.Tags);
         storedEntity.Price.ShouldBe(result.Price);
-        //storedEntity.Status.ShouldBe(result.Status);
+        storedEntity.Status.ToString().ShouldBe(result.Status.ToString());
         storedEntity.IsDeleted.ShouldBe(result.IsDeleted);
     }
 
@@ -127,7 +127,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.Difficulty.ShouldBe(updatedEntity.Difficulty);
         storedEntity.Tags.ShouldBe(updatedEntity.Tags);
         storedEntity.Price.ShouldBe(updatedEntity.Price);
-        //storedEntity.Status.ShouldBe(updatedEntity.Status);
+        storedEntity.Status.ToString().ShouldBe(updatedEntity.Status.ToString());
         storedEntity.IsDeleted.ShouldBe(updatedEntity.IsDeleted);
         var oldEntity = dbContext.Tours.FirstOrDefault(i => i.Name == "Voda");
         oldEntity.ShouldBeNull();
