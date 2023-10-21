@@ -8,6 +8,9 @@ public class StakeholderProfile : Profile
 {
     public StakeholderProfile()
     {
-        CreateMap<ClubDto, Club>().ReverseMap();
+        CreateMap<ClubResponseDto, Club>().ReverseMap();
+        CreateMap<Club, ClubResponseWithOwnerDto>()
+            .ConstructUsing(src => new ClubResponseWithOwnerDto { Id = src.Id, OwnerId = src.OwnerId, Username = src.Owner.Username, Name = src.Name, Description = src.Description, Image = src.Image });
+        CreateMap<ClubCreateDto, Club>().ReverseMap();
     }
 }

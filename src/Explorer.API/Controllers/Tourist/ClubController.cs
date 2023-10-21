@@ -19,14 +19,14 @@ namespace Explorer.API.Controllers.Tourist
             _clubService = clubService;
         }
         [HttpGet]
-        public ActionResult<PagedResult<ClubDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<ClubResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _clubService.GetPaged(page, pageSize);
+            var result = _clubService.GetClubsPaged(page, pageSize);
             return CreateResponse(result);
         }
         [HttpGet]
         [Route("ownerclubs")]
-        public ActionResult<PagedResult<ClubDto>> GetOwnerClubs()
+        public ActionResult<PagedResult<ClubResponseDto>> GetOwnerClubs()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long ownerId = long.Parse(identity.FindFirst("id").Value);
@@ -34,7 +34,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
         [HttpPost]
-        public ActionResult<ClubDto> Create([FromBody] ClubDto club)
+        public ActionResult<ClubResponseDto> Create([FromBody] ClubCreateDto club)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
@@ -45,7 +45,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
         [HttpPut]
-        public ActionResult<ClubDto> Update([FromBody] ClubDto club)
+        public ActionResult<ClubResponseDto> Update([FromBody] ClubResponseDto club)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
@@ -58,6 +58,12 @@ namespace Explorer.API.Controllers.Tourist
                 }
             }
             var result = _clubService.Update(club);
+            return CreateResponse(result);
+        }
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            var result = _clubService.Delete(id);
             return CreateResponse(result);
         }
     }
