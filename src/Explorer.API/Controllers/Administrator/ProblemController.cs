@@ -19,7 +19,7 @@ namespace Explorer.API.Controllers.Administrator
             _problemService = problemService;
         }
         [HttpGet]
-        public ActionResult<PagedResult<ProblemDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<ProblemResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _problemService.GetPaged(page, pageSize);
             return CreateResponse(result);

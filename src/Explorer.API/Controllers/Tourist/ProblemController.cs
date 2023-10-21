@@ -23,14 +23,14 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<ProblemDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<ProblemResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _problemService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
 
         [HttpPost]
-        public ActionResult<ProblemDto> Create([FromBody] ProblemDto problem)
+        public ActionResult<ProblemResponseDto> Create([FromBody] ProblemCreateDto problem)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null)
@@ -45,7 +45,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<ProblemDto> Update([FromBody] ProblemDto problem)
+        public ActionResult<ProblemResponseDto> Update([FromBody] ProblemUpdateDto problem)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null)
@@ -65,10 +65,10 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
         [HttpGet("{id:int}")]
-        public ActionResult<PagedResult<ProblemDto>> GetByUserId([FromQuery] int page, [FromQuery] int pageSize, int id)
+        public ActionResult<PagedResult<ProblemResponseDto>> GetByUserId([FromQuery] int page, [FromQuery] int pageSize, int id)
         {
             var result = _problemService.GetPaged(page, pageSize);
-            result = _problemService.GetByUser(page, pageSize, id);
+            result = _problemService.GetByUserId(page, pageSize, id);
             return CreateResponse(result);
         }
     }

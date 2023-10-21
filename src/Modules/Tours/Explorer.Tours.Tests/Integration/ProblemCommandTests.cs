@@ -22,7 +22,7 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new ProblemDto
+        var newEntity = new ProblemCreateDto
         {
             Category="Kategorija1",
             Priority="Bitno",
@@ -33,7 +33,7 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as ProblemDto;
+        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as ProblemResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -52,9 +52,8 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new ProblemDto
-        {
-            Id = 1, 
+        var updatedEntity = new ProblemCreateDto
+        { 
             Category = "", 
             Priority = "High", 
             Description = "", 
@@ -78,7 +77,7 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var updatedEntity = new ProblemDto
+        var updatedEntity = new ProblemUpdateDto
         {
             Id = -1,
             Category = "Kategorija1",
@@ -90,7 +89,7 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ProblemDto;
+        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ProblemUpdateDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -112,7 +111,7 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new ProblemDto
+        var updatedEntity = new ProblemUpdateDto
         {
             Id = -1000,
             Category = "Kategorija1",

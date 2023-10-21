@@ -23,7 +23,7 @@ public class ProblemQueryTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<ProblemDto>;
+        var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<ProblemResponseDto>;
 
         // Assert
         result.ShouldNotBeNull();
