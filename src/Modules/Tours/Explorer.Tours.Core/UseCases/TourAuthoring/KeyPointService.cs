@@ -12,7 +12,7 @@ public class KeyPointService : BaseService<KeyPointDto, KeyPoint>, IKeyPointServ
 {
     private readonly IKeyPointRepository _keyPointRepository;
 
-    public KeyPointService(IKeyPointRepository keyPointRepository, IMapper mapper) : base(mapper) 
+    public KeyPointService(IKeyPointRepository keyPointRepository, IMapper mapper) : base(mapper)
     {
         _keyPointRepository = keyPointRepository;
     }

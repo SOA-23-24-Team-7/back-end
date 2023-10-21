@@ -1,5 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System.Net.Mail;
 
 namespace Explorer.Tours.Core.Domain;
 
