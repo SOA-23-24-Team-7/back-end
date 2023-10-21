@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Explorer.Stakeholders.API.Dtos
+﻿namespace Explorer.Stakeholders.API.Dtos
 {
-    public class RatingDto
+    public class RatingResponseDto
     {
         public int Id { get; set; }
         public int Grade { get; set; }

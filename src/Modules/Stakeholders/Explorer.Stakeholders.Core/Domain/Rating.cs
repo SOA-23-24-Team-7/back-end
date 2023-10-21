@@ -14,6 +14,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public string? Comment { get; private set; }
         public DateTime DateTime { get; private set; }
         public long UserId { get; private set; }
+        public User? User { get; init; }
         public Rating(int grade, string? comment, DateTime dateTime, long userId)
         {
             Grade = grade;

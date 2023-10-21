@@ -26,5 +26,10 @@ public class StakeholdersContext : DbContext
             .HasOne<User>()
             .WithOne()
             .HasForeignKey<Person>(s => s.UserId);
+
+        modelBuilder.Entity<Rating>()
+           .HasOne(s => s.User)
+           .WithOne()
+           .HasForeignKey<Rating>(s => s.UserId);
     }
 }

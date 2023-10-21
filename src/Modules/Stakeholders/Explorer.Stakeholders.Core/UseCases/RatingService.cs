@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class RatingService : CrudService<RatingDto, Rating>, IRatingService
+    public class RatingService : CrudService<RatingResponseDto, Rating>, IRatingService
     {
         private readonly IRatingRepository _ratingRepository;
         public RatingService(ICrudRepository<Rating> repository, IMapper mapper, IRatingRepository ratingRepository) : base(repository, mapper) 
@@ -21,12 +21,15 @@ namespace Explorer.Stakeholders.Core.UseCases
             _ratingRepository = ratingRepository;
         }
 
-        public Result<RatingDto> GetByUser(int id)
+        public Result<PagedResult<RatingWithUserDto>> GetRatingsPaged(int page, int pageSize)
         {
-            //var ratings = CrudRepository.GetPaged(2, 2);
-            //Rating? r = ratings.Results.Find(r => r.UserId == id);
+            var result = _ratingRepository.GetRatingsPaged(page, pageSize);
+            return MapToDto<RatingWithUserDto>(result);
+        }
+        public Result<RatingResponseDto> GetByUser(long id)
+        {
             var r = _ratingRepository.GetByUserId(id);
-            return MapToDto(r);
+            return MapToDto<RatingResponseDto>(r);
         }
     }
 }
