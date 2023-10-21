@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.API.Dtos
 {
-    public class ReviewDto
+    public class ReviewResponseDto
     {
         public int Id { get; set; }
         public int Rating { get; set; }
@@ -15,6 +15,6 @@ namespace Explorer.Tours.API.Dtos
         public DateOnly TourVisitDate { get; set; }
         public DateOnly CommentDate { get; set; }
         public int TourId { get; set; }
-        public List<string> Images {  get; set; }
+        public List<string> Images { get; set; }
     }
 }

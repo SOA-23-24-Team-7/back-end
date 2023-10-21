@@ -20,7 +20,7 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new ReviewDto
+        var newEntity = new ReviewCreateDto
         {
             Rating = 2,
             Comment = "Not so good.",
@@ -32,7 +32,7 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as ReviewDto;
+        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as ReviewResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -64,7 +64,7 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new ReviewDto
+        var updatedEntity = new ReviewCreateDto
         {
             Comment = "Test"
         };
@@ -84,7 +84,7 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var updatedEntity = new ReviewDto
+        var updatedEntity = new ReviewUpdateDto
         {
             Id = -1,
             Rating = 4,
@@ -97,7 +97,7 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ReviewDto;
+        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ReviewResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -130,7 +130,7 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new ReviewDto
+        var updatedEntity = new ReviewUpdateDto
         {
             Id = -1000,
             Rating = 2,

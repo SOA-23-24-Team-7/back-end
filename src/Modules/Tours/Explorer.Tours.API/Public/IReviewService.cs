@@ -6,10 +6,10 @@ namespace Explorer.Tours.API.Public
 {
     public interface IReviewService
     { 
-        Result<PagedResult<ReviewDto>> GetPagedByTourId(int page, int pageSize, int tourId);
-        bool ReviewExists(long touristId, int tourId);
-        Result<ReviewDto> Create(ReviewDto review);
-        Result<ReviewDto> Update(ReviewDto review);
-        Result Delete(int id);
+        Result<PagedResult<ReviewResponseDto>> GetPagedByTourId(int page, int pageSize, int tourId);
+        Result<Boolean> ReviewExists(long touristId, int tourId);
+        Result<ReviewResponseDto> Create<ReviewCreateDto>(ReviewCreateDto review);
+        Result<ReviewResponseDto> Update<ReviewUpdateDto>(ReviewUpdateDto review);
+        Result Delete(long id);
     }
 }

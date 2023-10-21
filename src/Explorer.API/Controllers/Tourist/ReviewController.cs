@@ -20,7 +20,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("{tourId:int}")]
-        public ActionResult<PagedResult<ReviewDto>> GetAllByTourId([FromQuery] int page, [FromQuery] int pageSize, int tourId)
+        public ActionResult<PagedResult<ReviewResponseDto>> GetAllByTourId([FromQuery] int page, [FromQuery] int pageSize, int tourId)
         {
             var result = _reviewService.GetPagedByTourId(page, pageSize, tourId);
             return CreateResponse(result);
@@ -30,11 +30,11 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<Boolean> ReviewExists(long touristId, int tourId)
         {
             var result = _reviewService.ReviewExists(touristId, tourId);
-            return result;
+            return result.Value;
         }
 
         [HttpPost]
-        public ActionResult<ReviewDto> Create([FromBody] ReviewDto review)
+        public ActionResult<ReviewResponseDto> Create([FromBody] ReviewCreateDto review)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
@@ -47,7 +47,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<ReviewDto> Update([FromBody] ReviewDto review)
+        public ActionResult<ReviewResponseDto> Update([FromBody] ReviewUpdateDto review)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)

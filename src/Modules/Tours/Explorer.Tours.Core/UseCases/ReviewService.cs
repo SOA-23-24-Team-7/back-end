@@ -13,7 +13,7 @@ using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases
 {
-    public class ReviewService : CrudService<ReviewDto, Review>, IReviewService
+    public class ReviewService : CrudService<ReviewResponseDto, Review>, IReviewService
     {
         private readonly IMapper _mapper;
         private readonly IReviewRepository _reviewRepository;
@@ -23,11 +23,11 @@ namespace Explorer.Tours.Core.UseCases
             _reviewRepository = reviewRepository;
         }
 
-        public Result<PagedResult<ReviewDto>> GetPagedByTourId(int page, int pageSize, int tourId)
+        public Result<PagedResult<ReviewResponseDto>> GetPagedByTourId(int page, int pageSize, int tourId)
         {
-            return MapToDto(_reviewRepository.GetPagedByTourId(page, pageSize, tourId));
+            return MapToDto<ReviewResponseDto>(_reviewRepository.GetPagedByTourId(page, pageSize, tourId));
         }
-        public bool ReviewExists(long touristId, int tourId)
+        public Result<Boolean> ReviewExists(long touristId, int tourId)
         {
             return _reviewRepository.ReviewExists(touristId, tourId);
         }
