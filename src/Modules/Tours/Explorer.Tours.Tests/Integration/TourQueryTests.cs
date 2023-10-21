@@ -37,7 +37,7 @@ public class TourQueryTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetEquipment(tourId:-1))?.Value as PagedResult<EquipmentDto>;
+        var result = ((ObjectResult)controller.GetEquipment(tourId:-1))?.Value as PagedResult<EquipmentResponseDto>;
 
         // Assert
         result.ShouldNotBeNull();

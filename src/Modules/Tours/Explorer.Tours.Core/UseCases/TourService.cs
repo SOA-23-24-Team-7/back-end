@@ -26,15 +26,15 @@ public class TourService : CrudService<TourDto, Tour>, ITourService
         var allTours = _repository.GetPaged(page, pageSize);
         var toursByAuthor = allTours.Results.Where(t => t.AuthorId == authorId).ToList();
         var pagedResult = new PagedResult<Tour>(toursByAuthor, toursByAuthor.Count);
-        return MapToDto(pagedResult);
+        return MapToDto<TourDto>(pagedResult);
     }
 
-    public Result<PagedResult<EquipmentDto>> GetEquipment(long tourId)
+    public Result<PagedResult<EquipmentResponseDto>> GetEquipment(long tourId)
     {
         var equipment = _tourRepository.GetEquipment(tourId);
         var result = new PagedResult<Equipment>(equipment, equipment.Count);
-        var items = result.Results.Select(_mapper.Map<EquipmentDto>).ToList();
-        return new PagedResult<EquipmentDto>(items, result.TotalCount);
+        var items = result.Results.Select(_mapper.Map<EquipmentResponseDto>).ToList();
+        return new PagedResult<EquipmentResponseDto>(items, result.TotalCount);
     }
 
     public Result AddEquipment(long tourId, long equipmentId)
@@ -62,4 +62,6 @@ public class TourService : CrudService<TourDto, Tour>, ITourService
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
         }
     }
+
+    
 }

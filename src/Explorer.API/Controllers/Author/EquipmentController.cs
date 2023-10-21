@@ -18,7 +18,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<EquipmentDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<EquipmentResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _equipmentService.GetPaged(page, pageSize);
             return CreateResponse(result);
