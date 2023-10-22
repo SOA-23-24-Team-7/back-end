@@ -6,9 +6,9 @@ namespace Explorer.Tours.API.Public;
 
 public interface IFacilityService
 {
-    Result<PagedResult<FacilityDto>> GetPaged(int page, int pageSize);
-    Result<PagedResult<FacilityDto>> GetPagedByAuthorId(int page, int pageSize, int authorId);
-    Result<FacilityDto> Create(FacilityDto facility);
-    Result<FacilityDto> Update(FacilityDto facility);
-    Result Delete(int id);
+    Result<PagedResult<FacilityResponseDto>> GetPaged(int page, int pageSize);
+    Result<PagedResult<FacilityResponseDto>> GetPagedByAuthorId(int page, int pageSize, int authorId);
+    Result<FacilityResponseDto> Create<FacilityCreateDto>(FacilityCreateDto facility);
+    Result<FacilityResponseDto> Update<FacilityUpdateDto>(FacilityUpdateDto facility);
+    Result Delete(long id);
 }

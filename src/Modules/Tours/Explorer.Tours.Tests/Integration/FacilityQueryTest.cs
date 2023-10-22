@@ -21,7 +21,7 @@ public class FacilityQueryTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<FacilityDto>;
+        var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<FacilityResponseDto>;
 
         // Assert
         result.ShouldNotBeNull();

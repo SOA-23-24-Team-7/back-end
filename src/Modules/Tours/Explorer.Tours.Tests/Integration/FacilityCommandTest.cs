@@ -20,7 +20,7 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new FacilityDto
+        var newEntity = new FacilityCreateDto
         {
             Name = "Parking",
             Description = "Ogroman parking sa cak 200 mesta.",
@@ -30,7 +30,7 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as FacilityDto;
+        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as FacilityResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -49,7 +49,7 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new FacilityDto
+        var updatedEntity = new FacilityCreateDto
         {
             Description = "Test"
         };
@@ -69,7 +69,7 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var updatedEntity = new FacilityDto
+        var updatedEntity = new FacilityUpdateDto
         {
             Id = -1,
             Name = "Apoteka",
@@ -80,7 +80,7 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as FacilityDto;
+        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as FacilityResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -95,7 +95,7 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         var storedEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == "Apoteka");
         storedEntity.ShouldNotBeNull();
         storedEntity.Description.ShouldBe(updatedEntity.Description);
-        //storedEntity.Category.ShouldBe(updatedEntity.Category);  
+        storedEntity.Category.ToString().ShouldBe(updatedEntity.Category.ToString());  
         var oldEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == "Test");
         oldEntity.ShouldBeNull();
     }
@@ -106,7 +106,7 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new FacilityDto
+        var updatedEntity = new FacilityUpdateDto
         {
             Id = -1000,
             Name = "Test"

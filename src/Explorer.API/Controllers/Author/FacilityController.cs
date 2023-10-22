@@ -19,14 +19,14 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<FacilityDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<FacilityResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _facilityService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
 
         [HttpGet("authorsFacilities")]
-        public ActionResult<PagedResult<FacilityDto>> GetByAuthorId([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<FacilityResponseDto>> GetByAuthorId([FromQuery] int page, [FromQuery] int pageSize)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var loggedInAuthorId = int.Parse(identity.FindFirst("id").Value);
@@ -35,7 +35,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPost]
-        public ActionResult<FacilityDto> Create([FromBody] FacilityDto facility)
+        public ActionResult<FacilityResponseDto> Create([FromBody] FacilityCreateDto facility)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
@@ -49,7 +49,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<FacilityDto> Update([FromBody] FacilityDto facility)
+        public ActionResult<FacilityResponseDto> Update([FromBody] FacilityUpdateDto facility)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)

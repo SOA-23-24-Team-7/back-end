@@ -1,6 +1,6 @@
 ﻿namespace Explorer.Tours.API.Dtos;
 
-public class FacilityDto
+public class FacilityResponseDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
