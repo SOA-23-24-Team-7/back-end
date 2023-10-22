@@ -46,5 +46,13 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             getTask.Wait();
             return getTask.Result;
         }
+
+        public List<ClubJoinRequest> GetAll(Expression<Func<ClubJoinRequest, bool>> filter)
+        {
+            IQueryable<ClubJoinRequest> query = _dbContext.ClubJoinRequests;
+            query = query.Where(filter);
+            var requests = query.ToList();
+            return requests;
+        }
     }
 }
