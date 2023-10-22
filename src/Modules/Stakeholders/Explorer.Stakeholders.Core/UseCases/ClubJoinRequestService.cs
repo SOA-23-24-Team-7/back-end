@@ -25,8 +25,8 @@ namespace Explorer.Stakeholders.Core.UseCases
             _requestRepository = requestRepository;
         }
 
-        public Result<ClubJoinRequestDto> Send(ClubJoinRequestDto request)
-        {// nije vec poslao i nije member
+        public Result<ClubJoinRequestSendDto> Send(ClubJoinRequestSendDto request)
+        {
             try
             {
                 var joinRequest = _mapper.Map<ClubJoinRequest>(request);
@@ -40,7 +40,7 @@ namespace Explorer.Stakeholders.Core.UseCases
         }
 
         public Result Respond(long id, ClubJoinRequestResponseDto response)
-        {//vlasnik je
+        {
             try
             {
                 var request = _requestRepository.Get(r => r.Id == id && r.Status == ClubJoinRequestStatus.Pending);
@@ -56,7 +56,7 @@ namespace Explorer.Stakeholders.Core.UseCases
         }
 
         public Result Cancel(long id)
-        {//on je poslao
+        {
             try
             {
                 var request = _requestRepository.Get(r => r.Id == id && r.Status == ClubJoinRequestStatus.Pending);
@@ -69,6 +69,24 @@ namespace Explorer.Stakeholders.Core.UseCases
             {
                 return Result.Fail(FailureCode.NotFound).WithError("Club Join Request Not Found: " + id);
             }
+        }
+
+        public Result<PagedResult<ClubJoinRequestByTouristDto>> GetPagedByTourist(long id, int page, int pageSize)
+        {
+            var requests = _requestRepository.GetPagedByTourist(id, page, pageSize);
+            return MapToDto<ClubJoinRequestByTouristDto>(requests);
+        }
+
+        public Result<PagedResult<ClubJoinRequestByClubDto>> GetPagedByClub(long id, int page, int pageSize)
+        {
+            var requests = _requestRepository.GetPagedByClub(id, page, pageSize);
+            return MapToDto<ClubJoinRequestByClubDto>(requests);
+        }
+
+        private PagedResult<T> MapToDto<T>(PagedResult<ClubJoinRequest> requests)
+        {
+            var requestsDto = requests.Results.Select(_mapper.Map<T>).ToList();
+            return new PagedResult<T>(requestsDto, requests.TotalCount);
         }
     }
 }

@@ -24,16 +24,18 @@ public static class StakeholdersStartup
         SetupInfrastructure(services);
         return services;
     }
-    
+
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IClubInvitationService, ClubInvitationService>();
         services.AddScoped<IPersonService, PersonService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
         services.AddScoped<IClubJoinRequestService, ClubJoinRequestService>();
         services.AddScoped<IClubService, ClubService>();
         services.AddScoped<IClubMemberManagementService, ClubMemberManagementService>();
+        services.AddScoped<IRatingService, RatingService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -42,11 +44,19 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>));
         services.AddScoped<IClubInvitationRepository, ClubInvitationDatabaseRepository>();
         services.AddScoped<IClubMembershipRepository, ClubMembershipDatabaseRepository>();
+        services.AddScoped(typeof(ICrudRepository<ClubInvitation>), typeof(CrudDatabaseRepository<ClubInvitation, StakeholdersContext>));
+        services.AddScoped<IClubRepository, ClubRepository>();
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IClubJoinRequestRepository, ClubJoinRequestRepository>();
+        services.AddScoped<IRatingRepository, RatingDatabaseRepository>();
+        services.AddScoped(typeof(ICrudRepository<Rating>), typeof(CrudDatabaseRepository<Rating, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudDatabaseRepository<User, StakeholdersContext>));
+        services.AddScoped<IUserRepository, UserDatabaseRepository>();
+        services.AddScoped<IPersonRepository, PersonDataBaseRepository>();
 
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", "stakeholders")));
+
     }
 }

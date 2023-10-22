@@ -10,7 +10,7 @@ namespace Explorer.BuildingBlocks.Core.UseCases;
 /// </summary>
 /// <typeparam name="TDto">Type of output data transfer object.</typeparam>
 /// <typeparam name="TDomain">Type of domain object that maps to TDto</typeparam>
-public abstract class BaseService<TDto, TDomain> where TDomain : Entity
+public abstract class BaseService<TDomain> where TDomain : Entity
 {
     private readonly IMapper _mapper;
 
@@ -19,28 +19,28 @@ public abstract class BaseService<TDto, TDomain> where TDomain : Entity
         _mapper = mapper;
     }
 
-    protected TDomain MapToDomain(TDto dto)
+    protected TDomain MapToDomain<TDto>(TDto dto)
     {
         return _mapper.Map<TDomain>(dto);
     }
 
-    protected List<TDomain> MapToDomain(List<TDto> dtos)
+    protected List<TDomain> MapToDomain<TDto>(List<TDto> dtos)
     {
         return dtos.Select(dto => _mapper.Map<TDomain>(dto)).ToList();
     }
 
-    protected TDto MapToDto(TDomain result)
+    protected TDto MapToDto<TDto>(TDomain result)
     {
         return _mapper.Map<TDto>(result);
     }
 
-    protected Result<List<TDto>> MapToDto(Result<List<TDomain>> result)
+    protected Result<List<TDto>> MapToDto<TDto>(Result<List<TDomain>> result)
     {
         if (result.IsFailed) return Result.Fail(result.Errors);
         return result.Value.Select(_mapper.Map<TDto>).ToList();
     }
 
-    protected Result<PagedResult<TDto>> MapToDto(Result<PagedResult<TDomain>> result)
+    protected Result<PagedResult<TDto>> MapToDto<TDto>(Result<PagedResult<TDomain>> result)
     {
         if (result.IsFailed) return Result.Fail(result.Errors);
 
