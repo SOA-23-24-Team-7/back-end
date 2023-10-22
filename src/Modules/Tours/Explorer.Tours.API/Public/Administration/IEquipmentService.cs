@@ -6,8 +6,8 @@ namespace Explorer.Tours.API.Public.Administration;
 
 public interface IEquipmentService
 {
-    Result<PagedResult<EquipmentDto>> GetPaged(int page, int pageSize);
-    Result<EquipmentDto> Create(EquipmentDto equipment);
-    Result<EquipmentDto> Update(EquipmentDto equipment);
-    Result Delete(int id);
+    Result<PagedResult<EquipmentResponseDto>> GetPaged(int page, int pageSize);
+    Result<EquipmentResponseDto> Create<EquipmentCreateDto>(EquipmentCreateDto equipment);
+    Result<EquipmentResponseDto> Update<EquipmentUpdateDto>(EquipmentUpdateDto equipment);
+    Result Delete(long id);
 }
