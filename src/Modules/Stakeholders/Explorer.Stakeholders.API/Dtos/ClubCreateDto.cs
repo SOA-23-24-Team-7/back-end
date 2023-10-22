@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.API.Dtos
 {
-    public class ClubDto
+    public class ClubCreateDto
     {
-        public int Id { get; set; }
         public long OwnerId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

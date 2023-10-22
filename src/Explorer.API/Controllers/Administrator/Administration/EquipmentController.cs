@@ -18,21 +18,21 @@ namespace Explorer.API.Controllers.Administrator.Administration
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<EquipmentDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<EquipmentResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _equipmentService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
 
         [HttpPost]
-        public ActionResult<EquipmentDto> Create([FromBody] EquipmentDto equipment)
+        public ActionResult<EquipmentResponseDto> Create([FromBody] EquipmentCreateDto equipment)
         {
             var result = _equipmentService.Create(equipment);
             return CreateResponse(result);
         }
 
-        [HttpPut("{id:int}")]
-        public ActionResult<EquipmentDto> Update([FromBody] EquipmentDto equipment)
+        [HttpPut("{id:long}")]
+        public ActionResult<EquipmentResponseDto> Update([FromBody] EquipmentUpdateDto equipment)
         {
             var result = _equipmentService.Update(equipment);
             return CreateResponse(result);

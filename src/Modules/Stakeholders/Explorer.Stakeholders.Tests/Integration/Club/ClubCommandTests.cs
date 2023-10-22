@@ -28,7 +28,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-            var newEntity = new ClubDto
+            var newEntity = new ClubCreateDto
             {
                 OwnerId = -1,
                 Name = "nekoime",
@@ -37,7 +37,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             };
 
             // Act
-            var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as ClubDto;
+            var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as ClubResponseDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -55,7 +55,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var updatedEntity = new ClubDto
+            var updatedEntity = new ClubCreateDto
             {
                 Description = "Test"
             };
@@ -75,7 +75,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-            var updatedEntity = new ClubDto
+            var updatedEntity = new ClubResponseDto
             {
                 Id = -2,
                 OwnerId = -2,
@@ -85,7 +85,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             };
 
             // Act
-            var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ClubDto;
+            var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ClubResponseDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -107,7 +107,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var updatedEntity = new ClubDto
+            var updatedEntity = new ClubResponseDto
             {
                 Id = -1000,
                 OwnerId = -1,
