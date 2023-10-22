@@ -24,11 +24,11 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         {
             Name = "Parking",
             Description = "Ogroman parking sa cak 200 mesta.",
-            ImageUrl = "url",
+            ImagePath = "url",
             AuthorId = 1,
             Category = FacilityCategory.ParkingLot,
-            GeographicalHeight = 45.0,
-            GeographicalWidth = 17.0
+            Longitude = 45.0,
+            Latitude = 17.0
         };
 
         // Act
@@ -76,11 +76,11 @@ public class FacilityCommandTests : BaseToursIntegrationTest
             Id = -1,
             Name = "Apoteka",
             Description = "Veoma uredna apoteka sa pristupacnim cenama",
-            ImageUrl = "url2",
+            ImagePath = "url2",
             AuthorId = 1,
             Category = FacilityCategory.Pharmacy,
-            GeographicalHeight = 45.0,
-            GeographicalWidth = 17.0
+            Longitude = 45.0,
+            Latitude = 17.0
         };
 
         // Act
@@ -91,21 +91,21 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         result.Id.ShouldBe(-1);
         result.Name.ShouldBe(updatedEntity.Name);
         result.Description.ShouldBe(updatedEntity.Description);
-        result.ImageUrl.ShouldBe(updatedEntity.ImageUrl);
+        result.ImagePath.ShouldBe(updatedEntity.ImagePath);
         result.AuthorId.ShouldBe(1);
         result.Category.ShouldBe(updatedEntity.Category);
-        result.GeographicalHeight.ShouldBe(updatedEntity.GeographicalHeight);
-        result.GeographicalWidth.ShouldBe(updatedEntity.GeographicalWidth);
+        result.Longitude.ShouldBe(updatedEntity.Longitude);
+        result.Latitude.ShouldBe(updatedEntity.Latitude);
 
         // Assert - Database
         var storedEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == "Apoteka");
         storedEntity.ShouldNotBeNull();
         storedEntity.Description.ShouldBe(updatedEntity.Description);
         storedEntity.Category.ToString().ShouldBe(updatedEntity.Category.ToString());
-        storedEntity.ImageUrl.ShouldBe(updatedEntity.ImageUrl);
+        storedEntity.ImagePath.ShouldBe(updatedEntity.ImagePath);
         storedEntity.AuthorId.ShouldBe(1);
-        storedEntity.GeographicalHeight.ShouldBe(updatedEntity.GeographicalHeight);
-        storedEntity.GeographicalWidth.ShouldBe(updatedEntity.GeographicalWidth);
+        storedEntity.Longitude.ShouldBe(updatedEntity.Longitude);
+        storedEntity.Latitude.ShouldBe(updatedEntity.Latitude);
         var oldEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == "Test");
         oldEntity.ShouldBeNull();
     }

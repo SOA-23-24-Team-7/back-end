@@ -6,21 +6,21 @@ public class Facility : Entity
 {
     public string Name { get; init; }
     public string? Description { get; init; }
-    public string? ImageUrl { get; init; } 
+    public string? ImagePath { get; init; } 
     public int AuthorId { get; init; } 
-    public double GeographicalWidth { get; init; }
-    public double GeographicalHeight { get; init; }
     public FacilityCategory Category { get; init; }
+    public double Longitude { get; init; }
+    public double Latitude { get; init; }
 
-    public Facility(string name, string? description, string? imageUrl, int authorId, FacilityCategory category, double geographicalWidth, double geographicalHeight)
+    public Facility(string name, string? description, string? imagePath, int authorId, FacilityCategory category, double longitude, double latitude)
     {
         Name = name;
         Description = description;
-        ImageUrl = imageUrl;
+        ImagePath = imagePath;
         Category = category;
         AuthorId = authorId;
-        GeographicalWidth = geographicalWidth;
-        GeographicalHeight = geographicalHeight;
+        Longitude = longitude;
+        Latitude = latitude;
         Validate();
     }
 
