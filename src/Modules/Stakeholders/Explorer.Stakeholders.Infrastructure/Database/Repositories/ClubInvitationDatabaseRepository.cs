@@ -12,6 +12,24 @@ public class ClubInvitationDatabaseRepository : CrudDatabaseRepository<ClubInvit
 {
     public ClubInvitationDatabaseRepository(StakeholdersContext dbContext) : base(dbContext) { }
 
+    public void DeleteByClubId(long clubId)
+    {
+        var invitations = GetAll(i => i.ClubId == clubId);
+        foreach (var invitation in invitations)
+        {
+            Delete(invitation.Id);
+        }
+    }
+
+    public void DeleteWaiting(long clubId, long touristId)
+    {
+        var invitations = GetAll(i => i.ClubId == clubId && i.TouristId == touristId && i.Status == InvitationStatus.Waiting);
+        foreach (var invitation in invitations)
+        {
+            Delete(invitation.Id);
+        }
+    }
+
     public List<ClubInvitation> GetAll(Expression<Func<ClubInvitation, bool>> filter)
     {
         IQueryable<ClubInvitation> query = this.DbContext.ClubInvitations;

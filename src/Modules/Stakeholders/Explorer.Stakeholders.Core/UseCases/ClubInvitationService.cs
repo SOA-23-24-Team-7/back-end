@@ -14,17 +14,17 @@ public class ClubInvitationService : IClubInvitationService
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
     private readonly IClubInvitationRepository _invitationRepository;
-    private readonly ICrudRepository<Club> _clubRepository;
-    private readonly IClubJoinRequestService _clubJoinRequestService;
+    private readonly IClubRepository _clubRepository;
+    private readonly IClubJoinRequestRepository _requestRepository;
     private readonly IClubMemberManagementService _clubMemberManagementService;
 
-    public ClubInvitationService(IMapper mapper, IUserRepository userRepository, IClubInvitationRepository invitationRepository, ICrudRepository<Club> clubRepository, IClubJoinRequestService clubJoinRequestService, IClubMemberManagementService clubMemberManagementService)
+    public ClubInvitationService(IMapper mapper, IUserRepository userRepository, IClubInvitationRepository invitationRepository, IClubRepository clubRepository, IClubJoinRequestRepository requestRepository, IClubMemberManagementService clubMemberManagementService)
     {
         _mapper = mapper;
         _userRepository = userRepository;
         _invitationRepository = invitationRepository;
         _clubRepository = clubRepository;
-        _clubJoinRequestService = clubJoinRequestService;
+        _requestRepository = requestRepository;
         _clubMemberManagementService = clubMemberManagementService;
     }
 
@@ -98,7 +98,7 @@ public class ClubInvitationService : IClubInvitationService
 
             _invitationRepository.Update(invitation);
             _clubMemberManagementService.AddMember(invitation.ClubId, userId);
-            _clubJoinRequestService.DeletePending(invitation.ClubId, invitation.TouristId);
+            _requestRepository.DeletePending(invitation.ClubId, invitation.TouristId);
 
             return Result.Ok().WithSuccess("Club invitation rejected successfully.");
         }
@@ -111,23 +111,5 @@ public class ClubInvitationService : IClubInvitationService
     private bool isWaiting(ClubInvitation clubInvitation)
     {
         return clubInvitation.Status == InvitationStatus.Waiting;
-    }
-
-    public void DeleteWaiting(long clubId, long touristId)
-    {
-        var invitations = _invitationRepository.GetAll(i => i.ClubId == clubId && i.TouristId == touristId && i.Status == InvitationStatus.Waiting);
-        foreach (var invitation in invitations)
-        {
-            _invitationRepository.Delete(invitation.Id);
-        }
-    }
-
-    public void DeleteByClubId(long clubId)
-    {
-        var invitations = _invitationRepository.GetAll(i => i.ClubId == clubId);
-        foreach (var invitation in invitations)
-        {
-            _invitationRepository.Delete(invitation.Id);
-        }
     }
 }

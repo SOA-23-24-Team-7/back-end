@@ -13,13 +13,14 @@ namespace Explorer.Stakeholders.Core.UseCases
     {
         private readonly IMapper _mapper;
         private readonly IClubJoinRequestRepository _requestRepository;
-        private readonly IClubInvitationService _clubInvitationService;
+        private readonly IClubInvitationRepository _clubInvitationRepository;
         private readonly IClubMemberManagementService _clubMemberManagementService;
-        public ClubJoinRequestService(IMapper mapper, IClubJoinRequestRepository requestRepository, IClubInvitationService clubInvitationService)
+        public ClubJoinRequestService(IMapper mapper, IClubJoinRequestRepository requestRepository, IClubInvitationRepository clubInvitationRepository, IClubMemberManagementService clubMemberManagementService)
         {
             _mapper = mapper;
             _requestRepository = requestRepository;
-            _clubInvitationService = clubInvitationService;
+            _clubInvitationRepository = clubInvitationRepository;
+            _clubMemberManagementService = clubMemberManagementService;
         }
 
         public Result<ClubJoinRequestSendDto> Send(ClubJoinRequestSendDto request)
@@ -47,7 +48,7 @@ namespace Explorer.Stakeholders.Core.UseCases
 
                 if (response.Accepted)
                 {
-                    _clubInvitationService.DeleteWaiting(request.ClubId, request.TouristId);
+                    _clubInvitationRepository.DeleteWaiting(request.ClubId, request.TouristId);
                     _clubMemberManagementService.AddMember(request.ClubId, request.TouristId);
                 }
 
@@ -91,24 +92,6 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
             var requestsDto = requests.Results.Select(_mapper.Map<T>).ToList();
             return new PagedResult<T>(requestsDto, requests.TotalCount);
-        }
-
-        public void DeletePending(long clubId, long touristId)
-        {
-            var requests = _requestRepository.GetAll(r => r.ClubId == clubId && r.TouristId == touristId && r.Status == ClubJoinRequestStatus.Pending);
-            foreach (var request in requests)
-            {
-                _requestRepository.Delete(request.Id);
-            }
-        }
-
-        public void DeleteByClubId(long clubId)
-        {
-            var requests = _requestRepository.GetAll(r => r.ClubId == clubId);
-            foreach (var request in requests)
-            {
-                _requestRepository.Delete(request.Id);
-            }
         }
     }
 }

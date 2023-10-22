@@ -11,7 +11,5 @@ namespace Explorer.Tours.API.Public.Administration
         Result Cancel(long id);
         Result<PagedResult<ClubJoinRequestByTouristDto>> GetPagedByTourist(long id, int page, int pageSize);
         Result<PagedResult<ClubJoinRequestByClubDto>> GetPagedByClub(long id, int page, int pageSize);
-        void DeletePending(long clubId, long personId);
-        void DeleteByClubId(long clubId);
     }
 }

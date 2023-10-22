@@ -54,5 +54,23 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             var requests = query.ToList();
             return requests;
         }
+
+        public void DeleteByClubId(long clubId)
+        {
+            var requests = GetAll(r => r.ClubId == clubId);
+            foreach (var request in requests)
+            {
+                Delete(request.Id);
+            }
+        }
+
+        public void DeletePending(long clubId, long touristId)
+        {
+            var requests = GetAll(r => r.ClubId == clubId && r.TouristId == touristId && r.Status == ClubJoinRequestStatus.Pending);
+            foreach (var request in requests)
+            {
+                Delete(request.Id);
+            }
+        }
     }
 }
