@@ -35,9 +35,8 @@ public class TourPreferenceTest : BaseStakeholdersIntegrationTest
             HttpContext = context
         };
 
-        var preference = new TourPreferenceDto
+        var preference = new TourPreferenceCreateDto
         {
-            Id = 2,
             UserId = -21,
             DifficultyLevel = 1,
             WalkingRating = 1,
@@ -48,12 +47,11 @@ public class TourPreferenceTest : BaseStakeholdersIntegrationTest
         };
 
         // Act
-        var createPreferencesResponse = ((ObjectResult)controller.Create(preference).Result).Value as TourPreferenceDto;
+        var createPreferencesResponse = ((ObjectResult)controller.Create(preference).Result).Value as TourPreferenceResponseDto;
 
 
         // Assert
         createPreferencesResponse.ShouldNotBeNull();
-        createPreferencesResponse.Id.ShouldBe(2);
         createPreferencesResponse.UserId.ShouldBe(-21);
         createPreferencesResponse.DifficultyLevel.ShouldBe(1);
         createPreferencesResponse.WalkingRating.ShouldBe(1);

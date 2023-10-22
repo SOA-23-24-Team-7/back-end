@@ -9,6 +9,8 @@ public class StakeholderProfile : Profile
 {
     public StakeholderProfile()
     {
-        CreateMap<TourPreferenceDto, TourPreference>().ReverseMap();
+        CreateMap<TourPreferenceResponseDto, TourPreference>().ReverseMap();
+        CreateMap<TourPreferenceCreateDto, TourPreference>().ReverseMap();
+        CreateMap<TourPreferenceUpdateDto, TourPreference>().ReverseMap();
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Explorer.Stakeholders.API.Dtos;
+using FluentResults;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,7 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
     {
         TourPreference Create(TourPreference tourPreference);
         TourPreference GetByUserId(int userId);
-        void Delete(int id);
+        void Delete(long id);
+        TourPreference Update(TourPreference tourPreference);
     }
 }

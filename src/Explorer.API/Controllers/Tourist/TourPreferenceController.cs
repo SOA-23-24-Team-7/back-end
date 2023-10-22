@@ -22,7 +22,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet]
-        public ActionResult<TourPreferenceDto> Get()
+        public ActionResult<TourPreferenceResponseDto> Get()
         {
             int userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _tourPreferencesService.GetByUserId(userId);
@@ -30,10 +30,10 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPost("create")]
-        public ActionResult<TourPreferenceDto> Create([FromBody] TourPreferenceDto preferences)
+        public ActionResult<TourPreferenceResponseDto> Create([FromBody] TourPreferenceCreateDto preference)
         {
-            preferences.UserId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _tourPreferencesService.Create(preferences);
+            preference.UserId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _tourPreferencesService.Create(preference);
             return CreateResponse(result);
         }
 
@@ -44,9 +44,10 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [HttpPut("{id:int}")]
-        public ActionResult<TourPreferenceDto> Update([FromBody] TourPreferenceDto preference)
+        [HttpPut]
+        public ActionResult<TourPreferenceResponseDto> Update([FromBody] TourPreferenceUpdateDto preference)
         {
+            preference.UserId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _tourPreferencesService.Update(preference);
             return CreateResponse(result);
         }

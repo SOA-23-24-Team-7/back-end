@@ -2,7 +2,7 @@
 
 namespace Explorer.Stakeholders.API.Dtos
 {
-    public class TourPreferenceDto
+    public class TourPreferenceResponseDto
     {
         public long Id { get; set; }
         public long UserId { get; set; }

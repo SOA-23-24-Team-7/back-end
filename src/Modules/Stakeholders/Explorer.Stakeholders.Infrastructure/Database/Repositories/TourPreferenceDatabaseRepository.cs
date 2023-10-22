@@ -30,6 +30,13 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             return tourPreference;
         }
 
+        public TourPreference Update(TourPreference tourPreference)
+        {
+            _dbContext.TourPreferences.Update(tourPreference);
+            _dbContext.SaveChanges();
+            return tourPreference;
+        }
+
         public TourPreference GetByUserId(int userId)
         {
             var preference = _dbContext.TourPreferences;
@@ -45,7 +52,7 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             return entity;
         }
 
-        public void Delete(int preferenceId) 
+        public void Delete(long preferenceId) 
         {
             var entity = Get(preferenceId);
             _dbSet.Remove(entity);
