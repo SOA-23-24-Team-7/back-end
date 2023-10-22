@@ -34,5 +34,8 @@ public class StakeholderProfile : Profile
         CreateMap<RatingCreateDto, Rating>().ReverseMap();
         CreateMap<RatingUpdateDto, Rating>().ReverseMap();
         CreateMap<UserDto, User>().ReverseMap();
+        CreateMap<PersonResponseDto, Person>().ReverseMap();
+        CreateMap<PersonUpdateDto, Person>().ReverseMap();
+        CreateMap<UserResponseDto, User>().ReverseMap();
     }
 }

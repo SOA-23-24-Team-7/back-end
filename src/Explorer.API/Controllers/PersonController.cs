@@ -17,21 +17,21 @@ public class PersonController : BaseApiController
     }
 
     [HttpPut("update")]
-    public ActionResult<PersonDto> Update([FromBody] PersonDto person)
+    public ActionResult<PersonResponseDto> Update([FromBody] PersonResponseDto person)
     {
         var result = _personService.Update(person);
         return CreateResponse(result);
     }
 
     [HttpGet]
-    public ActionResult<PersonDto> GetPaged(int page, int pageSize)
+    public ActionResult<PersonResponseDto> GetPaged(int page, int pageSize)
     {
         var result = _personService.GetPaged(page, pageSize);
         return CreateResponse(result);
     }
 
     [HttpGet("person/{userId:long}")]
-    public ActionResult<PersonDto> GetByUserId(long userId)
+    public ActionResult<PersonResponseDto> GetByUserId(long userId)
     {
         var result = _personService.GetByUserId(userId);
         return CreateResponse(result);

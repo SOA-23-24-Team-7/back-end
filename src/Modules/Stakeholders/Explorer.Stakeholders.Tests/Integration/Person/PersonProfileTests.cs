@@ -20,7 +20,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var updatedEntity = new PersonDto
+            var updatedEntity = new PersonResponseDto
             {
                 Id = -11,
                 UserId = -11,
@@ -34,7 +34,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
 
             // Act
             var updateProfileResponse = (ObjectResult)controller.Update(updatedEntity).Result;
-            var updateProfileResult = updateProfileResponse?.Value as PersonDto;
+            var updateProfileResult = updateProfileResponse?.Value as PersonResponseDto;
 
             // Assert - Response
             updateProfileResponse.StatusCode.ShouldBe(200);
@@ -64,7 +64,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonDto
+            var invalidEntity = new PersonResponseDto
             {
                 Id = -11,
                 UserId = -11,
@@ -90,7 +90,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonDto
+            var invalidEntity = new PersonResponseDto
             {
                 Id = -9999,
                 UserId = -11,
@@ -116,7 +116,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonDto
+            var invalidEntity = new PersonResponseDto
             {
                 Id = -11,
                 UserId = -9999,
@@ -142,7 +142,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonDto
+            var invalidEntity = new PersonResponseDto
             {
                 Id = -11,
                 UserId = -9999,
@@ -168,7 +168,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonDto
+            var invalidEntity = new PersonResponseDto
             {
                 Id = -11,
                 UserId = -9999,
@@ -194,7 +194,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonDto
+            var invalidEntity = new PersonResponseDto
             {
                 Id = -11,
                 UserId = -9999,
@@ -219,7 +219,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonDto
+            var invalidEntity = new PersonResponseDto
             {
                 Id = -11,
                 UserId = -9999,
