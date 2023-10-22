@@ -8,6 +8,8 @@ public class FacilityResponseDto
     public string? ImageUrl { get; set; }
     public int AuthorId { get; set; }
     public FacilityCategory Category { get; set; }
+    public double GeographicalWidth { get; set; }
+    public double GeographicalHeight { get; set; }
 }
 
 public enum FacilityCategory
