@@ -43,7 +43,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
 
             //Assert - response
             result.StatusCode.ShouldBe(200);
-            var data = result?.Value as UserDto;
+            var data = result?.Value as UserResponseDto;
             data.ShouldNotBeNull();
             data.IsActive.ShouldBe(false);
 
