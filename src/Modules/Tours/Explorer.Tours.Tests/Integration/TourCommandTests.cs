@@ -28,7 +28,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
         var newEntity = new TourCreateDto
         {
-            //AuthorId = 1,
+            AuthorId = 1,
             Name = "Tura Novog Sada",
             Description = "The best!",
             Difficulty = 3,
