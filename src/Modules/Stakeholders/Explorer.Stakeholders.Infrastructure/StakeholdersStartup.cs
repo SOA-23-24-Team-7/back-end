@@ -35,6 +35,7 @@ public static class StakeholdersStartup
         services.AddScoped<IClubJoinRequestService, ClubJoinRequestService>();
         services.AddScoped<IClubService, ClubService>();
         services.AddScoped<IRatingService, RatingService>();
+        services.AddScoped<IClubMemberManagementService, ClubMemberManagementService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -43,6 +44,8 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<ClubInvitation>), typeof(CrudDatabaseRepository<ClubInvitation, StakeholdersContext>));
         services.AddScoped<IClubRepository, ClubRepository>();
+        services.AddScoped<IClubInvitationRepository, ClubInvitationDatabaseRepository>();
+        services.AddScoped<IClubMembershipRepository, ClubMembershipDatabaseRepository>();
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IClubJoinRequestRepository, ClubJoinRequestRepository>();
         services.AddScoped<IRatingRepository, RatingDatabaseRepository>();

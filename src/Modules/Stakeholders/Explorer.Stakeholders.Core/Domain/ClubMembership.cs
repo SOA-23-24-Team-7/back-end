@@ -4,6 +4,16 @@ namespace Explorer.Stakeholders.Core.Domain;
 
 public class ClubMembership : Entity
 {
-    public long InvitationId { get; init; }
+    public long ClubId { get; init; }
+    public long TouristId { get; init; }
     public DateTime TimeJoined { get; set; }
+
+    public ClubMembership() : this(-1, -1) { }
+    public ClubMembership(long clubId, long touristId) : this(clubId, touristId, DateTime.Now) { }
+    public ClubMembership(long clubId, long touristId, DateTime timeJoined)
+    {
+        ClubId = clubId;
+        TouristId = touristId;
+        TimeJoined = timeJoined;
+    }
 }
