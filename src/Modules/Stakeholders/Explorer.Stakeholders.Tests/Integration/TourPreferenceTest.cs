@@ -7,23 +7,38 @@ using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.API.Controllers.Tourist;
 using Newtonsoft.Json.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace Explorer.Stakeholders.Tests.Integration;
 [Collection("Sequential")]
-public class TourPreferencesTest : BaseStakeholdersIntegrationTest
+public class TourPreferenceTest : BaseStakeholdersIntegrationTest
 {
-    public TourPreferencesTest(StakeholdersTestFactory factory) : base(factory) { }
+    public TourPreferenceTest(StakeholdersTestFactory factory) : base(factory) { }
 
     [Fact]
     public void Can_Create_TourPreferences()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var controller = CreateController(scope);
-        var preference = new TourPreferencesDto
+
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-21") }, "test");
+
+        var context = new DefaultHttpContext()
         {
-            UserId = 3,
+            User = new ClaimsPrincipal(contextUser)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+
+        var preference = new TourPreferenceDto
+        {
+            Id = 2,
+            UserId = -21,
             DifficultyLevel = 1,
             WalkingRating = 1,
             CyclingRating = 1,
@@ -33,12 +48,13 @@ public class TourPreferencesTest : BaseStakeholdersIntegrationTest
         };
 
         // Act
-        var createPreferencesResponse = ((ObjectResult)controller.CreateTourPreference(preference).Result).Value as TourPreferencesDto;
+        var createPreferencesResponse = ((ObjectResult)controller.Create(preference).Result).Value as TourPreferenceDto;
 
 
         // Assert
         createPreferencesResponse.ShouldNotBeNull();
-        createPreferencesResponse.UserId.ShouldBe(3);
+        createPreferencesResponse.Id.ShouldBe(2);
+        createPreferencesResponse.UserId.ShouldBe(-21);
         createPreferencesResponse.DifficultyLevel.ShouldBe(1);
         createPreferencesResponse.WalkingRating.ShouldBe(1);
         createPreferencesResponse.CyclingRating.ShouldBe(1);
@@ -47,8 +63,8 @@ public class TourPreferencesTest : BaseStakeholdersIntegrationTest
         createPreferencesResponse.SelectedTags.ShouldBe(new[] { "tag1", "tag2" });
     }
 
-    private static TourPreferencesController CreateController(IServiceScope scope)
+    private static TourPreferenceController CreateController(IServiceScope scope)
     {
-        return new TourPreferencesController(scope.ServiceProvider.GetRequiredService<ITourPreferencesService>());
+        return new TourPreferenceController(scope.ServiceProvider.GetRequiredService<ITourPreferenceService>());
     }
 }

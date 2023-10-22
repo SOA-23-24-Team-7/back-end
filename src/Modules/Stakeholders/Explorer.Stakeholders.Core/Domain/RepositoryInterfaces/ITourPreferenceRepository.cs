@@ -10,5 +10,6 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
     {
         TourPreference Create(TourPreference tourPreference);
         TourPreference GetByUserId(int userId);
+        void Delete(int id);
     }
 }
