@@ -49,7 +49,6 @@ public class TourPreferenceTest : BaseStakeholdersIntegrationTest
         // Act
         var createPreferencesResponse = ((ObjectResult)controller.Create(preference).Result).Value as TourPreferenceResponseDto;
 
-
         // Assert
         createPreferencesResponse.ShouldNotBeNull();
         createPreferencesResponse.UserId.ShouldBe(-21);
