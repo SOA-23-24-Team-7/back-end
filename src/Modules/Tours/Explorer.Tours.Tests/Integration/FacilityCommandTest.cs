@@ -26,7 +26,9 @@ public class FacilityCommandTests : BaseToursIntegrationTest
             Description = "Ogroman parking sa cak 200 mesta.",
             ImageUrl = "url",
             AuthorId = 1,
-            Category = FacilityCategory.ParkingLot
+            Category = FacilityCategory.ParkingLot,
+            GeographicalHeight = 45.0,
+            GeographicalWidth = 17.0
         };
 
         // Act
@@ -76,7 +78,9 @@ public class FacilityCommandTests : BaseToursIntegrationTest
             Description = "Veoma uredna apoteka sa pristupacnim cenama",
             ImageUrl = "url2",
             AuthorId = 1,
-            Category = FacilityCategory.Pharmacy
+            Category = FacilityCategory.Pharmacy,
+            GeographicalHeight = 45.0,
+            GeographicalWidth = 17.0
         };
 
         // Act
@@ -90,12 +94,18 @@ public class FacilityCommandTests : BaseToursIntegrationTest
         result.ImageUrl.ShouldBe(updatedEntity.ImageUrl);
         result.AuthorId.ShouldBe(1);
         result.Category.ShouldBe(updatedEntity.Category);
+        result.GeographicalHeight.ShouldBe(updatedEntity.GeographicalHeight);
+        result.GeographicalWidth.ShouldBe(updatedEntity.GeographicalWidth);
 
         // Assert - Database
         var storedEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == "Apoteka");
         storedEntity.ShouldNotBeNull();
         storedEntity.Description.ShouldBe(updatedEntity.Description);
-        storedEntity.Category.ToString().ShouldBe(updatedEntity.Category.ToString());  
+        storedEntity.Category.ToString().ShouldBe(updatedEntity.Category.ToString());
+        storedEntity.ImageUrl.ShouldBe(updatedEntity.ImageUrl);
+        storedEntity.AuthorId.ShouldBe(1);
+        storedEntity.GeographicalHeight.ShouldBe(updatedEntity.GeographicalHeight);
+        storedEntity.GeographicalWidth.ShouldBe(updatedEntity.GeographicalWidth);
         var oldEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == "Test");
         oldEntity.ShouldBeNull();
     }
