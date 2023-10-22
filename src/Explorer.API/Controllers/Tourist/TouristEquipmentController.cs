@@ -1,5 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Dtos.TouristEquipment;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
@@ -7,6 +7,7 @@ using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -23,37 +24,37 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("/api/tourist/only_equipment")]
-        public ActionResult<PagedResult<EquipmentDto>> GetAllEquipment([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<EquipmentResponseDto>> GetAllEquipment([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _equipmentService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<TouristEquipmentDto>> GetAllTouristEquipment([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<TouristEquipmentResponseDto>> GetAllTouristEquipment([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _touristEquipmentService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
 
         [HttpPost]
-        public ActionResult<TouristEquipmentDto> Create([FromBody] TouristEquipmentDto touristEquipment)
+        public ActionResult<TouristEquipmentResponseDto> Create([FromBody] TouristEquipmentCreateDto touristEquipment)
         {
             int touristId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            if (touristEquipment.TouristId != touristId)
+            touristEquipment.TouristId = touristId;
+            if(GetForTourist(touristId) != null)
             {
-                return Unauthorized();
+                return BadRequest();
             }
             var result = _touristEquipmentService.Create(touristEquipment);
             return CreateResponse(result);
         }
-
-        [HttpPut("{id:int}")]
-        public ActionResult<TouristEquipmentDto> Update([FromBody] TouristEquipmentDto touristEquipment)
+        
+        [HttpPut]
+        public ActionResult<TouristEquipmentResponseDto> Update([FromBody] TouristEquipmentUpdateDto touristEquipment)
         {
             int touristId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            if(touristEquipment.TouristId != touristId)
-            {
+            if (touristEquipment.TouristId != touristId){
                 return Unauthorized();
             }
             var result = _touristEquipmentService.Update(touristEquipment);
@@ -72,9 +73,9 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        private TouristEquipmentDto GetForTourist(int touristId)
+        private TouristEquipmentResponseDto GetForTourist(int touristId)
         {
-            return ((GetAllTouristEquipment(0, 0).Result as OkObjectResult).Value as PagedResult<TouristEquipmentDto>).Results.Find(te => te.TouristId == touristId);
+            return ((GetAllTouristEquipment(0, 0).Result as OkObjectResult).Value as PagedResult<TouristEquipmentResponseDto>).Results.Find(te => te.TouristId == touristId);
         }
     }
 }

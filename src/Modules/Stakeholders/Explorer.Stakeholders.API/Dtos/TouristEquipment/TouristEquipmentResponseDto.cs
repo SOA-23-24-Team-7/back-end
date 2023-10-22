@@ -1,6 +1,6 @@
-﻿namespace Explorer.Stakeholders.API.Dtos
+﻿namespace Explorer.Stakeholders.API.Dtos.TouristEquipment
 {
-    public class TouristEquipmentDto
+    public class TouristEquipmentResponseDto
     {
         public int Id { get; set; }
         public int TouristId { get; set; }

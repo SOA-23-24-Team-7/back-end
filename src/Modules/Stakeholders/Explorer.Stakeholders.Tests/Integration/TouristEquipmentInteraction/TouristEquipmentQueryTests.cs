@@ -1,11 +1,11 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Explorer.Stakeholders.API.Public;
 using Explorer.API.Controllers.Tourist;
 using Explorer.Tours.API.Public.Administration;
+using Explorer.Stakeholders.API.Dtos.TouristEquipment;
 
 namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
 {
@@ -22,7 +22,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.GetAllTouristEquipment(0, 0).Result)?.Value as PagedResult<TouristEquipmentDto>;
+            var result = ((ObjectResult)controller.GetAllTouristEquipment(0, 0).Result)?.Value as PagedResult<TouristEquipmentResponseDto>;
 
             // Assert
             result.ShouldNotBeNull();
