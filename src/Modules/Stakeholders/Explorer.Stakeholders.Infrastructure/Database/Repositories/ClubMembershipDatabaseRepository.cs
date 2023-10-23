@@ -13,7 +13,7 @@ public class ClubMembershipDatabaseRepository : CrudDatabaseRepository<ClubMembe
 
     public List<ClubMembership> GetAll(Expression<Func<ClubMembership, bool>> filter)
     {
-        IQueryable<ClubMembership> query = this.DbContext.ClubMemberships;
+        IQueryable<ClubMembership> query = this.DbContext.ClubMemberships.Include(m => m.Tourist);
         query = query.Where(filter);
         var memberships = query.ToList();
         return memberships;

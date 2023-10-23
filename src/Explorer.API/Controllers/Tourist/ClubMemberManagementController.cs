@@ -17,12 +17,19 @@ public class ClubMemberManagementController : BaseApiController
         _clubMemberManagementService = clubMemberManagementService;
     }
 
-    [HttpDelete("kick/{id}")]
-    public ActionResult KickTourist(long id)
+    [HttpDelete("kick/{id:int}")]
+    public ActionResult KickTourist(int id)
     {
         var userId = extractUserIdFromHttpContext();
         var result = _clubMemberManagementService.KickTourist(id, userId);
         return CreateResponse(result);
+    }
+
+    [HttpGet("{id:long}")]
+    public ActionResult GetMembers(long id)
+    {
+        var members = _clubMemberManagementService.GetMembers(id);
+        return CreateResponse(members);
     }
 
     private long extractUserIdFromHttpContext()

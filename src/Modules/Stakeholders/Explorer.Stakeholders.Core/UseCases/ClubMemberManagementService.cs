@@ -12,13 +12,15 @@ public class ClubMemberManagementService : IClubMemberManagementService
 {
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
+    private readonly IPersonRepository _personRepository;
     private readonly IClubRepository _clubRepository;
     private readonly IClubMembershipRepository _clubMembershipRepository;
 
-    public ClubMemberManagementService(IMapper mapper, IUserRepository userRepository, IClubRepository clubRepository, IClubMembershipRepository clubMembershipRepository)
+    public ClubMemberManagementService(IMapper mapper, IUserRepository userRepository, IPersonRepository personRepository, IClubRepository clubRepository, IClubMembershipRepository clubMembershipRepository)
     {
         _mapper = mapper;
         _userRepository = userRepository;
+        _personRepository = personRepository;
         _clubRepository = clubRepository;
         _clubMembershipRepository = clubMembershipRepository;
     }
@@ -49,6 +51,24 @@ public class ClubMemberManagementService : IClubMemberManagementService
         }
     }
 
+    public Result<PagedResult<ClubMemberDto>> GetMembers(long clubId)
+    {
+        var memberships = _clubMembershipRepository.GetAll(m => m.ClubId == clubId);
+        var dtos = new PagedResult<ClubMemberDto>(new List<ClubMemberDto>(), 0);
+        foreach (var membership in memberships)
+        {
+            var person = _personRepository.GetByUserId(membership.TouristId);
+            var memberDto = new ClubMemberDto() { UserId = person.UserId, FirstName = person.Name, LastName = person.Surname, Username = membership.Tourist.Username, MembershipId = membership.Id };
+            dtos.Results.Add(memberDto);
+        }
+        return dtos;
+    }
+
+    public Result<PagedResult<string>> GetNonMemberUsernames(long clubId)
+    {
+        throw new NotImplementedException();
+    }
+
     public Result<ClubMemberKickDto> KickTourist(long membershipId, long userId)
     {
         try
@@ -56,15 +76,10 @@ public class ClubMemberManagementService : IClubMemberManagementService
             var membership = _clubMembershipRepository.Get(membershipId);
             var club = _clubRepository.Get(membership.ClubId);
 
-            if (membership == null)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
-            }
-
-            if (club.OwnerId != userId)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
-            }
+            //if (club.OwnerId != userId)
+            //{
+            //    return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
+            //}
 
             _clubMembershipRepository.Delete(membershipId);
 
