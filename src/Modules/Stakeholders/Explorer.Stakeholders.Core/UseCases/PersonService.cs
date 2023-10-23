@@ -8,7 +8,7 @@ using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class PersonService : CrudService<PersonDto, Person>, IPersonService
+    public class PersonService : CrudService<PersonResponseDto, Person>, IPersonService
     {
 
         private readonly IPersonRepository _personRepository;
@@ -17,12 +17,12 @@ namespace Explorer.Stakeholders.Core.UseCases
             _personRepository = personRepository;
         }
 
-        public Result<PersonDto> GetByUserId(long id)
+        public Result<PersonResponseDto> GetByUserId(long id)
         {
             try
             {
                 var result = _personRepository.GetByUserId(id);
-                return MapToDto(result);
+                return MapToDto<PersonResponseDto>(result);
             }
             catch (KeyNotFoundException e)
             {

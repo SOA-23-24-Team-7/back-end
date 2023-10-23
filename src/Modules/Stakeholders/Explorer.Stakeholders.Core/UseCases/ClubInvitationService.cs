@@ -4,6 +4,7 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.API.Public.Administration;
 using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases;
@@ -13,16 +14,18 @@ public class ClubInvitationService : IClubInvitationService
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
     private readonly IClubInvitationRepository _invitationRepository;
-    private readonly IClubMembershipRepository _membershipRepository;
-    private readonly ICrudRepository<Club> _clubRepository;
+    private readonly IClubRepository _clubRepository;
+    private readonly IClubJoinRequestRepository _requestRepository;
+    private readonly IClubMemberManagementService _clubMemberManagementService;
 
-    public ClubInvitationService(IMapper mapper, IUserRepository userRepository, IClubInvitationRepository invitationRepository, ICrudRepository<Club> clubRepository, IClubMembershipRepository membershipRepository)
+    public ClubInvitationService(IMapper mapper, IUserRepository userRepository, IClubInvitationRepository invitationRepository, IClubRepository clubRepository, IClubJoinRequestRepository requestRepository, IClubMemberManagementService clubMemberManagementService)
     {
         _mapper = mapper;
         _userRepository = userRepository;
         _invitationRepository = invitationRepository;
         _clubRepository = clubRepository;
-        _membershipRepository = membershipRepository;
+        _requestRepository = requestRepository;
+        _clubMemberManagementService = clubMemberManagementService;
     }
 
     public Result<ClubInvitationDto> InviteTourist(ClubInvitationDto invitationDto)
@@ -94,7 +97,8 @@ public class ClubInvitationService : IClubInvitationService
             invitation.Status = InvitationStatus.Accepted;
 
             _invitationRepository.Update(invitation);
-            _membershipRepository.Create(new ClubMembership(invitation.ClubId, invitation.TouristId));
+            _clubMemberManagementService.AddMember(invitation.ClubId, userId);
+            _requestRepository.DeletePending(invitation.ClubId, invitation.TouristId);
 
             return Result.Ok().WithSuccess("Club invitation rejected successfully.");
         }

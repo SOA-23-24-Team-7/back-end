@@ -18,14 +18,14 @@ namespace Explorer.API.Controllers.Administrator.Administration
         }
 
         [HttpGet("disable/{userId:long}")]
-        public ActionResult<UserDto> DisableAccount(long userId)
+        public ActionResult<UserResponseDto> DisableAccount(long userId)
         {
             var result = _userService.DisableAccount(userId);
             return CreateResponse(result);
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<UserDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<UserResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _userService.GetPagedByAdmin(page, pageSize, long.Parse(HttpContext.User.Claims.First(x => x.Type == "id").Value));
             return CreateResponse(result);

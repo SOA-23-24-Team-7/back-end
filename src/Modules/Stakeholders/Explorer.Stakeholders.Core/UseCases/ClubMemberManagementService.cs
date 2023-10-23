@@ -12,15 +12,41 @@ public class ClubMemberManagementService : IClubMemberManagementService
 {
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
-    private readonly ICrudRepository<Club> _clubRepository;
+    private readonly IClubRepository _clubRepository;
     private readonly IClubMembershipRepository _clubMembershipRepository;
 
-    public ClubMemberManagementService(IMapper mapper, IUserRepository userRepository, ICrudRepository<Club> clubRepository, IClubMembershipRepository clubMembershipRepository)
+    public ClubMemberManagementService(IMapper mapper, IUserRepository userRepository, IClubRepository clubRepository, IClubMembershipRepository clubMembershipRepository)
     {
         _mapper = mapper;
         _userRepository = userRepository;
         _clubRepository = clubRepository;
         _clubMembershipRepository = clubMembershipRepository;
+    }
+
+    public Result AddMember(long clubId, long touristId)
+    {
+        try
+        {
+            var club = _clubRepository.Get(clubId);
+
+            var membership = new ClubMembership(clubId, touristId);
+            _clubMembershipRepository.Create(membership);
+
+            return Result.Ok().WithSuccess("Member added successfully.");
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
+        }
+    }
+
+    public void DeleteByClubId(long clubId)
+    {
+        var memberships = _clubMembershipRepository.GetAll(i => i.ClubId == clubId);
+        foreach (var membership in memberships)
+        {
+            _clubMembershipRepository.Delete(membership.Id);
+        }
     }
 
     public Result<ClubMemberKickDto> KickTourist(long membershipId, long userId)

@@ -46,5 +46,31 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             getTask.Wait();
             return getTask.Result;
         }
+
+        public List<ClubJoinRequest> GetAll(Expression<Func<ClubJoinRequest, bool>> filter)
+        {
+            IQueryable<ClubJoinRequest> query = _dbContext.ClubJoinRequests;
+            query = query.Where(filter);
+            var requests = query.ToList();
+            return requests;
+        }
+
+        public void DeleteByClubId(long clubId)
+        {
+            var requests = GetAll(r => r.ClubId == clubId);
+            foreach (var request in requests)
+            {
+                Delete(request.Id);
+            }
+        }
+
+        public void DeletePending(long clubId, long touristId)
+        {
+            var requests = GetAll(r => r.ClubId == clubId && r.TouristId == touristId && r.Status == ClubJoinRequestStatus.Pending);
+            foreach (var request in requests)
+            {
+                Delete(request.Id);
+            }
+        }
     }
 }

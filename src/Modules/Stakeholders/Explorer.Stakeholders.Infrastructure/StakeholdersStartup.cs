@@ -34,18 +34,17 @@ public static class StakeholdersStartup
         services.AddScoped<ITokenGenerator, JwtGenerator>();
         services.AddScoped<IClubJoinRequestService, ClubJoinRequestService>();
         services.AddScoped<IClubService, ClubService>();
-        services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<IClubMemberManagementService, ClubMemberManagementService>();
+        services.AddScoped<IRatingService, RatingService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>));
-        services.AddScoped(typeof(ICrudRepository<ClubInvitation>), typeof(CrudDatabaseRepository<ClubInvitation, StakeholdersContext>));
-        services.AddScoped<IClubRepository, ClubRepository>();
         services.AddScoped<IClubInvitationRepository, ClubInvitationDatabaseRepository>();
         services.AddScoped<IClubMembershipRepository, ClubMembershipDatabaseRepository>();
+        services.AddScoped<IClubRepository, ClubRepository>();
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IClubJoinRequestRepository, ClubJoinRequestRepository>();
         services.AddScoped<IRatingRepository, RatingDatabaseRepository>();

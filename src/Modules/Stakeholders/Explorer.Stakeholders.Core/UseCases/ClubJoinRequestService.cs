@@ -4,14 +4,8 @@ using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Public.Administration;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
-using System.Net;
+using Explorer.Stakeholders.API.Public;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
@@ -19,10 +13,14 @@ namespace Explorer.Stakeholders.Core.UseCases
     {
         private readonly IMapper _mapper;
         private readonly IClubJoinRequestRepository _requestRepository;
-        public ClubJoinRequestService(IMapper mapper, IClubJoinRequestRepository requestRepository)
+        private readonly IClubInvitationRepository _clubInvitationRepository;
+        private readonly IClubMemberManagementService _clubMemberManagementService;
+        public ClubJoinRequestService(IMapper mapper, IClubJoinRequestRepository requestRepository, IClubInvitationRepository clubInvitationRepository, IClubMemberManagementService clubMemberManagementService)
         {
             _mapper = mapper;
             _requestRepository = requestRepository;
+            _clubInvitationRepository = clubInvitationRepository;
+            _clubMemberManagementService = clubMemberManagementService;
         }
 
         public Result<ClubJoinRequestSendDto> Send(ClubJoinRequestSendDto request)
@@ -47,6 +45,13 @@ namespace Explorer.Stakeholders.Core.UseCases
 
                 request.Respond(response.Accepted);
                 _requestRepository.Update(request);
+
+                if (response.Accepted)
+                {
+                    _clubInvitationRepository.DeleteWaiting(request.ClubId, request.TouristId);
+                    _clubMemberManagementService.AddMember(request.ClubId, request.TouristId);
+                }
+
                 return Result.Ok().WithSuccess("Club Join Request " + (response.Accepted ? "Accepted" : "Rejected"));
             }
             catch (KeyNotFoundException e)

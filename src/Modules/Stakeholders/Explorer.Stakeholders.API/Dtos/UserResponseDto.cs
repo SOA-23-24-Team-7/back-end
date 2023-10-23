@@ -1,6 +1,6 @@
 ﻿namespace Explorer.Stakeholders.API.Dtos
 {
-    public class UserDto
+    public class UserResponseDto
     {
         public int Id { get; set; }
         public string Username { get;  set; }

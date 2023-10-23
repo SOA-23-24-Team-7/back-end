@@ -8,7 +8,7 @@ using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class UserService : CrudService<UserDto, User>, IUserService
+    public class UserService : CrudService<UserResponseDto, User>, IUserService
     {
 
         private readonly IUserRepository _userRepository;
@@ -19,7 +19,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             _userRepository = userRepository;
         }
 
-        public Result<UserDto> DisableAccount(long userId)
+        public Result<UserResponseDto> DisableAccount(long userId)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace Explorer.Stakeholders.Core.UseCases
                 user.IsActive = false;
 
                 var result = CrudRepository.Update(user);
-                return MapToDto(result);
+                return MapToDto<UserResponseDto>(result);
             }
             catch (KeyNotFoundException e)
             {
@@ -39,9 +39,9 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
-        public Result<PagedResult<UserDto>> GetPagedByAdmin(int page, int pageSize, long adminId)
+        public Result<PagedResult<UserResponseDto>> GetPagedByAdmin(int page, int pageSize, long adminId)
         {
-            return MapToDto(_userRepository.GetPagedByAdmin(page, pageSize, adminId));
+            return MapToDto<UserResponseDto>(_userRepository.GetPagedByAdmin(page, pageSize, adminId));
         }
     }
 }
