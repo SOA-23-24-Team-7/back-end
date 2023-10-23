@@ -24,6 +24,13 @@ public class ClubInvitationController : BaseApiController
         return CreateResponse(result);
     }
 
+    [HttpPost("byUsername")]
+    public ActionResult<ClubInvitationDto> Invite([FromBody] ClubInvitationWithUsernameDto dto)
+    {
+        var result = _clubInvitationService.InviteTourist(dto);
+        return CreateResponse(result);
+    }
+
     [HttpPatch("reject/{id:long}")]
     public ActionResult Reject(long id)
     {

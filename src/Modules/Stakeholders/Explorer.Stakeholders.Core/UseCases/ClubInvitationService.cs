@@ -16,16 +16,39 @@ public class ClubInvitationService : IClubInvitationService
     private readonly IClubInvitationRepository _invitationRepository;
     private readonly IClubRepository _clubRepository;
     private readonly IClubJoinRequestRepository _requestRepository;
+    private readonly IClubMembershipRepository _membershipRepository;
+
     private readonly IClubMemberManagementService _clubMemberManagementService;
 
-    public ClubInvitationService(IMapper mapper, IUserRepository userRepository, IClubInvitationRepository invitationRepository, IClubRepository clubRepository, IClubJoinRequestRepository requestRepository, IClubMemberManagementService clubMemberManagementService)
+    public ClubInvitationService(IMapper mapper, IUserRepository userRepository, IClubInvitationRepository invitationRepository, IClubRepository clubRepository, IClubJoinRequestRepository requestRepository, IClubMembershipRepository membershipRepository, IClubMemberManagementService clubMemberManagementService)
     {
         _mapper = mapper;
         _userRepository = userRepository;
         _invitationRepository = invitationRepository;
         _clubRepository = clubRepository;
         _requestRepository = requestRepository;
+        _membershipRepository = membershipRepository;
         _clubMemberManagementService = clubMemberManagementService;
+    }
+
+    public Result<ClubInvitationDto> InviteTourist(ClubInvitationWithUsernameDto invitationDto)
+    {
+        try
+        {
+            var user = _userRepository.GetActiveByName(invitationDto.Username);
+
+            if (user == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            var dto = new ClubInvitationDto() { ClubId = invitationDto.ClubId, TouristId = user.Id };
+            return InviteTourist(dto);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
+        }
     }
 
     public Result<ClubInvitationDto> InviteTourist(ClubInvitationDto invitationDto)
@@ -33,8 +56,12 @@ public class ClubInvitationService : IClubInvitationService
         try
         {
             var invitation = _mapper.Map<ClubInvitation>(invitationDto);
-            var tourist = _userRepository.GetPersonId(invitationDto.TouristId);
             var club = _clubRepository.Get(invitationDto.ClubId);
+
+            if (isMember(invitationDto.TouristId, invitation.ClubId) || isInvited(invitationDto.TouristId))
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
+            }
 
             _invitationRepository.Create(invitation);
 
@@ -111,5 +138,17 @@ public class ClubInvitationService : IClubInvitationService
     private bool isWaiting(ClubInvitation clubInvitation)
     {
         return clubInvitation.Status == InvitationStatus.Waiting;
+    }
+
+    private bool isMember(long touristId, long clubId)
+    {
+        var membership = _membershipRepository.GetAll(m => m.ClubId == clubId && m.TouristId == touristId).FirstOrDefault();
+        return membership != null;
+    }
+
+    private bool isInvited(long touristId)
+    {
+        var invitation = _invitationRepository.GetAll(i => i.TouristId == touristId && i.Status == InvitationStatus.Waiting).FirstOrDefault();
+        return invitation != null;
     }
 }
