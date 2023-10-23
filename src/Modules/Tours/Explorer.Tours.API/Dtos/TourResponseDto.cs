@@ -1,6 +1,6 @@
 ﻿namespace Explorer.Tours.API.Dtos;
 
-public class TourDto
+public class TourResponseDto
 {
     public int Id { get; set; }
     public long AuthorId { get; set; }

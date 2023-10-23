@@ -19,14 +19,14 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<TourDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<TourResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _tourService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
 
         [HttpGet("authors")]
-        public ActionResult<PagedResult<TourDto>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<TourResponseDto>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
@@ -35,7 +35,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPost]
-        public ActionResult<TourDto> Create([FromBody] TourDto tour)
+        public ActionResult<TourResponseDto> Create([FromBody] TourResponseDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if(identity != null && identity.IsAuthenticated)
@@ -47,7 +47,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<TourDto> Update([FromBody] TourDto tour)
+        public ActionResult<TourResponseDto> Update([FromBody] TourResponseDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null  && identity.IsAuthenticated)
@@ -65,21 +65,21 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(result);
         }
 
-        [HttpGet("tourEquipment/{tourId:int}")]
+        [HttpGet("equipment/{tourId:int}")]
         public ActionResult GetEquipment(int tourId)
         {
             var result = _tourService.GetEquipment(tourId);
             return CreateResponse(result);
         }
 
-        [HttpPost("tourEquipment/{tourId:int}/{equipmentId:int}")]
+        [HttpPost("equipment/{tourId:int}/{equipmentId:int}")]
         public ActionResult AddEquipment(int tourId, int equipmentId)
         {
             var result = _tourService.AddEquipment(tourId, equipmentId);
             return CreateResponse(result);
         }
 
-        [HttpDelete("tourEquipment/{tourId:int}/{equipmentId:int}")]
+        [HttpDelete("equipment/{tourId:int}/{equipmentId:int}")]
         public ActionResult DeleteEquipment(int tourId, int equipmentId)
         {
             var result = _tourService.DeleteEquipment(tourId, equipmentId);

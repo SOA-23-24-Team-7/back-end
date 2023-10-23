@@ -27,7 +27,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new TourDto
+        var newEntity = new TourResponseDto
         {
             //AuthorId = 1,
             Name = "Tura Novog Sada",
@@ -39,7 +39,7 @@ public class TourCommandTests : BaseToursIntegrationTest
             IsDeleted = false*/
         };
 
-        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourDto;
+        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -74,7 +74,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new TourDto
+        var updatedEntity = new TourResponseDto
         {
             Description = "Test"
         };
@@ -94,7 +94,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var updatedEntity = new TourDto
+        var updatedEntity = new TourResponseDto
         {
             Id = -1,
             AuthorId = 1,
@@ -108,7 +108,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TourDto;
+        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TourResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -140,7 +140,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new TourDto
+        var updatedEntity = new TourResponseDto
         {
             Id = -1000,
             Name = "Test",

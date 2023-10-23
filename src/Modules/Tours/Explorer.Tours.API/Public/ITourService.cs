@@ -6,11 +6,11 @@ namespace Explorer.Tours.API.Public;
 
 public interface ITourService
 {
-    Result<PagedResult<TourDto>> GetPaged(int page, int pageSize);
-    Result<TourDto> Create<TourCreateDto>(TourCreateDto tour);
-    Result<TourDto> Update<TourUpdateDto>(TourUpdateDto tour);
+    Result<PagedResult<TourResponseDto>> GetPaged(int page, int pageSize);
+    Result<TourResponseDto> Create<TourCreateDto>(TourCreateDto tour);
+    Result<TourResponseDto> Update<TourUpdateDto>(TourUpdateDto tour);
     Result Delete(long id);
-    Result<PagedResult<TourDto>> GetAuthorsPagedTours(long id,int page, int pageSize);
+    Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long id,int page, int pageSize);
     Result<PagedResult<EquipmentResponseDto>> GetEquipment(long tourId);
     Result AddEquipment(long tourId, long equipmentId);
     Result DeleteEquipment(long tourId, int equipmentId);
