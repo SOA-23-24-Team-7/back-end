@@ -27,9 +27,9 @@ public class TourCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new TourResponseDto
+        var newEntity = new TourCreateDto
         {
-            //AuthorId = 1,
+            AuthorId = 1,
             Name = "Tura Novog Sada",
             Description = "The best!",
             Difficulty = 3,
@@ -62,7 +62,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.Difficulty.ShouldBe(result.Difficulty);
         storedEntity.Tags.ShouldBe(result.Tags);
         storedEntity.Price.ShouldBe(result.Price);
-        //storedEntity.Status.ShouldBe(result.Status);
+        storedEntity.Status.ToString().ShouldBe(result.Status.ToString());
         storedEntity.IsDeleted.ShouldBe(result.IsDeleted);
     }
 
@@ -74,7 +74,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new TourResponseDto
+        var updatedEntity = new TourCreateDto
         {
             Description = "Test"
         };
@@ -94,7 +94,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var updatedEntity = new TourResponseDto
+        var updatedEntity = new TourUpdateDto
         {
             Id = -1,
             AuthorId = 1,
@@ -128,7 +128,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.Difficulty.ShouldBe(updatedEntity.Difficulty);
         storedEntity.Tags.ShouldBe(updatedEntity.Tags);
         storedEntity.Price.ShouldBe(updatedEntity.Price);
-        //storedEntity.Status.ShouldBe(updatedEntity.Status);
+        storedEntity.Status.ToString().ShouldBe(updatedEntity.Status.ToString());
         storedEntity.IsDeleted.ShouldBe(updatedEntity.IsDeleted);
         var oldEntity = dbContext.Tours.FirstOrDefault(i => i.Name == "Voda");
         oldEntity.ShouldBeNull();
@@ -140,7 +140,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new TourResponseDto
+        var updatedEntity = new TourUpdateDto
         {
             Id = -1000,
             Name = "Test",

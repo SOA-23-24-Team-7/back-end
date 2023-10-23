@@ -35,7 +35,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPost]
-        public ActionResult<TourResponseDto> Create([FromBody] TourResponseDto tour)
+        public ActionResult<TourResponseDto> Create([FromBody] TourCreateDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if(identity != null && identity.IsAuthenticated)
@@ -47,7 +47,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<TourResponseDto> Update([FromBody] TourResponseDto tour)
+        public ActionResult<TourResponseDto> Update([FromBody] TourUpdateDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null  && identity.IsAuthenticated)

@@ -14,5 +14,4 @@ public interface ITourService
     Result<PagedResult<EquipmentResponseDto>> GetEquipment(long tourId);
     Result AddEquipment(long tourId, long equipmentId);
     Result DeleteEquipment(long tourId, int equipmentId);
-
 }
