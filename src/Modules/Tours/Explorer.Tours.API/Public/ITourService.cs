@@ -11,4 +11,7 @@ public interface ITourService
     Result<TourResponseDto> Update<TourUpdateDto>(TourUpdateDto tour);
     Result Delete(long id);
     Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long id,int page, int pageSize);
+    Result<PagedResult<EquipmentResponseDto>> GetEquipment(long tourId);
+    Result AddEquipment(long tourId, long equipmentId);
+    Result DeleteEquipment(long tourId, int equipmentId);
 }

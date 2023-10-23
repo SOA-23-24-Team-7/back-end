@@ -18,4 +18,6 @@ namespace Explorer.Tours.API.Dtos
         public double Price { get; set; }
         public bool IsDeleted { get; set; }
     }
+
+    
 }
