@@ -23,6 +23,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
     public class ClubJoinRequestsCommandTests : BaseStakeholdersIntegrationTest
     {
         public ClubJoinRequestsCommandTests(StakeholdersTestFactory factory) : base(factory) { }
+
         [Fact]
         public void Sends()
         {
@@ -30,28 +31,38 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+            var minDateTime = DateTime.Now;
             var newEntity = new ClubJoinRequestSendDto
             {
-                TouristId = -1,
+                TouristId = -11,
                 ClubId = -1
             };
 
-            // Act
-            var result = ((ObjectResult)controller.Send(newEntity).Result)?.Value as ClubJoinRequestSendDto;
 
+            // Act
+            var result = ((ObjectResult)controller.Send(newEntity).Result)?.Value as ClubJoinRequestCreatedDto;
+            
             // Assert - Response
             result.ShouldNotBeNull();
-            result.TouristId.ShouldNotBe(0);
-            result.ClubId.ShouldNotBe(0);
+            result.Id.ShouldNotBe(0);
+            result.TouristId.ShouldBe(newEntity.TouristId);
+            result.ClubId.ShouldBe(newEntity.ClubId);
+            result.RequestedAt.ShouldBeGreaterThanOrEqualTo(minDateTime);
+            result.RequestedAt.ShouldBeLessThanOrEqualTo(DateTime.Now);
+            result.Status.ShouldBe("Pending");
 
             // Assert - Database
-            var storedEntity = dbContext.ClubJoinRequests.FirstOrDefault(r => r.TouristId == newEntity.TouristId && r.ClubId == newEntity.ClubId);
+            var storedEntity = dbContext.ClubJoinRequests.FirstOrDefault(r => r.Id == result.Id);
             storedEntity.ShouldNotBeNull();
-            storedEntity.Id.ShouldNotBe(0);
+            storedEntity.Id.ShouldBe(result.Id);
+            storedEntity.TouristId.ShouldBe(result.TouristId);
+            storedEntity.ClubId.ShouldBe(result.ClubId);
+            storedEntity.RequestedAt.ShouldBe(result.RequestedAt);
+            storedEntity.GetPrimaryStatusName().ShouldBe(result.Status);
         }
 
         [Fact]
-        public void Sends_fails_invalid_data()
+        public void Sends_fails_invalid_tourist_id()
         {
             // Arrange
             using var scope = Factory.Services.CreateScope();
@@ -59,15 +70,35 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             var newEntity = new ClubJoinRequestSendDto
             {
                 TouristId = 0,
-                ClubId = 0
+                ClubId = -1
             };
 
             // Act
-            var result = ((ObjectResult)controller.Send(newEntity).Result);
+            var result = (ObjectResult)controller.Send(newEntity).Result;
 
             // Assert
             result.ShouldNotBeNull();
             result.StatusCode.ShouldBe(400);
+        }
+
+        [Fact]
+        public void Sends_fails_invalid_club_id()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var newEntity = new ClubJoinRequestSendDto
+            {
+                TouristId = -11,
+                ClubId = 0
+            };
+
+            // Act
+            var result = (ObjectResult)controller.Send(newEntity).Result;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(404);
         }
 
         [Fact]
@@ -92,6 +123,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             // Assert - Database
             var storedEntity = dbContext.ClubJoinRequests.FirstOrDefault(r => r.Id == id);
             storedEntity.ShouldNotBeNull();
+            storedEntity.Id.ShouldBe(id);
             storedEntity.Status.ShouldBe(ClubJoinRequestStatus.Accepted);
         }
 
@@ -102,14 +134,14 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-            long id = 100;
+            long id = -1000;
             var response = new ClubJoinRequestResponseDto
             {
                 Accepted = false
             };
 
             // Act
-            var result = ((ObjectResult)controller.Respond(id, response));
+            var result = (ObjectResult)controller.Respond(id, response);
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -134,6 +166,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             // Assert - Database
             var storedEntity = dbContext.ClubJoinRequests.FirstOrDefault(r => r.Id == id);
             storedEntity.ShouldNotBeNull();
+            storedEntity.Id.ShouldBe(id);
             storedEntity.Status.ShouldBe(ClubJoinRequestStatus.Cancelled);
         }
 
@@ -144,7 +177,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-            long id = 100;
+            long id = -1000;
 
             // Act
             var result = ((ObjectResult)controller.Cancel(id));

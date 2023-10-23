@@ -13,27 +13,35 @@ namespace Explorer.Stakeholders.Core.UseCases
     {
         private readonly IMapper _mapper;
         private readonly IClubJoinRequestRepository _requestRepository;
-        private readonly IClubInvitationRepository _clubInvitationRepository;
-        private readonly IClubMemberManagementService _clubMemberManagementService;
-        public ClubJoinRequestService(IMapper mapper, IClubJoinRequestRepository requestRepository, IClubInvitationRepository clubInvitationRepository, IClubMemberManagementService clubMemberManagementService)
+        private readonly IClubInvitationRepository _invitationRepository;
+        private readonly IClubMemberManagementService _memberManagementService;
+        private readonly IClubRepository _clubRepository;
+        public ClubJoinRequestService(IMapper mapper, IClubJoinRequestRepository requestRepository, IClubInvitationRepository invitationRepository, IClubMemberManagementService memberManagementService, IClubRepository clubRepository)
         {
             _mapper = mapper;
             _requestRepository = requestRepository;
-            _clubInvitationRepository = clubInvitationRepository;
-            _clubMemberManagementService = clubMemberManagementService;
+            _invitationRepository = invitationRepository;
+            _memberManagementService = memberManagementService;
+            _clubRepository = clubRepository;
         }
 
-        public Result<ClubJoinRequestSendDto> Send(ClubJoinRequestSendDto request)
+        public Result<ClubJoinRequestCreatedDto> Send(ClubJoinRequestSendDto request)
         {
             try
             {
+                _clubRepository.Get(request.ClubId);
+
                 var joinRequest = _mapper.Map<ClubJoinRequest>(request);
-                _requestRepository.Create(joinRequest);
-                return request;
+                joinRequest = _requestRepository.Create(joinRequest);
+                return _mapper.Map<ClubJoinRequestCreatedDto>(joinRequest);
             }
             catch (ArgumentException e)
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
 
@@ -48,15 +56,15 @@ namespace Explorer.Stakeholders.Core.UseCases
 
                 if (response.Accepted)
                 {
-                    _clubInvitationRepository.DeleteWaiting(request.ClubId, request.TouristId);
-                    _clubMemberManagementService.AddMember(request.ClubId, request.TouristId);
+                    _invitationRepository.DeleteWaiting(request.ClubId, request.TouristId);
+                    _memberManagementService.AddMember(request.ClubId, request.TouristId);
                 }
 
                 return Result.Ok().WithSuccess("Club Join Request " + (response.Accepted ? "Accepted" : "Rejected"));
             }
             catch (KeyNotFoundException e)
             {
-                return Result.Fail(FailureCode.NotFound).WithError("Club Join Request Not Found: " + id);
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
 
@@ -72,7 +80,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
             catch (KeyNotFoundException e)
             {
-                return Result.Fail(FailureCode.NotFound).WithError("Club Join Request Not Found: " + id);
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
 
@@ -84,6 +92,15 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         public Result<PagedResult<ClubJoinRequestByClubDto>> GetPagedByClub(long id, int page, int pageSize)
         {
+            try
+            {
+                _clubRepository.Get(id);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+
             var requests = _requestRepository.GetPagedByClub(id, page, pageSize);
             return MapToDto<ClubJoinRequestByClubDto>(requests);
         }
