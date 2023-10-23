@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Explorer.Tours.Core.UseCases;
 
-public class TourService : CrudService<TourDto, Tour>, ITourService
+public class TourService : CrudService<TourResponseDto, Tour>, ITourService
 {
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
@@ -16,11 +16,11 @@ public class TourService : CrudService<TourDto, Tour>, ITourService
         _repository = repository;
         _mapper = mapper;
     }
-    public Result<PagedResult<TourDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
+    public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
     {
         var allTours = _repository.GetPaged(page, pageSize);
         var toursByAuthor = allTours.Results.Where(t => t.AuthorId == authorId).ToList();
         var pagedResult = new PagedResult<Tour>(toursByAuthor, toursByAuthor.Count);
-        return MapToDto<TourDto>(pagedResult);
+        return MapToDto<TourResponseDto>(pagedResult);
     }
 }

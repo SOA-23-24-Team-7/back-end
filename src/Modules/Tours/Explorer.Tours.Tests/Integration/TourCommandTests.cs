@@ -38,7 +38,7 @@ public class TourCommandTests : BaseToursIntegrationTest
             IsDeleted = false*/
         };
 
-        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourDto;
+        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -107,7 +107,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TourDto;
+        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TourResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();

@@ -19,14 +19,14 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<TourDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<TourResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _tourService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
 
         [HttpGet("authors")]
-        public ActionResult<PagedResult<TourDto>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<TourResponseDto>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
@@ -35,7 +35,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPost]
-        public ActionResult<TourDto> Create([FromBody] TourCreateDto tour)
+        public ActionResult<TourResponseDto> Create([FromBody] TourCreateDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if(identity != null && identity.IsAuthenticated)
@@ -47,7 +47,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<TourDto> Update([FromBody] TourUpdateDto tour)
+        public ActionResult<TourResponseDto> Update([FromBody] TourUpdateDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null  && identity.IsAuthenticated)
