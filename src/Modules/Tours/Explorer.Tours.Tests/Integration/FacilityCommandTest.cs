@@ -1,17 +1,17 @@
-﻿using Explorer.API.Controllers.Administrator.Administration;
+﻿using Explorer.API.Controllers.Author;
 using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.API.Public;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 
-namespace Explorer.Tours.Tests.Integration.Administration;
+namespace Explorer.Tours.Tests.Integration;
 
 [Collection("Sequential")]
-public class EquipmentCommandTests : BaseToursIntegrationTest
+public class FacilityCommandTests : BaseToursIntegrationTest
 {
-    public EquipmentCommandTests(ToursTestFactory factory) : base(factory) { }
+    public FacilityCommandTests(ToursTestFactory factory) : base(factory) { }
 
     [Fact]
     public void Creates()
@@ -20,14 +20,19 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new EquipmentCreateDto
+        var newEntity = new FacilityCreateDto
         {
-            Name = "Obuća za grub teren",
-            Description = "Patike sa tvrdim đonom i kramponima koje daju stabilnost na neravnom i rastresitom terenu."
+            Name = "Parking",
+            Description = "Ogroman parking sa cak 200 mesta.",
+            ImagePath = "url",
+            AuthorId = 1,
+            Category = FacilityCategory.ParkingLot,
+            Longitude = 45.0,
+            Latitude = 17.0
         };
 
         // Act
-        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as EquipmentResponseDto;
+        var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as FacilityResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -35,7 +40,7 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         result.Name.ShouldBe(newEntity.Name);
 
         // Assert - Database
-        var storedEntity = dbContext.Equipment.FirstOrDefault(i => i.Name == newEntity.Name);
+        var storedEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == newEntity.Name);
         storedEntity.ShouldNotBeNull();
         storedEntity.Id.ShouldBe(result.Id);
     }
@@ -46,7 +51,7 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new EquipmentCreateDto
+        var updatedEntity = new FacilityCreateDto
         {
             Description = "Test"
         };
@@ -66,27 +71,42 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var updatedEntity = new EquipmentUpdateDto
+        var updatedEntity = new FacilityUpdateDto
         {
             Id = -1,
-            Name = "Tečnost",
-            Description = "Voda ili druga tečnost koja hidrira. Preporuka je pola litre tečnosti na sat vremena umerene aktivnosti po umerenoj temperaturi."
+            Name = "Apoteka",
+            Description = "Veoma uredna apoteka sa pristupacnim cenama",
+            ImagePath = "url2",
+            AuthorId = 1,
+            Category = FacilityCategory.Pharmacy,
+            Longitude = 45.0,
+            Latitude = 17.0
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as EquipmentResponseDto;
+        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as FacilityResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
         result.Id.ShouldBe(-1);
         result.Name.ShouldBe(updatedEntity.Name);
         result.Description.ShouldBe(updatedEntity.Description);
+        result.ImagePath.ShouldBe(updatedEntity.ImagePath);
+        result.AuthorId.ShouldBe(1);
+        result.Category.ShouldBe(updatedEntity.Category);
+        result.Longitude.ShouldBe(updatedEntity.Longitude);
+        result.Latitude.ShouldBe(updatedEntity.Latitude);
 
         // Assert - Database
-        var storedEntity = dbContext.Equipment.FirstOrDefault(i => i.Name == "Tečnost");
+        var storedEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == "Apoteka");
         storedEntity.ShouldNotBeNull();
         storedEntity.Description.ShouldBe(updatedEntity.Description);
-        var oldEntity = dbContext.Equipment.FirstOrDefault(i => i.Name == "Voda");
+        storedEntity.Category.ToString().ShouldBe(updatedEntity.Category.ToString());
+        storedEntity.ImagePath.ShouldBe(updatedEntity.ImagePath);
+        storedEntity.AuthorId.ShouldBe(1);
+        storedEntity.Longitude.ShouldBe(updatedEntity.Longitude);
+        storedEntity.Latitude.ShouldBe(updatedEntity.Latitude);
+        var oldEntity = dbContext.Facilities.FirstOrDefault(i => i.Name == "Test");
         oldEntity.ShouldBeNull();
     }
 
@@ -96,7 +116,7 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new EquipmentUpdateDto
+        var updatedEntity = new FacilityUpdateDto
         {
             Id = -1000,
             Name = "Test"
@@ -126,7 +146,7 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         result.StatusCode.ShouldBe(200);
 
         // Assert - Database
-        var storedCourse = dbContext.Equipment.FirstOrDefault(i => i.Id == -3);
+        var storedCourse = dbContext.Facilities.FirstOrDefault(i => i.Id == -3);
         storedCourse.ShouldBeNull();
     }
 
@@ -145,9 +165,9 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         result.StatusCode.ShouldBe(404);
     }
 
-    private static EquipmentController CreateController(IServiceScope scope)
+    private static FacilityController CreateController(IServiceScope scope)
     {
-        return new EquipmentController(scope.ServiceProvider.GetRequiredService<IEquipmentService>())
+        return new FacilityController(scope.ServiceProvider.GetRequiredService<IFacilityService>())
         {
             ControllerContext = BuildContext("-1")
         };

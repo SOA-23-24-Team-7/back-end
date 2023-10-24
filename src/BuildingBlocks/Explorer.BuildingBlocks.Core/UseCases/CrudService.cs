@@ -9,7 +9,7 @@ namespace Explorer.BuildingBlocks.Core.UseCases;
 /// </summary>
 /// <typeparam name="TDto">Type of output data transfer object.</typeparam>
 /// <typeparam name="TDomain">Type of domain object that maps to TDto</typeparam>
-public abstract class CrudService<TDto, TDomain> : BaseService<TDto, TDomain> where TDomain : Entity
+public abstract class CrudService<TDto, TDomain> : BaseService<TDomain> where TDomain : Entity
 {
     protected readonly ICrudRepository<TDomain> CrudRepository;
 
@@ -21,15 +21,15 @@ public abstract class CrudService<TDto, TDomain> : BaseService<TDto, TDomain> wh
     public Result<PagedResult<TDto>> GetPaged(int page, int pageSize)
     {
         var result = CrudRepository.GetPaged(page, pageSize);
-        return MapToDto(result);
+        return MapToDto<TDto>(result);
     }
 
-    public Result<TDto> Get(int id)
+    public Result<TDto> Get(long id)
     {
         try
         {
             var result = CrudRepository.Get(id);
-            return MapToDto(result);
+            return MapToDto<TDto>(result);
         }
         catch (KeyNotFoundException e)
         {
@@ -37,12 +37,12 @@ public abstract class CrudService<TDto, TDomain> : BaseService<TDto, TDomain> wh
         }
     }
 
-    public virtual Result<TDto> Create(TDto entity)
+    public virtual Result<TDto> Create<PDto>(PDto entity)
     {
         try
         {
-            var result = CrudRepository.Create(MapToDomain(entity));
-            return MapToDto(result);
+            var result = CrudRepository.Create(MapToDomain<PDto>(entity));
+            return MapToDto<TDto>(result);
         }
         catch (ArgumentException e)
         {
@@ -50,12 +50,12 @@ public abstract class CrudService<TDto, TDomain> : BaseService<TDto, TDomain> wh
         }
     }
 
-    public virtual Result<TDto> Update(TDto entity)
+    public virtual Result<TDto> Update<PDto>(PDto entity)
     {
         try
         {
-            var result = CrudRepository.Update(MapToDomain(entity));
-            return MapToDto(result);
+            var result = CrudRepository.Update(MapToDomain<PDto>(entity));
+            return MapToDto<TDto>(result);
         }
         catch (KeyNotFoundException e)
         {
@@ -67,7 +67,7 @@ public abstract class CrudService<TDto, TDomain> : BaseService<TDto, TDomain> wh
         }
     }
 
-    public virtual Result Delete(int id)
+    public virtual Result Delete(long id)
     {
         try
         {
