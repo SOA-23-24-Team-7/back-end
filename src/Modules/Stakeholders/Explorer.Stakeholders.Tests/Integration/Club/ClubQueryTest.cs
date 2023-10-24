@@ -27,7 +27,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<ClubResponseDto>;
+            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<ClubResponseWithOwnerDto>;
 
             // Assert
             result.ShouldNotBeNull();
