@@ -80,28 +80,33 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         var updatedEntity = new ProblemUpdateDto
         {
             Id = -1,
-            Category = "Kategorija1",
-            Priority = "Veoma bitno",
-            Description = "Nije ukljuceno u turu sve sto je bilo navedeno.",
-            ReportedTime = "10:00AM",
-            TourId = -3,
-            TouristId = -5,
+            Category = "Kategorija4",
+            Priority = "Bitno",
+            Description = "Nije bilo nekih vecih problema.",
+            ReportedTime = "11:00AM",
+            TourId = 1,
+            TouristId = 3,
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ProblemUpdateDto;
+        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ProblemResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
         result.Id.ShouldBe(-1);
         result.Priority.ShouldBe(updatedEntity.Priority);
+        result.TouristId.ShouldBe(updatedEntity.TouristId);
+        result.ReportedTime.ShouldBe(updatedEntity.ReportedTime);
+        result.TourId.ShouldBe(updatedEntity.TourId);
         result.Description.ShouldBe(updatedEntity.Description);
-
         // Assert - Database
-        var storedEntity = dbContext.Problem.FirstOrDefault(i => i.TourId == -3 && i.TouristId==-5);
+        var storedEntity = dbContext.Problem.FirstOrDefault(i => i.Description== "Nije bilo nekih vecih problema.");
         storedEntity.ShouldNotBeNull();
+        storedEntity.Priority.ShouldBe(updatedEntity.Priority);
+        storedEntity.ReportedTime.ShouldBe(updatedEntity.ReportedTime);
+        storedEntity.TouristId.ShouldBe(updatedEntity.TouristId);
         storedEntity.TourId.ShouldBe(updatedEntity.TourId);
-        var oldEntity = dbContext.Problem.FirstOrDefault(i => i.TourId == -1 && i.TouristId==-1);
+        var oldEntity = dbContext.Problem.FirstOrDefault(i => i.Description== "Nije ukljuceno u turu sve sto je bilo navedeno.");
         oldEntity.ShouldBeNull();
     }
 
