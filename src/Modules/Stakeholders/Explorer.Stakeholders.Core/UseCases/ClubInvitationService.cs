@@ -43,7 +43,7 @@ public class ClubInvitationService : IClubInvitationService
             }
 
             var dto = new ClubInvitationDto() { ClubId = invitationDto.ClubId, TouristId = user.Id };
-            return InviteTourist(dto);
+            return InviteByTouristId(dto);
         }
         catch (KeyNotFoundException e)
         {
@@ -51,7 +51,7 @@ public class ClubInvitationService : IClubInvitationService
         }
     }
 
-    public Result<ClubInvitationCreatedDto> InviteTourist(ClubInvitationDto invitationDto)
+    private Result<ClubInvitationCreatedDto> InviteByTouristId(ClubInvitationDto invitationDto)
     {
         try
         {
