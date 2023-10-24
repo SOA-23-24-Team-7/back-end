@@ -17,9 +17,6 @@ public class StakeholdersContext : DbContext
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
-    public DbSet<Rating> Ratings { get; set; }
-
-    public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
