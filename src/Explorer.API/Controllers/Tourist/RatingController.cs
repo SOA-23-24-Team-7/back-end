@@ -27,10 +27,6 @@ namespace Explorer.API.Controllers.Tourist
             {
                 rating.UserId = long.Parse(identity.FindFirst("id").Value);
             }
-            else
-            {
-                rating.UserId = -22;
-            }
             var result = _ratingService.Create(rating);
             return CreateResponse(result);
         }
