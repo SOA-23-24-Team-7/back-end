@@ -1,4 +1,5 @@
-﻿using Explorer.Stakeholders.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +45,14 @@ public class ClubInvitationController : BaseApiController
     {
         var userId = extractUserIdFromHttpContext();
         var result = _clubInvitationService.Accept(id, userId);
+        return CreateResponse(result);
+    }
+
+    [HttpGet("my-invitations")]
+    public ActionResult<PagedResult<ClubInvitationWithClubAndOwnerName>> GetInvitations()
+    {
+        var userId = extractUserIdFromHttpContext();
+        var result = _clubInvitationService.GetWaitingInvitations(userId);
         return CreateResponse(result);
     }
 

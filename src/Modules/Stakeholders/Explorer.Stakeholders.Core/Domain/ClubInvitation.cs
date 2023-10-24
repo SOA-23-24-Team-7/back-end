@@ -5,6 +5,7 @@ namespace Explorer.Stakeholders.Core.Domain;
 public class ClubInvitation : Entity
 {
     public long ClubId { get; init; }
+    public Club? Club { get; init; }
     public long TouristId { get; init; }
     public DateTime TimeCreated { get; init; }
     public InvitationStatus Status { get; set; }

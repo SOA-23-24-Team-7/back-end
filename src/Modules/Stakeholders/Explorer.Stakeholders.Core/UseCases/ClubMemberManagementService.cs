@@ -64,11 +64,6 @@ public class ClubMemberManagementService : IClubMemberManagementService
         return dtos;
     }
 
-    public Result<PagedResult<string>> GetNonMemberUsernames(long clubId)
-    {
-        throw new NotImplementedException();
-    }
-
     public Result<ClubMemberKickDto> KickTourist(long membershipId, long userId)
     {
         try

@@ -151,4 +151,16 @@ public class ClubInvitationService : IClubInvitationService
         var invitation = _invitationRepository.GetAll(i => i.TouristId == touristId && i.Status == InvitationStatus.Waiting).FirstOrDefault();
         return invitation != null;
     }
+
+    public Result<PagedResult<ClubInvitationWithClubAndOwnerName>> GetWaitingInvitations(long touristId)
+    {
+        var invitations = _invitationRepository.GetAll(i => i.TouristId == touristId && i.Status == InvitationStatus.Waiting);
+        var dtos = new List<ClubInvitationWithClubAndOwnerName>();
+        foreach (var invitation in invitations)
+        {
+            dtos.Add(_mapper.Map<ClubInvitationWithClubAndOwnerName>(invitation));
+        }
+        var result = new PagedResult<ClubInvitationWithClubAndOwnerName>(dtos, dtos.Count);
+        return result;
+    }
 }
