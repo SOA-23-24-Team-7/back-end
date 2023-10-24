@@ -1,4 +1,13 @@
-﻿namespace Explorer.Blog.Tests.Integration.Blog
+﻿using Explorer.API.Controllers;
+using Explorer.Blog.API.Dtos;
+using Explorer.Blog.API.Public;
+using Explorer.Blog.Infrastructure.Database;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Shouldly;
+using Xunit;
+
+namespace Explorer.Blog.Tests.Integration.Blog
 {
     [Collection("Sequential")]
     public class BlogCommandTests : BaseBlogIntegrationTest

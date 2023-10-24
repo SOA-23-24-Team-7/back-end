@@ -1,4 +1,9 @@
-﻿namespace Explorer.API.Startup;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
+
+namespace Explorer.API.Startup;
 
 public static class AuthConfiguration
 {
