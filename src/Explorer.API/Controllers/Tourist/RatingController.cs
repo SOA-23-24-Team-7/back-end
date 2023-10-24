@@ -14,18 +14,16 @@ namespace Explorer.API.Controllers.Tourist
     public class RatingController : BaseApiController
     {
         private readonly IRatingService _ratingService;
-        private readonly IAuthenticationService _authenticationService;
-        public RatingController(IRatingService ratingService, IAuthenticationService authenticationService)
+        public RatingController(IRatingService ratingService)
         {
             _ratingService = ratingService;
-            _authenticationService = authenticationService;
         }
 
         [HttpPost]
         public ActionResult<RatingResponseDto> Create([FromBody] RatingCreateDto rating)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null && identity.IsAuthenticated)
             {
                 rating.UserId = long.Parse(identity.FindFirst("id").Value);
             }
