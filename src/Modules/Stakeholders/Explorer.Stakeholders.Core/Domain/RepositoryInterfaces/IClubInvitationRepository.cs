@@ -1,5 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
 namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
