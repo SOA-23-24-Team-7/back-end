@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.Core.Domain;
 
@@ -16,6 +16,9 @@ public class ToursProfile : Profile
         CreateMap<EquipmentResponseDto, Equipment>().ReverseMap();
         CreateMap<EquipmentCreateDto, Equipment>().ReverseMap();
         CreateMap<EquipmentUpdateDto, Equipment>().ReverseMap();
+        CreateMap<TourResponseDto, Tour>().ReverseMap();
+        CreateMap<TourCreateDto, Tour>().ReverseMap();
+        CreateMap<TourUpdateDto, Tour>().ReverseMap();
 
     }
 }

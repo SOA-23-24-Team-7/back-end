@@ -7,6 +7,7 @@ public class StakeholdersContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Person> People { get; set; }
+    public DbSet<Rating> Ratings { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
 
@@ -25,5 +26,10 @@ public class StakeholdersContext : DbContext
             .HasOne<User>()
             .WithOne()
             .HasForeignKey<Person>(s => s.UserId);
+
+        modelBuilder.Entity<Rating>()
+           .HasOne(s => s.User)
+           .WithOne()
+           .HasForeignKey<Rating>(s => s.UserId);
     }
 }
