@@ -50,6 +50,11 @@ public class StakeholdersContext : DbContext
             .HasOne(c => c.Owner)
             .WithMany()
             .HasForeignKey(c => c.OwnerId);
+
+        modelBuilder.Entity<ClubInvitation>()
+            .HasOne(i => i.Club)
+            .WithMany()
+            .HasForeignKey(i => i.ClubId);
             
         modelBuilder.Entity<Rating>()
            .HasOne(s => s.User)

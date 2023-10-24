@@ -1,4 +1,5 @@
-﻿using Explorer.Stakeholders.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,13 @@ public class ClubInvitationController : BaseApiController
         return CreateResponse(result);
     }
 
+    [HttpPost("byUsername")]
+    public ActionResult<ClubInvitationDto> Invite([FromBody] ClubInvitationWithUsernameDto dto)
+    {
+        var result = _clubInvitationService.InviteTourist(dto);
+        return CreateResponse(result);
+    }
+
     [HttpPatch("reject/{id:long}")]
     public ActionResult Reject(long id)
     {
@@ -37,6 +45,14 @@ public class ClubInvitationController : BaseApiController
     {
         var userId = extractUserIdFromHttpContext();
         var result = _clubInvitationService.Accept(id, userId);
+        return CreateResponse(result);
+    }
+
+    [HttpGet("my-invitations")]
+    public ActionResult<PagedResult<ClubInvitationWithClubAndOwnerName>> GetInvitations()
+    {
+        var userId = extractUserIdFromHttpContext();
+        var result = _clubInvitationService.GetWaitingInvitations(userId);
         return CreateResponse(result);
     }
 

@@ -64,11 +64,6 @@ public class ClubMemberManagementService : IClubMemberManagementService
         return dtos;
     }
 
-    public Result<PagedResult<string>> GetNonMemberUsernames(long clubId)
-    {
-        throw new NotImplementedException();
-    }
-
     public Result<ClubMemberKickDto> KickTourist(long membershipId, long userId)
     {
         try
@@ -76,10 +71,10 @@ public class ClubMemberManagementService : IClubMemberManagementService
             var membership = _clubMembershipRepository.Get(membershipId);
             var club = _clubRepository.Get(membership.ClubId);
 
-            //if (club.OwnerId != userId)
-            //{
-            //    return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
-            //}
+            if (club.OwnerId != userId)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
+            }
 
             _clubMembershipRepository.Delete(membershipId);
 

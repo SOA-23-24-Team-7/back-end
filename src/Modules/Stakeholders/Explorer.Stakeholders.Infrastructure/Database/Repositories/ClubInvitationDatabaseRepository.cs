@@ -32,7 +32,7 @@ public class ClubInvitationDatabaseRepository : CrudDatabaseRepository<ClubInvit
 
     public List<ClubInvitation> GetAll(Expression<Func<ClubInvitation, bool>> filter)
     {
-        IQueryable<ClubInvitation> query = this.DbContext.ClubInvitations;
+        IQueryable<ClubInvitation> query = this.DbContext.ClubInvitations.Include(i => i.Club).Include(i => i.Club.Owner);
         query = query.Where(filter);
         var invitations = query.ToList();
         return invitations;
