@@ -19,7 +19,7 @@ public class StakeholderProfile : Profile
             .ConstructUsing(src => new ClubJoinRequestByTouristDto { Id = src.Id, ClubId = src.ClubId, ClubName = src.Club.Name, RequestedAt = src.RequestedAt, Status = src.GetPrimaryStatusName() });
 
         CreateMap<ClubJoinRequest, ClubJoinRequestByClubDto>()
-            .ConstructUsing(src => new ClubJoinRequestByClubDto { Id = src.Id, TouristId = src.Tourist.UserId, TouristName = src.Tourist.Name + " " + src.Tourist.Surname, RequestedAt = src.RequestedAt, Status = src.GetPrimaryStatusName() });
+            .ConstructUsing(src => new ClubJoinRequestByClubDto { Id = src.Id, TouristId = src.Tourist.Id, TouristName = src.Tourist.Username, RequestedAt = src.RequestedAt, Status = src.GetPrimaryStatusName() });
 
         CreateMap<ClubInvitation, ClubInvitationDto>().ReverseMap()
             .ConstructUsing(dto => new ClubInvitation(dto.ClubId, dto.TouristId));
