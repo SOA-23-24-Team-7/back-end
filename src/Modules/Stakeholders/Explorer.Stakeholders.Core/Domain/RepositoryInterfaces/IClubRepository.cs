@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
 {
-    public interface IClubRepository
+    public interface IClubRepository : ICrudRepository<Club>
     {
         public PagedResult<Club> GetClubsPaged(int page, int pageSize);
     }
