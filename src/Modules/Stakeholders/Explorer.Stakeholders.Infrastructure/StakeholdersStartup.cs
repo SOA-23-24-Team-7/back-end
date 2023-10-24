@@ -29,6 +29,7 @@ public static class StakeholdersStartup
         services.AddScoped<IPersonService, PersonService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
+        services.AddScoped<IRatingService, RatingService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -37,9 +38,12 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudDatabaseRepository<User, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IPersonRepository, PersonDataBaseRepository>();
+        services.AddScoped<IRatingRepository, RatingDatabaseRepository>();
+        services.AddScoped(typeof(ICrudRepository<Rating>), typeof(CrudDatabaseRepository<Rating, StakeholdersContext>));
 
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", "stakeholders")));
+
     }
 }
