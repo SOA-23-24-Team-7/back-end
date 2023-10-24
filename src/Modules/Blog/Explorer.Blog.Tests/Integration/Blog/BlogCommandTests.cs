@@ -1,13 +1,4 @@
-﻿using Explorer.API.Controllers;
-using Explorer.Blog.API.Dtos;
-using Explorer.Blog.API.Public;
-using Explorer.Blog.Infrastructure.Database;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-
-namespace Explorer.Blog.Tests.Integration.Blog
+﻿namespace Explorer.Blog.Tests.Integration.Blog
 {
     [Collection("Sequential")]
     public class BlogCommandTests : BaseBlogIntegrationTest
@@ -25,10 +16,10 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
             var newEntity = new BlogResponseDto
             {
-                Title = "Neki naslov",
-                Description = "Opis neki",
-                Date = DateTime.Now.ToUniversalTime(),
-                Pictures = new List<string> { "slika1.jpg", "slika2.jpg" }, // Primer slika
+                Title = "Predlog",
+                Description = "Test",
+                Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Pictures = new List<string> { },
                 Status = BlogStatus.Published
             };
 
@@ -36,13 +27,16 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as BlogResponseDto;
             // Assert - Response
             result.ShouldNotBeNull();
+
             result.Id.ShouldNotBe(0);
             result.Title.ShouldBe(newEntity.Title);
 
             // Assert - Database
-            var storedEntity = dbContext.Blogs.FirstOrDefault(i => i.Title == newEntity.Title);
+            var storedEntity = dbContext.Blogs.FirstOrDefault(i => i.Id == result.Id);
             storedEntity.ShouldNotBeNull();
             storedEntity.Id.ShouldBe(result.Id);
+
+
 
         }
         [Fact]
@@ -53,7 +47,11 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var controller = CreateController(scope);
             var updatedEntity = new BlogResponseDto
             {
-                Description = "Test"
+                //Title ="Predlog",
+                Description = "Test",
+                Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Pictures = new List<string> { },
+                Status = BlogStatus.Published
             };
 
             // Act

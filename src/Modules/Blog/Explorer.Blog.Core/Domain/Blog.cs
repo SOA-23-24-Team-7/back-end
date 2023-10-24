@@ -1,10 +1,9 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
-
-namespace Explorer.Blog.Core.Domain
+﻿namespace Explorer.Blog.Core.Domain
 {
     public enum BlogStatus { Draft, Published, Closed };
     public class Blog : Entity
     {
+
         public string Title { get; init; }
         public string Description { get; init; }
         public DateTime Date { get; init; }
@@ -13,8 +12,15 @@ namespace Explorer.Blog.Core.Domain
 
         public Blog() { }
 
-        public Blog(string title, string description, DateTime date, List<string>? pictures, BlogStatus status)
+        public Blog(int id, string title, string description, DateTime date, List<string>? pictures, BlogStatus status)
         {
+
+            if (string.IsNullOrEmpty(title))
+            {
+                throw new ArgumentException("Title ne sme biti prazan ili null.\n");
+            }
+
+
             Title = title;
             Description = description;
             Date = date;

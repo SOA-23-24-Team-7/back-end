@@ -1,0 +1,15 @@
+{
+  "Explorer.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\Explorer.API",
+  "Explorer.Blog.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\Modules\\Blog\\Explorer.Blog.API",
+  "Explorer.Blog.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\Modules\\Blog\\Explorer.Blog.Core",
+  "Explorer.Blog.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\Modules\\Blog\\Explorer.Blog.Infrastructure",
+  "Explorer.BuildingBlocks.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\BuildingBlocks\\Explorer.BuildingBlocks.Core",
+  "Explorer.BuildingBlocks.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\BuildingBlocks\\Explorer.BuildingBlocks.Infrastructure",
+  "Explorer.BuildingBlocks.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\BuildingBlocks\\Explorer.BuildingBlocks.Tests",
+  "Explorer.Stakeholders.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\Modules\\Stakeholders\\Explorer.Stakeholders.API",
+  "Explorer.Stakeholders.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\Modules\\Stakeholders\\Explorer.Stakeholders.Core",
+  "Explorer.Stakeholders.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\Modules\\Stakeholders\\Explorer.Stakeholders.Infrastructure",
+  "Explorer.Tours.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\Modules\\Tours\\Explorer.Tours.API",
+  "Explorer.Tours.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\Modules\\Tours\\Explorer.Tours.Core",
+  "Explorer.Tours.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\LENOVO\\Desktop\\PSW\\back-end\\src\\Modules\\Tours\\Explorer.Tours.Infrastructure"
+}
