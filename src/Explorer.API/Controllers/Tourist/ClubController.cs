@@ -19,7 +19,7 @@ namespace Explorer.API.Controllers.Tourist
             _clubService = clubService;
         }
         [HttpGet]
-        public ActionResult<PagedResult<ClubResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<ClubResponseWithOwnerDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _clubService.GetClubsPaged(page, pageSize);
             return CreateResponse(result);
