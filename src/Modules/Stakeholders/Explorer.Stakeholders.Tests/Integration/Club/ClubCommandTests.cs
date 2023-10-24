@@ -78,7 +78,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             var updatedEntity = new ClubResponseDto
             {
                 Id = -2,
-                OwnerId = -2,
+                OwnerId = -11,
                 Name = "izmenjenoime",
                 Description = "izmenjen opis",
                 Image = "izmenjena slika"
