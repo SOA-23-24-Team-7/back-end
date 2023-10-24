@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-
-namespace Explorer.API.Startup;
+﻿namespace Explorer.API.Startup;
 
 public static class AuthConfiguration
 {
@@ -55,6 +51,7 @@ public static class AuthConfiguration
             options.AddPolicy("administratorPolicy", policy => policy.RequireRole("administrator"));
             options.AddPolicy("authorPolicy", policy => policy.RequireRole("author"));
             options.AddPolicy("touristPolicy", policy => policy.RequireRole("tourist"));
+            options.AddPolicy("nonAdministratorPolicy", policy => policy.RequireAssertion(context => (new[] { "author", "tourist" }).Contains(context.User.Claims.First(c => c.Type == ClaimTypes.Role).Value)));
             options.AddPolicy("userPolicy", policy => policy.RequireAuthenticatedUser());
         });
     }
