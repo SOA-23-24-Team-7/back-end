@@ -17,6 +17,9 @@ public class StakeholdersContext : DbContext
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
+    public DbSet<Rating> Ratings { get; set; }
+
+    public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -35,7 +38,6 @@ public class StakeholdersContext : DbContext
             .HasOne<User>()
             .WithOne()
             .HasForeignKey<Person>(s => s.UserId);
-
         modelBuilder.Entity<ClubJoinRequest>()
             .HasOne(r => r.Tourist)
             .WithMany()
@@ -55,7 +57,6 @@ public class StakeholdersContext : DbContext
             .HasOne(i => i.Club)
             .WithMany()
             .HasForeignKey(i => i.ClubId);
-            
         modelBuilder.Entity<Rating>()
            .HasOne(s => s.User)
            .WithOne()
