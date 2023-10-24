@@ -22,7 +22,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPost]
-        public ActionResult<ClubJoinRequestSendDto> Send([FromBody] ClubJoinRequestSendDto request)
+        public ActionResult<ClubJoinRequestCreatedDto> Send([FromBody] ClubJoinRequestSendDto request)
         {
             var result = _requestService.Send(request);
             return CreateResponse(result);

@@ -10,7 +10,10 @@ public class StakeholderProfile : Profile
     public StakeholderProfile()
     {
         CreateMap<ClubJoinRequestSendDto, ClubJoinRequest>()
-            .ConstructUsing(src => new ClubJoinRequest(src.TouristId, src.ClubId, DateTime.Now, ClubJoinRequestStatus.Pending)).ReverseMap();
+            .ConstructUsing(src => new ClubJoinRequest(src.TouristId, src.ClubId, DateTime.Now, ClubJoinRequestStatus.Pending));
+
+        CreateMap<ClubJoinRequest, ClubJoinRequestCreatedDto>()
+            .ConstructUsing(src => new ClubJoinRequestCreatedDto { Id = src.Id, TouristId = src.TouristId, ClubId = src.ClubId, RequestedAt = src.RequestedAt, Status = src.GetPrimaryStatusName() });
 
         CreateMap<ClubJoinRequest, ClubJoinRequestByTouristDto>()
             .ConstructUsing(src => new ClubJoinRequestByTouristDto { Id = src.Id, ClubId = src.ClubId, ClubName = src.Club.Name, RequestedAt = src.RequestedAt, Status = src.GetPrimaryStatusName() });

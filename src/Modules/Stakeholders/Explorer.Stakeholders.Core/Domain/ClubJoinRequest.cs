@@ -47,7 +47,7 @@ namespace Explorer.Stakeholders.Core.Domain
 
         public string GetPrimaryStatusName()
         {
-            return Status.ToString().ToLower();
+            return Enum.GetName(typeof(ClubJoinRequestStatus), Status);
         }
     }
 }

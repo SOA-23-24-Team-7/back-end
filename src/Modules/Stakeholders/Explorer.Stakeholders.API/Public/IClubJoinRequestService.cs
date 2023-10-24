@@ -6,7 +6,7 @@ namespace Explorer.Tours.API.Public.Administration
 {
     public interface IClubJoinRequestService
     {
-        Result<ClubJoinRequestSendDto> Send(ClubJoinRequestSendDto request);
+        Result<ClubJoinRequestCreatedDto> Send(ClubJoinRequestSendDto request);
         Result Respond(long id, ClubJoinRequestResponseDto response);
         Result Cancel(long id);
         Result<PagedResult<ClubJoinRequestByTouristDto>> GetPagedByTourist(long id, int page, int pageSize);
