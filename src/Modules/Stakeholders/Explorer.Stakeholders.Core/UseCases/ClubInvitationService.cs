@@ -31,7 +31,7 @@ public class ClubInvitationService : IClubInvitationService
         _clubMemberManagementService = clubMemberManagementService;
     }
 
-    public Result<ClubInvitationDto> InviteTourist(ClubInvitationWithUsernameDto invitationDto)
+    public Result<ClubInvitationCreatedDto> InviteTourist(ClubInvitationWithUsernameDto invitationDto)
     {
         try
         {
@@ -51,7 +51,7 @@ public class ClubInvitationService : IClubInvitationService
         }
     }
 
-    public Result<ClubInvitationDto> InviteTourist(ClubInvitationDto invitationDto)
+    public Result<ClubInvitationCreatedDto> InviteTourist(ClubInvitationDto invitationDto)
     {
         try
         {
@@ -63,9 +63,11 @@ public class ClubInvitationService : IClubInvitationService
                 return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
             }
 
-            _invitationRepository.Create(invitation);
+            var createdInvitaion = _invitationRepository.Create(invitation);
+            
+            var createdInvitationDto = _mapper.Map<ClubInvitationCreatedDto>(createdInvitaion);
 
-            return invitationDto;
+            return createdInvitationDto;
         }
         catch (KeyNotFoundException)
         {

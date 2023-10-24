@@ -26,7 +26,7 @@ public class ClubInvitationController : BaseApiController
     }
 
     [HttpPost("byUsername")]
-    public ActionResult<ClubInvitationDto> Invite([FromBody] ClubInvitationWithUsernameDto dto)
+    public ActionResult<ClubInvitationCreatedDto> Invite([FromBody] ClubInvitationWithUsernameDto dto)
     {
         var result = _clubInvitationService.InviteTourist(dto);
         return CreateResponse(result);
