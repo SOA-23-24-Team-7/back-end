@@ -1,4 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 
 namespace Explorer.Tours.Core.Domain;
 
@@ -13,7 +15,10 @@ public class Tour : Entity
     public double Price { get; init; }
     public bool IsDeleted { get; init; }
 
-    public Tour(long authorId, string name, string description, int difficulty, List<string> tags, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
+    
+    public ICollection<Equipment> EquipmentList { get; init; }
+
+    public Tour(long authorId, string name, string description, int difficulty, List<string> tags, TourStatus status = TourStatus.Draft,double price = 0, bool isDeleted = false)
     {
         AuthorId = authorId;
         Name = name;
@@ -24,6 +29,7 @@ public class Tour : Entity
         Price = price;
         IsDeleted = isDeleted;
         Validate();
+        
     }
 
     private void Validate()
