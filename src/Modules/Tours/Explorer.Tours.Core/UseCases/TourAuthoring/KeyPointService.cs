@@ -8,7 +8,7 @@ using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases.TourAuthoring;
 
-public class KeyPointService : BaseService<KeyPointDto, KeyPoint>, IKeyPointService
+public class KeyPointService : BaseService<KeyPoint>, IKeyPointService
 {
     private readonly IKeyPointRepository _keyPointRepository;
 
@@ -22,7 +22,7 @@ public class KeyPointService : BaseService<KeyPointDto, KeyPoint>, IKeyPointServ
         try
         {
             var result = _keyPointRepository.GetByTourId(tourId);
-            return MapToDto(result);
+            return MapToDto<KeyPointDto>(result);
         }
         catch (KeyNotFoundException e)
         {
@@ -35,7 +35,7 @@ public class KeyPointService : BaseService<KeyPointDto, KeyPoint>, IKeyPointServ
         try
         {
             var result = _keyPointRepository.Create(MapToDomain(keyPoint));
-            return MapToDto(result);
+            return MapToDto<KeyPointDto>(result);
         }
         catch (ArgumentException e)
         {
@@ -48,7 +48,7 @@ public class KeyPointService : BaseService<KeyPointDto, KeyPoint>, IKeyPointServ
         try
         {
             var result = _keyPointRepository.Update(MapToDomain(keyPoint));
-            return MapToDto(result);
+            return MapToDto<KeyPointDto>(result);
         }
         catch (KeyNotFoundException e)
         {

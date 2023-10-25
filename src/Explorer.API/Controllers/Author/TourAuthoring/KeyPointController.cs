@@ -25,7 +25,7 @@ public class KeyPointController : BaseApiController
     }
 
     [HttpPut("tours/{tourId:long}/key-points/{id:long}")]
-    public ActionResult<EquipmentDto> Update(long tourId, long id, [FromBody] KeyPointDto keyPoint)
+    public ActionResult<KeyPointDto> Update(long tourId, long id, [FromBody] KeyPointDto keyPoint)
     {
         keyPoint.Id = id;
         var result = _keyPointService.Update(keyPoint);
