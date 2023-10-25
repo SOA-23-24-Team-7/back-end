@@ -5,7 +5,7 @@ namespace Explorer.Stakeholders.Core.Domain
     public class ClubJoinRequest : Entity
     {
         public long TouristId { get; init; }
-        public Person? Tourist { get; init; }
+        public User? Tourist { get; init; }
         public long ClubId { get; init; }
         public Club? Club { get; init; }
         public DateTime RequestedAt { get; init; }
@@ -44,7 +44,7 @@ namespace Explorer.Stakeholders.Core.Domain
             return Enum.GetName(typeof(ClubJoinRequestStatus), Status);
         }
     }
-
+    
     public enum ClubJoinRequestStatus
     {
         Pending,
@@ -53,3 +53,5 @@ namespace Explorer.Stakeholders.Core.Domain
         Cancelled
     }
 }
+
+

@@ -33,11 +33,9 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<ProblemResponseDto> Create([FromBody] ProblemCreateDto problem)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null && identity.IsAuthenticated)
             {
-                var idClaim = identity.FindFirst("id");
-                if (idClaim != null)
-                    problem.TouristId = int.Parse(idClaim.Value);
+                problem.TouristId = Int32.Parse(identity.FindFirst("id").Value);
             }
             problem.ReportedTime = DateTime.Now.Hour.ToString()+":"+DateTime.Now.Minute.ToString();
             var result = _problemService.Create(problem);
@@ -48,11 +46,10 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<ProblemResponseDto> Update([FromBody] ProblemUpdateDto problem)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
+            if (identity != null && identity.IsAuthenticated)
             {
-                var idClaim = identity.FindFirst("id");
-                if (idClaim != null)
-                    problem.TouristId = int.Parse(idClaim.Value);
+                if (Int32.Parse(identity.FindFirst("id").Value) != problem.TouristId)
+                    return Forbid();
             }
             var result = _problemService.Update(problem);
             return CreateResponse(result);
