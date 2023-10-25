@@ -5,6 +5,7 @@ namespace Explorer.Stakeholders.Infrastructure.Database;
 
 public class StakeholdersContext : DbContext
 {
+
     public DbSet<User> Users { get; set; }
     public DbSet<Person> People { get; set; }
     public DbSet<ClubInvitation> ClubInvitations { get; set; }
@@ -12,11 +13,13 @@ public class StakeholdersContext : DbContext
     public DbSet<Club> Clubs { get; set; }
     public DbSet<ClubJoinRequest> ClubJoinRequests { get; set; }
     public DbSet<Rating> Ratings { get; set; }
-    
+    public DbSet<TourPreference> TourPreferences { get; set; }
+
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) 
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
