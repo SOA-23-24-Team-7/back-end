@@ -44,7 +44,7 @@ namespace Explorer.Stakeholders.Core.Domain
             return Enum.GetName(typeof(ClubJoinRequestStatus), Status);
         }
     }
-
+    
     public enum ClubJoinRequestStatus
     {
         Pending,
@@ -53,3 +53,5 @@ namespace Explorer.Stakeholders.Core.Domain
         Cancelled
     }
 }
+
+
