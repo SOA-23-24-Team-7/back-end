@@ -1,6 +1,6 @@
 ﻿INSERT INTO stakeholders."TouristEquipments"(
     "Id", "TouristId", "EquipmentIds")
-VALUES (1, 1, ARRAY[1, 2, 3]);
+VALUES (10, 1, ARRAY[1, 2, 3]);
 
 INSERT INTO stakeholders."TouristEquipments"(
     "Id", "TouristId", "EquipmentIds")

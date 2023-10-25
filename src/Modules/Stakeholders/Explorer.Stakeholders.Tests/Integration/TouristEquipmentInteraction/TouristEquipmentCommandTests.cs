@@ -98,7 +98,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var updatedEntity = new TouristEquipmentUpdateDto
             {
-                Id = 1,
+                Id = 10,
                 TouristId = 1,
                 EquipmentIds = new List<int> { 1, 3 }
             };
@@ -118,12 +118,12 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
 
             // Assert - Response
             result.ShouldNotBeNull();
-            result.Id.ShouldBe(1);
+            result.Id.ShouldBe(10);
             result.TouristId.ShouldBe(updatedEntity.TouristId);
             result.EquipmentIds.ShouldBe(updatedEntity.EquipmentIds);
 
             // Assert - Database
-            var storedEntity = dbContext.TouristEquipments.FirstOrDefault(i => i.Id == 1);
+            var storedEntity = dbContext.TouristEquipments.FirstOrDefault(i => i.Id == 10);
             storedEntity.ShouldNotBeNull();
             storedEntity.TouristId.ShouldBe(updatedEntity.TouristId);
             storedEntity.EquipmentIds.ShouldBe(updatedEntity.EquipmentIds);
