@@ -25,7 +25,7 @@ public class ClubInvitationsCommandTests : BaseStakeholdersIntegrationTest
         var newEntity = new ClubInvitationWithUsernameDto()
         {
             ClubId = -1,
-            Username = "admin@gmail.com"
+            Username = "autor2@gmail.com"
         };
 
         // Act

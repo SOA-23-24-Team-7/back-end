@@ -18,7 +18,7 @@ public class ClubMemberManagementController : BaseApiController
         _clubMemberManagementService = clubMemberManagementService;
     }
 
-    [HttpDelete("kick/{id:int}")]
+    [HttpDelete("kick/{membershipId:int}")]
     public ActionResult KickTourist(int membershipId)
     {
         var userId = extractUserIdFromHttpContext();
@@ -26,7 +26,7 @@ public class ClubMemberManagementController : BaseApiController
         return CreateResponse(result);
     }
 
-    [HttpGet("{id:long}")]
+    [HttpGet("{clubId:long}")]
     public ActionResult<PagedResult<ClubMemberDto>> GetMembers(long clubId)
     {
         var members = _clubMemberManagementService.GetMembers(clubId);
