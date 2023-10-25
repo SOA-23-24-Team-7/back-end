@@ -50,12 +50,13 @@ namespace Explorer.Stakeholders.Core.Domain
             return Enum.GetName(typeof(ClubJoinRequestStatus), Status);
         }
     }
+    public enum ClubJoinRequestStatus
+    {
+        Pending,
+        Accepted,
+        Rejected,
+        Cancelled
+    }
 }
 
-public enum ClubJoinRequestStatus
-{
-    Pending,
-    Accepted,
-    Rejected,
-    Cancelled
-}
+
