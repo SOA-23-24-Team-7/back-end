@@ -11,6 +11,8 @@ public class ToursContext : DbContext
 
     public DbSet<Problem> Problem { get; set; }
     public DbSet<Tour> Tours { get; set; }
+    public DbSet<KeyPoint> KeyPoints { get; set; }
+    public DbSet<Facility> Facilities { get; set; }
 
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
@@ -19,10 +21,21 @@ public class ToursContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("tours");
+        
         modelBuilder.Entity<Tour>()
             .HasMany(t => t.EquipmentList)
             .WithMany(e => e.Tours)
             .UsingEntity(j => j.ToTable("TourEquipment"));
+
+        ConfigureKeyPoint(modelBuilder);
+    }
+
+    private static void ConfigureKeyPoint(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<KeyPoint>()
+            .HasOne<Tour>()
+            .WithMany()
+            .HasForeignKey(kp => kp.TourId);
     }
 
     
