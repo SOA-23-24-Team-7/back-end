@@ -8,4 +8,6 @@ public interface IKeyPointService
 {
     Result<List<KeyPointDto>> GetByTourId(long tourId);
     Result<KeyPointDto> Create(KeyPointDto keyPoint);
+    Result<KeyPointDto> Update(KeyPointDto keyPoint);
+    Result Delete(long id);
 }

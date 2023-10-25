@@ -9,4 +9,5 @@ public class KeyPointDto
     public double Longitude { get; set; }
     public double Latitude { get; set; }
     public string ImagePath { get; set; }
+    public long Order { get; set; }
 }
