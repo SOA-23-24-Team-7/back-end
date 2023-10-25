@@ -8,6 +8,8 @@ using Explorer.Stakeholders.Core.UseCases;
 using Explorer.Stakeholders.Infrastructure.Authentication;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Stakeholders.Infrastructure.Database.Repositories;
+using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.Core.UseCases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,20 +24,37 @@ public static class StakeholdersStartup
         SetupInfrastructure(services);
         return services;
     }
-    
+
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IClubInvitationService, ClubInvitationService>();
+        services.AddScoped<IPersonService, PersonService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<ITokenGenerator, JwtGenerator>();
+        services.AddScoped<IClubJoinRequestService, ClubJoinRequestService>();
+        services.AddScoped<IClubService, ClubService>();
+        services.AddScoped<IClubMemberManagementService, ClubMemberManagementService>();
+        services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<ITourPreferenceService, TourPreferenceService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
-        services.AddScoped<ITourPreferenceRepository, TourPreferenceDatabaseRepository > ();
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>));
+        services.AddScoped<IClubInvitationRepository, ClubInvitationDatabaseRepository>();
+        services.AddScoped<IClubMembershipRepository, ClubMembershipDatabaseRepository>();
+        services.AddScoped<IClubRepository, ClubRepository>();
+        services.AddScoped<IUserRepository, UserDatabaseRepository>();
+        services.AddScoped<IClubJoinRequestRepository, ClubJoinRequestRepository>();
+        services.AddScoped<IRatingRepository, RatingDatabaseRepository>();
+        services.AddScoped<ITourPreferenceRepository, TourPreferenceDatabaseRepository>();
+        services.AddScoped(typeof(ICrudRepository<Rating>), typeof(CrudDatabaseRepository<Rating, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudDatabaseRepository<User, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<TourPreference>), typeof(CrudDatabaseRepository<TourPreference, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
+        services.AddScoped<IPersonRepository, PersonDataBaseRepository>();
 
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
