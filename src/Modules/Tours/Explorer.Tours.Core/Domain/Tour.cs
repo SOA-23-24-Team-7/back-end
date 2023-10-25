@@ -31,7 +31,7 @@ public class Tour : Entity
         if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name");
         if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description");
         if (Difficulty < 1 || Difficulty > 5) throw new ArgumentException("Invalid Difficulty");
-        if (Tags == null) throw new ArgumentNullException("Tags cannot be null");
+        if (Tags.Count == 0) throw new ArgumentNullException("Tags cannot be empty");
         if (Price < 0) throw new ArgumentException("Price cannot be negative");
     }
 
