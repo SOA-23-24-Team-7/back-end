@@ -1,7 +1,7 @@
 using AutoMapper;
-using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Dtos.TouristEquipment;
 using Explorer.Stakeholders.Core.Domain;
-using System.Reflection;
+using Explorer.Stakeholders.API.Dtos;
 
 namespace Explorer.Stakeholders.Core.Mappers;
 
@@ -9,6 +9,9 @@ public class StakeholderProfile : Profile
 {
     public StakeholderProfile()
     {
+        CreateMap<TouristEquipmentResponseDto, TouristEquipment>().ReverseMap();
+        CreateMap<TouristEquipmentCreateDto, TouristEquipment>().ReverseMap();
+        CreateMap<TouristEquipmentUpdateDto, TouristEquipment>().ReverseMap();
         CreateMap<ClubJoinRequestSendDto, ClubJoinRequest>()
             .ConstructUsing(src => new ClubJoinRequest(src.TouristId, src.ClubId, DateTime.Now, ClubJoinRequestStatus.Pending));
 
