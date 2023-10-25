@@ -24,7 +24,6 @@ public class AuthenticationService : IAuthenticationService
     {
         var user = _userRepository.GetActiveByName(credentials.Username);
         if (user == null || credentials.Password != user.Password) return Result.Fail(FailureCode.NotFound);
-
         long personId;
         try
         {
