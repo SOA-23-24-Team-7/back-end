@@ -8,8 +8,15 @@ public class ToursProfile : Profile
 {
     public ToursProfile()
     {
-        CreateMap<EquipmentDto, Equipment>().ReverseMap();
         CreateMap<TourDto, Tour>().ReverseMap();
         CreateMap<KeyPointDto, KeyPoint>().ReverseMap();
+
+        CreateMap<EquipmentResponseDto, Equipment>().ReverseMap();
+        CreateMap<EquipmentCreateDto, Equipment>().ReverseMap();
+        CreateMap<EquipmentUpdateDto, Equipment>().ReverseMap();
+
+        CreateMap<FacilityResponseDto, Facility>().ReverseMap();
+        CreateMap<FacilityCreateDto, Facility>().ReverseMap();
+        CreateMap<FacilityUpdateDto, Facility>().ReverseMap();
     }
 }

@@ -1,17 +1,17 @@
-﻿using Explorer.API.Controllers.Administrator.Administration;
+﻿using Explorer.API.Controllers.Author;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 
-namespace Explorer.Tours.Tests.Integration.Administration;
+namespace Explorer.Tours.Tests.Integration;
 
 [Collection("Sequential")]
-public class EquipmentQueryTests : BaseToursIntegrationTest
+public class FacilityQueryTests : BaseToursIntegrationTest
 {
-    public EquipmentQueryTests(ToursTestFactory factory) : base(factory) { }
+    public FacilityQueryTests(ToursTestFactory factory) : base(factory) { }
 
     [Fact]
     public void Retrieves_all()
@@ -21,7 +21,7 @@ public class EquipmentQueryTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<EquipmentResponseDto>;
+        var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<FacilityResponseDto>;
 
         // Assert
         result.ShouldNotBeNull();
@@ -29,9 +29,9 @@ public class EquipmentQueryTests : BaseToursIntegrationTest
         result.TotalCount.ShouldBe(3);
     }
 
-    private static EquipmentController CreateController(IServiceScope scope)
+    private static FacilityController CreateController(IServiceScope scope)
     {
-        return new EquipmentController(scope.ServiceProvider.GetRequiredService<IEquipmentService>())
+        return new FacilityController(scope.ServiceProvider.GetRequiredService<IFacilityService>())
         {
             ControllerContext = BuildContext("-1")
         };
