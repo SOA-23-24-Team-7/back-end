@@ -142,15 +142,15 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
         // Act
-        var result = (OkResult)controller.Delete(-1, -1);
+        var result = (OkResult)controller.Delete(-1, -2);
 
         // Assert - Response
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(200);
 
         // Assert - Database
-        var storedCourse = dbContext.KeyPoints.FirstOrDefault(i => i.Id == -3);
-        storedCourse.ShouldBeNull();
+        var storedKeyPoint = dbContext.KeyPoints.FirstOrDefault(i => i.Id == -2);
+        storedKeyPoint.ShouldBeNull();
     }
 
     [Fact]
