@@ -31,7 +31,7 @@ public class ClubInvitationService : IClubInvitationService
         _clubMemberManagementService = clubMemberManagementService;
     }
 
-    public Result<ClubInvitationDto> InviteTourist(ClubInvitationWithUsernameDto invitationDto)
+    public Result<ClubInvitationCreatedDto> InviteTourist(ClubInvitationWithUsernameDto invitationDto)
     {
         try
         {
@@ -43,7 +43,7 @@ public class ClubInvitationService : IClubInvitationService
             }
 
             var dto = new ClubInvitationDto() { ClubId = invitationDto.ClubId, TouristId = user.Id };
-            return InviteTourist(dto);
+            return InviteByTouristId(dto);
         }
         catch (KeyNotFoundException e)
         {
@@ -51,21 +51,23 @@ public class ClubInvitationService : IClubInvitationService
         }
     }
 
-    public Result<ClubInvitationDto> InviteTourist(ClubInvitationDto invitationDto)
+    private Result<ClubInvitationCreatedDto> InviteByTouristId(ClubInvitationDto invitationDto)
     {
         try
         {
             var invitation = _mapper.Map<ClubInvitation>(invitationDto);
             var club = _clubRepository.Get(invitationDto.ClubId);
 
-            if (isMember(invitationDto.TouristId, invitation.ClubId) || isInvited(invitationDto.TouristId))
+            if (isMember(invitationDto.TouristId, invitation.ClubId) || isInvited(invitationDto.TouristId) || isOwner(invitation.TouristId, invitation.ClubId))
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
             }
 
-            _invitationRepository.Create(invitation);
+            var createdInvitaion = _invitationRepository.Create(invitation);
+            
+            var createdInvitationDto = _mapper.Map<ClubInvitationCreatedDto>(createdInvitaion);
 
-            return invitationDto;
+            return createdInvitationDto;
         }
         catch (KeyNotFoundException)
         {
@@ -150,6 +152,12 @@ public class ClubInvitationService : IClubInvitationService
     {
         var invitation = _invitationRepository.GetAll(i => i.TouristId == touristId && i.Status == InvitationStatus.Waiting).FirstOrDefault();
         return invitation != null;
+    }
+
+    private bool isOwner(long touristId, long clubId)
+    {
+        var club = _clubRepository.Get(clubId);
+        return club.OwnerId == touristId;
     }
 
     public Result<PagedResult<ClubInvitationWithClubAndOwnerName>> GetWaitingInvitations(long touristId)

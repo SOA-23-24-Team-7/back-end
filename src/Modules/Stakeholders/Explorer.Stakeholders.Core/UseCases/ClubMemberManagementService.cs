@@ -53,18 +53,27 @@ public class ClubMemberManagementService : IClubMemberManagementService
 
     public Result<PagedResult<ClubMemberDto>> GetMembers(long clubId)
     {
-        var memberships = _clubMembershipRepository.GetAll(m => m.ClubId == clubId);
-        var dtos = new PagedResult<ClubMemberDto>(new List<ClubMemberDto>(), 0);
-        foreach (var membership in memberships)
+        try
         {
-            var person = _personRepository.GetByUserId(membership.TouristId);
-            var memberDto = new ClubMemberDto() { UserId = person.UserId, FirstName = person.Name, LastName = person.Surname, Username = membership.Tourist.Username, MembershipId = membership.Id };
-            dtos.Results.Add(memberDto);
+            var club = _clubRepository.Get(clubId);
+            var memberships = _clubMembershipRepository.GetAll(m => m.ClubId == clubId);
+            var dtos = new List<ClubMemberDto>();
+            foreach (var membership in memberships)
+            {
+                var person = _personRepository.GetByUserId(membership.TouristId);
+                var memberDto = new ClubMemberDto() { UserId = person.UserId, FirstName = person.Name, LastName = person.Surname, Username = membership.Tourist.Username, MembershipId = membership.Id };
+                dtos.Add(memberDto);
+            }
+            var result = new PagedResult<ClubMemberDto>(dtos, dtos.Count);
+            return result;
         }
-        return dtos;
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
+        }
     }
 
-    public Result<ClubMemberKickDto> KickTourist(long membershipId, long userId)
+    public Result KickTourist(long membershipId, long userId)
     {
         try
         {

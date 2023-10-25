@@ -27,6 +27,9 @@ public class StakeholderProfile : Profile
         CreateMap<ClubInvitation, ClubInvitationDto>().ReverseMap()
             .ConstructUsing(dto => new ClubInvitation(dto.ClubId, dto.TouristId));
 
+        CreateMap<ClubInvitationCreatedDto, ClubInvitation>().ReverseMap()
+            .ConstructUsing(i => new ClubInvitationCreatedDto() { Id = i.Id, ClubId = i.ClubId, TouristId = i.TouristId});
+
         CreateMap<ClubInvitationWithClubAndOwnerName, ClubInvitation>().ReverseMap()
             .ConstructUsing(invitation => new ClubInvitationWithClubAndOwnerName() { Id = invitation.Id, ClubName = invitation.Club.Name, OwnerUsername = invitation.Club.Owner.Username });
 
