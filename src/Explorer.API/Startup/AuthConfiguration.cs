@@ -56,8 +56,6 @@ public static class AuthConfiguration
             options.AddPolicy("administratorPolicy", policy => policy.RequireRole("administrator"));
             options.AddPolicy("authorPolicy", policy => policy.RequireRole("author"));
             options.AddPolicy("touristPolicy", policy => policy.RequireRole("tourist"));
-            options.AddPolicy("authorOrTouristPolicy", policy => policy.RequireAssertion(context => 
-            (new[] { "author", "tourist" }).Contains(context.User.Claims.First(c => c.Type == ClaimTypes.Role).Value)));
         });
     }
 }

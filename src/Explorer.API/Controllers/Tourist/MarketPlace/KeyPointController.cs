@@ -15,7 +15,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
             _keyPointService = keyPointService;
         }
 
-        [Authorize(Policy = "authorOrTouristPolicy")]
+        [Authorize(Roles = "author, tourist")]
         [HttpGet("tours/{tourId:long}/key-points")]
         public ActionResult<KeyPointDto> GetKeyPoints(long tourId)
         {
