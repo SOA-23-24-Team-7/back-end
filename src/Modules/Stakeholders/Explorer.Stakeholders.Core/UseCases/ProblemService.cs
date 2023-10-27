@@ -16,6 +16,27 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
             _problemRepository = problemRepository;
         }
+
+        public Result<ProblemResponseDto> ResolveProblem(long problemId)
+        {
+            try
+            {
+                Problem problem = CrudRepository.Get(problemId);
+                problem.IsResolved = true;
+
+                var result = CrudRepository.Update(problem);
+                return MapToDto<ProblemResponseDto>(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
         public Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id)
         {
             return MapToDto<ProblemResponseDto>(_problemRepository.GetByUserId(page, pageSize, id));

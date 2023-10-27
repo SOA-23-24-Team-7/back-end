@@ -1,8 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -51,6 +49,13 @@ namespace Explorer.API.Controllers.Tourist
                     return Forbid();
             }
             var result = _problemService.Update(problem);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("resolve/{problemId:long}")]
+        public ActionResult<ProblemResponseDto> ResolveProblem(long problemId)
+        {
+            var result = _problemService.ResolveProblem(problemId);
             return CreateResponse(result);
         }
 

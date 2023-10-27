@@ -10,7 +10,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public DateTime DateTime { get; init; }
         public long TouristId { get; init; }
         public int TourId { get; init; }
-        public bool IsResolved { get; init; } = false;
+        public bool IsResolved { get; set; } = false;
 
         public Problem(string category, string priority, string description, DateTime dateTime, long touristId, int tourId)
         {

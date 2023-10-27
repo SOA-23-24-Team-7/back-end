@@ -9,7 +9,8 @@ public interface IProblemService
     Result<PagedResult<ProblemResponseDto>> GetPaged(int page, int pageSize);
     Result<ProblemResponseDto> Create<ProblemCreateDto>(ProblemCreateDto problem);
     Result<ProblemResponseDto> Update<ProblemUpdateDto>(ProblemUpdateDto problem);
+    Result<ProblemResponseDto> ResolveProblem(long problemId);
     Result Delete(long id);
-    Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize,long id);
+    Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id);
 
 }
