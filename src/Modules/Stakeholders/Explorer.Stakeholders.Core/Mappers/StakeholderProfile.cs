@@ -48,5 +48,8 @@ public class StakeholderProfile : Profile
         CreateMap<TourPreferenceResponseDto, TourPreference>().ReverseMap();
         CreateMap<TourPreferenceCreateDto, TourPreference>().ReverseMap();
         CreateMap<TourPreferenceUpdateDto, TourPreference>().ReverseMap();
+        CreateMap<ProblemResponseDto, Problem>().ReverseMap();
+        CreateMap<ProblemCreateDto, Problem>().ReverseMap();
+        CreateMap<ProblemUpdateDto, Problem>().ReverseMap();
     }
 }

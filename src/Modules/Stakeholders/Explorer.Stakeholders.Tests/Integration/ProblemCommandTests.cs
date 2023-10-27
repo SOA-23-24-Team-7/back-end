@@ -1,19 +1,20 @@
 ﻿using Explorer.API.Controllers.Administrator.Administration;
 using Explorer.API.Controllers.Tourist;
-using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
 using Explorer.Tours.API.Public.Administration;
-using Explorer.Tours.Infrastructure.Database;
+using Explorer.Stakeholders.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using Explorer.Stakeholders.Tests;
 
-namespace Explorer.Tours.Tests.Integration;
+namespace Explorer.Stakeholders.Tests.Integration;
 
 [Collection("Sequential")]
-public class ProblemCommandTests : BaseToursIntegrationTest
+public class ProblemCommandTests : BaseStakeholdersIntegrationTest
 {
-    public ProblemCommandTests(ToursTestFactory factory) : base(factory) { }
+    public ProblemCommandTests(StakeholdersTestFactory factory) : base(factory) { }
 
     [Fact]
     public void Creates()
@@ -21,13 +22,13 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var newEntity = new ProblemCreateDto
         {
-            Category="Kategorija1",
-            Priority="Bitno",
-            Description="Smislicu",
-            ReportedTime="10:00AM",
+            Category = "Kategorija1",
+            Priority = "Bitno",
+            Description = "Smislicu",
+            DateTime = DateTime.UtcNow,
             TourId = -3,
             TouristId=-1,
         };
@@ -57,7 +58,7 @@ public class ProblemCommandTests : BaseToursIntegrationTest
             Category = "", 
             Priority = "High", 
             Description = "", 
-            ReportedTime = "9",
+            DateTime = DateTime.UtcNow,
             TourId = 0, 
             TouristId = 0 
         };
@@ -76,14 +77,14 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var updatedEntity = new ProblemUpdateDto
         {
             Id = -1,
             Category = "Kategorija4",
             Priority = "Bitno",
             Description = "Nije bilo nekih vecih problema.",
-            ReportedTime = "11:00AM",
+            DateTime = DateTime.UtcNow,
             TourId = 1,
             TouristId = 3,
         };
@@ -96,14 +97,14 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         result.Id.ShouldBe(-1);
         result.Priority.ShouldBe(updatedEntity.Priority);
         result.TouristId.ShouldBe(updatedEntity.TouristId);
-        result.ReportedTime.ShouldBe(updatedEntity.ReportedTime);
+        result.DateTime.ShouldBe(updatedEntity.DateTime);
         result.TourId.ShouldBe(updatedEntity.TourId);
         result.Description.ShouldBe(updatedEntity.Description);
         // Assert - Database
         var storedEntity = dbContext.Problem.FirstOrDefault(i => i.Description== "Nije bilo nekih vecih problema.");
         storedEntity.ShouldNotBeNull();
         storedEntity.Priority.ShouldBe(updatedEntity.Priority);
-        storedEntity.ReportedTime.ShouldBe(updatedEntity.ReportedTime);
+        storedEntity.DateTime.ShouldBe(updatedEntity.DateTime);
         storedEntity.TouristId.ShouldBe(updatedEntity.TouristId);
         storedEntity.TourId.ShouldBe(updatedEntity.TourId);
         var oldEntity = dbContext.Problem.FirstOrDefault(i => i.Description== "Nije ukljuceno u turu sve sto je bilo navedeno.");
@@ -122,7 +123,7 @@ public class ProblemCommandTests : BaseToursIntegrationTest
             Category = "Kategorija1",
             Priority = "Veoma bitno",
             Description = "Nije ukljuceno u turu sve sto je bilo navedeno.",
-            ReportedTime = "10:00AM",
+            DateTime = DateTime.UtcNow,
             TourId = -3,
             TouristId = -5,
         };
@@ -141,7 +142,7 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
 
         // Act
         var result = (OkResult)controller.Delete(-3);

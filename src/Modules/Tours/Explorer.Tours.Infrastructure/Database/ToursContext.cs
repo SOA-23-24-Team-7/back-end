@@ -9,7 +9,7 @@ public class ToursContext : DbContext
 
     public DbSet<Review> Reviews { get; set; }
 
-    public DbSet<Problem> Problem { get; set; }
+    
     public DbSet<Tour> Tours { get; set; }
     public DbSet<KeyPoint> KeyPoints { get; set; }
     public DbSet<Facility> Facilities { get; set; }

@@ -38,6 +38,7 @@ public static class StakeholdersStartup
         services.AddScoped<IClubMemberManagementService, ClubMemberManagementService>();
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<ITourPreferenceService, TourPreferenceService>();
+        services.AddScoped<IProblemService, ProblemService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -57,9 +58,11 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<TourPreference>), typeof(CrudDatabaseRepository<TourPreference, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IPersonRepository, PersonDataBaseRepository>();
-
+        services.AddScoped(typeof(ICrudRepository<Problem>), typeof(CrudDatabaseRepository<Problem, StakeholdersContext>));
+        services.AddScoped<IProblemRepository, ProblemDatabaseRepository>();
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", "stakeholders")));
+
     }
 }

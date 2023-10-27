@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Dtos;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.API.Public;
-using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 
-namespace Explorer.Tours.Core.UseCases
+namespace Explorer.Stakeholders.Core.UseCases
 {
     public class ProblemService : CrudService<ProblemResponseDto, Problem>, IProblemService
     {
@@ -17,7 +18,7 @@ namespace Explorer.Tours.Core.UseCases
             _problemRepository = problemRepository;
             _tourService = tourService;
         }
-        public Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, int id)
+        public Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id)
         {
             return MapToDto<ProblemResponseDto>(_problemRepository.GetByUserId(page, pageSize, id));
         }
