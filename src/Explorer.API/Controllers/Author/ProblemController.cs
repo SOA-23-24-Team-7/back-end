@@ -1,6 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Public;
-using Explorer.Tours.Core.Domain;
+using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
