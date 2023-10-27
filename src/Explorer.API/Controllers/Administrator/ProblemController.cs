@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.UseCases;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 namespace Explorer.API.Controllers.Administrator
 {
     [Authorize(Policy = "administratorPolicy")]

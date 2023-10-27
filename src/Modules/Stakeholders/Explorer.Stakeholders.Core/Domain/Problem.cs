@@ -1,11 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Explorer.Stakeholders.Core.Domain
 {
@@ -17,10 +10,11 @@ namespace Explorer.Stakeholders.Core.Domain
         public string ReportedTime { get; init; }
         public int TouristId { get; init; }
         public int TourId { get; init; }
+        public bool IsResolved { get; init; } = false;
 
         public Problem(string category, string priority, string description, string reportedTime, int touristId, int tourId)
         {
-            Validate(category, priority, description,reportedTime);
+            Validate(category, priority, description, reportedTime);
             Category = category;
             Priority = priority;
             Description = description;
