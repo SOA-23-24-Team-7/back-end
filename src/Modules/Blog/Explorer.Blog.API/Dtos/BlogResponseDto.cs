@@ -7,8 +7,9 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime Date { get; set; }
-        public List<string>? Pictures { get; init; }
-        public BlogStatus Status { get; init; }
+        public List<string>? Pictures { get; set; }
+        public BlogStatus Status { get; set; }
+        public List<CommentResponseDto> Comments { get; set; }
 
 
     }

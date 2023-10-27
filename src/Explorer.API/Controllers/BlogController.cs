@@ -23,7 +23,7 @@ namespace Explorer.API.Controllers
 
         [Authorize(Policy = "userPolicy")]
         [HttpPost("create")]
-        public ActionResult<BlogResponseDto> Create([FromBody] BlogResponseDto blog)
+        public ActionResult<BlogResponseDto> Create([FromBody] BlogCreateDto blog)
         {
             var result = _blogService.Create(blog);
             return CreateResponse(result);
@@ -32,14 +32,14 @@ namespace Explorer.API.Controllers
         [HttpGet]
         public ActionResult<PagedResult<BlogResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _blogService.GetPaged(page, pageSize);
+            var result = _blogService.GetAll(page, pageSize);
             return CreateResponse(result);
         }
 
         [HttpGet("{id:int}")]
         public ActionResult<BlogResponseDto> Get(int id)
         {
-            var result = _blogService.Get(id);
+            var result = _blogService.GetById(id);
             return CreateResponse(result);
         }
 
