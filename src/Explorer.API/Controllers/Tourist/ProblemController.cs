@@ -34,9 +34,9 @@ namespace Explorer.API.Controllers.Tourist
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
             {
-                problem.TouristId = Int32.Parse(identity.FindFirst("id").Value);
+                problem.TouristId = long.Parse(identity.FindFirst("id").Value);
             }
-            problem.ReportedTime = DateTime.Now.Hour.ToString()+":"+DateTime.Now.Minute.ToString();
+            problem.DateTime = DateTime.Now;
             var result = _problemService.Create(problem);
             return CreateResponse(result);
         }
@@ -47,7 +47,7 @@ namespace Explorer.API.Controllers.Tourist
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
             {
-                if (Int32.Parse(identity.FindFirst("id").Value) != problem.TouristId)
+                if (long.Parse(identity.FindFirst("id").Value) != problem.TouristId)
                     return Forbid();
             }
             var result = _problemService.Update(problem);
@@ -61,7 +61,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
         [HttpGet("{id:int}")]
-        public ActionResult<PagedResult<ProblemResponseDto>> GetByUserId([FromQuery] int page, [FromQuery] int pageSize, int id)
+        public ActionResult<PagedResult<ProblemResponseDto>> GetByUserId([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
             var result = _problemService.GetPaged(page, pageSize);
             result = _problemService.GetByUserId(page, pageSize, id);

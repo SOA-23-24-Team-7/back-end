@@ -25,10 +25,10 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var newEntity = new ProblemCreateDto
         {
-            Category="Kategorija1",
-            Priority="Bitno",
-            Description="Smislicu",
-            ReportedTime="10:00AM",
+            Category = "Kategorija1",
+            Priority = "Bitno",
+            Description = "Smislicu",
+            DateTime = DateTime.UtcNow,
             TourId = -3,
             TouristId=-1,
         };
@@ -58,7 +58,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
             Category = "", 
             Priority = "High", 
             Description = "", 
-            ReportedTime = "9",
+            DateTime = DateTime.UtcNow,
             TourId = 0, 
             TouristId = 0 
         };
@@ -84,7 +84,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
             Category = "Kategorija4",
             Priority = "Bitno",
             Description = "Nije bilo nekih vecih problema.",
-            ReportedTime = "11:00AM",
+            DateTime = DateTime.UtcNow,
             TourId = 1,
             TouristId = 3,
         };
@@ -97,14 +97,14 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         result.Id.ShouldBe(-1);
         result.Priority.ShouldBe(updatedEntity.Priority);
         result.TouristId.ShouldBe(updatedEntity.TouristId);
-        result.ReportedTime.ShouldBe(updatedEntity.ReportedTime);
+        result.DateTime.ShouldBe(updatedEntity.DateTime);
         result.TourId.ShouldBe(updatedEntity.TourId);
         result.Description.ShouldBe(updatedEntity.Description);
         // Assert - Database
         var storedEntity = dbContext.Problem.FirstOrDefault(i => i.Description== "Nije bilo nekih vecih problema.");
         storedEntity.ShouldNotBeNull();
         storedEntity.Priority.ShouldBe(updatedEntity.Priority);
-        storedEntity.ReportedTime.ShouldBe(updatedEntity.ReportedTime);
+        storedEntity.DateTime.ShouldBe(updatedEntity.DateTime);
         storedEntity.TouristId.ShouldBe(updatedEntity.TouristId);
         storedEntity.TourId.ShouldBe(updatedEntity.TourId);
         var oldEntity = dbContext.Problem.FirstOrDefault(i => i.Description== "Nije ukljuceno u turu sve sto je bilo navedeno.");
@@ -123,7 +123,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
             Category = "Kategorija1",
             Priority = "Veoma bitno",
             Description = "Nije ukljuceno u turu sve sto je bilo navedeno.",
-            ReportedTime = "10:00AM",
+            DateTime = DateTime.UtcNow,
             TourId = -3,
             TouristId = -5,
         };
