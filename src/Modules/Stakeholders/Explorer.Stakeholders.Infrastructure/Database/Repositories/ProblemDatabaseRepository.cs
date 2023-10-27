@@ -20,7 +20,7 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<Problem>();
         }
-        public PagedResult<Problem> GetByUserId(int page, int pageSize, int id)
+        public PagedResult<Problem> GetByUserId(int page, int pageSize, long id)
         {
             var task = _dbSet.Where(x => x.TouristId == id).GetPagedById(page, pageSize);
             task.Wait();

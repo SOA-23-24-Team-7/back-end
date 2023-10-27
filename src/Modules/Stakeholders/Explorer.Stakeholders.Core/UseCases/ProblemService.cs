@@ -16,7 +16,7 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
             _problemRepository = problemRepository;
         }
-        public Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, int id)
+        public Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id)
         {
             return MapToDto<ProblemResponseDto>(_problemRepository.GetByUserId(page, pageSize, id));
         }
