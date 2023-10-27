@@ -1,14 +1,11 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Explorer.Tours.API.Dtos;
 
 namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 {
     public interface IProblemRepository
     {
         PagedResult<Problem> GetByUserId(int page, int pageSize, int id);
+        PagedResult<Problem> GetByAuthor(int page, int pageSize, List<TourResponseDto> authorsTours);
     }
 }

@@ -1,9 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
-using Explorer.Tours.API.Public.Administration;
-using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -12,7 +9,7 @@ namespace Explorer.API.Controllers.Tourist
 {
 
     [Authorize(Policy = "touristPolicy")]
-    [Route("api/problem")]
+    [Route("api/tourist/problem")]
     public class ProblemController : BaseApiController
     {
         private readonly IProblemService _problemService;
@@ -22,7 +19,7 @@ namespace Explorer.API.Controllers.Tourist
             _problemService = problemService;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public ActionResult<PagedResult<ProblemResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _problemService.GetPaged(page, pageSize);
@@ -37,7 +34,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 problem.TouristId = Int32.Parse(identity.FindFirst("id").Value);
             }
-            problem.ReportedTime = DateTime.Now.Hour.ToString()+":"+DateTime.Now.Minute.ToString();
+            problem.ReportedTime = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
             var result = _problemService.Create(problem);
             return CreateResponse(result);
         }
@@ -61,11 +58,10 @@ namespace Explorer.API.Controllers.Tourist
             var result = _problemService.Delete(id);
             return CreateResponse(result);
         }
-        [HttpGet("{id:int}")]
-        public ActionResult<PagedResult<ProblemResponseDto>> GetByUserId([FromQuery] int page, [FromQuery] int pageSize, int id)
+        [HttpGet("")]
+        public ActionResult<PagedResult<ProblemResponseDto>> GetByUserId([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _problemService.GetPaged(page, pageSize);
-            result = _problemService.GetByUserId(page, pageSize, id);
+            var result = _problemService.GetByUserId(page, pageSize, int.Parse(HttpContext.User.Claims.First(x => x.Type == "id").Value));
             return CreateResponse(result);
         }
     }

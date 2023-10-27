@@ -9,8 +9,6 @@ namespace Explorer.Blog.Core.UseCases
     {
         public BlogService(ICrudRepository<Domain.Blog> crudRepository, IMapper mapper) : base(crudRepository, mapper)
         {
-
-
         }
     }
 }
