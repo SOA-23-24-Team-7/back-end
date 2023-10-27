@@ -10,9 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers
 {
 
-    [Authorize(Policy = "authorPolicy")]
     [Route("api/blog")]
-    public class BlogController: BaseApiController
+    public class BlogController : BaseApiController
     {
         private readonly IBlogService _blogService;
 
@@ -21,21 +20,27 @@ namespace Explorer.API.Controllers
             _blogService = authenticationService;
         }
 
-       
 
+        [Authorize(Policy = "userPolicy")]
         [HttpPost("create")]
-        public ActionResult<BlogDto> Create([FromBody] BlogDto blog)
+        public ActionResult<BlogResponseDto> Create([FromBody] BlogResponseDto blog)
         {
             blog.Date = DateTime.UtcNow;
             var result = _blogService.Create(blog);
             return CreateResponse(result);
         }
 
-
         [HttpGet]
-        public ActionResult<PagedResult<BlogDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<BlogResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _blogService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("{id:int}")]
+        public ActionResult<BlogResponseDto> Get(int id)
+        {
+            var result = _blogService.Get(id);
             return CreateResponse(result);
         }
 

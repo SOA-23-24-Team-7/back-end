@@ -1,6 +1,6 @@
-using Explorer.Tours.Infrastructure;
-using Explorer.Stakeholders.Infrastructure;
 using Explorer.Blog.Infrastructure;
+using Explorer.Stakeholders.Infrastructure;
+using Explorer.Tours.Infrastructure;
 
 namespace Explorer.API.Startup;
 
