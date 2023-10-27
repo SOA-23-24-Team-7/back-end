@@ -6,8 +6,8 @@ namespace Explorer.Tours.API.Public
 {
     public interface IReviewService
     { 
-        Result<PagedResult<ReviewResponseDto>> GetPagedByTourId(int page, int pageSize, int tourId);
-        Result<Boolean> ReviewExists(long touristId, int tourId);
+        Result<PagedResult<ReviewResponseDto>> GetPagedByTourId(int page, int pageSize, long tourId);
+        Result<Boolean> ReviewExists(long touristId, long tourId);
         Result<ReviewResponseDto> Create<ReviewCreateDto>(ReviewCreateDto review);
         Result<ReviewResponseDto> Update<ReviewUpdateDto>(ReviewUpdateDto review);
         Result Delete(long id);

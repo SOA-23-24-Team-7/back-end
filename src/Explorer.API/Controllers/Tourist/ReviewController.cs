@@ -20,14 +20,14 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("{tourId:int}")]
-        public ActionResult<PagedResult<ReviewResponseDto>> GetAllByTourId([FromQuery] int page, [FromQuery] int pageSize, int tourId)
+        public ActionResult<PagedResult<ReviewResponseDto>> GetAllByTourId([FromQuery] int page, [FromQuery] int pageSize, long tourId)
         {
             var result = _reviewService.GetPagedByTourId(page, pageSize, tourId);
             return CreateResponse(result);
         }
 
-        [HttpGet("{touristId:long}/{tourId:int}")]
-        public ActionResult<Boolean> ReviewExists(long touristId, int tourId)
+        [HttpGet("{touristId:long}/{tourId:long}")]
+        public ActionResult<Boolean> ReviewExists(long touristId, long tourId)
         {
             var result = _reviewService.ReviewExists(touristId, tourId);
             return result.Value;
