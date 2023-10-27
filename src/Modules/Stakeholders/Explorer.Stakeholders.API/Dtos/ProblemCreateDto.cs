@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Tours.API.Dtos
+namespace Explorer.Stakeholders.API.Dtos
 {
-    public class ProblemUpdateDto
+    public class ProblemCreateDto
     {
-        public int Id { get; set; }
         public string Category { get; set; }
         public string Priority { get; set; }
         public string Description { get; set; }

@@ -1,7 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
-using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,13 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Tours.Infrastructure.Database.Repositories
+namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 {
     public class ProblemDatabaseRepository:IProblemRepository
     {
-        private readonly ToursContext _dbContext;
+        private readonly StakeholdersContext _dbContext;
         private readonly DbSet<Problem> _dbSet;
-        public ProblemDatabaseRepository(ToursContext dbContext)
+        public ProblemDatabaseRepository(StakeholdersContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<Problem>();
