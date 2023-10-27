@@ -26,6 +26,7 @@ namespace Explorer.API.Controllers
         [HttpPost("create")]
         public ActionResult<BlogDto> Create([FromBody] BlogDto blog)
         {
+            blog.Date = DateTime.UtcNow;
             var result = _blogService.Create(blog);
             return CreateResponse(result);
         }
