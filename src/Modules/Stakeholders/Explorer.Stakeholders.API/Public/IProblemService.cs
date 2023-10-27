@@ -10,6 +10,6 @@ public interface IProblemService
     Result<ProblemResponseDto> Create<ProblemCreateDto>(ProblemCreateDto problem);
     Result<ProblemResponseDto> Update<ProblemUpdateDto>(ProblemUpdateDto problem);
     Result Delete(long id);
-    Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize,int id);
+    Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize,long id);
 
 }

@@ -9,6 +9,6 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
 {
     public interface IProblemRepository
     {
-        PagedResult<Problem> GetByUserId(int page, int pageSize, int id);
+        PagedResult<Problem> GetByUserId(int page, int pageSize, long id);
     }
 }

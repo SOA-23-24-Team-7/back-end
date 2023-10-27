@@ -20,7 +20,7 @@ namespace Explorer.Stakeholders.Core.UseCases
         public ProblemService(ICrudRepository<Problem> repository, IMapper mapper,IProblemRepository problemRepository) : base(repository, mapper) {
             _problemRepository = problemRepository;
         }
-        public Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, int id)
+        public Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id)
         {
             return MapToDto<ProblemResponseDto>(_problemRepository.GetByUserId(page, pageSize, id));
         }
