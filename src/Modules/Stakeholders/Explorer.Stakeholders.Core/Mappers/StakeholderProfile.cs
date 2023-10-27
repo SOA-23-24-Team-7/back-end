@@ -52,7 +52,6 @@ public class StakeholderProfile : Profile
         CreateMap<ProblemCreateDto, Problem>().ReverseMap();
         CreateMap<ProblemUpdateDto, Problem>().ReverseMap();
         CreateMap<ProblemAnswerCreateDto, ProblemAnswer>().ReverseMap();
-        CreateMap<ProblemAnswerResponseDto, ProblemAnswer>().ReverseMap().ForMember(x => x.Comments, opt => opt.MapFrom(src => src.Comments));
         CreateMap<ProblemCommentCreateDto, ProblemComment>().ReverseMap();
         CreateMap<ProblemCommentResponseDto, ProblemComment>().ReverseMap();
     }
