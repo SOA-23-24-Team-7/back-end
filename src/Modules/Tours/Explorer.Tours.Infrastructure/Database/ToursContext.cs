@@ -6,13 +6,11 @@ namespace Explorer.Tours.Infrastructure.Database;
 public class ToursContext : DbContext
 {
     public DbSet<Equipment> Equipment { get; set; }
-
     public DbSet<Review> Reviews { get; set; }
-
-    
     public DbSet<Tour> Tours { get; set; }
     public DbSet<KeyPoint> KeyPoints { get; set; }
     public DbSet<Facility> Facilities { get; set; }
+    public DbSet<Preference> Preferences { get; set; }
 
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
@@ -37,6 +35,4 @@ public class ToursContext : DbContext
             .WithMany()
             .HasForeignKey(kp => kp.TourId);
     }
-
-    
 }

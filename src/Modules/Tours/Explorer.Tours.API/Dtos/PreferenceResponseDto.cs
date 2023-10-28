@@ -1,8 +1,8 @@
 ﻿
 
-namespace Explorer.Stakeholders.API.Dtos
+namespace Explorer.Tours.API.Dtos
 {
-    public class TourPreferenceResponseDto
+    public class PreferenceResponseDto
     {
         public long Id { get; set; }
         public long UserId { get; set; }
