@@ -26,7 +26,7 @@ public class ToursContext : DbContext
             .UsingEntity(j => j.ToTable("TourEquipment"));
 
         ConfigureKeyPoint(modelBuilder);
-        ConfigureReview(modelBuilder);
+        
     }
 
     private static void ConfigureKeyPoint(ModelBuilder modelBuilder)
@@ -38,12 +38,5 @@ public class ToursContext : DbContext
     }
 
 
-    private static void ConfigureReview(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Review>()
-            .HasOne<Tour>()
-            .WithMany()
-            .HasForeignKey(r => r.TourId);
-    }
 
 }
