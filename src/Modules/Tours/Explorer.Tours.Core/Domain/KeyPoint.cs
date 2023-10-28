@@ -5,6 +5,7 @@ namespace Explorer.Tours.Core.Domain;
 public class KeyPoint : Entity
 {
     public long TourId { get; init; }
+    public Tour? Tour { get; init; }
     public string Name { get; init; }
     public string Description { get; init; }
     public double Longitude { get; init; }

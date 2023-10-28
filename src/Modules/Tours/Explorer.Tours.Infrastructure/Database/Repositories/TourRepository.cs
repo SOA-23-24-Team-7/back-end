@@ -56,5 +56,21 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
             DbContext.SaveChanges();
         }
+
+        //anja dodala
+        public PagedResult<Core.Domain.Tour> GetAll(int page, int pageSize)
+        {
+            var task = _dbSet.Include(x => x.KeyPoints).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
+        }
+
+        //dodato
+        public Core.Domain.Tour GetById(long id)
+        {
+            var entity = _dbSet.Include(x => x.KeyPoints).First(x => x.Id == id);
+            if (entity == null) throw new KeyNotFoundException("Not found: " + id);
+            return entity;
+        }
     }
 }

@@ -30,9 +30,13 @@ public class ToursContext : DbContext
 
     private static void ConfigureKeyPoint(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Tour>()
+            .HasMany(t => t.KeyPoints)
+            .WithOne(k => k.Tour);
+
         modelBuilder.Entity<KeyPoint>()
             .HasOne<Tour>()
-            .WithMany()
+            .WithMany(t => t.KeyPoints)
             .HasForeignKey(kp => kp.TourId);
     }
 }

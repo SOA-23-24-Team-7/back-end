@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,5 +15,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         List<Equipment> GetEquipment(long tourId);
         void AddEquipment(long tourId, long equipmentId);
         void DeleteEquipment(long tourId, long equipmentId);
+        PagedResult<Tour> GetAll(int page, int pageSize);   //anja dodala
+        Tour GetById(long id);  //dodato
     }
 }

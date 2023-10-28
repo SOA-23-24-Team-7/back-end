@@ -23,7 +23,8 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
     {
-        var allTours = _repository.GetPaged(page, pageSize);
+        //var allTours = _repository.GetPaged(page, pageSize);
+        var allTours = _tourRepository.GetAll(page, pageSize);  //anja dodala
         var toursByAuthor = allTours.Results.Where(t => t.AuthorId == authorId).ToList();
         var pagedResult = new PagedResult<Tour>(toursByAuthor, toursByAuthor.Count);
         return MapToDto<TourResponseDto>(pagedResult);
@@ -63,5 +64,12 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
         }
     }
 
-    
+    //dodato
+    public Result<TourResponseDto> GetById(long id)
+    {
+        var entity = _tourRepository.GetById(id);
+        return MapToDto<TourResponseDto>(entity);
+    }
+
+
 }

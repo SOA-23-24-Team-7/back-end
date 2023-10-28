@@ -6,7 +6,7 @@ namespace Explorer.Tours.API.Public;
 
 public interface ITourService
 {
-    Result<PagedResult<TourResponseDto>> GetPaged(int page, int pageSize);
+    Result<PagedResult<TourResponseDto>> GetPaged(int page, int pageSize);  //bilo
     Result<TourResponseDto> Create<TourCreateDto>(TourCreateDto tour);
     Result<TourResponseDto> Update<TourUpdateDto>(TourUpdateDto tour);
     Result Delete(long id);
@@ -14,4 +14,5 @@ public interface ITourService
     Result<PagedResult<EquipmentResponseDto>> GetEquipment(long tourId);
     Result AddEquipment(long tourId, long equipmentId);
     Result DeleteEquipment(long tourId, int equipmentId);
+    Result<TourResponseDto> GetById(long id);   //dodato
 }
