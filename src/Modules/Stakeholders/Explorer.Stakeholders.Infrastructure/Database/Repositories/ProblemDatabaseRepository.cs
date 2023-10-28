@@ -30,5 +30,11 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             task.Wait();
             return task.Result;
         }
+
+        public long GetTourIdByProblemId(long problemId)
+        {
+            var result = _dbContext.Problem.FirstOrDefault(problem => problem.Id == problemId);
+            return result.TourId;
+        }
     }
 }

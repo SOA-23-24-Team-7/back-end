@@ -1,7 +1,7 @@
 using AutoMapper;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Dtos.TouristEquipment;
 using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.API.Dtos;
 
 namespace Explorer.Stakeholders.Core.Mappers;
 
@@ -28,7 +28,7 @@ public class StakeholderProfile : Profile
             .ConstructUsing(dto => new ClubInvitation(dto.ClubId, dto.TouristId));
 
         CreateMap<ClubInvitationCreatedDto, ClubInvitation>().ReverseMap()
-            .ConstructUsing(i => new ClubInvitationCreatedDto() { Id = i.Id, ClubId = i.ClubId, TouristId = i.TouristId});
+            .ConstructUsing(i => new ClubInvitationCreatedDto() { Id = i.Id, ClubId = i.ClubId, TouristId = i.TouristId });
 
         CreateMap<ClubInvitationWithClubAndOwnerName, ClubInvitation>().ReverseMap()
             .ConstructUsing(invitation => new ClubInvitationWithClubAndOwnerName() { Id = invitation.Id, ClubName = invitation.Club.Name, OwnerUsername = invitation.Club.Owner.Username });
@@ -51,5 +51,9 @@ public class StakeholderProfile : Profile
         CreateMap<ProblemResponseDto, Problem>().ReverseMap();
         CreateMap<ProblemCreateDto, Problem>().ReverseMap();
         CreateMap<ProblemUpdateDto, Problem>().ReverseMap();
+        CreateMap<ProblemAnswerCreateDto, ProblemAnswer>().ReverseMap();
+        CreateMap<ProblemAnswerResponseDto, ProblemAnswer>().ReverseMap();
+        CreateMap<ProblemCommentCreateDto, ProblemComment>().ReverseMap();
+        CreateMap<ProblemCommentResponseDto, ProblemComment>().ReverseMap();
     }
 }

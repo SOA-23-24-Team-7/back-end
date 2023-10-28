@@ -7,6 +7,6 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
     {
         PagedResult<Problem> GetByAuthor(int page, int pageSize, List<TourResponseDto> authorsTours);
         PagedResult<Problem> GetByUserId(int page, int pageSize, long id);
-
+        long GetTourIdByProblemId(long problemId);
     }
 }

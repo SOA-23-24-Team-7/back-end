@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Explorer.Stakeholders.API.Dtos
+﻿namespace Explorer.Stakeholders.API.Dtos
 {
     public class ProblemResponseDto
     {
@@ -15,5 +9,6 @@ namespace Explorer.Stakeholders.API.Dtos
         public DateTime DateTime { get; set; }
         public long TouristId { get; set; }
         public int TourId { get; set; }
+        public bool IsResolved { get; set; }
     }
 }

@@ -52,6 +52,13 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("resolve/{problemId:long}")]
+        public ActionResult<ProblemResponseDto> ResolveProblem(long problemId)
+        {
+            var result = _problemService.ResolveProblem(problemId);
+            return CreateResponse(result);
+        }
+
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
