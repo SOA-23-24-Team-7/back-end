@@ -45,9 +45,6 @@ public class StakeholderProfile : Profile
             .ConstructUsing(src => new RatingWithUserDto { Id = src.Id, UserId = src.UserId, Grade = src.Grade, Comment = src.Comment, UserName = src.User.Username });
         CreateMap<RatingCreateDto, Rating>().ReverseMap();
         CreateMap<RatingUpdateDto, Rating>().ReverseMap();
-        CreateMap<TourPreferenceResponseDto, TourPreference>().ReverseMap();
-        CreateMap<TourPreferenceCreateDto, TourPreference>().ReverseMap();
-        CreateMap<TourPreferenceUpdateDto, TourPreference>().ReverseMap();
         CreateMap<ProblemResponseDto, Problem>().ReverseMap();
         CreateMap<ProblemCreateDto, Problem>().ReverseMap();
         CreateMap<ProblemUpdateDto, Problem>().ReverseMap();

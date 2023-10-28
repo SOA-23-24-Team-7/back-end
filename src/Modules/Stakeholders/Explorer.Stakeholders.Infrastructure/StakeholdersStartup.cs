@@ -37,7 +37,6 @@ public static class StakeholdersStartup
         services.AddScoped<IClubService, ClubService>();
         services.AddScoped<IClubMemberManagementService, ClubMemberManagementService>();
         services.AddScoped<IRatingService, RatingService>();
-        services.AddScoped<ITourPreferenceService, TourPreferenceService>();
         services.AddScoped<IProblemService, ProblemService>();
     }
 
@@ -52,10 +51,8 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, StakeholdersContext>));
         services.AddScoped<IClubJoinRequestRepository, ClubJoinRequestRepository>();
         services.AddScoped<IRatingRepository, RatingDatabaseRepository>();
-        services.AddScoped<ITourPreferenceRepository, TourPreferenceDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Rating>), typeof(CrudDatabaseRepository<Rating, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudDatabaseRepository<User, StakeholdersContext>));
-        services.AddScoped(typeof(ICrudRepository<TourPreference>), typeof(CrudDatabaseRepository<TourPreference, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IPersonRepository, PersonDataBaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Problem>), typeof(CrudDatabaseRepository<Problem, StakeholdersContext>));
