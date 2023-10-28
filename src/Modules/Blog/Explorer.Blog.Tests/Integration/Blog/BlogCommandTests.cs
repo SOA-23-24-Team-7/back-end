@@ -23,7 +23,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
-            var newEntity = new BlogResponseDto
+            var newEntity = new BlogCreateDto
             {
                 Title = "Predlog",
                 Description = "Test",
@@ -54,7 +54,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var updatedEntity = new BlogResponseDto
+            var updatedEntity = new BlogCreateDto
             {
                 //Title ="Predlog",
                 Description = "Test",
