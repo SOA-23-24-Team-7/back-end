@@ -1,17 +1,12 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
-using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 {
-    public class ProblemDatabaseRepository:IProblemRepository
+    public class ProblemDatabaseRepository : IProblemRepository
     {
         private readonly StakeholdersContext _dbContext;
         private readonly DbSet<Problem> _dbSet;
@@ -25,6 +20,11 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             var task = _dbSet.Where(x => x.TouristId == id).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
+        }
+        public long GetTourIdByProblemId(long problemId)
+        {
+            var result = _dbContext.Problem.FirstOrDefault(problem => problem.Id == problemId);
+            return result.TourId;
         }
     }
 }

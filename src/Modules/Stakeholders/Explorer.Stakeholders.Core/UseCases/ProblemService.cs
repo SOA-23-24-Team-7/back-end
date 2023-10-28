@@ -41,6 +41,11 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
             return MapToDto<ProblemResponseDto>(_problemRepository.GetByUserId(page, pageSize, id));
         }
+
+        public long GetTourIdByProblemId(long problemId)
+        {
+            return _problemRepository.GetTourIdByProblemId(problemId);
+        }
     }
 }
 

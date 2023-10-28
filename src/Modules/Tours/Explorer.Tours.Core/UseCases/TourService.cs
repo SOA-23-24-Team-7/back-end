@@ -5,7 +5,6 @@ using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-using System.Linq;
 
 namespace Explorer.Tours.Core.UseCases;
 
@@ -14,7 +13,8 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository) : base(repository, mapper) {
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository) : base(repository, mapper)
+    {
         _repository = repository;
         _mapper = mapper;
         _tourRepository = tourRepository;
@@ -41,7 +41,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
     {
         try
         {
-            _tourRepository.AddEquipment(tourId,equipmentId);
+            _tourRepository.AddEquipment(tourId, equipmentId);
             return Result.Ok();
         }
         catch (Exception e)
@@ -63,5 +63,5 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
         }
     }
 
-    
+
 }

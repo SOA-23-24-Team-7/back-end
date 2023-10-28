@@ -12,5 +12,6 @@ public interface IProblemService
     Result<ProblemResponseDto> ResolveProblem(long problemId);
     Result Delete(long id);
     Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id);
+    long GetTourIdByProblemId(long problemId);
 
 }
