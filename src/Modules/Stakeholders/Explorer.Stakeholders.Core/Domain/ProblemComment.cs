@@ -4,11 +4,13 @@ namespace Explorer.Stakeholders.Core.Domain
 {
     public class ProblemComment : Entity
     {
+        public long CommenterId { get; private set; }
         public long ProblemAnswerId { get; private set; }
         public string Text { get; private set; }
 
-        public ProblemComment(long problemAnswerId, string text)
+        public ProblemComment(long commenterId, long problemAnswerId, string text)
         {
+            CommenterId = commenterId;
             ProblemAnswerId = problemAnswerId;
             Text = text;
             Validate();
