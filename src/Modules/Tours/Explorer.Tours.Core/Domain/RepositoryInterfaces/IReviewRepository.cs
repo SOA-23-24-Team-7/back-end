@@ -10,7 +10,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 {
     public interface IReviewRepository
     {
-        PagedResult<Review> GetPagedByTourId(int page, int pageSize, int tourId);
-        bool ReviewExists(long touristId, int tourId);
+        PagedResult<Review> GetPagedByTourId(int page, int pageSize, long tourId);
+        bool ReviewExists(long touristId, long tourId);
     }
 }

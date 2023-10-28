@@ -26,6 +26,7 @@ public class ToursContext : DbContext
             .UsingEntity(j => j.ToTable("TourEquipment"));
 
         ConfigureKeyPoint(modelBuilder);
+        
     }
 
     private static void ConfigureKeyPoint(ModelBuilder modelBuilder)
@@ -35,4 +36,7 @@ public class ToursContext : DbContext
             .WithMany()
             .HasForeignKey(kp => kp.TourId);
     }
+
+
+
 }
