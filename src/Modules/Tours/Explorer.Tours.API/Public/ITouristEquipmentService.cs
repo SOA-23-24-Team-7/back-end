@@ -1,8 +1,8 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos.TouristEquipment;
+using Explorer.Tours.API.Dtos.TouristEquipment;
 using FluentResults;
 
-namespace Explorer.Stakeholders.API.Public
+namespace Explorer.Tours.API.Public
 {
     public interface ITouristEquipmentService
     {
