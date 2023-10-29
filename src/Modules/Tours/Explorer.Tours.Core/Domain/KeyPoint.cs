@@ -11,7 +11,7 @@ public class KeyPoint : Entity
     public double Longitude { get; init; }
     public double Latitude { get; init; }
     public string ImagePath { get; init; }
-    public long Order { get; init; }
+    public long Order { get; init; }  
 
     public KeyPoint(long tourId, string name, string description, double longitude, double latitude, string imagePath, long order)
     {
@@ -35,3 +35,4 @@ public class KeyPoint : Entity
         if (string.IsNullOrWhiteSpace(ImagePath)) throw new ArgumentException("Invalid ImagePath");
     }
 }
+

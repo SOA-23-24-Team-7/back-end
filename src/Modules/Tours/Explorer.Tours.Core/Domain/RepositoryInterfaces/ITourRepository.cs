@@ -15,7 +15,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         List<Equipment> GetEquipment(long tourId);
         void AddEquipment(long tourId, long equipmentId);
         void DeleteEquipment(long tourId, long equipmentId);
-        PagedResult<Tour> GetAll(int page, int pageSize);   //anja dodala
+        PagedResult<Tour> GetAll(int page, int pageSize);   //dodato
         Tour GetById(long id);  //dodato
     }
 }

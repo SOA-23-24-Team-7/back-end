@@ -46,6 +46,8 @@ public static class ToursStartup
         services.AddScoped<ITourService, TourService>();
 
         services.AddScoped<IPreferenceService, PreferenceService>();
+
+        services.AddScoped<IPublicKeyPointRequestService, PublicKeyPointRequestService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -55,6 +57,8 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<Facility>), typeof(CrudDatabaseRepository<Facility, ToursContext>));
       
         services.AddScoped(typeof(IKeyPointRepository), typeof(KeyPointDatabaseRepository));
+
+        services.AddScoped(typeof(ICrudRepository<PublicKeyPointRequest>), typeof(CrudDatabaseRepository<PublicKeyPointRequest, ToursContext>));
 
         services.AddScoped(typeof(ICrudRepository<Review>), typeof(CrudDatabaseRepository<Review, ToursContext>));
         services.AddScoped<IReviewRepository, ReviewDatabaseRepository>();
