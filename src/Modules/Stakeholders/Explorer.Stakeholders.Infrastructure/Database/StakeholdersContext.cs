@@ -13,8 +13,6 @@ public class StakeholdersContext : DbContext
     public DbSet<Club> Clubs { get; set; }
     public DbSet<ClubJoinRequest> ClubJoinRequests { get; set; }
     public DbSet<Rating> Ratings { get; set; }
-    public DbSet<TourPreference> TourPreferences { get; set; }
-    public DbSet<TouristEquipment> TouristEquipments { get; set; }
     public DbSet<Problem> Problem { get; set; }
     public DbSet<ProblemAnswer> ProblemAnswer { get; set; }
     public DbSet<ProblemComment> ProblemComment { get; set; }
@@ -61,6 +59,7 @@ public class StakeholdersContext : DbContext
             .HasOne(i => i.Club)
             .WithMany()
             .HasForeignKey(i => i.ClubId);
+
         modelBuilder.Entity<Rating>()
            .HasOne(s => s.User)
            .WithOne()

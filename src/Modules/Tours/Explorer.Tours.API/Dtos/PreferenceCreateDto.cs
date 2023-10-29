@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Stakeholders.API.Dtos
+namespace Explorer.Tours.API.Dtos
 {
-    public class TourPreferenceCreateDto
+    public class PreferenceCreateDto
     {
         public long UserId { get; set; }
         public int DifficultyLevel { get; set; }

@@ -1,27 +1,22 @@
 ﻿using Explorer.API.Controllers.Administrator.Administration;
 using Explorer.API.Controllers.Tourist;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.Tests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Explorer.Stakeholders.Tests.Integration.TourPreference;
+namespace Explorer.Tours.Tests.Integration.Preference;
 [Collection("Sequential")]
 
-public class TourPreferenceQueryTest : BaseStakeholdersIntegrationTest
+public class PreferenceQueryTest : BaseToursIntegrationTest
 {
-    public TourPreferenceQueryTest(StakeholdersTestFactory factory) : base(factory) { }
+    public PreferenceQueryTest(ToursTestFactory factory) : base(factory) { }
 
     [Fact]
     public void Retrieves_one()
@@ -50,8 +45,8 @@ public class TourPreferenceQueryTest : BaseStakeholdersIntegrationTest
         result.StatusCode.ShouldBe(200);
     }
 
-    private static TourPreferenceController CreateController(IServiceScope scope)
+    private static PreferenceController CreateController(IServiceScope scope)
     {
-        return new TourPreferenceController(scope.ServiceProvider.GetRequiredService<ITourPreferenceService>());
+        return new PreferenceController(scope.ServiceProvider.GetRequiredService<IPreferenceService>());
     }
 }

@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Infrastructure.Database;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Public;
+using Explorer.Tours.Infrastructure.Database;
 using Explorer.API.Controllers.Tourist;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace Explorer.Stakeholders.Tests.Integration.TourPreference;
+namespace Explorer.Tours.Tests.Integration.Preference;
 [Collection("Sequential")]
-public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
+public class PreferenceCommandTest : BaseToursIntegrationTest
 {
-    public TourPreferenceCommandTest(StakeholdersTestFactory factory) : base(factory) { }
+    public PreferenceCommandTest(ToursTestFactory factory) : base(factory) { }
 
     [Fact]
     public void Creates()
@@ -33,7 +33,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
             HttpContext = context
         };
 
-        var preference = new TourPreferenceCreateDto
+        var preference = new PreferenceCreateDto
         {
             UserId = -21,
             DifficultyLevel = 1,
@@ -45,7 +45,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
         };
 
         // Act
-        var createPreferencesResponse = ((ObjectResult)controller.Create(preference).Result).Value as TourPreferenceResponseDto;
+        var createPreferencesResponse = ((ObjectResult)controller.Create(preference).Result).Value as PreferenceResponseDto;
 
         // Assert
         createPreferencesResponse.ShouldNotBeNull();
@@ -77,7 +77,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
             HttpContext = context
         };
 
-        var preference = new TourPreferenceCreateDto
+        var preference = new PreferenceCreateDto
         {
             UserId = -21,
             DifficultyLevel = 1,
@@ -102,7 +102,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
         var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "3") }, "test");
 
@@ -116,7 +116,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
             HttpContext = context
         };
 
-        var updatedPreference = new TourPreferenceUpdateDto
+        var updatedPreference = new PreferenceUpdateDto
         {
             Id = 25,
             UserId = 0,
@@ -129,7 +129,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(updatedPreference).Result)?.Value as TourPreferenceResponseDto;
+        var result = ((ObjectResult)controller.Update(updatedPreference).Result)?.Value as PreferenceResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -142,7 +142,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
         result.SelectedTags.ShouldBe(new[] { "tag1", "tag2" });
 
         // Assert - Database
-        var storedEntity = dbContext.TourPreferences.FirstOrDefault(i => i.Id == 25);
+        var storedEntity = dbContext.Preferences.FirstOrDefault(i => i.Id == 25);
         storedEntity.ShouldNotBeNull();
         storedEntity.DifficultyLevel.ShouldBe(1);
         storedEntity.WalkingRating.ShouldBe(1);
@@ -150,7 +150,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
         storedEntity.CarRating.ShouldBe(1);
         storedEntity.BoatRating.ShouldBe(1);
         storedEntity.SelectedTags.ShouldBe(new[] { "tag1", "tag2" });
-        var oldEntity = dbContext.TourPreferences.FirstOrDefault(i => i.DifficultyLevel == 25);
+        var oldEntity = dbContext.Preferences.FirstOrDefault(i => i.DifficultyLevel == 25);
         oldEntity.ShouldBeNull();
     }
 
@@ -173,7 +173,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
             HttpContext = context
         };
 
-        var updatedPreference = new TourPreferenceUpdateDto
+        var updatedPreference = new PreferenceUpdateDto
         {
             Id = -1000,
             UserId = 0,
@@ -199,7 +199,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
         // Act
         var result = (OkResult)controller.Delete(28);
@@ -208,7 +208,7 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(200);
 
-        var storedPreference = dbContext.TourPreferences.FirstOrDefault(i => i.Id == 28);
+        var storedPreference = dbContext.Preferences.FirstOrDefault(i => i.Id == 28);
         storedPreference.ShouldBeNull();
     }
 
@@ -227,8 +227,8 @@ public class TourPreferenceCommandTest : BaseStakeholdersIntegrationTest
         result.StatusCode.ShouldBe(404);
     }
 
-    private static TourPreferenceController CreateController(IServiceScope scope)
+    private static PreferenceController CreateController(IServiceScope scope)
     {
-        return new TourPreferenceController(scope.ServiceProvider.GetRequiredService<ITourPreferenceService>());
+        return new PreferenceController(scope.ServiceProvider.GetRequiredService<IPreferenceService>());
     }
 }

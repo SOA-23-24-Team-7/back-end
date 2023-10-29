@@ -1,4 +1,4 @@
-﻿namespace Explorer.Stakeholders.API.Dtos.TouristEquipment
+﻿namespace Explorer.Tours.API.Dtos.TouristEquipment
 {
     public class TouristEquipmentResponseDto
     {
