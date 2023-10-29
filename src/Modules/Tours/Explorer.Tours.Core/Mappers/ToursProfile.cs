@@ -1,5 +1,6 @@
 using AutoMapper;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Dtos.TouristEquipment;
 using Explorer.Tours.Core.Domain;
 
 namespace Explorer.Tours.Core.Mappers;
@@ -29,5 +30,9 @@ public class ToursProfile : Profile
         CreateMap<PreferenceResponseDto, Preference>().ReverseMap();
         CreateMap<PreferenceCreateDto, Preference>().ReverseMap();
         CreateMap<PreferenceUpdateDto, Preference>().ReverseMap();
+
+        CreateMap<TouristEquipmentResponseDto, TouristEquipment>().ReverseMap();
+        CreateMap<TouristEquipmentCreateDto, TouristEquipment>().ReverseMap();
+        CreateMap<TouristEquipmentUpdateDto, TouristEquipment>().ReverseMap();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System.Security.AccessControl;
 
-namespace Explorer.Stakeholders.Core.Domain
+namespace Explorer.Tours.Core.Domain
 {
     public class TouristEquipment : Entity
     {

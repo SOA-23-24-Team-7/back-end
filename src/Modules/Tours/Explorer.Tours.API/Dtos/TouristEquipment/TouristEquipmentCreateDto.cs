@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Stakeholders.API.Dtos.TouristEquipment
+namespace Explorer.Tours.API.Dtos.TouristEquipment
 {
     public class TouristEquipmentCreateDto
     {
