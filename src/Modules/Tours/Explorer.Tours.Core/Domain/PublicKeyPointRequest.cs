@@ -16,6 +16,12 @@ namespace Explorer.Tours.Core.Domain
             KeyPointId = keyPointId;
             Status = status;
             //Comment = comment;
-        }  
+        }
+        public PublicKeyPointRequest(long keyPointId, PublicStatus status,string? comment)
+        {
+            KeyPointId = keyPointId;
+            Status = status;
+            Comment = comment;
+        }
     }
 }
