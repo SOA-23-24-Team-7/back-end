@@ -72,4 +72,6 @@ public class KeyPointService : BaseService<KeyPoint>, IKeyPointService
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
         }
     }
+
+
 }

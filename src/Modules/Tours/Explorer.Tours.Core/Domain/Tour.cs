@@ -18,6 +18,9 @@ public class Tour : Entity
     
     public ICollection<Equipment> EquipmentList { get; init; }
 
+    [InverseProperty("Tour")]
+    public ICollection<KeyPoint> KeyPoints { get; } = new List<KeyPoint>();
+
     public Tour(long authorId, string name, string description, int difficulty, List<string> tags, TourStatus status = TourStatus.Draft,double price = 0, bool isDeleted = false)
     {
         AuthorId = authorId;

@@ -5,12 +5,13 @@ namespace Explorer.Tours.Core.Domain;
 public class KeyPoint : Entity
 {
     public long TourId { get; init; }
+    public Tour? Tour { get; init; }
     public string Name { get; init; }
     public string Description { get; init; }
     public double Longitude { get; init; }
     public double Latitude { get; init; }
     public string ImagePath { get; init; }
-    public long Order { get; init; }
+    public long Order { get; init; }  
 
     public KeyPoint(long tourId, string name, string description, double longitude, double latitude, string imagePath, long order)
     {
@@ -34,3 +35,4 @@ public class KeyPoint : Entity
         if (string.IsNullOrWhiteSpace(ImagePath)) throw new ArgumentException("Invalid ImagePath");
     }
 }
+
