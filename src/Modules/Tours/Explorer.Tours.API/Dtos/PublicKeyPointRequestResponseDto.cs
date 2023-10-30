@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Tours.API.Dtos
 {
@@ -12,5 +13,6 @@ namespace Explorer.Tours.API.Dtos
         public long KeyPointId { get; set; }
         public PublicStatus Status { get; set; }
         public string? Comment { get; set; }
+        //public KeyPointDto? KeyPoint {  get; set; }
     }
 }
