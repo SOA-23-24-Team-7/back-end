@@ -20,6 +20,7 @@ public class ToursProfile : Profile
         CreateMap<TourResponseDto, Tour>().ReverseMap();
         CreateMap<TourCreateDto, Tour>().ReverseMap();
         CreateMap<TourUpdateDto, Tour>().ReverseMap();
+        CreateMap<TourResponseDto, Domain.Tour>().ReverseMap().ForMember(x => x.KeyPoints, opt => opt.MapFrom(src => src.KeyPoints));
 
         CreateMap<FacilityResponseDto, Facility>().ReverseMap();
         CreateMap<FacilityCreateDto, Facility>().ReverseMap();
@@ -31,8 +32,13 @@ public class ToursProfile : Profile
         CreateMap<PreferenceCreateDto, Preference>().ReverseMap();
         CreateMap<PreferenceUpdateDto, Preference>().ReverseMap();
 
+
         CreateMap<TouristEquipmentResponseDto, TouristEquipment>().ReverseMap();
         CreateMap<TouristEquipmentCreateDto, TouristEquipment>().ReverseMap();
         CreateMap<TouristEquipmentUpdateDto, TouristEquipment>().ReverseMap();
+
+        CreateMap<PublicKeyPointRequestCreateDto, PublicKeyPointRequest>().ReverseMap() ;
+        CreateMap<PublicKeyPointRequestResponseDto, PublicKeyPointRequest>().ReverseMap();
+
     }
 }

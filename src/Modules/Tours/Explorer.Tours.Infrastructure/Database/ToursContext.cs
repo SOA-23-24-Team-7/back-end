@@ -12,6 +12,8 @@ public class ToursContext : DbContext
     public DbSet<Facility> Facilities { get; set; }
     public DbSet<Preference> Preferences { get; set; }
     public DbSet<TouristEquipment> TouristEquipments { get; set; }
+    public DbSet<PublicKeyPointRequest> PublicKeyPointRequests { get; set; }
+
 
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
@@ -27,17 +29,26 @@ public class ToursContext : DbContext
             .UsingEntity(j => j.ToTable("TourEquipment"));
 
         ConfigureKeyPoint(modelBuilder);
-        
+        ConfigurePublicKeyPointRequest(modelBuilder);
+
     }
 
     private static void ConfigureKeyPoint(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Tour>()
+            .HasMany(t => t.KeyPoints)
+            .WithOne(k => k.Tour);
+
         modelBuilder.Entity<KeyPoint>()
             .HasOne<Tour>()
-            .WithMany()
+            .WithMany(t => t.KeyPoints)
             .HasForeignKey(kp => kp.TourId);
     }
-
-
-
+    private static void ConfigurePublicKeyPointRequest(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<PublicKeyPointRequest>()
+            .HasOne<KeyPoint>()
+            .WithOne()
+            .HasForeignKey<PublicKeyPointRequest>(s => s.KeyPointId);
+    }
 }
