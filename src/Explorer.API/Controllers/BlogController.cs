@@ -36,10 +36,28 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-        [HttpGet("{id:int}")]
-        public ActionResult<BlogResponseDto> Get(int id)
+        [HttpGet("{id:long}")]
+        public ActionResult<BlogResponseDto> Get(long id)
         {
             var result = _blogService.GetById(id);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Policy = "userPolicy")]
+        [HttpGet("upvote/{id:long}")]
+        public ActionResult Upvote(long id)
+        {
+            var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _blogService.SetVote(id, userId, VoteType.UPVOTE);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Policy = "userPolicy")]
+        [HttpGet("downvote/{id:long}")]
+        public ActionResult Downvote(long id)
+        {
+            var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _blogService.SetVote(id, userId, VoteType.DOWNVOTE);
             return CreateResponse(result);
         }
 

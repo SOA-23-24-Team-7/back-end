@@ -20,6 +20,18 @@ namespace Explorer.Blog.Core.Domain
         [InverseProperty("Blog")]
         public ICollection<Comment> Comments { get; } = new List<Comment>();
 
+        [InverseProperty("Blog")]
+        public ICollection<Vote> Votes { get; } = new List<Vote>();
+
+        public long VoteCount => Votes.Sum(x =>
+        {
+            if (x.VoteType == VoteType.UPVOTE) return 1;
+            return -1;
+        });
+
+        public long UpvoteCount => Votes.Sum(x => x.VoteType == VoteType.UPVOTE ? 1 : 0);
+        public long DownvoteCount => Votes.Sum(x => x.VoteType == VoteType.DOWNVOTE ? 1 : 0);
+
         public Blog(string title, string description, DateTime date, List<string>? pictures, BlogStatus status)
         {
 

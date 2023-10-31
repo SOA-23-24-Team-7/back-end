@@ -10,6 +10,9 @@
         public List<string>? Pictures { get; set; }
         public BlogStatus Status { get; set; }
         public List<CommentResponseDto> Comments { get; set; }
+        public long VoteCount { get; set; }
+        public long UpvoteCount { get; set; }
+        public long DownvoteCount { get; set; }
 
 
     }

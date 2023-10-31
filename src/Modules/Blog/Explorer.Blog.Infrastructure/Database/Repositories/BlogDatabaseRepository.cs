@@ -25,14 +25,14 @@ namespace Explorer.Blog.Infrastructure.Database.Repositories
 
         public PagedResult<Core.Domain.Blog> GetAll(int page, int pageSize)
         {
-            var task = _dbSet.Include(x => x.Comments).GetPagedById(page, pageSize);
+            var task = _dbSet.Include(x => x.Comments).Include(x => x.Votes).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
         }
 
         public Core.Domain.Blog GetById(long id)
         {
-            var entity = _dbSet.Include(x => x.Comments).First(x => x.Id == id);
+            var entity = _dbSet.Include(x => x.Comments).Include(x => x.Votes).First(x => x.Id == id);
             if (entity == null) throw new KeyNotFoundException("Not found: " + id);
             return entity;
         }
