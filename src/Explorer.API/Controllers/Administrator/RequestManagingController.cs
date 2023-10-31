@@ -13,9 +13,11 @@ namespace Explorer.API.Controllers.Administrator
     public class RequestManagingController : BaseApiController
     {
         private readonly IPublicKeyPointRequestService _publicKeyPointRequestService;
-        public RequestManagingController(IPublicKeyPointRequestService publicKeyPointRequestService)
+        private readonly IPublicFacilityRequestService _publicFacilityRequestService;
+        public RequestManagingController(IPublicKeyPointRequestService publicKeyPointRequestService, IPublicFacilityRequestService publicFacilityRequestService)
         {
             _publicKeyPointRequestService = publicKeyPointRequestService;
+            _publicFacilityRequestService = publicFacilityRequestService;
         }
         [HttpGet]
         public ActionResult<PagedResult<PublicKeyPointRequestResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
@@ -27,6 +29,18 @@ namespace Explorer.API.Controllers.Administrator
         public ActionResult<PublicKeyPointRequestResponseDto> Update([FromBody] PublicKeyPointRequestUpdateDto response)
         {
             var result = _publicKeyPointRequestService.Update(response);
+            return CreateResponse(result);
+        }
+        [HttpGet("facility")]
+        public ActionResult<PagedResult<PublicFacilityRequestResponseDto>> GetAllFacilityRequest([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _publicFacilityRequestService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }
+        [HttpPut("facility/{id:long}")]
+        public ActionResult<PublicFacilityRequestResponseDto> UpdateFacility([FromBody] PublicFacilityRequestUpdateDto response)
+        {
+            var result = _publicFacilityRequestService.Update(response);
             return CreateResponse(result);
         }
     }
