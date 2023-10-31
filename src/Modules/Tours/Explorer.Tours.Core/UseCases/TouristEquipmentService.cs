@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos.TouristEquipment;
-using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
+using Explorer.Tours.API.Dtos.TouristEquipment;
+using Explorer.Tours.Core.Domain;
+using Explorer.Tours.API.Public;
 
-namespace Explorer.Stakeholders.Core.UseCases
+namespace Explorer.Tours.Core.UseCases
 {
     public class TouristEquipmentService : CrudService<TouristEquipmentResponseDto, TouristEquipment>, ITouristEquipmentService
     {

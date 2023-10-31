@@ -11,7 +11,11 @@ public class ToursContext : DbContext
     public DbSet<KeyPoint> KeyPoints { get; set; }
     public DbSet<Facility> Facilities { get; set; }
     public DbSet<Preference> Preferences { get; set; }
+
     public DbSet<PublicKeyPointRequest> PublicKeyPointRequests { get; set; }
+
+    public DbSet<TouristEquipment> TouristEquipments { get; set; }
+
 
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
@@ -28,6 +32,7 @@ public class ToursContext : DbContext
 
         ConfigureKeyPoint(modelBuilder);
         ConfigurePublicKeyPointRequest(modelBuilder);
+
     }
 
     private static void ConfigureKeyPoint(ModelBuilder modelBuilder)
