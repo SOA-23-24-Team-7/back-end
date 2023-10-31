@@ -32,7 +32,7 @@ public class ToursContext : DbContext
 
         ConfigureKeyPoint(modelBuilder);
         ConfigurePublicKeyPointRequest(modelBuilder);
-
+        ConfigurePublicFacilityRequest(modelBuilder);
     }
 
     private static void ConfigureKeyPoint(ModelBuilder modelBuilder)
@@ -53,5 +53,13 @@ public class ToursContext : DbContext
             .HasOne<KeyPoint>()
             .WithOne()
             .HasForeignKey<PublicKeyPointRequest>(s => s.KeyPointId);
+    }
+
+    private static void ConfigurePublicFacilityRequest(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<PublicFacilityRequest>()
+            .HasOne<Facility>()
+            .WithOne()
+            .HasForeignKey<PublicFacilityRequest>(s => s.FacilityId);
     }
 }

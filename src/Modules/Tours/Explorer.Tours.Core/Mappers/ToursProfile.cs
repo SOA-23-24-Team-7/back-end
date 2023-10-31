@@ -44,5 +44,10 @@ public class ToursProfile : Profile
         //CreateMap<PublicKeyPointRequestResponseDto, Domain.PublicKeyPointRequest>().ReverseMap().ForMember(x => x.KeyPoint, opt => opt.MapFrom(src => src.KeyPoint));
         CreateMap<PublicKeyPointRequestUpdateDto, PublicKeyPointRequest>().ReverseMap();
 
+        CreateMap<PublicFacilityRequestCreateDto, PublicFacilityRequest>().ReverseMap();
+        CreateMap<PublicFacilityRequestResponseDto, PublicFacilityRequest>().ReverseMap();
+        //CreateMap<PublicKeyPointRequestResponseDto, Domain.PublicKeyPointRequest>().ReverseMap().ForMember(x => x.KeyPoint, opt => opt.MapFrom(src => src.KeyPoint));
+        CreateMap<PublicFacilityRequestUpdateDto, PublicFacilityRequest>().ReverseMap();
+
     }
 }
