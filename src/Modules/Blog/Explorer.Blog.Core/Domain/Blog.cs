@@ -11,17 +11,17 @@ namespace Explorer.Blog.Core.Domain
     public class Blog : Entity
     {
 
-        public string Title { get; init; }
-        public string Description { get; init; }
+        public string Title { get; private set; }
+        public string Description { get; private set; }
         public DateTime Date { get; init; }
-        public List<string>? Pictures { get; init; }
-        public BlogStatus Status { get; init; }
+        public List<string>? Pictures { get; private set; }
+        public BlogStatus Status { get; private set; }
 
-        public Blog() { }
+        
+        
 
-        public Blog(int id, string title, string description, DateTime date, List<string>? pictures, BlogStatus status)
+        public Blog( string title, string description, DateTime date, List<string>? pictures, BlogStatus status)
         {
-
             if (string.IsNullOrEmpty(title))
             {
                 throw new ArgumentException("Title ne sme biti prazan ili null.\n");
@@ -30,9 +30,19 @@ namespace Explorer.Blog.Core.Domain
 
             Title = title;
             Description = description;
-            Date = date;
+            Date = DateTime.UtcNow.Date;
             Pictures = pictures;
             Status = status;
+        }
+
+        public void UpdateBlog(string title, string description, List<string> pictures, BlogStatus status)
+        {
+
+            Title = title;
+            Description = description;
+            Pictures = pictures;
+            Status = status;
+
         }
     }
 }
