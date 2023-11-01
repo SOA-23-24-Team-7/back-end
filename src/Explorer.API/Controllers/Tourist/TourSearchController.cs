@@ -8,17 +8,17 @@ namespace Explorer.API.Controllers.Tourist
 {
     [Authorize(Policy = "touristPolicy")]
     [Route("api/tourist/tour")]
-    public class TouristTourController : BaseApiController
+    public class TourSearchController : BaseApiController
     {
         private readonly ITourSearchService _tourSearchService;
 
-        public TouristTourController(ITourSearchService tourSearchService)
+        public TourSearchController(ITourSearchService tourSearchService)
         {
             _tourSearchService = tourSearchService;
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<TourResponseDto>> GetAll([FromQuery] double longitude, [FromQuery] double latitude, [FromQuery] double maxDistance, [FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<TourResponseDto>> SearchByGeoLocation([FromQuery] double longitude, [FromQuery] double latitude, [FromQuery] double maxDistance, [FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _tourSearchService.Search(longitude, latitude, maxDistance, page, pageSize);
             return CreateResponse(result);
