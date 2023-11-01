@@ -9,5 +9,7 @@ namespace Explorer.Blog.API.Public
         Result<BlogResponseDto> Create<BlogCreateDto>(BlogCreateDto blog);
         Result<PagedResult<BlogResponseDto>> GetPaged(int page, int pageSize);
         Result<BlogResponseDto> Get(long id);
+        Result<BlogResponseDto> UpdateBlog(BlogUpdateDto blog);
+        public Result Delete(long id);
     }
 }
