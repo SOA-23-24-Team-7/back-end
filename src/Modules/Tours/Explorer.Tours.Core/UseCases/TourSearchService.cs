@@ -21,23 +21,35 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
 
     public Result<PagedResult<TourResponseDto>> Search(double longitude, double latitude, double maxDistance, int page, int pageSize)
     {
-        Coordinate mapCoordinate = new Coordinate(longitude, latitude);
-
-        var tours = _tourRepository.GetPaged(1, 1000); // ako ima vise od 1000 tura pravice problem
-        var nearbyTours = new List<Tour>();
-
-        foreach (var tour in tours.Results)
+        try
         {
-            var keyPoints = _keyPointRepository.GetByTourId(tour.Id);
-            var nearbyKeypoints = keyPoints.Where(k => mapCoordinate.CalculateDistance(k.Longitude, k.Latitude) <= maxDistance);
-            if (nearbyKeypoints.Any())
+            if (maxDistance < 0)
             {
-                nearbyTours.Add(tour);
+                throw new ArgumentException("Max distance must be greater than 0.");
             }
+
+            Coordinate mapCoordinate = new Coordinate(longitude, latitude);
+
+            var tours = _tourRepository.GetPaged(1, 1000); // ako ima vise od 1000 tura pravice problem
+            var nearbyTours = new List<Tour>();
+
+            foreach (var tour in tours.Results)
+            {
+                var keyPoints = _keyPointRepository.GetByTourId(tour.Id);
+                var nearbyKeypoints = keyPoints.Where(k => mapCoordinate.CalculateDistance(k.Longitude, k.Latitude) <= maxDistance);
+                if (nearbyKeypoints.Any())
+                {
+                    nearbyTours.Add(tour);
+                }
+            }
+
+            var pagedResult = new PagedResult<Tour>(nearbyTours, nearbyTours.Count);
+
+            return MapToDto<TourResponseDto>(pagedResult);
         }
-
-        var pagedResult = new PagedResult<Tour>(nearbyTours, nearbyTours.Count);
-
-        return MapToDto<TourResponseDto>(pagedResult);
+        catch (ArgumentException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
     }
 }
