@@ -10,8 +10,8 @@ namespace Explorer.Tours.Core.Domain
     public class PublicFacilityRequest : Entity
     {
         public long FacilityId { get; init; }
-        public PublicStatus Status { get; init; }
-        public string? Comment { get; init; }
+        public PublicStatus Status { get; set; }
+        public string? Comment { get; set; }
 
         public PublicFacilityRequest(long facilityId, PublicStatus status)
         {

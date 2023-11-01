@@ -7,8 +7,8 @@ namespace Explorer.Tours.Core.Domain
     {
         public long KeyPointId { get; init; }
         //public KeyPoint? KeyPoint { get; init; }
-        public PublicStatus Status { get; init; }
-        public string? Comment { get; init; }
+        public PublicStatus Status { get; set; }
+        public string? Comment { get; set; }
 
         public PublicKeyPointRequest(long keyPointId,PublicStatus status) 
         { 
