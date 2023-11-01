@@ -2,6 +2,7 @@ using AutoMapper;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristEquipment;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.Tours;
 
 namespace Explorer.Tours.Core.Mappers;
 
@@ -20,7 +21,7 @@ public class ToursProfile : Profile
         CreateMap<TourResponseDto, Tour>().ReverseMap();
         CreateMap<TourCreateDto, Tour>().ReverseMap();
         CreateMap<TourUpdateDto, Tour>().ReverseMap();
-        CreateMap<TourResponseDto, Domain.Tour>().ReverseMap().ForMember(x => x.KeyPoints, opt => opt.MapFrom(src => src.KeyPoints));
+        CreateMap<TourResponseDto, Tour>().ReverseMap().ForMember(x => x.KeyPoints, opt => opt.MapFrom(src => src.KeyPoints));
 
         CreateMap<FacilityResponseDto, Facility>().ReverseMap();
         CreateMap<FacilityCreateDto, Facility>().ReverseMap();

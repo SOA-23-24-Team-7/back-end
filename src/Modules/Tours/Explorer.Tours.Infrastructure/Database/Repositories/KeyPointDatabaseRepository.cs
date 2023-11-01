@@ -1,6 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 
@@ -17,6 +17,12 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public KeyPoint Create(KeyPoint keyPoint)
         {
+            var tour = _dbContext.Tours
+                             .Include(t => t.KeyPoints)
+                             .Single(t => t.Id == keyPoint.TourId);
+
+            tour.KeyPoints.Add(keyPoint);
+
             _dbContext.KeyPoints.Add(keyPoint);
             _dbContext.SaveChanges();
             return keyPoint;
@@ -52,6 +58,13 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         public void Delete(long id)
         {
             var keyPoint = Get(id);
+         
+           var tour = _dbContext.Tours
+                                .Include(t => t.KeyPoints)
+                                .Single(t => t.Id == keyPoint.TourId);
+
+            tour.KeyPoints.Remove(keyPoint);
+            
             _dbContext.KeyPoints.Remove(keyPoint);
             _dbContext.SaveChanges();
         }

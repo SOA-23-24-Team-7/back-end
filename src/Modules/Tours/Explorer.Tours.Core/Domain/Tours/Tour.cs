@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
-namespace Explorer.Tours.Core.Domain;
+namespace Explorer.Tours.Core.Domain.Tours;
 
 public class Tour : Entity
 {
@@ -15,13 +15,14 @@ public class Tour : Entity
     public double Price { get; init; }
     public bool IsDeleted { get; init; }
 
-    
+    //polje za duzinu
+    public double Distance { get; init; }
     public ICollection<Equipment> EquipmentList { get; init; }
 
     [InverseProperty("Tour")]
     public ICollection<KeyPoint> KeyPoints { get; } = new List<KeyPoint>();
 
-    public Tour(long authorId, string name, string description, int difficulty, List<string> tags, TourStatus status = TourStatus.Draft,double price = 0, bool isDeleted = false)
+    public Tour(long authorId, string name, string description, int difficulty, List<string> tags, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
     {
         AuthorId = authorId;
         Name = name;
@@ -31,8 +32,9 @@ public class Tour : Entity
         Status = status;
         Price = price;
         IsDeleted = isDeleted;
+        Distance = distance;
         Validate();
-        
+
     }
 
     private void Validate()
@@ -42,6 +44,7 @@ public class Tour : Entity
         if (Difficulty < 1 || Difficulty > 5) throw new ArgumentException("Invalid Difficulty");
         if (Tags.Count == 0) throw new ArgumentNullException("Tags cannot be empty");
         if (Price < 0) throw new ArgumentException("Price cannot be negative");
+        //if (Distance < 0) throw new ArgumentException("Distance cannot be negative");
     }
 
     public string GetStatusName()
@@ -53,5 +56,6 @@ public class Tour : Entity
 public enum TourStatus
 {
     Draft,
-    Published
+    Published,
+    Archived
 }

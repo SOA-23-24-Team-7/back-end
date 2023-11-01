@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         }
 
         //anja dodala
-        public PagedResult<Core.Domain.Tour> GetAll(int page, int pageSize)
+        public PagedResult<Tour> GetAll(int page, int pageSize)
         {
             var task = _dbSet.Include(x => x.KeyPoints).GetPagedById(page, pageSize);
             task.Wait();
@@ -66,7 +67,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         }
 
         //dodato
-        public Core.Domain.Tour GetById(long id)
+        public Tour GetById(long id)
         {
             var entity = _dbSet.Include(x => x.KeyPoints).First(x => x.Id == id);
             if (entity == null) throw new KeyNotFoundException("Not found: " + id);
