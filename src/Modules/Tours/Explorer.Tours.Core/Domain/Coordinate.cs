@@ -27,14 +27,14 @@ namespace Explorer.Tours.Core.Domain
             if (Latitude < -90 || Latitude > 90) throw new ArgumentException("Invalid Latitude");
         }
 
-        public double CalculateDistance(Coordinate coordinates)
+        public double CalculateDistance(double longitude, double latitude)
         {
             const double earthRadius = 6371000;
 
             double latitude1 = Latitude * Math.PI / 180;
             double longitude1 = Longitude * Math.PI / 180;
-            double latitude2 = coordinates.Latitude * Math.PI / 180;
-            double longitude2 = coordinates.Longitude * Math.PI / 180;
+            double latitude2 = latitude * Math.PI / 180;
+            double longitude2 = longitude * Math.PI / 180;
 
             double latitudeDistance = latitude2 - latitude1;
             double longitudeDistance = longitude2 - longitude1;
