@@ -61,5 +61,13 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
+        [Authorize(Policy = "userPolicy")]
+        [HttpGet("votedBlogs/user/{userId:long}")]
+        public ActionResult GetAllVotesByUser([FromQuery] int page, [FromQuery] int pageSize, long userId)
+        {
+            var result = _blogService.GetBlogVotesByUser(page, pageSize, userId);
+            return CreateResponse(result);
+        }
+
     }
 }

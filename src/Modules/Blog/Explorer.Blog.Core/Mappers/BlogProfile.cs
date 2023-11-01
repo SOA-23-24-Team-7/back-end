@@ -14,5 +14,7 @@ public class BlogProfile : Profile
         CreateMap<CommentResponseDto, Comment>().ReverseMap();
         CreateMap<Comment, CommentCreateDto>().ReverseMap().ConstructUsing(x => new Comment(x.AuthorId, x.BlogId, x.CreatedAt, null, x.Text));
         CreateMap<CommentCreateDto, CommentResponseDto>().ReverseMap();
+
+        CreateMap<VoteResponseDto, Vote>().ReverseMap();
     }
 }

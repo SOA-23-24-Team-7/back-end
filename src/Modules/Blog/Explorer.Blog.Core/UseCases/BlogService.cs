@@ -13,11 +13,13 @@ namespace Explorer.Blog.Core.UseCases
         private readonly IBlogRepository _repository;
         private readonly IVoteRepository _voteRepository;
         private readonly ICrudRepository<Vote> _voteCrudRepository;
+        private readonly IMapper _mapper;
         public BlogService(ICrudRepository<Domain.Blog> crudRepository, IBlogRepository repository, ICrudRepository<Vote> voteCrudRepository, IVoteRepository voteRepository, IMapper mapper) : base(crudRepository, mapper)
         {
             _repository = repository;
             _voteRepository = voteRepository;
             _voteCrudRepository = voteCrudRepository;
+            _mapper = mapper;
         }
 
         public Result<BlogResponseDto> GetById(long id)
@@ -32,7 +34,14 @@ namespace Explorer.Blog.Core.UseCases
             return MapToDto<BlogResponseDto>(entities);
         }
 
-        public Result SetVote(long blogId, long userId, API.Public.VoteType voteType)
+        public Result<PagedResult<VoteResponseDto>> GetBlogVotesByUser(int page, int pageSize, long userId)
+        {
+            var entities = _voteRepository.GetPagedByUserId(page, pageSize, userId);
+            var items = entities.Results.Select(_mapper.Map<VoteResponseDto>).ToList();
+            return new PagedResult<VoteResponseDto>(items, entities.TotalCount);
+        }
+
+        public Result SetVote(long blogId, long userId, API.Dtos.VoteType voteType)
         {
             var domainVoteType = (Domain.VoteType)voteType; // bruh...
             try
