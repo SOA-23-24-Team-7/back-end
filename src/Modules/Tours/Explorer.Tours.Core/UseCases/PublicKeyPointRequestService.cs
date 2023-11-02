@@ -8,6 +8,8 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Utilities;
 using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases
@@ -15,9 +17,13 @@ namespace Explorer.Tours.Core.UseCases
     public class PublicKeyPointRequestService : CrudService<PublicKeyPointRequestResponseDto, PublicKeyPointRequest>, IPublicKeyPointRequestService
     {
         private readonly ICrudRepository<PublicKeyPointRequest> _repository;
-        public PublicKeyPointRequestService(ICrudRepository<PublicKeyPointRequest> repository, IMapper mapper) : base(repository, mapper)
+        private readonly ICrudRepository<PublicKeyPointNotification> _notificationRepository;
+        private readonly IKeyPointRepository _keyPointRepository;
+        public PublicKeyPointRequestService(ICrudRepository<PublicKeyPointRequest> repository, IMapper mapper, ICrudRepository<PublicKeyPointNotification> notificationRepository, IKeyPointRepository keyPointRepository) : base(repository, mapper)
         {
             _repository = repository;
+            _notificationRepository = notificationRepository;
+            _keyPointRepository = keyPointRepository;
         }
         public Result Reject(long requestId,string comment)
         {
@@ -34,6 +40,7 @@ namespace Explorer.Tours.Core.UseCases
                 request.Comment = comment;
 
                 _repository.Update(request);
+                CreateNotification(request,false);
 
                 return Result.Ok().WithSuccess("Request rejected successfully.");
             }
@@ -41,6 +48,21 @@ namespace Explorer.Tours.Core.UseCases
             {
                 return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
             }
+        }
+        private void CreateNotification(PublicKeyPointRequest request, bool isAccepted)
+        {
+            var keyPoint = _keyPointRepository.Get(request.KeyPointId);
+            NotificationGenerator generator = new NotificationGenerator();
+            string notificationText;
+            if (isAccepted)
+            {
+                notificationText = generator.GenerateAccepted(keyPoint.Name);
+            }
+            else
+            {
+                notificationText = generator.GenerateRejected(keyPoint.Name,request.Comment);
+            }
+            _notificationRepository.Create(new PublicKeyPointNotification(notificationText, request.AuthorId, request.Id));
         }
 
         public Result Accept(long requestId)
@@ -57,6 +79,7 @@ namespace Explorer.Tours.Core.UseCases
                 request.Status = PublicStatus.Accepted;
 
                 _repository.Update(request);
+                CreateNotification(request, true);
 
                 return Result.Ok().WithSuccess("Request accepted successfully.");
             }
@@ -70,5 +93,6 @@ namespace Explorer.Tours.Core.UseCases
         {
             return request.Status == PublicStatus.Pending;
         }
+     
     }
 }

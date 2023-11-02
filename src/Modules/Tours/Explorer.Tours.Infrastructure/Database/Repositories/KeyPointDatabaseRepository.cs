@@ -22,7 +22,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return keyPoint;
         }
 
-        private KeyPoint Get(long id)
+        public KeyPoint Get(long id)
         {
             var keyPoint = _dbContext.KeyPoints.Find(id);
             if (keyPoint == null) throw new KeyNotFoundException("Not found: " + id);

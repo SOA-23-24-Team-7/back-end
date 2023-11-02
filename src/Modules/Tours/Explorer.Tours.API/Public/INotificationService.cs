@@ -11,6 +11,8 @@ namespace Explorer.Tours.API.Public
 {
     public interface INotificationService
     {
-        Result<PagedResult<NotificationResponseDto>> GetPaged(int page, int pageSize);  
+        Result<PagedResult<PublicFacilityNotificationResponseDto>> GetFacilityNotificationsByAuthorId(int page, int pageSize,long id);
+        Result<PagedResult<PublicKeyPointNotificationResponseDto>> GetKeyPointNotificationsByAuthorId(int page, int pageSize, long id);
+        Result<PublicFacilityNotificationResponseDto> Create<NotificationCreateDto>(NotificationCreateDto notification);
     }
 }

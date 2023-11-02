@@ -8,6 +8,8 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Utilities;
 using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases
@@ -15,9 +17,13 @@ namespace Explorer.Tours.Core.UseCases
     public class PublicFacilityRequestService : CrudService<PublicFacilityRequestResponseDto, PublicFacilityRequest>, IPublicFacilityRequestService
     {
         private readonly ICrudRepository<PublicFacilityRequest> _repository;
-        public PublicFacilityRequestService(ICrudRepository<PublicFacilityRequest> repository, IMapper mapper) : base(repository, mapper)
+        private readonly ICrudRepository<PublicFacilityNotification> _notificationRepository;
+        private readonly ICrudRepository<Facility> _facilityRepository;
+        public PublicFacilityRequestService(ICrudRepository<PublicFacilityRequest> repository, IMapper mapper, ICrudRepository<PublicFacilityNotification> notificationRepository, ICrudRepository<Facility> facilityRepository) : base(repository, mapper)
         {
             _repository = repository;
+            _notificationRepository = notificationRepository;
+            _facilityRepository = facilityRepository;
         }
         public Result Reject(long requestId,string comment)
         {
@@ -34,6 +40,7 @@ namespace Explorer.Tours.Core.UseCases
                 request.Comment = comment;
 
                 _repository.Update(request);
+                CreateNotification(request, false);
 
                 return Result.Ok().WithSuccess("Request rejected successfully.");
             }
@@ -41,6 +48,21 @@ namespace Explorer.Tours.Core.UseCases
             {
                 return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
             }
+        }
+        private void CreateNotification(PublicFacilityRequest request, bool isAccepted)
+        {
+            var facility = _facilityRepository.Get(request.FacilityId);
+            NotificationGenerator generator = new NotificationGenerator();
+            string notificationText;
+            if (isAccepted)
+            {
+                notificationText = generator.GenerateAccepted(facility.Name);
+            }
+            else
+            {
+                notificationText = generator.GenerateRejected(facility.Name,request.Comment);
+            }
+            _notificationRepository.Create(new PublicFacilityNotification(notificationText, request.AuthorId, request.Id));
         }
 
         public Result Accept(long requestId)
@@ -57,6 +79,7 @@ namespace Explorer.Tours.Core.UseCases
                 request.Status = PublicStatus.Accepted;
 
                 _repository.Update(request);
+                CreateNotification(request, false);
 
                 return Result.Ok().WithSuccess("Request accepted successfully.");
             }

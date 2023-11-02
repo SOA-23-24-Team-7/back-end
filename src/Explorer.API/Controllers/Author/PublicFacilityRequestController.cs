@@ -1,7 +1,9 @@
 ﻿using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Author
 {
@@ -19,6 +21,11 @@ namespace Explorer.API.Controllers.Author
         [HttpPost]
         public ActionResult<PublicFacilityRequestResponseDto> Create([FromBody] PublicFacilityRequestCreateDto request)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                request.AuthorId = long.Parse(identity.FindFirst("id").Value);
+            }
             var result = _requestService.Create(request);
             return CreateResponse(result);
         }

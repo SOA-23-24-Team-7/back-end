@@ -49,7 +49,10 @@ public class ToursProfile : Profile
         //CreateMap<PublicKeyPointRequestResponseDto, Domain.PublicKeyPointRequest>().ReverseMap().ForMember(x => x.KeyPoint, opt => opt.MapFrom(src => src.KeyPoint));
         CreateMap<PublicFacilityRequestUpdateDto, PublicFacilityRequest>().ReverseMap();
 
-        CreateMap<NotificationResponseDto, Notification>().ReverseMap();
+        CreateMap<PublicFacilityNotificationResponseDto, PublicFacilityNotification>().ReverseMap();
+        CreateMap<PublicFacilityNotificationCreateDto, PublicFacilityNotification>().ReverseMap();
 
+        CreateMap<PublicKeyPointNotificationResponseDto, PublicKeyPointNotification>().ReverseMap();
+        CreateMap<PublicKeyPointNotificationCreateDto, PublicKeyPointNotification>().ReverseMap();
     }
 }
