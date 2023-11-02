@@ -44,7 +44,8 @@ public class StakeholderProfile : Profile
             Username = src.User.Username,
             ProfilePicture = src.User.ProfilePicture,
             Bio = src.Bio,
-            Motto = src.Motto
+            Motto = src.Motto,
+            IsActive = src.User.IsActive
         });
         CreateMap<Person, PersonUpdateDto>().ConstructUsing(src => new PersonUpdateDto
         {

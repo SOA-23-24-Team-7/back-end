@@ -11,5 +11,6 @@
         public string ProfilePicture { get; set; }
         public string? Bio { get; set; }
         public string? Motto { get; set; }
+        public bool IsActive { get; set; }
     }
 }

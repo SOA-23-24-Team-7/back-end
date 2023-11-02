@@ -52,6 +52,11 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
+        public Result<PagedResult<PersonResponseDto>> GetPagedByAdmin(int page, int pageSize, long adminId)
+        {
+            return MapToDto<PersonResponseDto>(_personRepository.GetPagedByAdmin(page, pageSize, adminId));
+        }
+
         public Result<PagedResult<PersonResponseDto>> GetAll(int page, int pageSize)
         {
             return MapToDto<PersonResponseDto>(_personRepository.GetAll(page, pageSize));

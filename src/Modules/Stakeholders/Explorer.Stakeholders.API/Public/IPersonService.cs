@@ -9,5 +9,6 @@ namespace Explorer.Stakeholders.API.Public
         public Result<PersonResponseDto> UpdatePerson(PersonUpdateDto personData);
         Result<PersonResponseDto> GetByUserId(long id);
         Result<PagedResult<PersonResponseDto>> GetAll(int page, int pageSize);
+        Result<PagedResult<PersonResponseDto>> GetPagedByAdmin(int page, int pageSize, long adminId);
     }
 }

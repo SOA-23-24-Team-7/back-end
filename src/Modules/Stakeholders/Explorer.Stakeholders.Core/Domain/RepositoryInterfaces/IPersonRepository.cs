@@ -8,5 +8,6 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
     {
         Person? GetByUserId(long id);
         Result<PagedResult<Person>> GetAll(int page, int pageSize);
+        Result<PagedResult<Person>> GetPagedByAdmin(int page, int pageSize, long adminId);
     }
 }
