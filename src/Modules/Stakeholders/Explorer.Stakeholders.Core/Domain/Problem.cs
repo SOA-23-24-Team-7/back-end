@@ -9,6 +9,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public string Description { get; init; }
         public DateTime DateTime { get; init; }
         public long TouristId { get; init; }
+        public Person Tourist { get; init; }
         public int TourId { get; init; }
         public bool IsResolved { get; set; } = false;
 

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Core.Domain;
+using System.Xml.Linq;
 
 namespace Explorer.Stakeholders.Core.Mappers;
 
@@ -33,15 +34,48 @@ public class StakeholderProfile : Profile
         CreateMap<Club, ClubResponseWithOwnerDto>()
             .ConstructUsing(src => new ClubResponseWithOwnerDto { Id = src.Id, OwnerId = src.OwnerId, Username = src.Owner.Username, Name = src.Name, Description = src.Description, Image = src.Image });
         CreateMap<ClubCreateDto, Club>().ReverseMap();
-        CreateMap<PersonResponseDto, Person>().ReverseMap();
-        CreateMap<PersonUpdateDto, Person>().ReverseMap();
+        CreateMap<Person, PersonResponseDto>().ConstructUsing(src => new PersonResponseDto
+        {
+            Id = src.Id,
+            UserId = src.UserId,
+            Name = src.Name,
+            Surname = src.Surname,
+            Email = src.Email,
+            Username = src.User.Username,
+            ProfilePicture = src.User.ProfilePicture,
+            Bio = src.Bio,
+            Motto = src.Motto
+        });
+        CreateMap<Person, PersonUpdateDto>().ConstructUsing(src => new PersonUpdateDto
+        {
+            Id = src.Id,
+            UserId = src.UserId,
+            Name = src.Name,
+            Surname = src.Surname,
+            ProfilePicture = src.User.ProfilePicture,
+            Bio = src.Bio,
+            Motto = src.Motto
+        });
         CreateMap<UserResponseDto, User>().ReverseMap();
         CreateMap<RatingResponseDto, Rating>().ReverseMap();
         CreateMap<Rating, RatingWithUserDto>()
             .ConstructUsing(src => new RatingWithUserDto { Id = src.Id, UserId = src.UserId, Grade = src.Grade, Comment = src.Comment, UserName = src.User.Username });
         CreateMap<RatingCreateDto, Rating>().ReverseMap();
         CreateMap<RatingUpdateDto, Rating>().ReverseMap();
-        CreateMap<ProblemResponseDto, Problem>().ReverseMap();
+        CreateMap<Problem, ProblemResponseDto>().ConstructUsing(src => new ProblemResponseDto
+        {
+            Id = src.Id,
+            Category = src.Category,
+            Priority = src.Priority,
+            Description = src.Description,
+            DateTime = src.DateTime,
+            TouristId = src.TouristId,
+            TouristName = src.Tourist.Name,
+            TouristSurname = src.Tourist.Surname,
+            TouristProfilePicture = src.Tourist.User.ProfilePicture,
+            TourId = src.TourId,
+            TouristUsername = src.Tourist.User.Username
+        });
         CreateMap<ProblemCreateDto, Problem>().ReverseMap();
         CreateMap<ProblemUpdateDto, Problem>().ReverseMap();
         CreateMap<ProblemAnswerCreateDto, ProblemAnswer>().ReverseMap();

@@ -37,7 +37,7 @@ public class StakeholdersContext : DbContext
     private static void ConfigureStakeholder(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Person>()
-            .HasOne<User>()
+            .HasOne(r => r.User)
             .WithOne()
             .HasForeignKey<Person>(s => s.UserId);
         modelBuilder.Entity<ClubJoinRequest>()

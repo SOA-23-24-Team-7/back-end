@@ -16,9 +16,10 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<Problem>();
         }
+
         public PagedResult<Problem> GetByUserId(int page, int pageSize, long id)
         {
-            var task = _dbSet.Where(x => x.TouristId == id).GetPagedById(page, pageSize);
+            var task = _dbSet.Include(x => x.Tourist).Where(x => x.TouristId == id).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
         }
@@ -26,7 +27,14 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
         public PagedResult<Problem> GetByAuthor(int page, int pageSize, List<TourResponseDto> authorsTours)
         {
             var tourIds = authorsTours.Select(x => x.Id);
-            var task = _dbSet.Where(x => tourIds.Contains(x.TourId)).GetPagedById(page, pageSize);
+            var task = _dbSet.Include(x => x.Tourist).Where(x => tourIds.Contains(x.TourId)).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
+        }
+
+        public PagedResult<Problem> GetAll(int page, int pageSize)
+        {
+            var task = _dbSet.Include(x => x.Tourist).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
         }

@@ -6,8 +6,8 @@ namespace Explorer.Stakeholders.API.Public
 {
     public interface IPersonService
     {
-        Result<PersonResponseDto> Update<PersonUpdateDto>(PersonUpdateDto person);
+        public Result<PersonResponseDto> UpdatePerson(PersonUpdateDto personData);
         Result<PersonResponseDto> GetByUserId(long id);
-        Result<PagedResult<PersonResponseDto>> GetPaged(int page, int pageSize);
+        Result<PagedResult<PersonResponseDto>> GetAll(int page, int pageSize);
     }
 }

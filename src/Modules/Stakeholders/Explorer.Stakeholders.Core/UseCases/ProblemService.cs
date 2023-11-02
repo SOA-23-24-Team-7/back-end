@@ -39,6 +39,11 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
+        public Result<PagedResult<ProblemResponseDto>> GetAll(int page, int pageSize)
+        {
+            return MapToDto<ProblemResponseDto>(_problemRepository.GetAll(page, pageSize));
+        }
+
         public Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id)
         {
             return MapToDto<ProblemResponseDto>(_problemRepository.GetByUserId(page, pageSize, id));
