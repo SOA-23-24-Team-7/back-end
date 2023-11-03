@@ -33,11 +33,9 @@ public static class BlogStartup
     {
         services.AddScoped(typeof(ICrudRepository<Core.Domain.Blog>), typeof(CrudDatabaseRepository<Core.Domain.Blog, BlogContext>));
         services.AddScoped(typeof(ICrudRepository<Comment>), typeof(CrudDatabaseRepository<Comment, BlogContext>));
-        services.AddScoped(typeof(ICrudRepository<Vote>), typeof(CrudDatabaseRepository<Vote, BlogContext>));
 
         services.AddScoped<IBlogRepository, BlogDatabaseRepository>();
         services.AddScoped<ICommentRepository, CommentDatabaseRepository>();
-        services.AddScoped<IVoteRepository, VoteDatabaseRepository>();
 
         services.AddDbContext<BlogContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("blog"),

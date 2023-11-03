@@ -11,7 +11,6 @@ namespace Explorer.Blog.API.Dtos
     public class VoteResponseDto
     {
         public long UserId { get; set; }
-        public long BlogId { get; set; }
         public VoteType VoteType { get; set; }
     }
 }
