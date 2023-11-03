@@ -41,17 +41,35 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         public Result<PagedResult<ProblemResponseDto>> GetAll(int page, int pageSize)
         {
-            return MapToDto<ProblemResponseDto>(_problemRepository.GetAll(page, pageSize));
+            var results = MapToDto<ProblemResponseDto>(_problemRepository.GetAll(page, pageSize));
+            foreach (var problemDto in results.Value.Results)
+            {
+                problemDto.TourName = _tourService.GetToursName(problemDto.TourId);
+            }
+
+            return results;
         }
 
         public Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id)
         {
-            return MapToDto<ProblemResponseDto>(_problemRepository.GetByUserId(page, pageSize, id));
+            var results = MapToDto<ProblemResponseDto>(_problemRepository.GetByUserId(page, pageSize, id));
+            foreach (var problemDto in results.Value.Results)
+            {
+                problemDto.TourName = _tourService.GetToursName(problemDto.TourId);
+            }
+
+            return results;
         }
 
         public Result<PagedResult<ProblemResponseDto>> GetByAuthor(int page, int pageSize, long id)
         {
-            return MapToDto<ProblemResponseDto>(_problemRepository.GetByAuthor(page, pageSize, _tourService.GetAuthorsTours(id).ToList()));
+            var results = MapToDto<ProblemResponseDto>(_problemRepository.GetByAuthor(page, pageSize, _tourService.GetAuthorsTours(id).ToList()));
+            foreach (var problemDto in results.Value.Results)
+            {
+                problemDto.TourName = _tourService.GetToursName(problemDto.TourId);
+            }
+
+            return results;
         }
 
         public long GetTourIdByProblemId(long problemId)
