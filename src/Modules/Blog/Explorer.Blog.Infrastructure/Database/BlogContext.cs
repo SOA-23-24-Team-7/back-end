@@ -15,5 +15,6 @@ public class BlogContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("blog");
+        modelBuilder.Entity<Core.Domain.Blog>().Property(item => item.Votes).HasColumnType("jsonb");
     }
 }

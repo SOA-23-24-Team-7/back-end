@@ -14,7 +14,7 @@ namespace Explorer.Blog.Core.Domain
 
         public Comment(long authorId, long blogId, DateTime createdAt, DateTime? updatedAt, string text)
         {
-            if (string.IsNullOrWhiteSpace(text)) throw new ArgumentException("Invalid comment text.");
+            Validate(text);
             AuthorId = authorId;
             BlogId = blogId;
             CreatedAt = createdAt;
@@ -24,8 +24,14 @@ namespace Explorer.Blog.Core.Domain
 
         public void UpdateText(string text)
         {
+            Validate(text);
             Text = text;
             UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void Validate(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) throw new ArgumentException("Invalid comment text.");
         }
     }
 }
