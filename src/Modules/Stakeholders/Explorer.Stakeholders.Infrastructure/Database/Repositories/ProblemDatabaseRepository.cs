@@ -2,7 +2,6 @@
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
-using Explorer.Tours.API.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
@@ -24,9 +23,8 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             return task.Result;
         }
 
-        public PagedResult<Problem> GetByAuthor(int page, int pageSize, List<TourResponseDto> authorsTours)
+        public PagedResult<Problem> GetByAuthor(int page, int pageSize, List<long> tourIds)
         {
-            var tourIds = authorsTours.Select(x => x.Id);
             var task = _dbSet.Include(x => x.Tourist).Where(x => tourIds.Contains(x.TourId)).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;

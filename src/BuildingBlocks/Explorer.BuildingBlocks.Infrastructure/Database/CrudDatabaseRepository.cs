@@ -34,7 +34,7 @@ public class CrudDatabaseRepository<TEntity, TDbContext> : ICrudRepository<TEnti
     public TEntity Create(TEntity entity)
     {
         _dbSet.Add(entity);
-        DbContext.SaveChangesAsync();
+        DbContext.SaveChanges();
         return entity;
     }
 

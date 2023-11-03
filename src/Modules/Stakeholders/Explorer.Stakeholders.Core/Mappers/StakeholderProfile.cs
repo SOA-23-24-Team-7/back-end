@@ -41,12 +41,10 @@ public class StakeholderProfile : Profile
             Name = src.Name,
             Surname = src.Surname,
             Email = src.Email,
-            Username = src.User.Username,
-            ProfilePicture = src.User.ProfilePicture,
             Bio = src.Bio,
             Motto = src.Motto,
-            IsActive = src.User.IsActive
-        });
+
+        }).ForMember(x => x.User, opt => opt.MapFrom(src => src.User));
         CreateMap<Person, PersonUpdateDto>().ConstructUsing(src => new PersonUpdateDto
         {
             Id = src.Id,
@@ -71,12 +69,9 @@ public class StakeholderProfile : Profile
             Description = src.Description,
             DateTime = src.DateTime,
             TouristId = src.TouristId,
-            TouristName = src.Tourist.Name,
-            TouristSurname = src.Tourist.Surname,
-            TouristProfilePicture = src.Tourist.User.ProfilePicture,
             TourId = src.TourId,
-            TouristUsername = src.Tourist.User.Username
-        });
+            IsResolved = src.IsResolved
+        }).ForMember(x => x.Tourist, opt => opt.MapFrom(src => src.Tourist));
         CreateMap<ProblemCreateDto, Problem>().ReverseMap();
         CreateMap<ProblemUpdateDto, Problem>().ReverseMap();
         CreateMap<ProblemAnswerCreateDto, ProblemAnswer>().ReverseMap();

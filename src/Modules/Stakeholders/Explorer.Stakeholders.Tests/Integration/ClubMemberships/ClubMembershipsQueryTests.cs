@@ -18,7 +18,7 @@ public class ClubMembershipsQueryTests : BaseStakeholdersIntegrationTest
         // Arange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var clubId = -2;
+        var clubId = 2;
         var page = 1;
         var pageSize = 10;
 

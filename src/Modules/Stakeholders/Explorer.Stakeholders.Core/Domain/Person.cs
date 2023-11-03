@@ -1,5 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Explorer.BuildingBlocks.Core.Domain;
 using System.Net.Mail;
 
 namespace Explorer.Stakeholders.Core.Domain;
@@ -7,7 +7,6 @@ namespace Explorer.Stakeholders.Core.Domain;
 public class Person : Entity
 {
     public long UserId { get; private set; }
-    [NotMapped]
     public User User { get; private set; }
     public string Name { get; private set; }
     public string Surname { get; private set; }

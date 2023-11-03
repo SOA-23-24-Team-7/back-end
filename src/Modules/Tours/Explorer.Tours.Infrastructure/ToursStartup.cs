@@ -1,5 +1,6 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.TourAuthoring;
@@ -32,18 +33,19 @@ public static class ToursStartup
         services.AddScoped<IEquipmentService, EquipmentService>();
 
         services.AddScoped<IFacilityService, FacilityService>();
-      
-        services.AddScoped<ITourService, TourService>();
-      
+
         services.AddScoped<IKeyPointService, KeyPointService>();
 
         services.AddScoped<IReviewService, ReviewService>();
 
         services.AddScoped<ITourService, TourService>();
 
+        services.AddScoped<IInternalTourService, TourService>();
+
         services.AddScoped<IPreferenceService, PreferenceService>();
 
         services.AddScoped<ITouristEquipmentService, TouristEquipmentService>();
+
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -51,7 +53,7 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
 
         services.AddScoped(typeof(ICrudRepository<Facility>), typeof(CrudDatabaseRepository<Facility, ToursContext>));
-      
+
         services.AddScoped(typeof(IKeyPointRepository), typeof(KeyPointDatabaseRepository));
 
         services.AddScoped(typeof(ICrudRepository<Review>), typeof(CrudDatabaseRepository<Review, ToursContext>));

@@ -8,10 +8,7 @@
         public string Description { get; set; }
         public DateTime DateTime { get; set; }
         public long TouristId { get; set; }
-        public string TouristName { get; set; }
-        public string TouristSurname { get; set; }
-        public string TouristProfilePicture { get; set; }
-        public string TouristUsername { get; set; }
+        public UserResponseDto Tourist { get; set; }
         public int TourId { get; set; }
         public bool IsResolved { get; set; }
     }

@@ -1,14 +1,6 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.BuildingBlocks.Infrastructure.Database;
-using Explorer.Tours.Core.Domain;
+﻿using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Tours.Infrastructure.Database.Repositories
 {
@@ -22,7 +14,6 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             DbContext = dbContext;
             _dbSet = DbContext.Set<Tour>();
         }
-
 
         public List<Equipment> GetEquipment(long tourId)
         {
@@ -41,7 +32,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             var equipment = DbContext.Equipment
                                      .Single(e => e.Id == equipmentId);
             tour.EquipmentList.Add(equipment);
-            
+
             DbContext.SaveChanges();
         }
 
@@ -55,6 +46,12 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             tour.EquipmentList.Remove(equipment);
 
             DbContext.SaveChanges();
+        }
+
+        //Metoda vraca listu ID-jeva tura od poslatog autora
+        public IEnumerable<long> GetAuthorsTours(long id)
+        {
+            return _dbSet.Where(t => t.AuthorId == id).Select(x => x.Id);
         }
     }
 }

@@ -4,7 +4,7 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
-using Explorer.Tours.API.Public;
+using Explorer.Tours.API.Internal;
 using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases
@@ -12,8 +12,8 @@ namespace Explorer.Stakeholders.Core.UseCases
     public class ProblemService : CrudService<ProblemResponseDto, Problem>, IProblemService
     {
         private readonly IProblemRepository _problemRepository;
-        private readonly ITourService _tourService;
-        public ProblemService(ICrudRepository<Problem> repository, IMapper mapper, IProblemRepository problemRepository, ITourService tourService) : base(repository, mapper)
+        private readonly IInternalTourService _tourService;
+        public ProblemService(ICrudRepository<Problem> repository, IMapper mapper, IProblemRepository problemRepository, IInternalTourService tourService) : base(repository, mapper)
         {
             _problemRepository = problemRepository;
             _tourService = tourService;
@@ -51,7 +51,7 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         public Result<PagedResult<ProblemResponseDto>> GetByAuthor(int page, int pageSize, long id)
         {
-            return MapToDto<ProblemResponseDto>(_problemRepository.GetByAuthor(page, pageSize, _tourService.GetAuthorsPagedTours(id, page, pageSize).Value.Results));
+            return MapToDto<ProblemResponseDto>(_problemRepository.GetByAuthor(page, pageSize, _tourService.GetAuthorsTours(id).ToList()));
         }
 
         public long GetTourIdByProblemId(long problemId)

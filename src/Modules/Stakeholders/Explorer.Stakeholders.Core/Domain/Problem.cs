@@ -1,4 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Stakeholders.Core.Domain
 {
@@ -9,7 +10,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public string Description { get; init; }
         public DateTime DateTime { get; init; }
         public long TouristId { get; init; }
-        public Person Tourist { get; init; }
+        public User Tourist { get; init; }
         public int TourId { get; init; }
         public bool IsResolved { get; set; } = false;
 
