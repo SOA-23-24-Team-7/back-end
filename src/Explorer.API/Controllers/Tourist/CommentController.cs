@@ -30,10 +30,16 @@ namespace Explorer.API.Controllers.Tourist
 
         [Authorize(Policy = "touristPolicy")]
         [HttpPut("{commentId:long}")]
-        public ActionResult<CommentResponseDto> Update([FromBody] CommentUpdateDto comment, long commentId)
+        public ActionResult<CommentResponseDto> Update([FromBody] CommentUpdateDto commentData, long commentId)
         {
-            comment.Id = commentId;
-            var result = _commentService.UpdateComment(comment);
+            var senderId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var comment = _commentService.Get(commentId);
+            if (senderId != comment.Value.AuthorId)
+            {
+                return CreateResponse(Result.Fail(FailureCode.Forbidden));
+            }
+            commentData.Id = commentId;
+            var result = _commentService.UpdateComment(commentData);
             return CreateResponse(result);
         }
 

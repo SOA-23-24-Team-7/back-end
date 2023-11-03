@@ -9,5 +9,7 @@ namespace Explorer.Blog.API.Public
         Result<BlogResponseDto> Create<BlogCreateDto>(BlogCreateDto blog);
         Result<PagedResult<BlogResponseDto>> GetAll(int page, int pageSize);
         Result<BlogResponseDto> GetById(long id);
+        Result SetVote(long blogId, long userId, VoteType voteType);
+
     }
 }
