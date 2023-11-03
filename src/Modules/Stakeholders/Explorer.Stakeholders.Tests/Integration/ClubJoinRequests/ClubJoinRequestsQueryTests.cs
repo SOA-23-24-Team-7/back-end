@@ -35,7 +35,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             var touristId = -11;
             var page = 1;
             var pageSize = 10;
-            
+
             var claims = new[] { new Claim("id", touristId.ToString()) };
             var identity = new ClaimsIdentity(claims, "test");
             var user = new ClaimsPrincipal(identity);
@@ -57,7 +57,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var clubId = -1;
+            var clubId = 1;
             var page = 1;
             var pageSize = 10;
 

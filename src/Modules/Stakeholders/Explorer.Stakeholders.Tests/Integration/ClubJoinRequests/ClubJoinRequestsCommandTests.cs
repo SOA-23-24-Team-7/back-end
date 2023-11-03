@@ -35,13 +35,13 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             var newEntity = new ClubJoinRequestSendDto
             {
                 TouristId = -11,
-                ClubId = -1
+                ClubId = 1
             };
 
 
             // Act
             var result = ((ObjectResult)controller.Send(newEntity).Result)?.Value as ClubJoinRequestCreatedDto;
-            
+
             // Assert - Response
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);
@@ -70,7 +70,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             var newEntity = new ClubJoinRequestSendDto
             {
                 TouristId = 0,
-                ClubId = -1
+                ClubId = 1
             };
 
             // Act

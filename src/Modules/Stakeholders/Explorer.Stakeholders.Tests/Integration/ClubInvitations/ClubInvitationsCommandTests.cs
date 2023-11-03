@@ -24,7 +24,7 @@ public class ClubInvitationsCommandTests : BaseStakeholdersIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var newEntity = new ClubInvitationWithUsernameDto()
         {
-            ClubId = -1,
+            ClubId = 2,
             Username = "autor2@gmail.com"
         };
 
@@ -66,7 +66,7 @@ public class ClubInvitationsCommandTests : BaseStakeholdersIntegrationTest
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(404);
     }
-    
+
     [Fact]
     public void Sends_fails_invalid_club_id()
     {
