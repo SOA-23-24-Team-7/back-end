@@ -40,7 +40,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             updateProfileResult.ShouldNotBeNull();
             updateProfileResult.Name.ShouldBe(updatedEntity.Name);
             updateProfileResult.Surname.ShouldBe(updatedEntity.Surname);
-            updateProfileResult.ProfilePicture.ShouldBe(updatedEntity.ProfilePicture);
+            updateProfileResult.User.ProfilePicture.ShouldBe(updatedEntity.ProfilePicture);
             updateProfileResult.Bio.ShouldBe(updatedEntity.Bio);
             updateProfileResult.Motto.ShouldBe(updatedEntity.Motto);
 
