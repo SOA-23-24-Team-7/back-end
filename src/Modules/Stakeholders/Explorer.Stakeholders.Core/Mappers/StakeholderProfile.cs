@@ -67,7 +67,7 @@ public class StakeholderProfile : Profile
             Category = src.Category,
             Priority = src.Priority,
             Description = src.Description,
-            DateTime = src.DateTime,
+            ReportedTime = src.ReportedTime,
             TouristId = src.TouristId,
             TourId = src.TourId,
             IsResolved = src.IsResolved

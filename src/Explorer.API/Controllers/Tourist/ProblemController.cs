@@ -34,7 +34,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 problem.TouristId = long.Parse(identity.FindFirst("id").Value);
             }
-            problem.DateTime = DateTime.Now;
+            problem.ReportedTime = DateTime.Now;
             var result = _problemService.Create(problem);
             return CreateResponse(result);
         }

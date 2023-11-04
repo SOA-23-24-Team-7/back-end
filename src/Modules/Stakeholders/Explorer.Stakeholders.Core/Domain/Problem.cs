@@ -8,19 +8,19 @@ namespace Explorer.Stakeholders.Core.Domain
         public string Category { get; init; }
         public string Priority { get; init; }
         public string Description { get; init; }
-        public DateTime DateTime { get; init; }
+        public DateTime ReportedTime { get; init; }
         public long TouristId { get; init; }
         public User Tourist { get; init; }
         public int TourId { get; init; }
         public bool IsResolved { get; set; } = false;
 
-        public Problem(string category, string priority, string description, DateTime dateTime, long touristId, int tourId)
+        public Problem(string category, string priority, string description, DateTime reportedTime, long touristId, int tourId)
         {
             Validate(category, priority, description);
             Category = category;
             Priority = priority;
             Description = description;
-            DateTime = dateTime;
+            ReportedTime = reportedTime;
             TouristId = touristId;
             TourId = tourId;
         }
