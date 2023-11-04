@@ -55,8 +55,14 @@ namespace Explorer.API.Controllers.Tourist
         [HttpGet("resolve/{problemId:long}")]
         public ActionResult<ProblemResponseDto> ResolveProblem(long problemId)
         {
-            var result = _problemService.ResolveProblem(problemId);
-            return CreateResponse(result);
+            var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var touristId = _problemService.Get(problemId).Value.TouristId;
+            if (loggedInUserId == touristId)
+            {
+                var result = _problemService.ResolveProblem(problemId);
+                return CreateResponse(result);
+            }
+            return Forbid();
         }
 
         [HttpDelete("{id:int}")]

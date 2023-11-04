@@ -7,6 +7,7 @@ namespace Explorer.Stakeholders.API.Public;
 public interface IProblemService
 {
     Result<PagedResult<ProblemResponseDto>> GetAll(int page, int pageSize);
+    Result<ProblemResponseDto> Get(long id);
     Result<ProblemResponseDto> Create<ProblemCreateDto>(ProblemCreateDto problem);
     Result<ProblemResponseDto> Update<ProblemUpdateDto>(ProblemUpdateDto problem);
     Result<ProblemResponseDto> ResolveProblem(long problemId);
