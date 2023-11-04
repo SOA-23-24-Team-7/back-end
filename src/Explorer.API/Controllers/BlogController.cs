@@ -1,8 +1,14 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.Blog.Core.UseCases;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.Core.Domain;
+using Explorer.Tours.API.Dtos;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Explorer.API.Controllers
 {
@@ -22,6 +28,7 @@ namespace Explorer.API.Controllers
         [HttpPost("create")]
         public ActionResult<BlogResponseDto> Create([FromBody] BlogResponseDto blog)
         {
+            blog.Date = DateTime.UtcNow;
             var result = _blogService.Create(blog);
             return CreateResponse(result);
         }
@@ -33,12 +40,32 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-        [HttpGet("{id:int}")]
-        public ActionResult<BlogResponseDto> Get(int id)
+
+
+        [HttpPut("{id:int}")]
+        public ActionResult<BlogResponseDto> Update([FromBody] BlogUpdateDto blog, int id)
         {
-            var result = _blogService.Get(id);
+            blog.Id = id;
+            var result = _blogService.UpdateBlog(blog);
             return CreateResponse(result);
         }
 
+
+
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            var result = _blogService.Delete(id);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("{blogId:long}")]
+        public ActionResult<PagedResult<BlogResponseDto>> Get(long blogId)
+        {
+            var result = _blogService.Get(blogId);
+            return CreateResponse(result);
+        }
     }
+
 }
+

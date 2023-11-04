@@ -10,6 +10,7 @@
         public long TouristId { get; set; }
         public UserResponseDto Tourist { get; set; }
         public int TourId { get; set; }
+        public string TourName { get; set; }
         public bool IsResolved { get; set; }
     }
 }

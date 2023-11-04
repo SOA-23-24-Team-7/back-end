@@ -53,5 +53,10 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         {
             return _dbSet.Where(t => t.AuthorId == id).Select(x => x.Id);
         }
+
+        public string GetToursName(long id)
+        {
+            return _dbSet.FirstOrDefault(t => t.Id == id).Name;
+        }
     }
 }
