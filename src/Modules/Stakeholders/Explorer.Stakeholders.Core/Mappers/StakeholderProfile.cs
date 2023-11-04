@@ -57,6 +57,7 @@ public class StakeholderProfile : Profile
         });
         CreateMap<UserResponseDto, User>().ReverseMap();
         CreateMap<RatingResponseDto, Rating>().ReverseMap();
+        CreateMap<Follower, FollowerDto>().ConstructUsing(src => new FollowerDto { FollowedById = src.FollowedById, UserId = src.UserId, Id = src.Id, FollowedByUserName = src.FollowedBy.Username});
         CreateMap<Rating, RatingWithUserDto>()
             .ConstructUsing(src => new RatingWithUserDto { Id = src.Id, UserId = src.UserId, Grade = src.Grade, Comment = src.Comment, UserName = src.User.Username });
         CreateMap<RatingCreateDto, Rating>().ReverseMap();

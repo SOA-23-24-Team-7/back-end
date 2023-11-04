@@ -2,6 +2,7 @@
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories;
@@ -22,6 +23,17 @@ public class UserDatabaseRepository : IUserRepository
         var task = _dbSet.Where(x => x.Id != adminId).GetPagedById(page, pageSize);
         task.Wait();
         return task.Result;
+    }
+
+    public Result<PagedResult<User>> GetPagedFollowersByUserId(int page, int pageSize, long userId)
+    {
+        var entity = _dbSet.Find(userId);
+        if (entity == null) throw new KeyNotFoundException("Not found: " + userId);
+        var a = entity.Followers;
+        var task = _dbSet.Include(m => m.Followers).GetPagedById(pageSize, page);
+        task.Wait();
+        return task.Result;
+        
     }
 
     public bool Exists(string username)

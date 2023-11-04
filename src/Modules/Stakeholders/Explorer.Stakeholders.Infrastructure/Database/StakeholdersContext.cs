@@ -8,6 +8,7 @@ public class StakeholdersContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Person> People { get; set; }
+    public DbSet<Follower> Followers { get; set; }
     public DbSet<ClubInvitation> ClubInvitations { get; set; }
     public DbSet<ClubMembership> ClubMemberships { get; set; }
     public DbSet<Club> Clubs { get; set; }
@@ -64,5 +65,16 @@ public class StakeholdersContext : DbContext
            .HasOne(s => s.User)
            .WithOne()
            .HasForeignKey<Rating>(s => s.UserId);
+
+        modelBuilder.Entity<Follower>()
+                    .HasOne(m => m.User)
+                    .WithMany(m => m.Followers)
+                    .HasForeignKey(k => k.UserId);
+
+        modelBuilder.Entity<Follower>()
+            .HasOne(m => m.FollowedBy)
+            .WithMany(m => m.Following)
+            .HasForeignKey(k => k.FollowedById);
+
     }
 }

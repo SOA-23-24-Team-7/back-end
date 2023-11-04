@@ -12,11 +12,13 @@ namespace Explorer.Stakeholders.Core.UseCases
     {
 
         private readonly IUserRepository _userRepository;
+        private readonly IFollowerRepository _followerRepository;
 
-        public UserService(ICrudRepository<User> repository, IUserRepository userRepository, IMapper mapper) : base(
+        public UserService(ICrudRepository<User> repository, IFollowerRepository followerRepository, IUserRepository userRepository, IMapper mapper) : base(
             repository, mapper)
         {
             _userRepository = userRepository;
+            _followerRepository = followerRepository;
         }
 
         public Result<UserResponseDto> DisableAccount(long userId)
