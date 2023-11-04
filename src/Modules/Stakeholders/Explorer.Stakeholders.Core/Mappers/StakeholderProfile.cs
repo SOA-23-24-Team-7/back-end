@@ -1,7 +1,6 @@
 using AutoMapper;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Core.Domain;
-using System.Xml.Linq;
 
 namespace Explorer.Stakeholders.Core.Mappers;
 
@@ -77,6 +76,12 @@ public class StakeholderProfile : Profile
         CreateMap<ProblemAnswerCreateDto, ProblemAnswer>().ReverseMap();
         CreateMap<ProblemAnswerResponseDto, ProblemAnswer>().ReverseMap();
         CreateMap<ProblemCommentCreateDto, ProblemComment>().ReverseMap();
-        CreateMap<ProblemCommentResponseDto, ProblemComment>().ReverseMap();
+        CreateMap<ProblemComment, ProblemCommentResponseDto>().ConstructUsing(src => new ProblemCommentResponseDto
+        {
+            Id = src.Id,
+            CommenterId = src.CommenterId,
+            ProblemAnswerId = src.ProblemAnswerId,
+            Text = src.Text,
+        }).ForMember(x => x.Commenter, opt => opt.MapFrom(src => src.Commenter));
     }
 }

@@ -5,6 +5,7 @@ namespace Explorer.Stakeholders.Core.Domain
     public class ProblemComment : Entity
     {
         public long CommenterId { get; private set; }
+        public User Commenter { get; private set; }
         public long ProblemAnswerId { get; private set; }
         public string Text { get; private set; }
 
