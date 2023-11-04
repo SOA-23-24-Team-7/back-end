@@ -79,8 +79,10 @@ namespace Explorer.Tours.Core.UseCases
                 }
 
                 request.Status = PublicStatus.Accepted;
-
                 _repository.Update(request);
+
+                CreatePublicKeypoint(request);
+
                 CreateNotification(request, true);
 
                 return Result.Ok().WithSuccess("Request accepted successfully.");

@@ -32,9 +32,7 @@ namespace Explorer.Tours.Core.UseCases
                 var request = _repository.Get(requestId);
 
                 if (!isPending(request))
-                {
                     return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
-                }
 
                 request.Status = PublicStatus.Rejected;
                 request.Comment = comment;
@@ -49,19 +47,19 @@ namespace Explorer.Tours.Core.UseCases
                 return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
             }
         }
+
         private void CreateNotification(PublicFacilityRequest request, bool isAccepted)
         {
             var facility = _facilityRepository.Get(request.FacilityId);
             NotificationGenerator generator = new NotificationGenerator();
             string notificationText;
+
             if (isAccepted)
-            {
                 notificationText = generator.GenerateAccepted(facility.Name);
-            }
+            
             else
-            {
                 notificationText = generator.GenerateRejected(facility.Name,request.Comment);
-            }
+
             _notificationRepository.Create(new PublicFacilityNotification(notificationText, request.AuthorId, request.Id));
         }
 
@@ -72,9 +70,7 @@ namespace Explorer.Tours.Core.UseCases
                 var request = _repository.Get(requestId);
 
                 if (!isPending(request))
-                {
                     return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
-                }
 
                 request.Status = PublicStatus.Accepted;
 
