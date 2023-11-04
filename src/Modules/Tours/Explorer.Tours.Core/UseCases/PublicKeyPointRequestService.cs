@@ -19,11 +19,13 @@ namespace Explorer.Tours.Core.UseCases
         private readonly ICrudRepository<PublicKeyPointRequest> _repository;
         private readonly ICrudRepository<PublicKeyPointNotification> _notificationRepository;
         private readonly IKeyPointRepository _keyPointRepository;
-        public PublicKeyPointRequestService(ICrudRepository<PublicKeyPointRequest> repository, IMapper mapper, ICrudRepository<PublicKeyPointNotification> notificationRepository, IKeyPointRepository keyPointRepository) : base(repository, mapper)
+        private readonly ICrudRepository<PublicKeyPoint> _publicKeyPointRepository;
+        public PublicKeyPointRequestService(ICrudRepository<PublicKeyPointRequest> repository, ICrudRepository<PublicKeyPoint> publicKeyPointRepository, ICrudRepository<PublicKeyPointNotification> notificationRepository, IKeyPointRepository keyPointRepository, IMapper mapper) : base(repository, mapper)
         {
             _repository = repository;
             _notificationRepository = notificationRepository;
             _keyPointRepository = keyPointRepository;
+            _publicKeyPointRepository = publicKeyPointRepository;
         }
         public Result Reject(long requestId,string comment)
         {
@@ -92,6 +94,13 @@ namespace Explorer.Tours.Core.UseCases
         private bool isPending(PublicKeyPointRequest request)
         {
             return request.Status == PublicStatus.Pending;
+        }
+
+        private void CreatePublicKeypoint(PublicKeyPointRequest request)
+        {
+            //dobavljanje keypointa za koji je poslat zahtjev, preko njega pravim public keypoint
+            var keyPoint = _keyPointRepository.Get(request.KeyPointId);
+            _publicKeyPointRepository.Create(new PublicKeyPoint(keyPoint.Name, keyPoint.Description, keyPoint.Longitude, keyPoint.Latitude, keyPoint.ImagePath, keyPoint.Order));
         }
      
     }
