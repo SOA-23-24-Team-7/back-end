@@ -32,9 +32,6 @@ public class ToursProfile : Profile
         CreateMap<PreferenceCreateDto, Preference>().ReverseMap();
         CreateMap<PreferenceUpdateDto, Preference>().ReverseMap();
 
-
-
-
         CreateMap<TouristEquipmentResponseDto, TouristEquipment>().ReverseMap();
         CreateMap<TouristEquipmentCreateDto, TouristEquipment>().ReverseMap();
         CreateMap<TouristEquipmentUpdateDto, TouristEquipment>().ReverseMap();
@@ -54,5 +51,8 @@ public class ToursProfile : Profile
 
         CreateMap<PublicKeyPointNotificationResponseDto, PublicKeyPointNotification>().ReverseMap();
         CreateMap<PublicKeyPointNotificationCreateDto, PublicKeyPointNotification>().ReverseMap();
+
+        CreateMap<PublicKeyPointResponseDto, PublicKeyPoint>().ReverseMap();
+        CreateMap<PublicKeyPointCreateDto, PublicKeyPoint>().ReverseMap();
     }
 }
