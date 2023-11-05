@@ -5,6 +5,7 @@ using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases;
@@ -23,7 +24,8 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
     {
-        var allTours = _repository.GetPaged(page, pageSize);
+        //var allTours = _repository.GetPaged(page, pageSize);
+        var allTours = _tourRepository.GetAll(page, pageSize);  //anja dodala
         var toursByAuthor = allTours.Results.Where(t => t.AuthorId == authorId).ToList();
         var pagedResult = new PagedResult<Tour>(toursByAuthor, toursByAuthor.Count);
         return MapToDto<TourResponseDto>(pagedResult);
@@ -73,4 +75,12 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     {
         return _tourRepository.GetToursName(id);
     }
+    //dodato
+    public Result<TourResponseDto> GetById(long id)
+    {
+        var entity = _tourRepository.GetById(id);
+        return MapToDto<TourResponseDto>(entity);
+    }
+
+
 }

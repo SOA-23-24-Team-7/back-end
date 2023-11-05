@@ -1,5 +1,6 @@
 ﻿namespace Explorer.Tours.API.Dtos;
 
+
 public class KeyPointDto
 {
     public long Id { get; set; }
@@ -11,3 +12,5 @@ public class KeyPointDto
     public string ImagePath { get; set; }
     public long Order { get; set; }
 }
+
+

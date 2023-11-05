@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Explorer.API.Controllers.Author
+namespace Explorer.API.Controllers.Author.TourAuthoring
 {
     [Authorize(Policy = "authorPolicy")] //come back to this
     [Route("api/tour")] //come back to this
@@ -85,5 +85,13 @@ namespace Explorer.API.Controllers.Author
             var result = _tourService.DeleteEquipment(tourId, equipmentId);
             return CreateResponse(result);
         }
+
+        [HttpGet("{tourId:long}")]
+        public ActionResult<PagedResult<TourResponseDto>> GetById(long tourId)
+        {
+            var result = _tourService.GetById(tourId);
+            return CreateResponse(result);
+        }
+
     }
 }
