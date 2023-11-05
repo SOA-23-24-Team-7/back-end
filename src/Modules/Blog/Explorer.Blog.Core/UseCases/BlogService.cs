@@ -46,5 +46,16 @@ namespace Explorer.Blog.Core.UseCases
             }
         }
 
+        public bool IsBlogClosed(long blogId)
+        {
+            var blog = CrudRepository.Get(blogId);
+
+            if (blog.Status == Domain.BlogStatus.Closed)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }
