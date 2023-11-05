@@ -37,6 +37,12 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             return task.Result;
         }
 
+        public Problem Get(long id)
+        {
+            var task = _dbContext.Problem.FirstOrDefault(problem => problem.Id == id);
+            return task;
+        }
+
         public long GetTourIdByProblemId(long problemId)
         {
             var result = _dbContext.Problem.FirstOrDefault(problem => problem.Id == problemId);

@@ -9,5 +9,6 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         void DeleteEquipment(long tourId, long equipmentId);
         IEnumerable<long> GetAuthorsTours(long id);
         string GetToursName(long id);
+        long GetAuthorsId(long id);
     }
 }

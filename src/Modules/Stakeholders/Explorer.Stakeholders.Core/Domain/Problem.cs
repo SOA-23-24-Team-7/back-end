@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Explorer.BuildingBlocks.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Stakeholders.Core.Domain
 {
@@ -13,6 +12,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public User Tourist { get; init; }
         public int TourId { get; init; }
         public bool IsResolved { get; set; } = false;
+        public bool IsAnswered { get; set; } = false;
 
         public Problem(string category, string priority, string description, DateTime reportedTime, long touristId, int tourId)
         {
@@ -24,6 +24,12 @@ namespace Explorer.Stakeholders.Core.Domain
             TouristId = touristId;
             TourId = tourId;
         }
+
+        public void UpdateIsAnswered(bool isAnswered)
+        {
+            IsAnswered = isAnswered;
+        }
+
         public void Validate(string category, string priority, string description)
         {
             if (string.IsNullOrWhiteSpace(category)) throw new ArgumentException("Invalid Category.");

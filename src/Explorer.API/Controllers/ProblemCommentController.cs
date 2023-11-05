@@ -11,17 +11,27 @@ namespace Explorer.API.Controllers
     public class ProblemCommentController : BaseApiController
     {
         private readonly IProblemCommentService _problemCommentService;
+        private readonly IProblemService _problemService;
 
-        public ProblemCommentController(IProblemCommentService problemCommentService)
+        public ProblemCommentController(IProblemCommentService problemCommentService, IProblemService problemService)
         {
             _problemCommentService = problemCommentService;
+            _problemService = problemService;
         }
 
         [HttpPost]
         public ActionResult<ProblemCommentResponseDto> Create([FromBody] ProblemCommentCreateDto problemComment)
         {
-            var result = _problemCommentService.Create(problemComment);
-            return CreateResponse(result);
+            var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var touristId = 1;
+            var authorId = 1;
+            //ulogovani korisnik mora biti ili kreator ture ili kreator problema, ostali ne mogu da komentarisu
+            if (loggedInUserId == touristId || loggedInUserId == authorId)
+            {
+                var result = _problemCommentService.Create(problemComment);
+                return CreateResponse(result);
+            }
+            return Forbid();
         }
 
         [HttpGet("{id:long}")]

@@ -1,5 +1,4 @@
-﻿using Explorer.BuildingBlocks.Infrastructure.Database;
-using Explorer.Tours.Core.Domain;
+﻿using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,6 +57,11 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         public string GetToursName(long id)
         {
             return _dbSet.FirstOrDefault(t => t.Id == id).Name;
+        }
+
+        public long GetAuthorsId(long id)
+        {
+            return _dbSet.FirstOrDefault(t => t.Id == id).AuthorId;
         }
     }
 }

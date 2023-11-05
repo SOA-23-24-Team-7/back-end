@@ -73,4 +73,9 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     {
         return _tourRepository.GetToursName(id);
     }
+
+    public long GetAuthorsId(long id)
+    {
+        return _tourRepository.GetAuthorsId(id);
+    }
 }

@@ -39,15 +39,43 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
+        public Result<ProblemResponseDto> UpdateIsAnswered(long problemId, bool isAnswered)
+        {
+            try
+            {
+                var problem = CrudRepository.Get(problemId);
+                problem.UpdateIsAnswered(isAnswered);
+                var result = CrudRepository.Update(problem);
+                return MapToDto<ProblemResponseDto>(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
         public Result<PagedResult<ProblemResponseDto>> GetAll(int page, int pageSize)
         {
             var results = MapToDto<ProblemResponseDto>(_problemRepository.GetAll(page, pageSize));
             foreach (var problemDto in results.Value.Results)
             {
                 problemDto.TourName = _tourService.GetToursName(problemDto.TourId);
+                problemDto.TourAuthorId = _tourService.GetAuthorsId(problemDto.TourId);
             }
 
             return results;
+        }
+
+        public Result<ProblemResponseDto> Get(long id)
+        {
+            var result = MapToDto<ProblemResponseDto>(_problemRepository.Get(id));
+            result.TourName = _tourService.GetToursName(result.TourId);
+            result.TourAuthorId = _tourService.GetAuthorsId(result.TourId);
+            return result;
         }
 
         public Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id)
@@ -56,6 +84,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             foreach (var problemDto in results.Value.Results)
             {
                 problemDto.TourName = _tourService.GetToursName(problemDto.TourId);
+                problemDto.TourAuthorId = _tourService.GetAuthorsId(problemDto.TourId);
             }
 
             return results;

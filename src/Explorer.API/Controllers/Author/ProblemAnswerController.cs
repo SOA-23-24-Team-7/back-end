@@ -10,17 +10,30 @@ namespace Explorer.API.Controllers.Author
     public class ProblemAnswerController : BaseApiController
     {
         private readonly IProblemAnswerService _problemAnswerService;
-        public ProblemAnswerController(IProblemAnswerService problemAnswerService)
+        private readonly IProblemService _problemService;
+        public ProblemAnswerController(IProblemAnswerService problemAnswerService, IProblemService problemService)
         {
             _problemAnswerService = problemAnswerService;
+            _problemService = problemService;
         }
 
         [HttpPost]
         public ActionResult<ProblemAnswerResponseDto> Create([FromBody] ProblemAnswerCreateDto problemAnswer)
         {
-            var result = _problemAnswerService.Create(problemAnswer);
-            return CreateResponse(result);
+            var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var tourAuthorId = _problemService.Get(problemAnswer.ProblemId).Value.TourAuthorId;
+            var resolved = _problemService.Get(problemAnswer.ProblemId).Value.IsResolved;
+            if (loggedInUserId == tourAuthorId)
+            {
+                var exists = _problemAnswerService.DoesAnswerExistsForProblem(problemAnswer.ProblemId);
+                if (!exists & !resolved)
+                {
+                    var result = _problemAnswerService.Create(problemAnswer);
+                    _problemService.UpdateIsAnswered(problemAnswer.ProblemId, true);
+                    return CreateResponse(result);
+                }
+            }
+            return Forbid();
         }
-
     }
 }
