@@ -10,5 +10,4 @@ public interface IUserRepository
     User Create(User user);
     long GetPersonId(long userId);
     PagedResult<User> GetPagedByAdmin(int page, int pageSize, long adminId);
-    Result<PagedResult<User>> GetPagedFollowersByUserId(int page, int pageSize, long userId);
 }

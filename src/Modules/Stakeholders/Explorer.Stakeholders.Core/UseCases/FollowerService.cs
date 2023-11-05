@@ -21,6 +21,7 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
             _followerRepository = followerRepository;
         }
+
         public Result<PagedResult<FollowerDto>> GetFollowers(int page, int pageSize, long userId)
         {
             var result = _followerRepository.GetFollowersPagedById(page, pageSize, userId);

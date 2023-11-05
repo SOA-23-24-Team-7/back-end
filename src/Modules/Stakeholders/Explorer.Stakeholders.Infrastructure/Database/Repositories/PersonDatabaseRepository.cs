@@ -21,7 +21,7 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 
         public Person? GetByUserId(long id)
         {
-            var person = _dbContext.People.Include(x => x.User).FirstOrDefault(person => person.UserId == id);
+            var person = _dbContext.People.Include(x => x.User).Include(f => f.User.Followers).ThenInclude(f => f.FollowedBy).FirstOrDefault(person => person.UserId == id);
             return person;
         }
 

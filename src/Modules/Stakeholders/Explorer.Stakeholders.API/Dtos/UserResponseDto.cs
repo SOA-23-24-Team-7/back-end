@@ -7,5 +7,6 @@
         public string ProfilePicture { get; set; }
         public int Role { get; set; }
         public bool IsActive { get; set; }
+        public ICollection<FollowerDto> Followers { get; set; }
     }
 }
