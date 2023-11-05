@@ -26,6 +26,7 @@ namespace Explorer.API.Controllers.Author
             {
                 request.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
+            request.Created = DateTime.UtcNow;
             var result = _requestService.Create(request);
             return CreateResponse(result);
         }

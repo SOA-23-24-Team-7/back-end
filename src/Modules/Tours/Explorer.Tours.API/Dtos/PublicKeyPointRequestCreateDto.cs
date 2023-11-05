@@ -12,6 +12,7 @@ namespace Explorer.Tours.API.Dtos
         public long AuthorId { get; set; }
         public long KeyPointId { get; set; }
         public PublicStatus Status { get; set; }
+        public DateTime? Created { get; set; }
     }
 }
 public enum PublicStatus
