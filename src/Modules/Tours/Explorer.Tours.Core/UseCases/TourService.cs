@@ -6,7 +6,6 @@ using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
-using System.Linq;
 
 namespace Explorer.Tours.Core.UseCases;
 
@@ -15,7 +14,8 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository) : base(repository, mapper) {
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository) : base(repository, mapper)
+    {
         _repository = repository;
         _mapper = mapper;
         _tourRepository = tourRepository;
@@ -25,7 +25,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
     {
         //var allTours = _repository.GetPaged(page, pageSize);
-        var allTours = _tourRepository.GetAll(page, pageSize);  //anja dodala
+        var allTours = _tourRepository.GetAll(page, pageSize);  //anja dodala 
         var toursByAuthor = allTours.Results.Where(t => t.AuthorId == authorId).ToList();
         var pagedResult = new PagedResult<Tour>(toursByAuthor, toursByAuthor.Count);
         return MapToDto<TourResponseDto>(pagedResult);
@@ -43,7 +43,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
     {
         try
         {
-            _tourRepository.AddEquipment(tourId,equipmentId);
+            _tourRepository.AddEquipment(tourId, equipmentId);
             return Result.Ok();
         }
         catch (Exception e)
@@ -72,5 +72,11 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
         return MapToDto<TourResponseDto>(entity);
     }
 
-
+    public Result<TourUpdateDto> Publish(TourUpdateDto tour)
+    {
+        var entity = _tourRepository.GetById(tour.Id);
+        entity.Publish();
+        _repository.Update(entity);
+        return MapToDto<TourUpdateDto>(entity);
+    }
 }

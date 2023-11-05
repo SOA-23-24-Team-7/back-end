@@ -3,6 +3,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristEquipment;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.Tours;
+using System.Linq;
 
 namespace Explorer.Tours.Core.Mappers;
 
@@ -20,8 +21,8 @@ public class ToursProfile : Profile
 
         CreateMap<TourResponseDto, Tour>().ReverseMap();
         CreateMap<TourCreateDto, Tour>().ReverseMap();
-        CreateMap<TourUpdateDto, Tour>().ReverseMap();
-        CreateMap<TourResponseDto, Tour>().ReverseMap().ForMember(x => x.KeyPoints, opt => opt.MapFrom(src => src.KeyPoints));
+        CreateMap<TourUpdateDto, Tour>().ReverseMap().ForMember(dest => dest.Durations, opt => opt.MapFrom(src => src.Durations.Select(d => new TourDuration(d.Duration, (Domain.Tours.TransportType)d.TransportType))));
+        CreateMap<TourResponseDto, Tour>().ReverseMap().ForMember(dest => dest.Durations, opt => opt.MapFrom(src => src.Durations.Select(d => new TourDuration(d.Duration, (Domain.Tours.TransportType)d.TransportType))));
 
         CreateMap<FacilityResponseDto, Facility>().ReverseMap();
         CreateMap<FacilityCreateDto, Facility>().ReverseMap();
@@ -33,14 +34,11 @@ public class ToursProfile : Profile
         CreateMap<PreferenceCreateDto, Preference>().ReverseMap();
         CreateMap<PreferenceUpdateDto, Preference>().ReverseMap();
 
-
-
-
         CreateMap<TouristEquipmentResponseDto, TouristEquipment>().ReverseMap();
         CreateMap<TouristEquipmentCreateDto, TouristEquipment>().ReverseMap();
         CreateMap<TouristEquipmentUpdateDto, TouristEquipment>().ReverseMap();
 
-        CreateMap<PublicKeyPointRequestCreateDto, PublicKeyPointRequest>().ReverseMap() ;
+        CreateMap<PublicKeyPointRequestCreateDto, PublicKeyPointRequest>().ReverseMap();
         CreateMap<PublicKeyPointRequestResponseDto, PublicKeyPointRequest>().ReverseMap();
         //CreateMap<PublicKeyPointRequestResponseDto, Domain.PublicKeyPointRequest>().ReverseMap().ForMember(x => x.KeyPoint, opt => opt.MapFrom(src => src.KeyPoint));
         CreateMap<PublicKeyPointRequestUpdateDto, PublicKeyPointRequest>().ReverseMap();
@@ -50,5 +48,7 @@ public class ToursProfile : Profile
         //CreateMap<PublicKeyPointRequestResponseDto, Domain.PublicKeyPointRequest>().ReverseMap().ForMember(x => x.KeyPoint, opt => opt.MapFrom(src => src.KeyPoint));
         CreateMap<PublicFacilityRequestUpdateDto, PublicFacilityRequest>().ReverseMap();
 
+        CreateMap<TourDurationResponseDto, TourDuration>().ReverseMap(); // Caos hehe, lepasimozebroj? ;))
+        CreateMap<TourDurationUpdateDto, TourDuration>().ReverseMap(); // ONATRAZILAMIBROJSVIDJAJOJSEROLEKSMOJ
     }
 }

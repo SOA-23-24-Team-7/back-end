@@ -93,5 +93,16 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             return CreateResponse(result);
         }
 
+        [HttpPut("publish/{id:int}")]
+        public ActionResult<TourResponseDto> Publish([FromBody] TourUpdateDto tour)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _tourService.Publish(tour);
+            return CreateResponse(result);
+        }
     }
 }
