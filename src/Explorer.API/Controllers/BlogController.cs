@@ -47,6 +47,8 @@ namespace Explorer.API.Controllers
         [HttpGet("upvote/{id:long}")]
         public ActionResult Upvote(long id)
         {
+            if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _blogService.SetVote(id, userId, VoteType.UPVOTE);
             return CreateResponse(result);
@@ -56,6 +58,8 @@ namespace Explorer.API.Controllers
         [HttpGet("downvote/{id:long}")]
         public ActionResult Downvote(long id)
         {
+            if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _blogService.SetVote(id, userId, VoteType.DOWNVOTE);
             return CreateResponse(result);

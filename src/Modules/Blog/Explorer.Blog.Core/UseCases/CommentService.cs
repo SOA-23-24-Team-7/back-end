@@ -6,6 +6,7 @@ using Explorer.Blog.Core.Domain.RepositoryInterfaces;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using FluentResults;
+using System.Xml.Linq;
 
 namespace Explorer.Blog.Core.UseCases
 {
@@ -13,11 +14,13 @@ namespace Explorer.Blog.Core.UseCases
     {
         private readonly IMapper _mapper;
         private readonly ICommentRepository _commentRepository;
+        private readonly ICrudRepository<Domain.Blog> _blogRepository;
 
-        public CommentService(ICrudRepository<Comment> repository, ICommentRepository commentRepository, IMapper mapper) : base(repository, mapper)
+        public CommentService(ICrudRepository<Comment> repository, ICommentRepository commentRepository, ICrudRepository<Domain.Blog> blogRepository, IMapper mapper) : base(repository, mapper)
         {
             _mapper = mapper;
             _commentRepository = commentRepository;
+            _blogRepository = blogRepository;
         }
 
         public Result<PagedResult<CommentResponseDto>> GetPagedByBlogId(int page, int pageSize, long blogId)

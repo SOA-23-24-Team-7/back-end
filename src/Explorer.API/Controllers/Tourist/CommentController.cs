@@ -1,5 +1,6 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.Blog.Core.UseCases;
 using Explorer.BuildingBlocks.Core.UseCases;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
@@ -11,16 +12,20 @@ namespace Explorer.API.Controllers.Tourist
     public class CommentController : BaseApiController
     {
         private readonly ICommentService _commentService;
+        private readonly IBlogService _blogService;
 
-        public CommentController(ICommentService commentService)
+        public CommentController(ICommentService commentService, IBlogService blogService)
         {
             _commentService = commentService;
+            _blogService = blogService;
         }
 
         [Authorize(Policy = "touristPolicy")]
         [HttpPost]
         public ActionResult<CommentResponseDto> Create([FromBody] CommentCreateDto comment)
         {
+            if (_blogService.IsBlogClosed(comment.BlogId)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+
             var authorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             comment.AuthorId = authorId;
             comment.CreatedAt = DateTime.UtcNow;
@@ -34,6 +39,10 @@ namespace Explorer.API.Controllers.Tourist
         {
             var senderId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var comment = _commentService.Get(commentId);
+
+            if (_blogService.IsBlogClosed(comment.Value.BlogId)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+
+
             if (senderId != comment.Value.AuthorId)
             {
                 return CreateResponse(Result.Fail(FailureCode.Forbidden));
@@ -49,6 +58,10 @@ namespace Explorer.API.Controllers.Tourist
         {
             var senderId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var comment = _commentService.Get(commentId);
+
+            if (_blogService.IsBlogClosed(comment.Value.BlogId)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+
+
             if (senderId != comment.Value.AuthorId)
             {
                 return CreateResponse(Result.Fail(FailureCode.Forbidden));
