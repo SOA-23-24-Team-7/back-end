@@ -41,7 +41,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
 
             // Act
             var result = ((ObjectResult)controller.Send(newEntity).Result)?.Value as ClubJoinRequestCreatedDto;
-            
+
             // Assert - Response
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);

@@ -51,6 +51,17 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             DbContext.SaveChanges();
         }
 
+        //Metoda vraca listu ID-jeva tura od poslatog autora
+        public IEnumerable<long> GetAuthorsTours(long id)
+        {
+            return _dbSet.Where(t => t.AuthorId == id).Select(x => x.Id);
+        }
+
+        public string GetToursName(long id)
+        {
+            return _dbSet.FirstOrDefault(t => t.Id == id).Name;
+        }
+
         //anja dodala
         public PagedResult<Tour> GetAll(int page, int pageSize)
         {
