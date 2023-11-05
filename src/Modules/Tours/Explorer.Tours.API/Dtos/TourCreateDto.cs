@@ -17,6 +17,7 @@ namespace Explorer.Tours.API.Dtos
         public TourStatus Status { get; set; }
         public double Price { get; set; }
         public bool IsDeleted { get; set; }
+        public double Distance { get; set; }
     }
 
     

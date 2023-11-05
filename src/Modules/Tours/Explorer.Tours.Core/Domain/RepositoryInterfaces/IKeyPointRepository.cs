@@ -1,4 +1,6 @@
-﻿namespace Explorer.Tours.Core.Domain.RepositoryInterfaces;
+﻿using Explorer.Tours.Core.Domain.Tours;
+
+namespace Explorer.Tours.Core.Domain.RepositoryInterfaces;
 
 public interface IKeyPointRepository
 {

@@ -11,10 +11,12 @@ public class TourResponseDto
     public TourStatus Status { get; set; }
     public double Price { get; set; }
     public bool IsDeleted { get; set; }
+    public double Distance { get; set; }
     public List<KeyPointDto> KeyPoints { get; set; }
 }
 public enum TourStatus
 {
     Draft,
-    Published
+    Published,
+    Archived
 }
