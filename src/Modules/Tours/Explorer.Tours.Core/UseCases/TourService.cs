@@ -1,26 +1,26 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
-using System.Linq;
 
 namespace Explorer.Tours.Core.UseCases;
 
-public class TourService : CrudService<TourResponseDto, Tour>, ITourService
+public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IInternalTourService
 {
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository) : base(repository, mapper) {
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository) : base(repository, mapper)
+    {
         _repository = repository;
         _mapper = mapper;
         _tourRepository = tourRepository;
     }
-
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
     {
@@ -43,7 +43,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
     {
         try
         {
-            _tourRepository.AddEquipment(tourId,equipmentId);
+            _tourRepository.AddEquipment(tourId, equipmentId);
             return Result.Ok();
         }
         catch (Exception e)
@@ -65,6 +65,16 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
         }
     }
 
+
+    public IEnumerable<long> GetAuthorsTours(long id)
+    {
+        return _tourRepository.GetAuthorsTours(id);
+    }
+
+    public string GetToursName(long id)
+    {
+        return _tourRepository.GetToursName(id);
+    }
     //dodato
     public Result<TourResponseDto> GetById(long id)
     {
