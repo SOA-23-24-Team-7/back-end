@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Explorer.BuildingBlocks.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.Stakeholders.Core.Domain;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Explorer.Blog.Core.Domain
 {
     public enum BlogStatus { Draft, Published, Closed, Active, Famous };
     public class Blog : Entity
     {
-        public string Title { get; init; }
-        public string Description { get; init; }
+
+        public string Title { get; private set; }
+        public string Description { get; private set; }
         public DateTime Date { get; init; }
-        public List<string>? Pictures { get; init; }
+        public List<string>? Pictures { get; private set; }
         public BlogStatus Status { get; private set; }
 
         [InverseProperty("Blog")]
@@ -43,9 +39,19 @@ namespace Explorer.Blog.Core.Domain
 
             Title = title;
             Description = description;
-            Date = date;
+            Date = DateTime.UtcNow.Date;
             Pictures = pictures;
             Status = status;
+        }
+
+        public void UpdateBlog(string title, string description, List<string> pictures, BlogStatus status)
+        {
+
+            Title = title;
+            Description = description;
+            Pictures = pictures;
+            Status = status;
+
         }
 
         public void SetVote(long userId, VoteType voteType)

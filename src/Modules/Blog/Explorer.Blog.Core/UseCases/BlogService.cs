@@ -4,6 +4,8 @@ using Explorer.Blog.API.Public;
 using Explorer.Blog.Core.Domain;
 using Explorer.Blog.Core.Domain.RepositoryInterfaces;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 
 namespace Explorer.Blog.Core.UseCases
@@ -28,6 +30,24 @@ namespace Explorer.Blog.Core.UseCases
         {
             var entities = _repository.GetAll(page, pageSize);
             return MapToDto<BlogResponseDto>(entities);
+        }
+
+        public Result<BlogResponseDto> UpdateBlog(BlogUpdateDto blogUpdateDto)
+        {
+            try
+            {
+                var blog = CrudRepository.Get(blogUpdateDto.Id);
+                blog.UpdateBlog(blogUpdateDto.Title, blogUpdateDto.Description, blogUpdateDto.Pictures, (Domain.BlogStatus)blogUpdateDto.Status);
+                CrudRepository.Update(blog);
+
+                return MapToDto<BlogResponseDto>(blog);
+
+            }
+            catch
+            {
+
+                return Result.Fail(FailureCode.NotFound);
+            }
         }
 
         public Result SetVote(long blogId, long userId, API.Dtos.VoteType voteType)

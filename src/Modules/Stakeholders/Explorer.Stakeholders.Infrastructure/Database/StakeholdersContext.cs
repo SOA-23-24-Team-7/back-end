@@ -13,10 +13,11 @@ public class StakeholdersContext : DbContext
     public DbSet<Club> Clubs { get; set; }
     public DbSet<ClubJoinRequest> ClubJoinRequests { get; set; }
     public DbSet<Rating> Ratings { get; set; }
-    public DbSet<TourPreference> TourPreferences { get; set; }
-    public DbSet<TouristEquipment> TouristEquipments { get; set; }
+    public DbSet<Problem> Problem { get; set; }
+    public DbSet<ProblemAnswer> ProblemAnswer { get; set; }
+    public DbSet<ProblemComment> ProblemComment { get; set; }
 
-    public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) 
+    public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options)
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
@@ -36,7 +37,7 @@ public class StakeholdersContext : DbContext
     private static void ConfigureStakeholder(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Person>()
-            .HasOne<User>()
+            .HasOne(r => r.User)
             .WithOne()
             .HasForeignKey<Person>(s => s.UserId);
         modelBuilder.Entity<ClubJoinRequest>()
@@ -48,7 +49,7 @@ public class StakeholdersContext : DbContext
             .HasOne(r => r.Club)
             .WithMany()
             .HasForeignKey(r => r.ClubId);
-            
+
         modelBuilder.Entity<Club>()
             .HasOne(c => c.Owner)
             .WithMany()
@@ -58,6 +59,7 @@ public class StakeholdersContext : DbContext
             .HasOne(i => i.Club)
             .WithMany()
             .HasForeignKey(i => i.ClubId);
+
         modelBuilder.Entity<Rating>()
            .HasOne(s => s.User)
            .WithOne()

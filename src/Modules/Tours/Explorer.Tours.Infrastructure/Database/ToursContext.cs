@@ -6,13 +6,12 @@ namespace Explorer.Tours.Infrastructure.Database;
 public class ToursContext : DbContext
 {
     public DbSet<Equipment> Equipment { get; set; }
-
     public DbSet<Review> Reviews { get; set; }
-
-    public DbSet<Problem> Problem { get; set; }
     public DbSet<Tour> Tours { get; set; }
     public DbSet<KeyPoint> KeyPoints { get; set; }
     public DbSet<Facility> Facilities { get; set; }
+    public DbSet<Preference> Preferences { get; set; }
+    public DbSet<TouristEquipment> TouristEquipments { get; set; }
 
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
@@ -28,6 +27,7 @@ public class ToursContext : DbContext
             .UsingEntity(j => j.ToTable("TourEquipment"));
 
         ConfigureKeyPoint(modelBuilder);
+        
     }
 
     private static void ConfigureKeyPoint(ModelBuilder modelBuilder)
@@ -38,5 +38,6 @@ public class ToursContext : DbContext
             .HasForeignKey(kp => kp.TourId);
     }
 
-    
+
+
 }
