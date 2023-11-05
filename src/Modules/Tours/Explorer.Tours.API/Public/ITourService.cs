@@ -16,4 +16,5 @@ public interface ITourService
     Result AddEquipment(long tourId, long equipmentId);
     Result DeleteEquipment(long tourId, int equipmentId);
     Result<TourResponseDto> GetById(long id);   //dodato
+    public Result Publish(long id, long authorId);
 }
