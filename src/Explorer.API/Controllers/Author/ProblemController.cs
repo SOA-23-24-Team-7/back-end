@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +19,7 @@ namespace Explorer.API.Controllers.Author
 
         [Authorize(Policy = "authorPolicy")]
         [HttpGet]
-        public ActionResult<PagedResult<Problem>> GetByAuthor([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<ProblemResponseDto>> GetByAuthor([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _problemService.GetByAuthor(page, pageSize, long.Parse(HttpContext.User.Claims.First(x => x.Type == "id").Value));
             return CreateResponse(result);
