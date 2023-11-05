@@ -42,7 +42,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         result.TourId.ShouldBe(newEntity.TourId);
         result.TouristId.ShouldBe(newEntity.TouristId);
         // Assert - Database
-        var storedEntity = dbContext.Problem.FirstOrDefault(i => i.TourId == newEntity.TourId && i.TouristId == newEntity.TouristId);
+        var storedEntity = dbContext.Problem.FirstOrDefault(i => i.Id == result.Id);
         storedEntity.ShouldNotBeNull();
         storedEntity.Id.ShouldBe(result.Id);
     }
@@ -85,7 +85,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
             Priority = "Bitno",
             Description = "Nije bilo nekih vecih problema.",
             DateTime = DateTime.UtcNow,
-            TourId = 1,
+            TourId = -1,
             TouristId = -21,
         };
 

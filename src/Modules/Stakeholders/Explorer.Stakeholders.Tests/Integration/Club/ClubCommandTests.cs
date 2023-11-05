@@ -77,7 +77,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var updatedEntity = new ClubResponseDto
             {
-                Id = 2,
+                Id = -2,
                 OwnerId = -11,
                 Name = "izmenjenoime",
                 Description = "izmenjen opis",
@@ -89,7 +89,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
 
             // Assert - Response
             result.ShouldNotBeNull();
-            result.Id.ShouldBe(2);
+            result.Id.ShouldBe(-2);
             result.Name.ShouldBe(updatedEntity.Name);
             result.Description.ShouldBe(updatedEntity.Description);
 

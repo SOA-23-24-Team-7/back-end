@@ -35,7 +35,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             var newEntity = new ClubJoinRequestSendDto
             {
                 TouristId = -11,
-                ClubId = 1
+                ClubId = -1
             };
 
 
@@ -70,7 +70,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             var newEntity = new ClubJoinRequestSendDto
             {
                 TouristId = 0,
-                ClubId = 1
+                ClubId = -1
             };
 
             // Act
