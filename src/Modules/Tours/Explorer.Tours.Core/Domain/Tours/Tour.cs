@@ -15,7 +15,7 @@ public class Tour : Entity
 
     //polje za duzinu NAPISAO MALI NINOSLAV
     public double Distance { get; init; }
-    public DateTime? PublishDate { get; private set; } 
+    public DateTime? PublishDate { get; private set; }
     public ICollection<Equipment> EquipmentList { get; init; }
 
     [InverseProperty("Tour")]
@@ -49,19 +49,23 @@ public class Tour : Entity
         //if (Distance < 0) throw new ArgumentException("Distance cannot be negative");
     }
 
-    public void Publish()
+    public bool Publish(long authorId)
     {
-        if (ValidationForPublishing())
+        if (ValidationForPublishing(authorId))
         {
             PublishDate = DateTime.UtcNow;
             Status = TourStatus.Published;
+
+            return true;
         }
+
+        return false;
     }
 
-    public bool ValidationForPublishing()
+    public bool ValidationForPublishing(long authorId)
     {
         if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Description) || Difficulty < 1 || Difficulty > 5 ||
-            Tags.Count == 0 || KeyPoints.Count < 2 || Durations.Count < 1)
+            Tags.Count == 0 || KeyPoints == null || KeyPoints.Count < 2 || Durations.Count < 1 || AuthorId != authorId)
         {
             return false;
         }

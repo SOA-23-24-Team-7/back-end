@@ -6,6 +6,7 @@ using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
+using System.Linq.Expressions;
 
 namespace Explorer.Tours.Core.UseCases;
 
@@ -72,11 +73,22 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService
         return MapToDto<TourResponseDto>(entity);
     }
 
-    public Result<TourUpdateDto> Publish(TourUpdateDto tour)
+    public Result Publish(long id, long authorId)
     {
-        var entity = _tourRepository.GetById(tour.Id);
-        entity.Publish();
-        _repository.Update(entity);
-        return MapToDto<TourUpdateDto>(entity);
+        try
+        {
+            var entity = _tourRepository.GetById(id);
+            if (entity.Publish(authorId))
+            {
+                _repository.Update(entity);
+                return Result.Ok();
+            }
+            
+            return Result.Fail(FailureCode.InvalidArgument).WithError("Invalid argument provided.");
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
     }
 }
