@@ -19,7 +19,7 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 
         public PagedResult<ProblemComment> GetPagedByProblemAnswerId(int page, int pageSize, long problemAnswerId)
         {
-            var task = _dbSet.Include(x => x.Commenter).Where(x => x.Id != problemAnswerId).GetPagedById(page, pageSize);
+            var task = _dbSet.Include(x => x.Commenter).Where(x => x.ProblemAnswerId == problemAnswerId).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
         }
