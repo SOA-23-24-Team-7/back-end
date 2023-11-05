@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Explorer.Tours.Core.Domain.Tours;
 
