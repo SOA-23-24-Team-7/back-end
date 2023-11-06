@@ -29,6 +29,14 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
+        [Authorize(Policy = "userPolicy")]
+        [HttpPut("update")]
+        public ActionResult<BlogResponseDto> Update([FromBody] BlogUpdateDto blog)
+        {
+            var result = _blogService.Update(blog);
+            return CreateResponse(result);
+        }
+
         [HttpGet]
         public ActionResult<PagedResult<BlogResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
