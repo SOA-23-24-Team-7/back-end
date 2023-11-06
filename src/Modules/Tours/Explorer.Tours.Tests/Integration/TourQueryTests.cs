@@ -25,8 +25,8 @@ public class TourQueryTests : BaseToursIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(3);
-        result.TotalCount.ShouldBe(3);
+        result.Results.Count.ShouldBe(6);
+        result.TotalCount.ShouldBe(6);
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class TourQueryTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetEquipment(tourId:-1))?.Value as PagedResult<EquipmentResponseDto>;
+        var result = ((ObjectResult)controller.GetEquipment(tourId: -1))?.Value as PagedResult<EquipmentResponseDto>;
 
         // Assert
         result.ShouldNotBeNull();

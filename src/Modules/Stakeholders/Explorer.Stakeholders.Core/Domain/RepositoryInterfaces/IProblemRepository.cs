@@ -1,14 +1,12 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
 {
     public interface IProblemRepository
     {
+        PagedResult<Problem> GetByAuthor(int page, int pageSize, List<long> tourIds);
+        PagedResult<Problem> GetAll(int page, int pageSize);
         PagedResult<Problem> GetByUserId(int page, int pageSize, long id);
+        long GetTourIdByProblemId(long problemId);
     }
 }

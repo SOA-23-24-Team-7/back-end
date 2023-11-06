@@ -43,5 +43,24 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
             return MapToDto<UserResponseDto>(_userRepository.GetPagedByAdmin(page, pageSize, adminId));
         }
+
+        public Result<UserResponseDto> UpdateProfilePicture(long userId, string profilePicture)
+        {
+            try
+            {
+                var user = CrudRepository.Get(userId);
+                user.UpdateProfilePicture(profilePicture);
+                var result = CrudRepository.Update(user);
+                return MapToDto<UserResponseDto>(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
     }
 }
