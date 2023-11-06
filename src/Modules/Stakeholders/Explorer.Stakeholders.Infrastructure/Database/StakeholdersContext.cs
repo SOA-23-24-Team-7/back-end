@@ -17,6 +17,7 @@ public class StakeholdersContext : DbContext
     public DbSet<Problem> Problem { get; set; }
     public DbSet<ProblemAnswer> ProblemAnswer { get; set; }
     public DbSet<ProblemComment> ProblemComment { get; set; }
+    public DbSet<Message> Messages { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options)
     {
