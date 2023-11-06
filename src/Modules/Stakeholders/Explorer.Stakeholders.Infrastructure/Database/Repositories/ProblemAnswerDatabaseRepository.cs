@@ -19,5 +19,10 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             bool task = _dbSet.Any(obj => obj.ProblemId == problemId);
             return task;
         }
+
+        public ProblemAnswer GetByProblem(long problemId)
+        {
+            return _dbSet.FirstOrDefault(x => x.ProblemId == problemId);
+        }
     }
 }

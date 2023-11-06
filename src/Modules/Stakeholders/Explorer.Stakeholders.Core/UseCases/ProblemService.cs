@@ -115,6 +115,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             foreach (var problemDto in results.Value.Results)
             {
                 problemDto.TourName = _tourService.GetToursName(problemDto.TourId);
+                problemDto.TourAuthorId = _tourService.GetAuthorsId(problemDto.TourId);
             }
 
             return results;

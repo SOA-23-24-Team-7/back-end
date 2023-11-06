@@ -1,14 +1,8 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
-using Explorer.Blog.Core.UseCases;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Tours.API.Dtos;
-using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Explorer.API.Controllers
 {

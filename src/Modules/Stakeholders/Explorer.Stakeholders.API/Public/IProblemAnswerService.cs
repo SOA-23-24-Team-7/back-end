@@ -8,5 +8,6 @@ namespace Explorer.Stakeholders.API.Public
         Result<ProblemAnswerResponseDto> Create<ProblemAnswerCreateDto>(ProblemAnswerCreateDto problemAnswer);
         Result<ProblemAnswerResponseDto> Get(long id);
         bool DoesAnswerExistsForProblem(long problemId);
+        Result<ProblemAnswerResponseDto> GetByProblem(long problemId);
     }
 }
