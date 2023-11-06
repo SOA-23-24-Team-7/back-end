@@ -13,5 +13,6 @@ namespace Explorer.Tours.API.Public
     {
         Result<PagedResult<PublicKeyPointResponseDto>> GetPaged(int page, int pageSize);  
         Result<PublicKeyPointResponseDto> Create<PublicKeyPointCreateDto>(PublicKeyPointCreateDto publicKeyPoint);
+        Result<KeyPointDto> CreatePrivateKeyPoint(int tourId, int publicKeyPointId);
     }
 }

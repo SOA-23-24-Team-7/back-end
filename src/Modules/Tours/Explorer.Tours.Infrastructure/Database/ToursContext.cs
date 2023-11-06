@@ -1,6 +1,7 @@
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace Explorer.Tours.Infrastructure.Database;
 
@@ -33,6 +34,7 @@ public class ToursContext : DbContext
         ConfigureKeyPoint(modelBuilder);
         ConfigurePublicKeyPointRequest(modelBuilder);
         ConfigurePublicFacilityRequest(modelBuilder);
+        ConfigureNotification(modelBuilder);
 
         modelBuilder.Entity<Core.Domain.Tours.Tour>().Property(item => item.Durations).HasColumnType("jsonb");
     }
@@ -63,5 +65,18 @@ public class ToursContext : DbContext
             .HasOne<Facility>()
             .WithOne()
             .HasForeignKey<PublicFacilityRequest>(s => s.FacilityId);
+    }
+
+    private static void ConfigureNotification(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<PublicFacilityNotification>()
+            .HasOne<PublicFacilityRequest>()
+            .WithOne()
+            .HasForeignKey<PublicFacilityNotification>(s => s.RequestId);
+
+        modelBuilder.Entity<PublicKeyPointNotification>()
+        .HasOne<PublicKeyPointRequest>()
+        .WithOne()
+        .HasForeignKey<PublicKeyPointNotification>(s => s.RequestId);
     }
 }
