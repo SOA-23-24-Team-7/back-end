@@ -21,15 +21,14 @@ namespace Explorer.API.Controllers.Author
         public ActionResult<ProblemAnswerResponseDto> Create([FromBody] ProblemAnswerCreateDto problemAnswer)
         {
             var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var tourAuthorId = _problemService.Get(problemAnswer.ProblemId).Value.TourAuthorId;
-            var resolved = _problemService.Get(problemAnswer.ProblemId).Value.IsResolved;
-            if (loggedInUserId == tourAuthorId)
+            var problem = _problemService.Get(problemAnswer.ProblemId).Value;
+            if (loggedInUserId == problem.TourAuthorId)
             {
-                var exists = _problemAnswerService.DoesAnswerExistsForProblem(problemAnswer.ProblemId);
-                if (!exists & !resolved)
+                if (!problem.IsAnswered & !problem.IsResolved)
                 {
                     var result = _problemAnswerService.Create(problemAnswer);
                     _problemService.UpdateIsAnswered(problemAnswer.ProblemId, true);
+                    _problemService.UpdateAnswerId(problemAnswer.ProblemId, result.Value.Id);
                     return CreateResponse(result);
                 }
             }

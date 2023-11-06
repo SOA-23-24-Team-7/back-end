@@ -16,4 +16,5 @@ public interface IProblemService
     Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id);
     long GetTourIdByProblemId(long problemId);
     Result<ProblemResponseDto> UpdateIsAnswered(long problemId, bool isAnswered);
+    Result<ProblemResponseDto> UpdateAnswerId(long problemId, long answerId);
 }

@@ -39,6 +39,25 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
+        public Result<ProblemResponseDto> UpdateAnswerId(long problemId, long answerId)
+        {
+            try
+            {
+                var problem = CrudRepository.Get(problemId);
+                problem.UpdateAnswerId(answerId);
+                var result = CrudRepository.Update(problem);
+                return MapToDto<ProblemResponseDto>(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
         public Result<ProblemResponseDto> UpdateIsAnswered(long problemId, bool isAnswered)
         {
             try

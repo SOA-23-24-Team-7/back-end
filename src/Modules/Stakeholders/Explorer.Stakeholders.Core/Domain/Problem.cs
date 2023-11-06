@@ -11,6 +11,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public long TouristId { get; init; }
         public User Tourist { get; init; }
         public int TourId { get; init; }
+        public long AnswerId { get; private set; } = 0;
         public bool IsResolved { get; set; } = false;
         public bool IsAnswered { get; set; } = false;
 
@@ -23,6 +24,11 @@ namespace Explorer.Stakeholders.Core.Domain
             ReportedTime = reportedTime;
             TouristId = touristId;
             TourId = tourId;
+        }
+
+        public void UpdateAnswerId(long answerId)
+        {
+            AnswerId = answerId;
         }
 
         public void UpdateIsAnswered(bool isAnswered)
