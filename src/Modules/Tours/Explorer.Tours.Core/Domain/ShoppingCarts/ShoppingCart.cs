@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.Tours.Core.Domain.Tours;
 
@@ -12,34 +13,29 @@ namespace Explorer.Tours.Core.Domain.ShoppingCarts
     public class ShoppingCart : Entity
     {
         public long TouristId { get; init; }
-        public double TotalPrice { get; init; }
+        public double TotalPrice { get; set; }
         public bool IsPurchased { get; init; }
 
         public ICollection<OrderItem> OrderItems { get; } = new List<OrderItem>();
 
 
-        public ShoppingCart(long touristId, double totalPrice, bool isPurchased)
+        public ShoppingCart(long touristId, bool isPurchased)
         {
             TouristId = touristId;
-            TotalPrice = totalPrice;
+            SetTotalPrice();
             IsPurchased = isPurchased;  //provjeriti
         }
 
-
-       /* public void AddOrderItem(long tourId, double price, string tourName, long shoppingCartId)
+        public void SetTotalPrice()
         {
-            OrderItem storedItem = OrderItems.FirstOrDefault(r => r.TourId == tourId);
-            if (storedItem != null)
+            TotalPrice = 0;
+            if (OrderItems != null)
             {
-                throw new ArgumentException("Order item already exists.\n");
+                foreach (var items in OrderItems)
+                {
+                    TotalPrice += items.Price;
+                }
             }
-            else
-            {
-                OrderItems.Add(new OrderItem(tourId, tourName, price, shoppingCartId));
-            }
-            
-
-        }*/
-
+        }
     }
 }

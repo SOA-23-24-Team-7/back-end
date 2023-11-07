@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Explorer.BuildingBlocks.Core.UseCases;
@@ -13,7 +14,7 @@ namespace Explorer.Tours.API.Public
     {
         Result<ShoppingCartResponseDto> GetByTouristId(long id);
         Result<ShoppingCartResponseDto> Create<ShoppingCartCreateDto>(ShoppingCartCreateDto cart);
-        Result<ShoppingCartResponseDto> Update<ShoppingCartUpdateDto>(ShoppingCartUpdateDto cart);
+        Result<ShoppingCartResponseDto> Update(ShoppingCartUpdateDto cart);
         Result Delete(long id);
         public bool IsPurchased(long id);
     }
