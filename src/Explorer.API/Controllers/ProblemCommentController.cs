@@ -23,9 +23,13 @@ namespace Explorer.API.Controllers
         public ActionResult<ProblemCommentResponseDto> Create([FromBody] ProblemCommentCreateDto problemComment)
         {
             var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _problemCommentService.Create(problemComment);
-            return CreateResponse(result);
-            //return Forbid();
+            var problem = _problemService.GetByAnswerId(problemComment.ProblemAnswerId).Value;
+            if ((loggedInUserId == problem.TouristId || loggedInUserId == problem.TourAuthorId) && !problem.IsResolved && problem.IsAnswered)
+            {
+                var result = _problemCommentService.Create(problemComment);
+                return CreateResponse(result);
+            }
+            return Forbid();
         }
 
         [HttpGet("{id:long}")]

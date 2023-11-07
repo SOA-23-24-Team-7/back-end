@@ -14,7 +14,7 @@ public interface IProblemService
     Result Delete(long id);
     Result<PagedResult<ProblemResponseDto>> GetByAuthor(int page, int pageSize, long id);
     Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id);
-    long GetTourIdByProblemId(long problemId);
+    Result<ProblemResponseDto> GetByAnswerId(long id);
     Result<ProblemResponseDto> UpdateIsAnswered(long problemId, bool isAnswered);
     Result<ProblemResponseDto> UpdateAnswerId(long problemId, long answerId);
 }

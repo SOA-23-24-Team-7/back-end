@@ -121,9 +121,12 @@ namespace Explorer.Stakeholders.Core.UseCases
             return results;
         }
 
-        public long GetTourIdByProblemId(long problemId)
+        public Result<ProblemResponseDto> GetByAnswerId(long id)
         {
-            return _problemRepository.GetTourIdByProblemId(problemId);
+            var result = MapToDto<ProblemResponseDto>(_problemRepository.GetByAnswerId(id));
+            result.TourName = _tourService.GetToursName(result.TourId);
+            result.TourAuthorId = _tourService.GetAuthorsId(result.TourId);
+            return result;
         }
     }
 }

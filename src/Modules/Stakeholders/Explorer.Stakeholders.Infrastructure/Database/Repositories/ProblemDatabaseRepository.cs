@@ -43,10 +43,10 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             return task;
         }
 
-        public long GetTourIdByProblemId(long problemId)
+        public Problem GetByAnswerId(long id)
         {
-            var result = _dbContext.Problem.FirstOrDefault(problem => problem.Id == problemId);
-            return result.TourId;
+            var task = _dbContext.Problem.FirstOrDefault(problem => problem.AnswerId == id);
+            return task;
         }
     }
 }

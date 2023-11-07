@@ -8,6 +8,6 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
         PagedResult<Problem> GetAll(int page, int pageSize);
         PagedResult<Problem> GetByUserId(int page, int pageSize, long id);
         Problem Get(long id);
-        long GetTourIdByProblemId(long problemId);
+        Problem GetByAnswerId(long id);
     }
 }
