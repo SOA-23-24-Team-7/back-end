@@ -25,6 +25,7 @@ namespace Explorer.API.Controllers
         [HttpPost("create")]
         public ActionResult<BlogResponseDto> Create([FromBody] BlogCreateDto blog)
         {
+            blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _blogService.Create(blog);
             return CreateResponse(result);
         }
@@ -33,7 +34,16 @@ namespace Explorer.API.Controllers
         [HttpPut("update")]
         public ActionResult<BlogResponseDto> Update([FromBody] BlogUpdateDto blog)
         {
+            blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _blogService.Update(blog);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Policy = "userPolicy")]
+        [HttpDelete("delete/{id:long}"  )]
+        public ActionResult<BlogResponseDto> Delete(int id)
+        {
+            var result = _blogService.Delete(id);
             return CreateResponse(result);
         }
 

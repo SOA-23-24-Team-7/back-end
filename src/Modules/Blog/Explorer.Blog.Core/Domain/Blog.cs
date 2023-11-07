@@ -15,8 +15,8 @@ namespace Explorer.Blog.Core.Domain
         public string Title { get; init; }
         public string Description { get; init; }
         public DateTime Date { get; init; }
-        public List<string>? Pictures { get; init; }
         public BlogStatus Status { get; private set; }
+        public int AuthorId{ get; init; }
 
         [InverseProperty("Blog")]
         public ICollection<Comment> Comments { get; } = new List<Comment>();
@@ -32,7 +32,7 @@ namespace Explorer.Blog.Core.Domain
         public long UpvoteCount => Votes.Sum(x => x.VoteType == VoteType.UPVOTE ? 1 : 0);
         public long DownvoteCount => Votes.Sum(x => x.VoteType == VoteType.DOWNVOTE ? 1 : 0);
 
-        public Blog(string title, string description, DateTime date, List<string>? pictures, BlogStatus status)
+        public Blog(string title, string description, DateTime date, BlogStatus status, int authorId)
         {
 
             if (string.IsNullOrEmpty(title))
@@ -44,8 +44,8 @@ namespace Explorer.Blog.Core.Domain
             Title = title;
             Description = description;
             Date = date;
-            Pictures = pictures;
             Status = status;
+            AuthorId = authorId;
         }
 
         public void SetVote(long userId, VoteType voteType)

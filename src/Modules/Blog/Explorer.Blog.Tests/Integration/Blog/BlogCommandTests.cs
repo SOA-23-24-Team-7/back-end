@@ -28,7 +28,6 @@ namespace Explorer.Blog.Tests.Integration.Blog
                 Title = "Predlog",
                 Description = "Test",
                 Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                Pictures = new List<string> { },
                 Status = BlogStatus.Published
             };
 
@@ -59,7 +58,6 @@ namespace Explorer.Blog.Tests.Integration.Blog
                 //Title ="Predlog",
                 Description = "Test",
                 Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                Pictures = new List<string> { },
                 Status = BlogStatus.Published
             };
 
