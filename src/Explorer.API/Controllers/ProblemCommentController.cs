@@ -23,15 +23,9 @@ namespace Explorer.API.Controllers
         public ActionResult<ProblemCommentResponseDto> Create([FromBody] ProblemCommentCreateDto problemComment)
         {
             var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var touristId = 1;
-            var authorId = 1;
-            //ulogovani korisnik mora biti ili kreator ture ili kreator problema, ostali ne mogu da komentarisu
-            if (loggedInUserId == touristId || loggedInUserId == authorId)
-            {
-                var result = _problemCommentService.Create(problemComment);
-                return CreateResponse(result);
-            }
-            return Forbid();
+            var result = _problemCommentService.Create(problemComment);
+            return CreateResponse(result);
+            //return Forbid();
         }
 
         [HttpGet("{id:long}")]

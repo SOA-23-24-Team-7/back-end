@@ -56,8 +56,8 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<ProblemResponseDto> ResolveProblem(long problemId)
         {
             var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var touristId = _problemService.Get(problemId).Value.TouristId;
-            if (loggedInUserId == touristId)
+            var problem = _problemService.Get(problemId).Value;
+            if ((loggedInUserId == problem.TouristId) && !problem.IsResolved && problem.IsAnswered)
             {
                 var result = _problemService.ResolveProblem(problemId);
                 return CreateResponse(result);
