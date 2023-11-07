@@ -11,8 +11,9 @@ namespace Explorer.Blog.Core.Domain
         public DateTime CreatedAt { get; init; }
         public DateTime? UpdatedAt { get; private set; }
         public string Text { get; private set; }
+        public string Author { get; init; }
 
-        public Comment(long authorId, long blogId, DateTime createdAt, DateTime? updatedAt, string text)
+        public Comment(long authorId, long blogId, DateTime createdAt, DateTime? updatedAt, string text, string author)
         {
             Validate(text);
             AuthorId = authorId;
@@ -20,6 +21,7 @@ namespace Explorer.Blog.Core.Domain
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
             Text = text;
+            Author = author;
         }
 
         public void UpdateText(string text)

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
@@ -8,7 +9,7 @@ using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class UserService : CrudService<UserResponseDto, User>, IUserService
+    public class UserService : CrudService<UserResponseDto, User>, IUserService, IInternalUserService
     {
 
         private readonly IUserRepository _userRepository;
@@ -37,6 +38,11 @@ namespace Explorer.Stakeholders.Core.UseCases
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
+        }
+
+        public Result<string> GetNameById(long id)
+        {
+            return _userRepository.GetNameById(id);
         }
 
         public Result<PagedResult<UserResponseDto>> GetPagedByAdmin(int page, int pageSize, long adminId)

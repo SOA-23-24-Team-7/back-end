@@ -20,7 +20,7 @@ namespace Explorer.API.Controllers.Tourist
             _blogService = blogService;
         }
 
-        [Authorize(Policy = "touristPolicy")]
+        [Authorize(Policy = "userPolicy")]
         [HttpPost]
         public ActionResult<CommentResponseDto> Create([FromBody] CommentCreateDto comment)
         {

@@ -9,4 +9,5 @@ public interface IUserRepository
     User Create(User user);
     long GetPersonId(long userId);
     PagedResult<User> GetPagedByAdmin(int page, int pageSize, long adminId);
+    string GetNameById(long id);
 }
