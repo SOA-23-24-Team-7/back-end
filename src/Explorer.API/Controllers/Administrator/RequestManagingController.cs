@@ -24,7 +24,7 @@ namespace Explorer.API.Controllers.Administrator
         [HttpGet]
         public ActionResult<PagedResult<PublicKeyPointRequestResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _publicKeyPointRequestService.GetPaged(page, pageSize);
+            var result = _publicKeyPointRequestService.GetPagedWithName(page, pageSize);
             return CreateResponse(result);
         }
         [HttpPut("{id:long}")]
@@ -36,7 +36,7 @@ namespace Explorer.API.Controllers.Administrator
         [HttpGet("facility")]
         public ActionResult<PagedResult<PublicFacilityRequestResponseDto>> GetAllFacilityRequest([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _publicFacilityRequestService.GetPaged(page, pageSize);
+            var result = _publicFacilityRequestService.GetPagedWithName(page, pageSize);
             return CreateResponse(result);
         }
         [HttpPut("facility/{id:long}")]

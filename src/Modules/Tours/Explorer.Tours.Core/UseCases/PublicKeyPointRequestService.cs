@@ -104,6 +104,18 @@ namespace Explorer.Tours.Core.UseCases
             var keyPoint = _keyPointRepository.Get(request.KeyPointId);
             _publicKeyPointRepository.Create(new PublicKeyPoint(keyPoint.Name, keyPoint.Description, keyPoint.Longitude, keyPoint.Latitude, keyPoint.ImagePath, keyPoint.Order));
         }
-     
+
+        public Result<PagedResult<PublicKeyPointRequestResponseDto>> GetPagedWithName(int page, int pageSize)
+        {
+            var result = _repository.GetPaged(page, pageSize).Results;
+            var resultsDto = new List<PublicKeyPointRequestResponseDto>();
+            foreach (PublicKeyPointRequest  req in result)
+            {
+                var dto = MapToDto<PublicKeyPointRequestResponseDto>(req);
+                dto.KeyPointName = _keyPointRepository.Get(req.KeyPointId).Name;
+                resultsDto.Add(dto);
+            }
+            return new PagedResult<PublicKeyPointRequestResponseDto>(resultsDto, resultsDto.Count);
+        }
     }
 }

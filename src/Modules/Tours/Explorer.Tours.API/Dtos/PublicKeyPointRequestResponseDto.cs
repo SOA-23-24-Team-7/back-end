@@ -10,6 +10,7 @@ namespace Explorer.Tours.API.Dtos
         public string? Comment { get; set; }
         public DateTime Created { get; set; }
         public string AuthorName { get; set; }
+        public string? KeyPointName { get; set; }
 
     }
 }

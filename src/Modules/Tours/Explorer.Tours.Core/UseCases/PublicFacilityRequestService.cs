@@ -89,5 +89,18 @@ namespace Explorer.Tours.Core.UseCases
         {
             return request.Status == PublicStatus.Pending;
         }
+
+        public Result<PagedResult<PublicFacilityRequestResponseDto>> GetPagedWithName(int page, int pageSize)
+        {
+            var result = _repository.GetPaged(page, pageSize).Results;
+            var resultsDto = new List<PublicFacilityRequestResponseDto>();
+            foreach (PublicFacilityRequest req in result)
+            {
+                var dto = MapToDto<PublicFacilityRequestResponseDto>(req);
+                dto.FacilityName = _facilityRepository.Get(req.FacilityId).Name;
+                resultsDto.Add(dto);
+            }
+            return new PagedResult<PublicFacilityRequestResponseDto>(resultsDto, resultsDto.Count);
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace Explorer.Tours.API.Public;
         Result<PublicKeyPointRequestResponseDto> Update<PublicKeyPointRequestUpdateDto>(PublicKeyPointRequestUpdateDto request);
         Result Reject(long requestId, string comment);
         Result Accept(long requestId);
+    Result<PagedResult<PublicKeyPointRequestResponseDto>> GetPagedWithName(int page, int pageSize);
 }
 
 
