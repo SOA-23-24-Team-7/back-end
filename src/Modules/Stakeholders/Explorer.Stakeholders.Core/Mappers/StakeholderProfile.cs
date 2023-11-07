@@ -55,8 +55,11 @@ public class StakeholderProfile : Profile
             Bio = src.Bio,
             Motto = src.Motto
         });
-        CreateMap<Follower, FollowerDto>().ConstructUsing(src => new FollowerDto { FollowedById = src.FollowedById, UserId = src.UserId, Id = src.Id, FollowedByUserName = src.FollowedBy.Username });
-        CreateMap<UserResponseDto, User>().ReverseMap().ForMember(x => x.Followers, opt => opt.MapFrom(src => src.Followers));
+        CreateMap<Follower, FollowerResponseWithUsernameDto>().ConstructUsing(src => new FollowerResponseWithUsernameDto { FollowedById = src.FollowedById, Id = src.Id, FollowedByUsername = src.FollowedBy.Username });
+        CreateMap<Follower, FollowingResponseWithUsernameDto>().ConstructUsing(src => new FollowingResponseWithUsernameDto { FollowingId = src.UserId, Id = src.Id, FollowingUsername = src.User.Username });
+        CreateMap<Follower, FollowerResponseDto>().ReverseMap();
+        CreateMap<Follower, FollowerCreateDto>().ReverseMap();
+        CreateMap<UserResponseDto, User>().ReverseMap();
         CreateMap<RatingResponseDto, Rating>().ReverseMap();
         CreateMap<Rating, RatingWithUserDto>()
             .ConstructUsing(src => new RatingWithUserDto { Id = src.Id, UserId = src.UserId, Grade = src.Grade, Comment = src.Comment, UserName = src.User.Username });

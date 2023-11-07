@@ -10,8 +10,8 @@ public class User : Entity
     public UserRole Role { get; private set; }
     public string? ProfilePicture { get; private set; }
     public bool IsActive { get; set; }
-    public ICollection<Follower> Followers { get; set; } = new List<Follower>();
-    public ICollection<Follower> Following { get; set; } = new List<Follower>();
+    //public ICollection<Follower> Followers { get; set; } = new List<Follower>();
+    //public ICollection<Follower> Following { get; set; } = new List<Follower>();
 
     public User(string username, string password, UserRole role, bool isActive)
     {

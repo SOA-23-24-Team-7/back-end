@@ -11,6 +11,7 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
     public interface IFollowerRepository
     {
         public PagedResult<Follower> GetFollowersPagedById(int page, int pageSize, long userId);
+        public PagedResult<Follower> GetFollowingsPagedById(int page, int pageSize, long userId);
 
     }
 }

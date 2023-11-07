@@ -26,5 +26,11 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             task.Wait();
             return task.Result;
         }
+        public PagedResult<Follower> GetFollowingsPagedById(int page, int pageSize, long userId)
+        {
+            var task = _dbContext.Followers.Include(f => f.User).Where(f => f.FollowedById == userId).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
+        }
     }
 }

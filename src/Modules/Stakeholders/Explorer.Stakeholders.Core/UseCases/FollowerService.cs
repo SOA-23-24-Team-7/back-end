@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class FollowerService : CrudService<FollowerDto, Follower>, IFollowerService
+    public class FollowerService : CrudService<FollowerResponseDto, Follower>, IFollowerService
     {
         private readonly IFollowerRepository _followerRepository;
 
@@ -22,10 +22,15 @@ namespace Explorer.Stakeholders.Core.UseCases
             _followerRepository = followerRepository;
         }
 
-        public Result<PagedResult<FollowerDto>> GetFollowers(int page, int pageSize, long userId)
+        public Result<PagedResult<FollowerResponseWithUsernameDto>> GetFollowers(int page, int pageSize, long userId)
         {
             var result = _followerRepository.GetFollowersPagedById(page, pageSize, userId);
-            return MapToDto<FollowerDto>(result);
+            return MapToDto<FollowerResponseWithUsernameDto>(result);
+        }
+        public Result<PagedResult<FollowingResponseWithUsernameDto>> GetFollowings(int page, int pageSize, long userId)
+        {
+            var result = _followerRepository.GetFollowingsPagedById(page, pageSize, userId);
+            return MapToDto<FollowingResponseWithUsernameDto>(result);
         }
     }
 }

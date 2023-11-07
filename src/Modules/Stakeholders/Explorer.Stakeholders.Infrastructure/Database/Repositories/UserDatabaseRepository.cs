@@ -25,7 +25,7 @@ public class UserDatabaseRepository : IUserRepository
         task.Wait();
         return task.Result;
     }
-
+    /*
     public Result<PagedResult<User>> GetPagedFollowersByUserId(int page, int pageSize, long userId)
     {
         var entity = _dbSet.Find(userId);
@@ -34,9 +34,8 @@ public class UserDatabaseRepository : IUserRepository
         var task = _dbSet.Include(m => m.Followers).GetPagedById(pageSize, page);
         task.Wait();
         return task.Result;
-        
     }
-
+    */
     public bool Exists(string username)
     {
         return _dbContext.Users.Any(user => user.Username == username);

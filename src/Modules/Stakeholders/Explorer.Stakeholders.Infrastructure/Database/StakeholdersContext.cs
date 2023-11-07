@@ -67,15 +67,6 @@ public class StakeholdersContext : DbContext
            .WithOne()
            .HasForeignKey<Rating>(s => s.UserId);
 
-        modelBuilder.Entity<Follower>()
-                    .HasOne(m => m.User)
-                    .WithMany(m => m.Followers)
-                    .HasForeignKey(k => k.UserId);
-
-        modelBuilder.Entity<Follower>()
-            .HasOne(m => m.FollowedBy)
-            .WithMany(m => m.Following)
-            .HasForeignKey(k => k.FollowedById);
-
+        
     }
 }
