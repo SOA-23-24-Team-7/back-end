@@ -64,7 +64,7 @@ namespace Explorer.Tours.Core.UseCases
             {
                 notificationText = generator.GenerateRejected(keyPoint.Name,request.Comment);
             }
-            _notificationRepository.Create(new PublicKeyPointNotification(notificationText, request.AuthorId, request.Id));
+            _notificationRepository.Create(new PublicKeyPointNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow));
         }
 
         public Result Accept(long requestId)

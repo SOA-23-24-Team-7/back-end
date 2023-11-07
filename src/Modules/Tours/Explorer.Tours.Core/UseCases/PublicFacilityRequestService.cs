@@ -60,7 +60,7 @@ namespace Explorer.Tours.Core.UseCases
             else
                 notificationText = generator.GenerateRejected(facility.Name,request.Comment);
 
-            _notificationRepository.Create(new PublicFacilityNotification(notificationText, request.AuthorId, request.Id));
+            _notificationRepository.Create(new PublicFacilityNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow));
         }
 
         public Result Accept(long requestId)

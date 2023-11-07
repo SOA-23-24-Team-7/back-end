@@ -12,12 +12,14 @@ namespace Explorer.Tours.Core.Domain
         public long RequestId { get; init; }
         public string Description { get; set; }
         public long AuthorId { get; init; }
-        public PublicFacilityNotification(string description, long authorId, long requestId)
+        public DateTime Created { get; set; }
+        public PublicFacilityNotification(string description, long authorId, long requestId, DateTime created)
         {
             Validate(description);
             Description = description;
             AuthorId = authorId;
             RequestId = requestId;
+            Created = created;
         }
         private void Validate(string description)
         {
