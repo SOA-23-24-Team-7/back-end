@@ -2,6 +2,7 @@ using AutoMapper;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristEquipment;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.ShoppingCarts;
 using Explorer.Tours.Core.Domain.Tours;
 using System.Linq;
 
@@ -57,6 +58,18 @@ public class ToursProfile : Profile
 
         CreateMap<PublicKeyPointResponseDto, PublicKeyPoint>().ReverseMap();
         CreateMap<PublicKeyPointCreateDto, PublicKeyPoint>().ReverseMap();
+
+
+        CreateMap<ShoppingCartResponseDto, ShoppingCart>().ReverseMap().ForMember(x => x.OrderItems, opt => opt.MapFrom(src => src.OrderItems));
+        CreateMap<ShoppingCartCreateDto, ShoppingCart>().ReverseMap();
+        CreateMap<ShoppingCartUpdateDto, ShoppingCart>().ReverseMap();
+
+        CreateMap<OrderItemResponseDto, OrderItem>().ReverseMap();
+        CreateMap<OrderItemCreateDto, OrderItem>().ReverseMap();
+        CreateMap<OrderItemUpdateDto, OrderItem>().ReverseMap();
+
+
+
 
     }
 }
