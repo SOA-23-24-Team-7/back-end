@@ -52,6 +52,9 @@ public static class ToursStartup
         services.AddScoped<IPublicKeyPointRequestService, PublicKeyPointRequestService>();
 
         services.AddScoped<IPublicFacilityRequestService, PublicFacilityRequestService>();
+
+        services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IPublicKeyPointService, PublicKeyPointService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -64,7 +67,10 @@ public static class ToursStartup
 
         services.AddScoped(typeof(ICrudRepository<PublicKeyPointRequest>), typeof(CrudDatabaseRepository<PublicKeyPointRequest, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<PublicFacilityRequest>), typeof(CrudDatabaseRepository<PublicFacilityRequest, ToursContext>));
-
+        services.AddScoped(typeof(ICrudRepository<PublicKeyPointNotification>), typeof(CrudDatabaseRepository<PublicKeyPointNotification, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<PublicFacilityNotification>), typeof(CrudDatabaseRepository<PublicFacilityNotification, ToursContext>));
+        services.AddScoped<IPublicKeyPointNotificationRepository, PublicKeyPointNotificationDatabaseRepository>();
+        services.AddScoped<IPublicFacilityNotificationRepository, PublicFacilityNotificationDatabaseRepository>();
 
         services.AddScoped(typeof(ICrudRepository<Review>), typeof(CrudDatabaseRepository<Review, ToursContext>));
         services.AddScoped<IReviewRepository, ReviewDatabaseRepository>();
@@ -76,6 +82,9 @@ public static class ToursStartup
         services.AddScoped(typeof(ITourRepository), typeof(TourRepository));
 
         services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, ToursContext>));
+
+        services.AddScoped(typeof(ICrudRepository<PublicKeyPoint>), typeof(CrudDatabaseRepository<PublicKeyPoint, ToursContext>));
+
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),
