@@ -1,19 +1,14 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Stakeholders.API.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.Domain
 {
-    public enum MessageStatus { Seen, NotSeen };
+    public enum MessageStatus { NotSeen, Seen };
     public class Message:Entity
     {
-        public int MessageID { get; set; }
-        public UserResponseDto UserSender { get; set; }
-        public UserResponseDto UserReciver { get; set; }
+        public long UserSenderId { get; set; }
+        public User UserSender { get; set; }
+        public long UserReciverId { get; set; }
+        public User UserReciver { get; set; }
         public string Text { get; set; }
         public MessageStatus StatusOfMessage { get; set; }
     }

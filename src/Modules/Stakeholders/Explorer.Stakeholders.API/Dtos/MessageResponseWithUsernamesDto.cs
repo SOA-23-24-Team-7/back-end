@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.API.Dtos
 {
-
-    public class MessageResponseDto
+    public class MessageResponseWithUsernamesDto
     {
         public long Id { get; set; }
         public long UserSenderId { get; set; }
+        public string SenderUsername { get; set; }
         public long UserReciverId { get; set; }
+        public string ReciverUsername { get; set; }
         public string Text { get; set; }
-        public string StatusOfMessage { get; set; }
+        public string? StatusOfMessage { get; set; }
     }
 }

@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.API.Dtos
 {
-
-    public class MessageResponseDto
+    public enum MessageStatus { NotSeen, Seen};
+    public class MessageCreateDto
     {
-        public long Id { get; set; }
         public long UserSenderId { get; set; }
         public long UserReciverId { get; set; }
         public string Text { get; set; }
-        public string StatusOfMessage { get; set; }
+        public MessageStatus StatusOfMessage { get; set; }
     }
 }

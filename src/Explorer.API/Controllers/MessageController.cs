@@ -21,22 +21,20 @@ namespace Explorer.API.Controllers
             _messageService= messageService;
         }
 
-         [HttpGet]
-         public ActionResult<PagedResult<MessageResponseDto>> GetAllMessages([FromQuery] int page, [FromQuery] int pageSize)
-         {
-            
-             var result = _messageService.GetPaged(page, pageSize);
-             return CreateResponse(result);
-         }
+        [HttpGet("{recieverId:long}")]
+        public ActionResult<PagedResult<MessageResponseWithUsernamesDto>> GetByRecieverId([FromQuery] int page, [FromQuery] int pageSize, long recieverId)
+        {
+            var result = _messageService.GetMessages(page, pageSize, recieverId);
+            return CreateResponse(result);
+        }
+
         [HttpPost("create")]
-        public ActionResult<MessageResponseDto> Create([FromBody] MessageDto message)
+        public ActionResult<MessageResponseDto> Create([FromBody] MessageCreateDto message)
         {
            
             var result = _messageService.Create(message);
             return CreateResponse(result);
         }
-
-     
        
         [HttpDelete("{id:long}")]
         public ActionResult Delete(long id)
@@ -45,11 +43,10 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-
-        [HttpGet("{messageId:long}")]
-        public ActionResult<PagedResult<MessageResponseDto>> Get(long messageId)
+        [HttpPut("{id:long}")]
+        public ActionResult<MessageResponseDto> Update([FromBody] MessageUpdateDto message)
         {
-            var result = _messageService.Get(messageId);
+            var result = _messageService.Update(message);
             return CreateResponse(result);
         }
     }

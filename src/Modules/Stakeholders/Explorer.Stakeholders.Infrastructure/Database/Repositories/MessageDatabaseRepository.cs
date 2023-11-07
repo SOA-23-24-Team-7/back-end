@@ -21,9 +21,9 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             _dbSet = _dbContext.Set<Message>();
         }
 
-        public PagedResult<Message> GetMessagesPagedById(int page, int pageSize, long messageId)
+        public PagedResult<Message> GetMessagesPagedById(int page, int pageSize, long userId)
         {
-            var task = _dbSet.Where(x => x.Id == messageId).GetPagedById(page, pageSize);
+            var task = _dbSet.Include(u => u.UserReciver).Include(u => u.UserSender).Where(m => m.UserReciverId == userId).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
         }

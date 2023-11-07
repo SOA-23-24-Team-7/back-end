@@ -5,11 +5,6 @@ using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
@@ -22,14 +17,14 @@ namespace Explorer.Stakeholders.Core.UseCases
             _messageRepository = messageRepository;
         }
 
-        public Result<PagedResult<MessageResponseDto>> GetMessages(int page, int pageSize, long userId)
+        public Result<PagedResult<MessageResponseWithUsernamesDto>> GetMessages(int page, int pageSize, long userId)
         {
             var result = _messageRepository.GetMessagesPagedById(page, pageSize, userId);
-            return MapToDto<MessageResponseDto>(result);
+            return MapToDto<MessageResponseWithUsernamesDto>(result);
         }
 
 
-        public Result<MessageResponseDto> UpdateMessage(MessageDto message)
+        public Result<MessageResponseDto> UpdateMessage(MessageCreateDto message)
         {
             throw new NotImplementedException();
         }

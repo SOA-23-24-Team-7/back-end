@@ -58,8 +58,6 @@ public class StakeholderProfile : Profile
         CreateMap<Follower, FollowerDto>().ConstructUsing(src => new FollowerDto { FollowedById = src.FollowedById, UserId = src.UserId, Id = src.Id, FollowedByUserName = src.FollowedBy.Username });
         CreateMap<UserResponseDto, User>().ReverseMap().ForMember(x => x.Followers, opt => opt.MapFrom(src => src.Followers));
         CreateMap<RatingResponseDto, Rating>().ReverseMap();
-        
-        
         CreateMap<Rating, RatingWithUserDto>()
             .ConstructUsing(src => new RatingWithUserDto { Id = src.Id, UserId = src.UserId, Grade = src.Grade, Comment = src.Comment, UserName = src.User.Username });
         CreateMap<RatingCreateDto, Rating>().ReverseMap();
@@ -81,9 +79,11 @@ public class StakeholderProfile : Profile
         CreateMap<ProblemAnswerResponseDto, ProblemAnswer>().ReverseMap();
         CreateMap<ProblemCommentCreateDto, ProblemComment>().ReverseMap();
         CreateMap<ProblemCommentResponseDto, ProblemComment>().ReverseMap();
+        CreateMap<MessageCreateDto, Message>().ReverseMap();
         CreateMap<MessageResponseDto, Message>().ReverseMap();
-        CreateMap<MessageDto, Message>();
-        CreateMap<Message, MessageDto>();
+        CreateMap<MessageUpdateDto, Message>().ReverseMap();
+        CreateMap<Message, MessageResponseWithUsernamesDto>()
+            .ConstructUsing(src => new MessageResponseWithUsernamesDto { Id = src.Id, UserReciverId = src.UserReciverId, ReciverUsername = src.UserReciver.Username, UserSenderId = src.UserSenderId, SenderUsername = src.UserSender.Username, Text = src.Text, StatusOfMessage = src.StatusOfMessage.ToString() });
 
     }
 }
