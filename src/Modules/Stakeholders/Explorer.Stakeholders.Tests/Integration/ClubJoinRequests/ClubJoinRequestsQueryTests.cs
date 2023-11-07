@@ -57,7 +57,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var clubId = 1;
+            var clubId = -1;
             var page = 1;
             var pageSize = 10;
 
