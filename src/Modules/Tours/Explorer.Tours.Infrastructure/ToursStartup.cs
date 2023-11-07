@@ -3,12 +3,14 @@ using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.TourAuthoring;
+using Explorer.Tours.API.Public.TourExecution;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases;
 using Explorer.Tours.Core.UseCases.Administration;
 using Explorer.Tours.Core.UseCases.TourAuthoring;
+using Explorer.Tours.Core.UseCases.TourExecution;
 using Explorer.Tours.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +46,8 @@ public static class ToursStartup
         services.AddScoped<IPreferenceService, PreferenceService>();
 
         services.AddScoped<ITouristEquipmentService, TouristEquipmentService>();
+
+        services.AddScoped<ITouristPositionService, TouristPositionService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -64,6 +68,9 @@ public static class ToursStartup
         services.AddScoped(typeof(ITourRepository), typeof(TourRepository));
 
         services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, ToursContext>));
+
+        services.AddScoped(typeof(ICrudRepository<TouristPosition>), typeof(CrudDatabaseRepository<TouristPosition, ToursContext>));
+        services.AddScoped<ITouristPositionRepository, TouristPositionRepository>();
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),
