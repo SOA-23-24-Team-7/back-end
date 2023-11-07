@@ -75,7 +75,7 @@ namespace Explorer.Tours.Core.UseCases
                 request.Status = PublicStatus.Accepted;
 
                 _repository.Update(request);
-                CreateNotification(request, false);
+                CreateNotification(request, true);
 
                 return Result.Ok().WithSuccess("Request accepted successfully.");
             }
