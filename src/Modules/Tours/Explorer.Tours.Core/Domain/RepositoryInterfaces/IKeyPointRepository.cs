@@ -9,6 +9,7 @@ public interface IKeyPointRepository
     KeyPoint Create(KeyPoint keyPoint);
     KeyPoint Update(KeyPoint keyPoint);
     void Delete(long id);
+    KeyPoint Get(long id);
     KeyPoint GetFirstByTourId(long tourId);
     PagedResult<KeyPoint> GetPaged(int page, int pageSize);
 }

@@ -9,8 +9,11 @@ namespace Explorer.Tours.API.Dtos
     public class PublicKeyPointRequestCreateDto
     {
         public long Id { get; set; }
+        public long AuthorId { get; set; }
         public long KeyPointId { get; set; }
         public PublicStatus Status { get; set; }
+        public DateTime? Created { get; set; }
+        public string AuthorName { get; set; }
     }
 }
 public enum PublicStatus

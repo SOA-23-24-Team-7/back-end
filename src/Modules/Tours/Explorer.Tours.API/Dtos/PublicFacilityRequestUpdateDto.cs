@@ -12,5 +12,6 @@ namespace Explorer.Tours.API.Dtos
         public long FacilityId { get; set; }
         public PublicStatus Status { get; set; }
         public string Comment { get; set; }
+        public string AuthorName { get; set; }
     }
 }

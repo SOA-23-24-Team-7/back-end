@@ -27,6 +27,18 @@ public class KeyPoint : Entity
         Validate();
     }
 
+    public KeyPoint(long tourId, PublicKeyPoint publicKeyPoint) 
+    {
+        TourId = tourId;
+        Name = publicKeyPoint.Name;
+        Description = publicKeyPoint.Description;
+        Longitude = publicKeyPoint.Longitude;
+        Latitude = publicKeyPoint.Latitude;
+        ImagePath = publicKeyPoint.ImagePath;
+        Order= publicKeyPoint.Order;
+        Validate();
+    }
+
     private void Validate()
     {
         if (TourId == 0) throw new ArgumentException("Invalid TourId");
