@@ -15,10 +15,18 @@ namespace Explorer.API.Controllers.Administrator
         {
             _problemService = problemService;
         }
+
         [HttpGet]
         public ActionResult<PagedResult<ProblemResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _problemService.GetAll(page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpPut("set-deadline/{problemId:long}")]
+        public ActionResult<ProblemResponseDto> SetDeadline([FromBody] ProblemDeadlineUpdateDto problem)
+        {
+            var result = _problemService.UpdateDeadline(problem.Id, problem.Deadline);
             return CreateResponse(result);
         }
     }

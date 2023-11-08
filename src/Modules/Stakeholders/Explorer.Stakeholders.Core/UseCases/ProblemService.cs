@@ -77,6 +77,25 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
+        public Result<ProblemResponseDto> UpdateDeadline(long problemId, DateTime deadline)
+        {
+            try
+            {
+                var problem = CrudRepository.Get(problemId);
+                problem.UpdateDeadline(deadline);
+                var result = CrudRepository.Update(problem);
+                return MapToDto<ProblemResponseDto>(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
         public Result<PagedResult<ProblemResponseDto>> GetAll(int page, int pageSize)
         {
             var results = MapToDto<ProblemResponseDto>(_problemRepository.GetAll(page, pageSize));
