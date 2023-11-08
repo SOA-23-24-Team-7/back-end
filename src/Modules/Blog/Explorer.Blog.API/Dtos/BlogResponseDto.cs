@@ -14,5 +14,6 @@
         public long VoteCount { get; set; }
         public long UpvoteCount { get; set; }
         public long DownvoteCount { get; set; }
+        public int AuthorId { get; set; }
     }
 }
