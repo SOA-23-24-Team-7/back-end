@@ -3,7 +3,6 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristEquipment;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.Tours;
-using System.Linq;
 
 namespace Explorer.Tours.Core.Mappers;
 
@@ -28,7 +27,9 @@ public class ToursProfile : Profile
         CreateMap<FacilityCreateDto, Facility>().ReverseMap();
         CreateMap<FacilityUpdateDto, Facility>().ReverseMap();
 
-        CreateMap<KeyPointDto, KeyPoint>().ReverseMap();
+        CreateMap<KeyPointResponseDto, KeyPoint>().ReverseMap();
+        CreateMap<KeyPointCreateDto, KeyPoint>().ReverseMap();
+        CreateMap<KeyPointUpdateDto, KeyPoint>().ReverseMap();
 
         CreateMap<PreferenceResponseDto, Preference>().ReverseMap();
         CreateMap<PreferenceCreateDto, Preference>().ReverseMap();
@@ -48,8 +49,9 @@ public class ToursProfile : Profile
         //CreateMap<PublicKeyPointRequestResponseDto, Domain.PublicKeyPointRequest>().ReverseMap().ForMember(x => x.KeyPoint, opt => opt.MapFrom(src => src.KeyPoint));
         CreateMap<PublicFacilityRequestUpdateDto, PublicFacilityRequest>().ReverseMap();
 
-        CreateMap<TourDurationResponseDto, TourDuration>().ReverseMap(); // Caos hehe, lepasimozebroj? ;))
-        CreateMap<TourDurationUpdateDto, TourDuration>().ReverseMap(); // ONATRAZILAMIBROJSVIDJAJOJSEROLEKSMOJ
+        CreateMap<TourDurationResponseDto, TourDuration>().ReverseMap(); 
+        CreateMap<TourDurationUpdateDto, TourDuration>().ReverseMap(); 
+
         CreateMap<PublicFacilityNotificationResponseDto, PublicFacilityNotification>().ReverseMap();
         CreateMap<PublicFacilityNotificationCreateDto, PublicFacilityNotification>().ReverseMap();
 
