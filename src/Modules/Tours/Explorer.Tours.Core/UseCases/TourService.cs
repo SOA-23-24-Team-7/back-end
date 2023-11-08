@@ -73,7 +73,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     {
         return _tourRepository.GetToursName(id);
     }
-    //dodato
+
     public Result<TourResponseDto> GetById(long id)
     {
         var entity = _tourRepository.GetById(id);

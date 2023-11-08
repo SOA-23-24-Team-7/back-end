@@ -12,7 +12,7 @@ public class TourResponseDto
     public double Price { get; set; }
     public bool IsDeleted { get; set; }
     public double Distance { get; set; }
-    public List<KeyPointDto> KeyPoints { get; set; }
+    public List<KeyPointResponseDto> KeyPoints { get; set; }
     public List<TourDurationResponseDto> Durations { get; set; }
     public DateTime PublishDate { get; set; }
 }
