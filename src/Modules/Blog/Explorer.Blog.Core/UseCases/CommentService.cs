@@ -39,7 +39,9 @@ namespace Explorer.Blog.Core.UseCases
                 var comment = CrudRepository.Get(commentData.Id);
                 comment.UpdateText(commentData.Text);
                 var result = CrudRepository.Update(comment);
-                return MapToDto<CommentResponseDto>(result);
+                var dtoResult = MapToDto<CommentResponseDto>(result);
+                dtoResult.Author = _internalUserService.Get(result.AuthorId).Value;
+                return dtoResult;
             }
             catch (KeyNotFoundException e)
             {
