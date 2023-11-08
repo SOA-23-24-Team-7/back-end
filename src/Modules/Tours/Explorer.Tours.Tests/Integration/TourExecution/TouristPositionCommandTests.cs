@@ -45,8 +45,10 @@ public class TouristPositionCommandTests : BaseToursIntegrationTest
         storedEntity.Latitude.ShouldBe(result.Latitude);
     }
 
-    [Fact]
-    public void Create_fails_invalid_data()
+    [Theory]
+    [InlineData(200.0, 0.0)]
+    [InlineData(0.0, 200.0)]
+    public void Create_fails_invalid_data(double longitude, double latitude)
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -54,8 +56,8 @@ public class TouristPositionCommandTests : BaseToursIntegrationTest
         var updatedEntity = new TouristPositionCreateDto
         {
             TouristId = -4,
-            Longitude = 230.0,
-            Latitude = 123.2
+            Longitude = longitude,
+            Latitude = latitude
         };
 
         // Act
