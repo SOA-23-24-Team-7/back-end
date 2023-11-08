@@ -15,6 +15,7 @@ public class TourResponseDto
     public List<KeyPointDto> KeyPoints { get; set; }
     public List<TourDurationResponseDto> Durations { get; set; }
     public DateTime PublishDate { get; set; }
+    public DateTime ArchiveDate { get; set; }
 }
 
 public enum TourStatus
