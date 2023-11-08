@@ -13,6 +13,7 @@ public class BlogProfile : Profile
         CreateMap<Domain.Blog, BlogUpdateDto>().ReverseMap();
 
         CreateMap<CommentResponseDto, Comment>().ReverseMap();
+        CreateMap<Domain.Blog, BlogUpdateDto>().ReverseMap();
         CreateMap<Comment, CommentCreateDto>().ReverseMap().ConstructUsing(x => new Comment(x.AuthorId, x.BlogId, x.CreatedAt, null, x.Text));
         CreateMap<CommentCreateDto, CommentResponseDto>().ReverseMap();
 

@@ -1,20 +1,20 @@
 ﻿using Explorer.API.Controllers.Tourist;
-using Explorer.Stakeholders.API.Dtos.TouristEquipment;
-using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Infrastructure.Database;
+using Explorer.Tours.Infrastructure.Database;
+using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System.Security.Claims;
+using Explorer.Tours.API.Dtos.TouristEquipment;
 
-namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
+namespace Explorer.Tours.Tests.Integration.TouristEquipmentInteraction
 {
     [Collection("Sequential")]
-    public class TouristEquipmentCommandTests : BaseStakeholdersIntegrationTest
+    public class TouristEquipmentCommandTests : BaseToursIntegrationTest
     {
-        public TouristEquipmentCommandTests(StakeholdersTestFactory factory) : base(factory) { }
+        public TouristEquipmentCommandTests(ToursTestFactory factory) : base(factory) { }
 
         [Fact]
         public void Creates()
@@ -22,7 +22,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
             var newEntity = new TouristEquipmentCreateDto
             {
                 TouristId = 100,
@@ -41,7 +41,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
 
 
             // Act
-            var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TouristEquipmentResponseDto;
+            var result = (controller.Create(newEntity).Result as ObjectResult)?.Value as TouristEquipmentResponseDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -63,7 +63,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
             var newEntity = new TouristEquipmentCreateDto
             {
                 TouristId = 1,
@@ -82,7 +82,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
 
 
             // Act
-            var result = (BadRequestResult)controller.Create(newEntity).Result;
+            var result = controller.Create(newEntity).Result as BadRequestResult;
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -95,7 +95,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
             var updatedEntity = new TouristEquipmentUpdateDto
             {
                 Id = 10,
@@ -114,7 +114,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
             };
 
             // Act
-            var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TouristEquipmentResponseDto;
+            var result = (controller.Update(updatedEntity).Result as ObjectResult)?.Value as TouristEquipmentResponseDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -166,7 +166,7 @@ namespace Explorer.Stakeholders.Tests.Integration.TouristEquipmentInteraction
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
             var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "10") }, "test");
             var context = new DefaultHttpContext()

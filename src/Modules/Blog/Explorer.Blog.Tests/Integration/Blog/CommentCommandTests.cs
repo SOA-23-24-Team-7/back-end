@@ -37,7 +37,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
             var newEntity = new CommentCreateDto()
             {
-                BlogId = 1,
+                BlogId = -1,
                 Text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id metus diam. Donec neque orci, laoreet a sollicitudin vitae, bibendum a mauris."
             };
 
@@ -81,7 +81,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
             var newEntity = new CommentCreateDto
             {
-                BlogId = 1,
+                BlogId = -1,
                 Text = ""
             };
 

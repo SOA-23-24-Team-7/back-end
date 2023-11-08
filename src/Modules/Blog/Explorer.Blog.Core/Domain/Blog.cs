@@ -6,11 +6,12 @@ namespace Explorer.Blog.Core.Domain
     public enum BlogStatus { Draft, Published, Closed, Active, Famous };
     public class Blog : Entity
     {
-        public string Title { get; init; }
-        public string Description { get; init; }
+
+        public string Title { get; private set; }
+        public string Description { get; private set; }
         public DateTime Date { get; init; }
         public BlogStatus Status { get; private set; }
-        public int AuthorId{ get; init; }
+        public int AuthorId { get; init; }
 
         [InverseProperty("Blog")]
         public ICollection<Comment> Comments { get; } = new List<Comment>();
@@ -34,6 +35,16 @@ namespace Explorer.Blog.Core.Domain
                 throw new ArgumentException("Title ne sme biti prazan ili null.\n");
             }
 
+
+            Title = title;
+            Description = description;
+            Date = DateTime.UtcNow.Date;
+            Pictures = pictures;
+            Status = status;
+        }
+
+        public void UpdateBlog(string title, string description, List<string> pictures, BlogStatus status)
+        {
 
             Title = title;
             Description = description;

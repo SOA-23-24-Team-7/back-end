@@ -12,6 +12,10 @@ namespace Explorer.Blog.API.Public
         Result<BlogResponseDto> GetById(long id);
         Result SetVote(long blogId, long userId, VoteType voteType);
         bool IsBlogClosed(long blogId);
-        Result Delete(long id);
+
+        Result<PagedResult<BlogResponseDto>> GetPaged(int page, int pageSize);
+        Result<BlogResponseDto> Get(long id);
+        Result<BlogResponseDto> UpdateBlog(BlogUpdateDto blog);
+        public Result Delete(long id);
     }
 }

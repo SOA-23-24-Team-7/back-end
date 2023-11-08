@@ -23,6 +23,7 @@ namespace Explorer.API.Controllers
         [HttpPost("create")]
         public ActionResult<BlogResponseDto> Create([FromBody] BlogCreateDto blog)
         {
+            blog.Date = DateTime.UtcNow;
             blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _blogService.Create(blog);
             return CreateResponse(result);
@@ -38,7 +39,7 @@ namespace Explorer.API.Controllers
         }
 
         [Authorize(Policy = "userPolicy")]
-        [HttpDelete("delete/{id:long}"  )]
+        [HttpDelete("delete/{id:long}")]
         public ActionResult<BlogResponseDto> Delete(int id)
         {
             var result = _blogService.Delete(id);
@@ -56,6 +57,21 @@ namespace Explorer.API.Controllers
         public ActionResult<BlogResponseDto> Get(long id)
         {
             var result = _blogService.GetById(id);
+            return CreateResponse(result);
+        }
+
+        [HttpPut("{id:int}")]
+        public ActionResult<BlogResponseDto> Update([FromBody] BlogUpdateDto blog, int id)
+        {
+            blog.Id = id;
+            var result = _blogService.UpdateBlog(blog);
+            return CreateResponse(result);
+        }
+
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            var result = _blogService.Delete(id);
             return CreateResponse(result);
         }
 
@@ -81,4 +97,6 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
     }
+
 }
+

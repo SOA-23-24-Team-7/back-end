@@ -27,7 +27,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
             Description = "Smislicu",
             DateTime = DateTime.UtcNow,
             TourId = -3,
-            TouristId=-1,
+            TouristId = -21,
         };
 
         // Act
@@ -39,7 +39,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         result.TourId.ShouldBe(newEntity.TourId);
         result.TouristId.ShouldBe(newEntity.TouristId);
         // Assert - Database
-        var storedEntity = dbContext.Problem.FirstOrDefault(i => i.TourId == newEntity.TourId && i.TouristId==newEntity.TouristId);
+        var storedEntity = dbContext.Problem.FirstOrDefault(i => i.Id == result.Id);
         storedEntity.ShouldNotBeNull();
         storedEntity.Id.ShouldBe(result.Id);
     }
@@ -51,13 +51,13 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var updatedEntity = new ProblemCreateDto
-        { 
-            Category = "", 
-            Priority = "High", 
-            Description = "", 
+        {
+            Category = "",
+            Priority = "High",
+            Description = "",
             DateTime = DateTime.UtcNow,
-            TourId = 0, 
-            TouristId = 0 
+            TourId = 0,
+            TouristId = 0
         };
 
         // Act
@@ -82,8 +82,8 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
             Priority = "Bitno",
             Description = "Nije bilo nekih vecih problema.",
             DateTime = DateTime.UtcNow,
-            TourId = 1,
-            TouristId = 3,
+            TourId = -1,
+            TouristId = -21,
         };
 
         // Act
@@ -98,13 +98,13 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         result.TourId.ShouldBe(updatedEntity.TourId);
         result.Description.ShouldBe(updatedEntity.Description);
         // Assert - Database
-        var storedEntity = dbContext.Problem.FirstOrDefault(i => i.Description== "Nije bilo nekih vecih problema.");
+        var storedEntity = dbContext.Problem.FirstOrDefault(i => i.Description == "Nije bilo nekih vecih problema.");
         storedEntity.ShouldNotBeNull();
         storedEntity.Priority.ShouldBe(updatedEntity.Priority);
         storedEntity.DateTime.ShouldBe(updatedEntity.DateTime);
         storedEntity.TouristId.ShouldBe(updatedEntity.TouristId);
         storedEntity.TourId.ShouldBe(updatedEntity.TourId);
-        var oldEntity = dbContext.Problem.FirstOrDefault(i => i.Description== "Nije ukljuceno u turu sve sto je bilo navedeno.");
+        var oldEntity = dbContext.Problem.FirstOrDefault(i => i.Description == "Nije ukljuceno u turu sve sto je bilo navedeno.");
         oldEntity.ShouldBeNull();
     }
 

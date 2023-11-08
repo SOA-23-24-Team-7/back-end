@@ -9,7 +9,7 @@ namespace Explorer.API.Controllers.Tourist
 {
 
     [Authorize(Policy = "touristPolicy")]
-    [Route("api/problem")]
+    [Route("api/tourist/problem")]
     public class ProblemController : BaseApiController
     {
         private readonly IProblemService _problemService;
@@ -19,10 +19,10 @@ namespace Explorer.API.Controllers.Tourist
             _problemService = problemService;
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public ActionResult<PagedResult<ProblemResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _problemService.GetPaged(page, pageSize);
+            var result = _problemService.GetAll(page, pageSize);
             return CreateResponse(result);
         }
 
@@ -52,17 +52,24 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("resolve/{problemId:long}")]
+        public ActionResult<ProblemResponseDto> ResolveProblem(long problemId)
+        {
+            var result = _problemService.ResolveProblem(problemId);
+            return CreateResponse(result);
+        }
+
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
             var result = _problemService.Delete(id);
             return CreateResponse(result);
         }
-        [HttpGet("{id:int}")]
-        public ActionResult<PagedResult<ProblemResponseDto>> GetByUserId([FromQuery] int page, [FromQuery] int pageSize, long id)
+
+        [HttpGet]
+        public ActionResult<PagedResult<ProblemResponseDto>> GetByUserId([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _problemService.GetPaged(page, pageSize);
-            result = _problemService.GetByUserId(page, pageSize, id);
+            var result = _problemService.GetByUserId(page, pageSize, int.Parse(HttpContext.User.Claims.First(x => x.Type == "id").Value));
             return CreateResponse(result);
         }
     }

@@ -1,4 +1,3 @@
-﻿using Microsoft.AspNetCore.Authorization;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
@@ -17,7 +16,7 @@ namespace Explorer.API.Controllers.Administrator
         [HttpGet]
         public ActionResult<PagedResult<ProblemResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _problemService.GetPaged(page, pageSize);
+            var result = _problemService.GetAll(page, pageSize);
             return CreateResponse(result);
         }
     }

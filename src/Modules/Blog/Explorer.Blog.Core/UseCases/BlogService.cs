@@ -38,7 +38,25 @@ namespace Explorer.Blog.Core.UseCases
             return result;
         }
 
-        public Result SetVote(long blogId, long userId, VoteType voteType)
+        public Result<BlogResponseDto> UpdateBlog(BlogUpdateDto blogUpdateDto)
+        {
+            try
+            {
+                var blog = CrudRepository.Get(blogUpdateDto.Id);
+                blog.UpdateBlog(blogUpdateDto.Title, blogUpdateDto.Description, blogUpdateDto.Pictures, (Domain.BlogStatus)blogUpdateDto.Status);
+                CrudRepository.Update(blog);
+
+                return MapToDto<BlogResponseDto>(blog);
+
+            }
+            catch
+            {
+
+                return Result.Fail(FailureCode.NotFound);
+            }
+        }
+
+        public Result SetVote(long blogId, long userId, API.Dtos.VoteType voteType)
         {
             var domainVoteType = (Domain.VoteType)voteType; // bruh...
             try

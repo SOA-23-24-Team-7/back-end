@@ -24,7 +24,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             var touristId = -11;
             var page = 1;
             var pageSize = 10;
-            
+
             var claims = new[] { new Claim("id", touristId.ToString()) };
             var identity = new ClaimsIdentity(claims, "test");
             var user = new ClaimsPrincipal(identity);

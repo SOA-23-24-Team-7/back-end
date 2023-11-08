@@ -12,7 +12,7 @@ namespace Explorer.Tours.Core.Domain
         public int BoatRating { get; private set; }
         public List<string> SelectedTags { get; private set; }
 
-        public Preference(long userId, int difficultyLevel, int walkingRating, int cyclingRating, int carRating, int boatRating, List<string> selectedTags) 
+        public Preference(long userId, int difficultyLevel, int walkingRating, int cyclingRating, int carRating, int boatRating, List<string> selectedTags)
         {
             UserId = userId;
             if (difficultyLevel < 1 || difficultyLevel > 5) throw new ArgumentException("Difficulty level must be in range between 1 and 5!");

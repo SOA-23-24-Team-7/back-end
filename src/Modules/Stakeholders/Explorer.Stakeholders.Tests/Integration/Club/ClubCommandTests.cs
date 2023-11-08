@@ -21,7 +21,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var newEntity = new ClubCreateDto
             {
-                OwnerId = -1,
+                OwnerId = -12,
                 Name = "nekoime",
                 Description = "opis",
                 Image = "slika"
