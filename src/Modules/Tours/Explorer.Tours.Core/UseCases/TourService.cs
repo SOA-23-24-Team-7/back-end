@@ -7,7 +7,6 @@ using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
-using System.Linq.Expressions;
 
 namespace Explorer.Tours.Core.UseCases;
 
@@ -65,8 +64,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
         }
     }
-
-
     public IEnumerable<long> GetAuthorsTours(long id)
     {
         return _tourRepository.GetAuthorsTours(id);
@@ -76,7 +73,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     {
         return _tourRepository.GetToursName(id);
     }
-    //dodato
+
     public Result<TourResponseDto> GetById(long id)
     {
         var entity = _tourRepository.GetById(id);
@@ -93,7 +90,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
                 _repository.Update(entity);
                 return Result.Ok();
             }
-            
+
             return Result.Fail(FailureCode.InvalidArgument).WithError("Invalid argument provided.");
         }
         catch (Exception e)
@@ -121,4 +118,12 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
     }
 
+
+    public Result<PagedResult<TourResponseDto>> GetPublished(int page, int pageSize)
+    {
+        var allTours = _tourRepository.GetAll(page, pageSize);
+        var publishedTours = allTours.Results.Where(t => t.Status == Domain.Tours.TourStatus.Published).ToList();
+        var pagedResult = new PagedResult<Tour>(publishedTours, publishedTours.Count);
+        return MapToDto<TourResponseDto>(pagedResult);
+    }
 }

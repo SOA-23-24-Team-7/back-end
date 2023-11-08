@@ -7,8 +7,8 @@ using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Author.TourAuthoring
 {
-    [Authorize(Policy = "authorPolicy")] //come back to this
-    [Route("api/tour")] //come back to this
+    [Authorize(Policy = "authorPolicy")] 
+    [Route("api/tour")] 
     public class TourController : BaseApiController
     {
         private readonly ITourService _tourService;

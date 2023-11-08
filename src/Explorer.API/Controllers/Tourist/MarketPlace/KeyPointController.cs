@@ -17,9 +17,17 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("tours/{tourId:long}/key-points")]
-        public ActionResult<KeyPointDto> GetKeyPoints(long tourId)
+        public ActionResult<KeyPointResponseDto> GetKeyPoints(long tourId)
         {
             var result = _keyPointService.GetByTourId(tourId);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Roles = "author, tourist")]
+        [HttpGet("tours/{tourId:long}/firts-key-point")]
+        public ActionResult<KeyPointResponseDto> GetToursFirstKeyPoint(long tourId)
+        {
+            var result = _keyPointService.GetFirstByTourId(tourId);
             return CreateResponse(result);
         }
     }

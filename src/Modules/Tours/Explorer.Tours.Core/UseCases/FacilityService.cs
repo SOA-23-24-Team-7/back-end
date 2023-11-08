@@ -10,9 +10,11 @@ namespace Explorer.Tours.Core.UseCases;
 public class FacilityService : CrudService<FacilityResponseDto, Facility>, IFacilityService
 {
     private readonly ICrudRepository<Facility> _repository;
-    public FacilityService(ICrudRepository<Facility> repository, IMapper mapper) : base(repository, mapper)
+    private readonly ICrudRepository<PublicFacilityRequest> _requestRepository;
+    public FacilityService(ICrudRepository<Facility> repository, IMapper mapper, ICrudRepository<PublicFacilityRequest> requestRepository) : base(repository, mapper)
     {
         _repository = repository;
+        _requestRepository = requestRepository;
     }
 
     public Result<PagedResult<FacilityResponseDto>> GetPagedByAuthorId(int page, int pageSize, int authorId)
@@ -32,6 +34,20 @@ public class FacilityService : CrudService<FacilityResponseDto, Facility>, IFaci
         catch (ArgumentException e)
         {
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+    }
+
+    public Result<PagedResult<FacilityResponseDto>> GetPublic()
+    {
+        try
+        {
+            var acceptedRequests = _requestRepository.GetPaged(0,0).Results.ToList().FindAll(req => req.Status == PublicStatus.Accepted);
+            var result = _repository.GetPaged(0,0).Results.ToList().FindAll(fac => (acceptedRequests.Find(req => req.FacilityId == fac.Id) != null));
+            return MapToDto<FacilityResponseDto>(new PagedResult<Facility>(result,result.Count));
+        }
+        catch
+        {
+            return Result.Fail(FailureCode.Internal);
         }
     }
 }
