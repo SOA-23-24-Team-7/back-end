@@ -99,6 +99,26 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
     }
 
+    public Result Archive(long id, long authorId)
+    {
+        try
+        {
+            var entity = _tourRepository.GetById(id);
+            if (entity.Archive(authorId))
+            {
+                _repository.Update(entity);
+                return Result.Ok();
+            }
+
+            return Result.Fail(FailureCode.InvalidArgument).WithError("Invalid argument provided.");
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+    }
+
+
     public Result<PagedResult<TourResponseDto>> GetPublished(int page, int pageSize)
     {
         var allTours = _tourRepository.GetAll(page, pageSize);

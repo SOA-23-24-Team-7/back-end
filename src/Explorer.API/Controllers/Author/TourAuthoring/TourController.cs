@@ -105,5 +105,19 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             var result = _tourService.Publish(id, authorId);
             return CreateResponse(result);
         }
+
+        [HttpPut("archive/{id:int}")]
+        public ActionResult<TourResponseDto> Archive(long id)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long authorId = -1;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                authorId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _tourService.Archive(id, authorId);
+            return CreateResponse(result);
+        }
+
     }
 }

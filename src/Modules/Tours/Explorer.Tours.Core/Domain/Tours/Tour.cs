@@ -14,13 +14,14 @@ public class Tour : Entity
     public bool IsDeleted { get; init; }
     public double Distance { get; init; }
     public DateTime? PublishDate { get; private set; }
+    public DateTime? ArchiveDate { get; private set; }
     public ICollection<Equipment> EquipmentList { get; init; }
 
     [InverseProperty("Tour")]
     public ICollection<KeyPoint> KeyPoints { get; } = new List<KeyPoint>();
     public ICollection<TourDuration> Durations { get; } = new List<TourDuration>();
 
-    public Tour(long authorId, string name, string description, int difficulty, List<string> tags, DateTime? publishDate = null, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
+    public Tour(long authorId, string name, string description, int difficulty, List<string> tags,DateTime? archiveDate = null ,DateTime? publishDate = null, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
     {
         AuthorId = authorId;
         Name = name;
@@ -32,6 +33,7 @@ public class Tour : Entity
         IsDeleted = isDeleted;
         Distance = distance;
         PublishDate = publishDate;
+        ArchiveDate = archiveDate;
         Validate();
     }
 
@@ -67,6 +69,20 @@ public class Tour : Entity
 
         return true;
     }
+
+    public bool Archive(long authorId)
+    {
+        if (Status == TourStatus.Published && AuthorId == authorId)
+        {
+            ArchiveDate = DateTime.UtcNow;
+            Status = TourStatus.Archived;
+
+            return true;
+        }
+
+        return false;
+    }
+
 
     public string GetStatusName()
     {
