@@ -68,13 +68,6 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-        [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
-        {
-            var result = _blogService.Delete(id);
-            return CreateResponse(result);
-        }
-
         [Authorize(Policy = "userPolicy")]
         [HttpGet("upvote/{id:long}")]
         public ActionResult Upvote(long id)

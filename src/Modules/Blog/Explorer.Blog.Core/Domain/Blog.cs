@@ -35,22 +35,19 @@ namespace Explorer.Blog.Core.Domain
                 throw new ArgumentException("Title ne sme biti prazan ili null.\n");
             }
 
-
+            AuthorId = authorId;
             Title = title;
             Description = description;
             Date = DateTime.UtcNow.Date;
-            Pictures = pictures;
             Status = status;
         }
 
-        public void UpdateBlog(string title, string description, List<string> pictures, BlogStatus status)
+        public void UpdateBlog(string title, string description, BlogStatus status)
         {
 
             Title = title;
             Description = description;
-            Date = date;
             Status = status;
-            AuthorId = authorId;
         }
 
         public void SetVote(long userId, VoteType voteType)

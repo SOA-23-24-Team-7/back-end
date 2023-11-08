@@ -43,7 +43,7 @@ namespace Explorer.Blog.Core.UseCases
             try
             {
                 var blog = CrudRepository.Get(blogUpdateDto.Id);
-                blog.UpdateBlog(blogUpdateDto.Title, blogUpdateDto.Description, blogUpdateDto.Pictures, (Domain.BlogStatus)blogUpdateDto.Status);
+                blog.UpdateBlog(blogUpdateDto.Title, blogUpdateDto.Description, (Domain.BlogStatus)blogUpdateDto.Status);
                 CrudRepository.Update(blog);
 
                 return MapToDto<BlogResponseDto>(blog);
