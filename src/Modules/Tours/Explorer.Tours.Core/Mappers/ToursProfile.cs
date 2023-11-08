@@ -1,4 +1,5 @@
 using AutoMapper;
+using Explorer.Stakeholders.API.Dtos.TouristEquipment;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristEquipment;
 using Explorer.Tours.Core.Domain;

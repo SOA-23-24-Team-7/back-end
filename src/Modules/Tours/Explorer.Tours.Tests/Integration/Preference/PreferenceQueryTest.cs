@@ -1,10 +1,5 @@
-﻿using Explorer.API.Controllers.Administrator.Administration;
-using Explorer.API.Controllers.Tourist;
-using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Dtos;
+﻿using Explorer.API.Controllers.Tourist;
 using Explorer.Tours.API.Public;
-using Explorer.Tours.API.Public.Administration;
-using Explorer.Tours.Tests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;

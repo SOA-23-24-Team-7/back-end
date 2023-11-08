@@ -1,4 +1,6 @@
-﻿namespace Explorer.Blog.API.Dtos
+﻿using Explorer.Stakeholders.API.Dtos;
+
+namespace Explorer.Blog.API.Dtos
 {
     public enum BlogStatus { Draft, Published, Closed };
     public class BlogResponseDto
@@ -14,5 +16,7 @@
         public long VoteCount { get; set; }
         public long UpvoteCount { get; set; }
         public long DownvoteCount { get; set; }
+        public int AuthorId { get; set; }
+        public UserResponseDto Author { get; set; }
     }
 }

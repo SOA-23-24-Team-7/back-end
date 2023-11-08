@@ -1,14 +1,9 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
-using Explorer.Blog.Core.UseCases;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Tours.API.Dtos;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Explorer.API.Controllers
 {
@@ -29,7 +24,25 @@ namespace Explorer.API.Controllers
         public ActionResult<BlogResponseDto> Create([FromBody] BlogCreateDto blog)
         {
             blog.Date = DateTime.UtcNow;
+            blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _blogService.Create(blog);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Policy = "userPolicy")]
+        [HttpPut("update")]
+        public ActionResult<BlogResponseDto> Update([FromBody] BlogUpdateDto blog)
+        {
+            blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _blogService.Update(blog);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Policy = "userPolicy")]
+        [HttpDelete("delete/{id:long}")]
+        public ActionResult<BlogResponseDto> Delete(int id)
+        {
+            var result = _blogService.Delete(id);
             return CreateResponse(result);
         }
 
@@ -52,13 +65,6 @@ namespace Explorer.API.Controllers
         {
             blog.Id = id;
             var result = _blogService.UpdateBlog(blog);
-            return CreateResponse(result);
-        }
-
-        [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
-        {
-            var result = _blogService.Delete(id);
             return CreateResponse(result);
         }
 

@@ -1,5 +1,6 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
@@ -39,6 +40,7 @@ public static class StakeholdersStartup
         services.AddScoped<IProblemService, ProblemService>();
         services.AddScoped<IProblemAnswerService, ProblemAnswerService>();
         services.AddScoped<IProblemCommentService, ProblemCommentService>();
+        services.AddScoped<IInternalUserService, UserService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)

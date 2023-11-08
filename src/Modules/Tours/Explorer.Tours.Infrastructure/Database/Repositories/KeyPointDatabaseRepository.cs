@@ -1,8 +1,6 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Tours.Core.Domain;
+﻿using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
 
 namespace Explorer.Tours.Infrastructure.Database.Repositories
 {

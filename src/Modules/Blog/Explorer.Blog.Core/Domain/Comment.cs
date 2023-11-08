@@ -1,5 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Stakeholders.Core.Domain;
 
 namespace Explorer.Blog.Core.Domain
 {

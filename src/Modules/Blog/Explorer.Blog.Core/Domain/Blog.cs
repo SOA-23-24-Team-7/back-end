@@ -1,6 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Stakeholders.Core.Domain;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Blog.Core.Domain
 {
@@ -11,8 +10,8 @@ namespace Explorer.Blog.Core.Domain
         public string Title { get; private set; }
         public string Description { get; private set; }
         public DateTime Date { get; init; }
-        public List<string>? Pictures { get; private set; }
         public BlogStatus Status { get; private set; }
+        public int AuthorId { get; init; }
 
         [InverseProperty("Blog")]
         public ICollection<Comment> Comments { get; } = new List<Comment>();
@@ -28,7 +27,7 @@ namespace Explorer.Blog.Core.Domain
         public long UpvoteCount => Votes.Sum(x => x.VoteType == VoteType.UPVOTE ? 1 : 0);
         public long DownvoteCount => Votes.Sum(x => x.VoteType == VoteType.DOWNVOTE ? 1 : 0);
 
-        public Blog(string title, string description, DateTime date, List<string>? pictures, BlogStatus status)
+        public Blog(string title, string description, DateTime date, BlogStatus status, int authorId)
         {
 
             if (string.IsNullOrEmpty(title))
@@ -36,22 +35,19 @@ namespace Explorer.Blog.Core.Domain
                 throw new ArgumentException("Title ne sme biti prazan ili null.\n");
             }
 
-
+            AuthorId = authorId;
             Title = title;
             Description = description;
             Date = DateTime.UtcNow.Date;
-            Pictures = pictures;
             Status = status;
         }
 
-        public void UpdateBlog(string title, string description, List<string> pictures, BlogStatus status)
+        public void UpdateBlog(string title, string description, BlogStatus status)
         {
 
             Title = title;
             Description = description;
-            Pictures = pictures;
             Status = status;
-
         }
 
         public void SetVote(long userId, VoteType voteType)
