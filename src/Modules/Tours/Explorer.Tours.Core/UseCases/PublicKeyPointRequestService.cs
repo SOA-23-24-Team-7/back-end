@@ -59,12 +59,13 @@ namespace Explorer.Tours.Core.UseCases
             if (isAccepted)
             {
                 notificationText = generator.GenerateAccepted(keyPoint.Name);
+                request.Comment = "";
             }
             else
             {
-                notificationText = generator.GenerateRejected(keyPoint.Name,request.Comment);
+                notificationText = generator.GenerateRejected(keyPoint.Name);
             }
-            _notificationRepository.Create(new PublicKeyPointNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow));
+            _notificationRepository.Create(new PublicKeyPointNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow, isAccepted, request.Comment));
         }
 
         public Result Accept(long requestId)
@@ -115,6 +116,7 @@ namespace Explorer.Tours.Core.UseCases
                 dto.KeyPointName = _keyPointRepository.Get(req.KeyPointId).Name;
                 resultsDto.Add(dto);
             }
+            resultsDto.Reverse();
             return new PagedResult<PublicKeyPointRequestResponseDto>(resultsDto, resultsDto.Count);
         }
     }

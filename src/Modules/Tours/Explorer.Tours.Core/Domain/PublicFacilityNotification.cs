@@ -13,13 +13,17 @@ namespace Explorer.Tours.Core.Domain
         public string Description { get; set; }
         public long AuthorId { get; init; }
         public DateTime Created { get; set; }
-        public PublicFacilityNotification(string description, long authorId, long requestId, DateTime created)
+        public bool IsAccepted { get; init; }
+        public string Comment { get; init; }
+        public PublicFacilityNotification(string description, long authorId, long requestId, DateTime created, bool isAccepted, string comment)
         {
             Validate(description);
             Description = description;
             AuthorId = authorId;
             RequestId = requestId;
             Created = created;
+            IsAccepted = isAccepted;
+            Comment = comment;
         }
         private void Validate(string description)
         {
