@@ -1,5 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System.Security.AccessControl;
 
 namespace Explorer.Stakeholders.Core.Domain
 {

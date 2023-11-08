@@ -1,21 +1,11 @@
-﻿using Explorer.API.Controllers.Administrator.Administration;
-using Explorer.API.Controllers.Tourist;
-using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.API.Controllers.Tourist;
 using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Infrastructure.Database;
-using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
-using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
 {

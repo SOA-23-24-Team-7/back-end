@@ -5,7 +5,6 @@ using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-using System.Linq;
 
 namespace Explorer.Tours.Core.UseCases;
 

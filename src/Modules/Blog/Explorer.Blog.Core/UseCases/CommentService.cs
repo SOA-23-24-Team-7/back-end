@@ -3,42 +3,33 @@ using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.Blog.Core.Domain;
 using Explorer.Blog.Core.Domain.RepositoryInterfaces;
-using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Internal;
 using FluentResults;
-using System.Xml.Linq;
 
 namespace Explorer.Blog.Core.UseCases
 {
     public class CommentService : CrudService<CommentResponseDto, Comment>, ICommentService
     {
-        private readonly IMapper _mapper;
         private readonly ICommentRepository _commentRepository;
-        private readonly ICrudRepository<Domain.Blog> _blogRepository;
         private readonly IInternalUserService _internalUserService;
 
         public CommentService(ICrudRepository<Comment> repository, ICommentRepository commentRepository, ICrudRepository<Domain.Blog> blogRepository, IMapper mapper, IInternalUserService internalUserService) : base(repository, mapper)
         {
-            _mapper = mapper;
             _commentRepository = commentRepository;
-            _blogRepository = blogRepository;
             _internalUserService = internalUserService;
         }
 
         public Result<PagedResult<CommentResponseDto>> GetPagedByBlogId(int page, int pageSize, long blogId)
         {
             var pagedComments = _commentRepository.GetPagedByBlogId(page, pageSize, blogId);
-            List<Comment> result = new List<Comment>();
-            foreach (var comment in pagedComments.Results)
+            var result = MapToDto<CommentResponseDto>(pagedComments);
+            foreach (var comment in result.Value.Results)
             {
-                var username = _internalUserService.GetNameById(comment.AuthorId).Value;
-                var newComment = new Comment(comment.AuthorId, comment.BlogId, comment.CreatedAt, comment.UpdatedAt, comment.Text, username);
-                result.Add(newComment);
+                var user = _internalUserService.Get(comment.AuthorId).Value;
+                comment.Author = user;
             }
-
-            pagedComments = new PagedResult<Comment>(result, result.Count);
-            return MapToDto<CommentResponseDto>(pagedComments);
+            return result;
         }
 
         public Result<CommentResponseDto> UpdateComment(CommentUpdateDto commentData)

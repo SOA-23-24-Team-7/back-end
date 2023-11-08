@@ -1,6 +1,5 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
-using Explorer.Blog.Core.UseCases;
 using Explorer.BuildingBlocks.Core.UseCases;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
