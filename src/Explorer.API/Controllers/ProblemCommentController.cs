@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers
 {
-    [Authorize(Policy = "nonAdministratorPolicy")]
     [Route("api/problemComment")]
     public class ProblemCommentController : BaseApiController
     {
@@ -19,6 +18,7 @@ namespace Explorer.API.Controllers
             _problemService = problemService;
         }
 
+        [Authorize(Policy = "nonAdministratorPolicy")]
         [HttpPost]
         public ActionResult<ProblemCommentResponseDto> Create([FromBody] ProblemCommentCreateDto problemComment)
         {
@@ -32,6 +32,7 @@ namespace Explorer.API.Controllers
             return Forbid();
         }
 
+        [Authorize(Policy = "userPolicy")]
         [HttpGet("{id:long}")]
         public ActionResult<PagedResult<ProblemResponseDto>> GetPagedByProblemAnswerId([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
