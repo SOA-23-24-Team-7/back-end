@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Explorer.API.Controllers.Author
+namespace Explorer.API.Controllers.Author.TourAuthoring
 {
     [Authorize(Policy = "authorPolicy")] //come back to this
     [Route("api/tour")] //come back to this
@@ -30,7 +30,7 @@ namespace Explorer.API.Controllers.Author
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
-            var result = _tourService.GetAuthorsPagedTours(id,page, pageSize);
+            var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
             return CreateResponse(result);
         }
 
@@ -38,7 +38,7 @@ namespace Explorer.API.Controllers.Author
         public ActionResult<TourResponseDto> Create([FromBody] TourCreateDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if(identity != null && identity.IsAuthenticated)
+            if (identity != null && identity.IsAuthenticated)
             {
                 tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
@@ -50,7 +50,7 @@ namespace Explorer.API.Controllers.Author
         public ActionResult<TourResponseDto> Update([FromBody] TourUpdateDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null  && identity.IsAuthenticated)
+            if (identity != null && identity.IsAuthenticated)
             {
                 tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
@@ -83,6 +83,26 @@ namespace Explorer.API.Controllers.Author
         public ActionResult DeleteEquipment(int tourId, int equipmentId)
         {
             var result = _tourService.DeleteEquipment(tourId, equipmentId);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("{tourId:long}")]
+        public ActionResult<PagedResult<TourResponseDto>> GetById(long tourId)
+        {
+            var result = _tourService.GetById(tourId);
+            return CreateResponse(result);
+        }
+
+        [HttpPut("publish/{id:int}")]
+        public ActionResult<TourResponseDto> Publish(long id)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long authorId = -1;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                authorId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _tourService.Publish(id, authorId);
             return CreateResponse(result);
         }
     }
