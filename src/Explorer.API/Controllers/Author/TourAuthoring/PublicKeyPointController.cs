@@ -24,7 +24,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring;
         }
 
         [HttpPost("addPrivate/{tourId:int}/{publicKeyPointId:int}")]
-        public ActionResult<KeyPointDto> CreatePrivateKeyPoint(int tourId, int publicKeyPointId)
+        public ActionResult<KeyPointCreateDto> CreatePrivateKeyPoint(int tourId, int publicKeyPointId)
         {
             var result = _publicKeyPointService.CreatePrivateKeyPoint(tourId, publicKeyPointId);
             return CreateResponse(result);
