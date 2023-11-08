@@ -17,4 +17,5 @@ public interface IProblemService
     Result<ProblemResponseDto> GetByAnswerId(long id);
     Result<ProblemResponseDto> UpdateIsAnswered(long problemId, bool isAnswered);
     Result<ProblemResponseDto> UpdateAnswerId(long problemId, long answerId);
+    Result<ProblemResponseDto> UpdateDeadline(long problemId, DateTime deadline);
 }

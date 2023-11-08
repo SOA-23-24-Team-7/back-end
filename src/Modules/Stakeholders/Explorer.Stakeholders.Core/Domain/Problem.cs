@@ -14,6 +14,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public long AnswerId { get; private set; } = 0;
         public bool IsResolved { get; set; } = false;
         public bool IsAnswered { get; set; } = false;
+        public DateTime Deadline { get; private set; } = DateTime.MaxValue;
 
         public Problem(string category, string priority, string description, DateTime reportedTime, long touristId, int tourId)
         {
@@ -34,6 +35,11 @@ namespace Explorer.Stakeholders.Core.Domain
         public void UpdateIsAnswered(bool isAnswered)
         {
             IsAnswered = isAnswered;
+        }
+
+        public void UpdateDeadline(DateTime deadline)
+        {
+            Deadline = deadline;
         }
 
         public void Validate(string category, string priority, string description)

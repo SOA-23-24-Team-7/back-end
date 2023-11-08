@@ -15,5 +15,6 @@
         public long TourAuthorId { get; set; }
         public bool IsResolved { get; set; }
         public bool IsAnswered { get; set; }
+        public DateTime Deadline { get; set; }
     }
 }
