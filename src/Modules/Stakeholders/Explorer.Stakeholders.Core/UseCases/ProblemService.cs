@@ -79,21 +79,26 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         public Result<ProblemResponseDto> UpdateDeadline(long problemId, DateTime deadline)
         {
-            try
+            var problem = CrudRepository.Get(problemId);
+            if (problem.Deadline == DateTime.MaxValue && problem.Deadline > DateTime.Now)
             {
-                var problem = CrudRepository.Get(problemId);
-                problem.UpdateDeadline(deadline);
-                var result = CrudRepository.Update(problem);
-                return MapToDto<ProblemResponseDto>(result);
+                try
+                {
+
+                    problem.UpdateDeadline(deadline);
+                    var result = CrudRepository.Update(problem);
+                    return MapToDto<ProblemResponseDto>(result);
+                }
+                catch (KeyNotFoundException e)
+                {
+                    return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+                }
+                catch (ArgumentException e)
+                {
+                    return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+                }
             }
-            catch (KeyNotFoundException e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
-            }
+            return Result.Fail(FailureCode.Forbidden).WithError("Deadline has already been set.");
         }
 
         public Result<PagedResult<ProblemResponseDto>> GetAll(int page, int pageSize)
