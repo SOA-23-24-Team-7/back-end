@@ -24,9 +24,9 @@ public class TouristPositionController : BaseApiController
     }
 
     [HttpPut("position")]
-    public ActionResult<TouristPositionResponseDto> Update([FromBody] TouristPositionUpdateDto club)
+    public ActionResult<TouristPositionResponseDto> Update([FromBody] TouristPositionUpdateDto touristPosition)
     {
-        var result = _touristPositionService.Update(club);
+        var result = _touristPositionService.Update(touristPosition);
         return CreateResponse(result);
     }
 

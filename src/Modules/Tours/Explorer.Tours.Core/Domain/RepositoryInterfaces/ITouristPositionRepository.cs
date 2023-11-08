@@ -3,4 +3,5 @@
 public interface ITouristPositionRepository
 {
     TouristPosition GetByTouristId(long touristId);
+    TouristPosition Update(TouristPosition touristPosition);
 }

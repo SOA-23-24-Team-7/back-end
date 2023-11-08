@@ -1,4 +1,3 @@
-using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +12,7 @@ public class ToursContext : DbContext
     public DbSet<Facility> Facilities { get; set; }
     public DbSet<Preference> Preferences { get; set; }
     public DbSet<TouristEquipment> TouristEquipments { get; set; }
-    public DbSet<TouristPosition> TouristPosition { get; set; }
+    public DbSet<TouristPosition> TouristPositions { get; set; }
 
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}

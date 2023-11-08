@@ -5,8 +5,8 @@ namespace Explorer.Tours.Core.Domain;
 public class TouristPosition : Entity
 {
     public long TouristId { get; init; }
-    public double Longitude { get; init; }
-    public double Latitude { get; init; }
+    public double Longitude { get; set; }
+    public double Latitude { get; set; }
 
     public TouristPosition(long touristId, double longitude, double latitude)
     {

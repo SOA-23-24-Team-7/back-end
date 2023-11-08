@@ -17,6 +17,23 @@ public class TouristPositionService : CrudService<TouristPositionResponseDto, To
         _repository = repository;
     }
 
+    public virtual Result<TouristPositionResponseDto> Update<PDto>(PDto entity)
+    {
+        try
+        {
+            var result = _repository.Update(MapToDomain(entity));
+            return MapToDto<TouristPositionResponseDto>(result);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+        catch (ArgumentException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+    }
+
     public Result<TouristPositionResponseDto> GetByTouristId(long touristId)
     {
         try

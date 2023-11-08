@@ -1,4 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
@@ -20,5 +21,23 @@ public class TouristPositionRepository : ITouristPositionRepository
     public TouristPosition GetByTouristId(long touristId)
     {
         return _dbSet.Where(x => x.TouristId == touristId).First();
+    }
+
+    public TouristPosition Update(TouristPosition touristPosition)
+    {
+        var touristPositionOld = GetByTouristId(touristPosition.TouristId);
+        touristPositionOld.Longitude = touristPosition.Longitude;
+        touristPositionOld.Latitude = touristPosition.Latitude;
+
+        try
+        {
+            DbContext.Update(touristPositionOld);
+            DbContext.SaveChanges();
+        }
+        catch (DbUpdateException e)
+        {
+            throw new KeyNotFoundException(e.Message);
+        }
+        return touristPositionOld;
     }
 }
