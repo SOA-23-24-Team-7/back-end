@@ -50,5 +50,13 @@ public class ToursProfile : Profile
 
         CreateMap<TourDurationResponseDto, TourDuration>().ReverseMap(); // Caos hehe, lepasimozebroj? ;))
         CreateMap<TourDurationUpdateDto, TourDuration>().ReverseMap(); // ONATRAZILAMIBROJSVIDJAJOJSEROLEKSMOJ
+        CreateMap<PublicFacilityNotificationResponseDto, PublicFacilityNotification>().ReverseMap();
+        CreateMap<PublicFacilityNotificationCreateDto, PublicFacilityNotification>().ReverseMap();
+
+        CreateMap<PublicKeyPointNotificationResponseDto, PublicKeyPointNotification>().ReverseMap();
+        CreateMap<PublicKeyPointNotificationCreateDto, PublicKeyPointNotification>().ReverseMap();
+
+        CreateMap<PublicKeyPointResponseDto, PublicKeyPoint>().ReverseMap();
+        CreateMap<PublicKeyPointCreateDto, PublicKeyPoint>().ReverseMap();
     }
 }
