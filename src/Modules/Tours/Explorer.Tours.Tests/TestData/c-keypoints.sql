@@ -19,3 +19,15 @@ INSERT INTO tours."KeyPoints"(
 INSERT INTO tours."KeyPoints"(
 	"Id", "TourId", "Name", "Description", "Longitude", "Latitude", "ImagePath", "Order")
 	VALUES (-7, -3, 'Toster burger', 'Dobri su.', 10.35, 38.54, 'ftn.png', 2);
+INSERT INTO tours."KeyPoints"(
+	"Id", "TourId", "Name", "Description", "Longitude", "Latitude", "ImagePath", "Order")
+	VALUES (-8, -7, 'Tortilla casa', 'Grande burito njam.', 15.31, 28.04, 'ftn.png', 0);
+INSERT INTO tours."KeyPoints"(
+	"Id", "TourId", "Name", "Description", "Longitude", "Latitude", "ImagePath", "Order")
+	VALUES (-9, -7, 'Sushirito', 'Uskoro.', 12.78, 54.04, 'ftn.png', 1);
+INSERT INTO tours."KeyPoints"(
+	"Id", "TourId", "Name", "Description", "Longitude", "Latitude", "ImagePath", "Order")
+	VALUES (-10, -8, 'Tortilla casa', 'Grande burito njam.', 15.31, 28.04, 'ftn.png', 0);
+INSERT INTO tours."KeyPoints"(
+	"Id", "TourId", "Name", "Description", "Longitude", "Latitude", "ImagePath", "Order")
+	VALUES (-11, -8, 'Sushirito', 'Uskoro.', 12.78, 54.04, 'ftn.png', 1);
