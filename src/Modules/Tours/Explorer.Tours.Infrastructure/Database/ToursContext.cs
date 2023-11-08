@@ -1,4 +1,5 @@
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.ShoppingCarts;
 using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
@@ -20,6 +21,9 @@ public class ToursContext : DbContext
     public DbSet<PublicFacilityNotification> PublicFacilityNotifications { get; set; }
     public DbSet<PublicKeyPoint> PublicKeyPoints { get; set; }
 
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+
+    public DbSet<OrderItem> OrderItems { get; set; }
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -79,4 +83,17 @@ public class ToursContext : DbContext
         .WithOne()
         .HasForeignKey<PublicKeyPointNotification>(s => s.RequestId);
     }
+
+    private static void ConfigureShoppingCart(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ShoppingCart>()
+            .HasMany(s => s.OrderItems)
+            .WithOne();
+
+        modelBuilder.Entity<OrderItem>()
+            .HasOne<ShoppingCart>()
+            .WithMany()
+            .HasForeignKey(o => o.ShoppingCartId);
+    }
+
 }
