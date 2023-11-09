@@ -4,6 +4,7 @@ using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.TourAuthoring;
+using Explorer.Tours.API.Public.TourExecution;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
@@ -11,6 +12,7 @@ using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases;
 using Explorer.Tours.Core.UseCases.Administration;
 using Explorer.Tours.Core.UseCases.TourAuthoring;
+using Explorer.Tours.Core.UseCases.TourExecution;
 using Explorer.Tours.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +53,8 @@ public static class ToursStartup
 
         services.AddScoped<ITouristEquipmentService, TouristEquipmentService>();
 
+        services.AddScoped<ITouristPositionService, TouristPositionService>();
+
         services.AddScoped<IPublicKeyPointRequestService, PublicKeyPointRequestService>();
 
         services.AddScoped<IPublicFacilityRequestService, PublicFacilityRequestService>();
@@ -85,8 +89,10 @@ public static class ToursStartup
 
         services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, ToursContext>));
 
-        services.AddScoped(typeof(ICrudRepository<PublicKeyPoint>), typeof(CrudDatabaseRepository<PublicKeyPoint, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TouristPosition>), typeof(CrudDatabaseRepository<TouristPosition, ToursContext>));
+        services.AddScoped<ITouristPositionRepository, TouristPositionRepository>();
 
+        services.AddScoped(typeof(ICrudRepository<PublicKeyPoint>), typeof(CrudDatabaseRepository<PublicKeyPoint, ToursContext>));
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),

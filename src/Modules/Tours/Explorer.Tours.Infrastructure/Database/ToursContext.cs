@@ -15,6 +15,7 @@ public class ToursContext : DbContext
     public DbSet<Preference> Preferences { get; set; }
     public DbSet<PublicKeyPointRequest> PublicKeyPointRequests { get; set; }
     public DbSet<TouristEquipment> TouristEquipments { get; set; }
+    public DbSet<TouristPosition> TouristPositions { get; set; }
     public DbSet<PublicFacilityRequest> PublicFacilityRequests { get; set; }
     public DbSet<PublicKeyPointNotification> PublicKeyPointNotifications { get; set; }
     public DbSet<PublicFacilityNotification> PublicFacilityNotifications { get; set; }
