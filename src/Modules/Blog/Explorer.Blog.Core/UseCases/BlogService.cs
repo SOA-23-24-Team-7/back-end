@@ -42,7 +42,7 @@ namespace Explorer.Blog.Core.UseCases
         {
             try
             {
-                var blog = CrudRepository.Get(blogUpdateDto.Id);
+                var blog = _repository.GetById(blogUpdateDto.Id);
                 blog.UpdateBlog(blogUpdateDto.Title, blogUpdateDto.Description, (Domain.BlogStatus)blogUpdateDto.Status);
                 CrudRepository.Update(blog);
 
@@ -61,7 +61,7 @@ namespace Explorer.Blog.Core.UseCases
             var domainVoteType = (Domain.VoteType)voteType; // bruh...
             try
             {
-                var blog = CrudRepository.Get(blogId);
+                var blog = _repository.GetById(blogId);
                 blog.SetVote(userId, domainVoteType);
                 CrudRepository.Update(blog);
                 return Result.Ok();

@@ -71,17 +71,17 @@ namespace Explorer.Blog.Core.Domain
 
         private void UpdateBlogStatus()
         {
-            if (VoteCount < -10)
+            if (VoteCount < -2)
             {
                 Status = BlogStatus.Closed;
             }
-            else if (VoteCount > 100 || Comments.Count > 10)
-            {
-                Status = BlogStatus.Active;
-            }
-            else if (VoteCount > 500 && Comments.Count > 30)
+            else if (VoteCount >= 3 && Comments.Count >= 3)
             {
                 Status = BlogStatus.Famous;
+            }
+            else if (VoteCount >= 2 || Comments.Count >= 2)
+            {
+                Status = BlogStatus.Active;
             }
         }
     }
