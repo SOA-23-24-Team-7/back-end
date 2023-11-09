@@ -34,18 +34,16 @@ public class ToursContext : DbContext
         ConfigurePublicFacilityRequest(modelBuilder);
 
         modelBuilder.Entity<Core.Domain.Tours.Tour>().Property(item => item.Durations).HasColumnType("jsonb");
+        modelBuilder.Entity<Core.Domain.Tours.KeyPoint>().Property(item => item.Secret).HasColumnType("jsonb");
     }
 
     private static void ConfigureKeyPoint(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Tour>()
             .HasMany(t => t.KeyPoints)
-            .WithOne(k => k.Tour);
-
-        modelBuilder.Entity<KeyPoint>()
-            .HasOne<Tour>()
-            .WithMany(t => t.KeyPoints)
-            .HasForeignKey(kp => kp.TourId);
+            .WithOne(k => k.Tour)
+            .HasForeignKey(k => k.TourId)
+            .IsRequired();
     }
 
     private static void ConfigurePublicKeyPointRequest(ModelBuilder modelBuilder)

@@ -4,6 +4,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -66,6 +67,16 @@ namespace Explorer.Tours.Core.UseCases
                 }
             }
             return MapToDto<TourExecutionResponseDto>(tourExecution);
+        }
+        public Result<TourResponseDto> GetAllFor(long touristId)
+        {
+
+            throw new NotImplementedException("Nisam jos uradio");
+        }
+        public Result<TourResponseDto> GetLive(long touristId)
+        {
+            //var liveTourExecution = _tourExecutionRepository.GetLive(touristId);
+            throw new NotImplementedException("Nisam jos uraido");
         }
     }
 }

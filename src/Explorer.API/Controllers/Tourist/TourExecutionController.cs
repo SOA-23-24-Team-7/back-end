@@ -1,6 +1,8 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -52,6 +54,22 @@ namespace Explorer.API.Controllers.Tourist
                 return BadRequest();
             }
             return CreateResponse(result);
+        }
+        [HttpGet]
+        [Route("Test")]
+        public ActionResult<PagedResult<TourResponseDto>> GetExecutedTour(long tourExecutionId)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long touristId = long.Parse(identity.FindFirst("id").Value);
+            throw new NotImplementedException("Nisam jos uradio");
+        }
+        [HttpGet]
+        [Route("live")]
+        public ActionResult<PagedResult<TourResponseDto>> GetLiveTour()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long touristId = long.Parse(identity.FindFirst("id").Value);
+            throw new NotImplementedException("Nisam jos uradio");
         }
     }
 }

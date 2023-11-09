@@ -28,6 +28,7 @@ public class ToursProfile : Profile
         CreateMap<FacilityCreateDto, Facility>().ReverseMap();
         CreateMap<FacilityUpdateDto, Facility>().ReverseMap();
 
+        CreateMap<KeyPointSecretDto, KeyPointSecret>().ReverseMap();
         CreateMap<KeyPointDto, KeyPoint>().ReverseMap();
 
         CreateMap<PreferenceResponseDto, Preference>().ReverseMap();
