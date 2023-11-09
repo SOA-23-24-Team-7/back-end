@@ -1,11 +1,12 @@
-﻿using Explorer.API.Controllers.Tourist.MarketPlace;
+﻿using Explorer.API.Controllers.Author.TourAuthoring;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.TourAuthoring;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 
-namespace Explorer.Tours.Tests.Integration.MarketPlace;
+namespace Explorer.Tours.Tests.Integration.TourAuthoring;
 
 [Collection("Sequential")]
 public class KeyPointQueryTests : BaseToursIntegrationTest
@@ -13,18 +14,19 @@ public class KeyPointQueryTests : BaseToursIntegrationTest
     public KeyPointQueryTests(ToursTestFactory factory) : base(factory) { }
 
     [Fact]
-    public void Retrieves_all_for_single_tour()
+    public void Retrieves_all()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetKeyPoints(-1).Result)?.Value as List<KeyPointResponseDto>;
+        var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<KeyPointResponseDto>;
 
         // Assert
         result.ShouldNotBeNull();
-        result.Count.ShouldBe(2);
+        result.Results.Count.ShouldBe(11);
+        result.TotalCount.ShouldBe(11);
     }
 
     private static KeyPointController CreateController(IServiceScope scope)

@@ -50,9 +50,7 @@ public static class ToursStartup
 
         services.AddScoped<IPreferenceService, PreferenceService>();
 
-
         services.AddScoped<ITouristEquipmentService, TouristEquipmentService>();
-
 
         services.AddScoped<IPublicKeyPointRequestService, PublicKeyPointRequestService>();
 
