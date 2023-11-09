@@ -405,6 +405,91 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
     }
 
+
+
+    [Fact]
+    public void Archive_succeeds()
+    {
+        // Arrange - Input data
+        var tourId = -7;
+        var expectedResponseCode = 200;
+        var expectedStatus = TourStatus.Archived;
+        //var expectedDate = "0001-01-01 12:00:00.789123+00:00";
+
+        // Arrange - Controller and dbContext
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result = (OkResult)controller.Archive(tourId).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedResponseCode);
+
+        // Assert - Database
+        var storedEntity = dbContext.Tours.FirstOrDefault(t => t.Id == tourId);
+        storedEntity.ShouldNotBeNull();
+        storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
+        //storedEntity.ArchiveDate.ToString().Equals(expectedDate);
+    }
+
+    [Fact]
+    public void Archive_fails_invalid_status()
+    {
+        // Arrange - Input data
+        var tourId = -3;
+        var expectedResponseCode = 400;
+        var expectedStatus = TourStatus.Draft;
+        // Arrange - Controller and dbContext
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result = (ObjectResult)controller.Archive(tourId).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedResponseCode);
+
+        // Assert - Database
+        var storedEntity = dbContext.Tours.FirstOrDefault(t => t.Id == tourId);
+        storedEntity.ShouldNotBeNull();
+        storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
+    }
+
+    
+
+    [Fact]
+    public void Archive_fails_wrong_author()
+    {
+        // Arrange - Input data
+        var tourId = -8;
+        var expectedResponseCode = 400;
+        var expectedStatus = TourStatus.Published;
+        // Arrange - Controller and dbContext
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result = (ObjectResult)controller.Archive(tourId).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedResponseCode);
+
+        // Assert - Database
+        var storedEntity = dbContext.Tours.FirstOrDefault(t => t.Id == tourId);
+        storedEntity.ShouldNotBeNull();
+        storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
+    }
+    
+
+
+
     private static TourController CreateController(IServiceScope scope)
     {
         return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())

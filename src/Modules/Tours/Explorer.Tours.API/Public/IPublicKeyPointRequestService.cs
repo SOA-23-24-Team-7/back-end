@@ -11,6 +11,9 @@ namespace Explorer.Tours.API.Public;
         Result<PublicKeyPointRequestResponseDto> Create<PublicKeyPointRequestCreateDto>(PublicKeyPointRequestCreateDto request);
         Result<PagedResult<PublicKeyPointRequestResponseDto>> GetPaged(int page, int pageSize);
         Result<PublicKeyPointRequestResponseDto> Update<PublicKeyPointRequestUpdateDto>(PublicKeyPointRequestUpdateDto request);
+        Result Reject(long requestId, string comment);
+        Result Accept(long requestId);
+    Result<PagedResult<PublicKeyPointRequestResponseDto>> GetPagedWithName(int page, int pageSize);
 }
 
 
