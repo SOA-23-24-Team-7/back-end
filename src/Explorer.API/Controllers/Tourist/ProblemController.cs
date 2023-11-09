@@ -52,7 +52,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [HttpGet("resolve/{problemId:long}")]
+        [HttpGet("{problemId:long}/resolve")]
         public ActionResult<ProblemResponseDto> ResolveProblem(long problemId)
         {
             var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);

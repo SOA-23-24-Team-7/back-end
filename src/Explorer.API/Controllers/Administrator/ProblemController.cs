@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers.Administrator
 {
     [Authorize(Policy = "administratorPolicy")]
-    [Route("api/administration/problem")]
+    [Route("api/administrator/problem")]
     public class ProblemController : BaseApiController
     {
         private readonly IProblemService _problemService;
@@ -28,6 +28,18 @@ namespace Explorer.API.Controllers.Administrator
         {
             var result = _problemService.UpdateDeadline(problem.Id, problem.Deadline);
             return CreateResponse(result);
+        }
+
+        [HttpGet("{problemId:long}/resolve")]
+        public ActionResult<ProblemResponseDto> ResolveProblem(long problemId)
+        {
+            var problem = _problemService.Get(problemId).Value;
+            if (!problem.IsResolved && problem.IsAnswered)
+            {
+                var result = _problemService.ResolveProblem(problemId);
+                return CreateResponse(result);
+            }
+            return Forbid();
         }
     }
 }

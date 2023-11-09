@@ -9,5 +9,6 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
         PagedResult<Problem> GetByUserId(int page, int pageSize, long id);
         Problem Get(long id);
         Problem GetByAnswerId(long id);
+        void DeleteByTour(long tourId);
     }
 }

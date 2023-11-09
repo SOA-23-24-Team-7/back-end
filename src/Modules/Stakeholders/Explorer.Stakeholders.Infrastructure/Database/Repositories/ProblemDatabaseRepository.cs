@@ -2,6 +2,7 @@
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
@@ -47,6 +48,12 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
         {
             var task = _dbContext.Problem.FirstOrDefault(problem => problem.AnswerId == id);
             return task;
+        }
+
+        public void DeleteByTour(long tourId)
+        {
+            _dbContext.Problem.Where(x => x.TourId == tourId).ExecuteDelete();
+            _dbContext.SaveChanges();
         }
     }
 }

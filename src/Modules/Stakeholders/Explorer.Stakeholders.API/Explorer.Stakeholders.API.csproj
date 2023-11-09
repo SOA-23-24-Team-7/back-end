@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\Explorer.BuildingBlocks.Core\Explorer.BuildingBlocks.Core.csproj" />
-    <ProjectReference Include="..\..\Tours\Explorer.Tours.Core\Explorer.Tours.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
@@ -14,11 +15,13 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository) : base(repository, mapper)
+    private readonly IInternalProblemService _problemService;
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, IInternalProblemService problemService) : base(repository, mapper)
     {
         _repository = repository;
         _mapper = mapper;
         _tourRepository = tourRepository;
+        _problemService = problemService;
     }
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
@@ -63,6 +66,19 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
     }
 
+    public Result DeleteCascade(long tourId)
+    {
+        try
+        {
+            _problemService.DeleteProblemByTour(tourId);
+            CrudRepository.Delete(tourId);
+            return Result.Ok();
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+    }
 
     public IEnumerable<long> GetAuthorsTours(long id)
     {

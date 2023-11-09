@@ -61,7 +61,7 @@ namespace Explorer.API.Controllers.Author
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var result = _tourService.Delete(id);
+            var result = _tourService.DeleteCascade(id);
             return CreateResponse(result);
         }
 
