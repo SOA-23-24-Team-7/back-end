@@ -1,5 +1,7 @@
-﻿using Explorer.Tours.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.TourAuthoring;
+using Explorer.Tours.Core.UseCases.TourAuthoring;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +19,7 @@ public class KeyPointController : BaseApiController
     }
 
     [HttpPost("tours/{tourId:long}/key-points")]
-    public ActionResult<KeyPointDto> CreateKeyPoint([FromRoute] long tourId, [FromBody] KeyPointDto keyPoint)
+    public ActionResult<KeyPointResponseDto> CreateKeyPoint([FromRoute] long tourId, [FromBody] KeyPointCreateDto keyPoint)
     {
         keyPoint.TourId = tourId;
         var result = _keyPointService.Create(keyPoint);
@@ -25,7 +27,7 @@ public class KeyPointController : BaseApiController
     }
 
     [HttpPut("tours/{tourId:long}/key-points/{id:long}")]
-    public ActionResult<KeyPointDto> Update(long tourId, long id, [FromBody] KeyPointDto keyPoint)
+    public ActionResult<KeyPointResponseDto> Update(long tourId, long id, [FromBody] KeyPointUpdateDto keyPoint)
     {
         keyPoint.Id = id;
         var result = _keyPointService.Update(keyPoint);
@@ -38,4 +40,12 @@ public class KeyPointController : BaseApiController
         var result = _keyPointService.Delete(id);
         return CreateResponse(result);
     }
+
+    [HttpGet]
+    public ActionResult<PagedResult<KeyPointResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+    {
+        var result = _keyPointService.GetPaged(page, pageSize);
+        return CreateResponse(result);
+    }
+
 }

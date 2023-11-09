@@ -17,12 +17,12 @@ public class KeyPointService : BaseService<KeyPoint>, IKeyPointService
         _keyPointRepository = keyPointRepository;
     }
 
-    public Result<List<KeyPointDto>> GetByTourId(long tourId)
+    public Result<List<KeyPointResponseDto>> GetByTourId(long tourId)
     {
         try
         {
             var result = _keyPointRepository.GetByTourId(tourId);
-            return MapToDto<KeyPointDto>(result);
+            return MapToDto<KeyPointResponseDto>(result);
         }
         catch (KeyNotFoundException e)
         {
@@ -30,12 +30,12 @@ public class KeyPointService : BaseService<KeyPoint>, IKeyPointService
         }
     }
 
-    public Result<KeyPointDto> Create(KeyPointDto keyPoint)
+    public Result<KeyPointResponseDto> Create<KeyPointCreateDto>(KeyPointCreateDto keyPoint)
     {
         try
         {
             var result = _keyPointRepository.Create(MapToDomain(keyPoint));
-            return MapToDto<KeyPointDto>(result);
+            return MapToDto<KeyPointResponseDto>(result);
         }
         catch (ArgumentException e)
         {
@@ -43,12 +43,12 @@ public class KeyPointService : BaseService<KeyPoint>, IKeyPointService
         }
     }
 
-    public Result<KeyPointDto> Update(KeyPointDto keyPoint)
+    public Result<KeyPointResponseDto> Update<KeyPointUpdateDto>(KeyPointUpdateDto keyPoint)
     {
         try
         {
             var result = _keyPointRepository.Update(MapToDomain(keyPoint));
-            return MapToDto<KeyPointDto>(result);
+            return MapToDto<KeyPointResponseDto>(result);
         }
         catch (KeyNotFoundException e)
         {
@@ -73,5 +73,23 @@ public class KeyPointService : BaseService<KeyPoint>, IKeyPointService
         }
     }
 
+    public Result<KeyPointResponseDto> GetFirstByTourId(long tourId)
+    {
+        try
+        {
+            var result = _keyPointRepository.GetFirstByTourId(tourId);
+            return MapToDto<KeyPointResponseDto>(result);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+    }
 
+    public Result<PagedResult<KeyPointResponseDto>> GetPaged(int page, int pageSize)
+    {
+        var allKeyPoints = _keyPointRepository.GetPaged(page, pageSize);  
+        var pagedResult = new PagedResult<KeyPoint>(allKeyPoints.Results, allKeyPoints.Results.Count);
+        return MapToDto<KeyPointResponseDto>(pagedResult);
+    }
 }
