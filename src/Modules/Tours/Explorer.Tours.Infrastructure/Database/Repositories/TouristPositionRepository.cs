@@ -20,7 +20,7 @@ public class TouristPositionRepository : ITouristPositionRepository
 
     public TouristPosition GetByTouristId(long touristId)
     {
-        return _dbSet.Where(x => x.TouristId == touristId).First();
+        return _dbSet.Where(x => x.TouristId == touristId).FirstOrDefault();
     }
 
     public TouristPosition Update(TouristPosition touristPosition)
