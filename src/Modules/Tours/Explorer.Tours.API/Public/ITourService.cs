@@ -19,4 +19,5 @@ public interface ITourService
     Result Publish(long id, long authorId);
     Result<PagedResult<TourResponseDto>> GetPublished(int page, int pageSize);
     Result Archive(long id, long authorId);
+    Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize);
 }

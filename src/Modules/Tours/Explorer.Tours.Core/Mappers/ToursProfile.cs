@@ -69,6 +69,8 @@ public class ToursProfile : Profile
         CreateMap<OrderItemCreateDto, OrderItem>().ReverseMap();
         CreateMap<OrderItemUpdateDto, OrderItem>().ReverseMap();
 
+        CreateMap<LimitedTourViewResponseDto, Tour>().ReverseMap();
+
 
 
 

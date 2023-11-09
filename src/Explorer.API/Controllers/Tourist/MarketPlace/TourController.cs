@@ -18,9 +18,9 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("tours/published")]
-        public ActionResult<PagedResult<TourResponseDto>> GetPublishedTours([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<LimitedTourViewResponseDto>> GetPublishedTours([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _tourService.GetPublished(page, pageSize);
+            var result = _tourService.GetPublishedLimitedView(page, pageSize);
             return CreateResponse(result);
         }
     }
