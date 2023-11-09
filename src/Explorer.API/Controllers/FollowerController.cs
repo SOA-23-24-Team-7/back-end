@@ -52,32 +52,9 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-        /*
-
-        [HttpGet("{id:int}")]
-        public ActionResult<RatingResponseDto> GetByUser(long id)
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                if (id != long.Parse(identity.FindFirst("id").Value))
-                {
-                    throw new ArgumentException("Not active UserId");
-                }
-            }
-            var result = _ratingService.GetByUser(id);
-            return CreateResponse(result);
-        }
-        */
-
         [HttpPost]
         public ActionResult<FollowerResponseDto> Create([FromBody] FollowerCreateDto follower)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null && identity.IsAuthenticated)
-            {
-                follower.FollowedById = long.Parse(identity.FindFirst("id").Value);
-            }
             var result = _followerService.Create(follower);
             return CreateResponse(result);
         }

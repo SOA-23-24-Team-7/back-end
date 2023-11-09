@@ -27,6 +27,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 rating.UserId = long.Parse(identity.FindFirst("id").Value);
             }
+            rating.DateTime = DateTime.UtcNow.AddHours(1);
             var result = _ratingService.Create(rating);
             return CreateResponse(result);
         }
