@@ -60,7 +60,7 @@ public class CrudDatabaseRepository<TEntity, TDbContext> : ICrudRepository<TEnti
         DbContext.SaveChanges();
     }
 
-    public List<TEntity> Get(Expression<Func<TEntity, bool>> filter)
+    public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter)
     {
         IQueryable<TEntity> query = _dbSet;
         query = query.Where(filter);
@@ -71,5 +71,14 @@ public class CrudDatabaseRepository<TEntity, TDbContext> : ICrudRepository<TEnti
     public List<TEntity> GetAll()
     {
         return _dbSet.ToList();
+    }
+
+    public TEntity Get(Expression<Func<TEntity, bool>> filter)
+    {
+        IQueryable<TEntity> query = _dbSet;
+        query = query.Where(filter);
+        var entity = query.FirstOrDefault();
+        if (entity == null) { throw new KeyNotFoundException("Not found."); }
+        return entity;
     }
 }
