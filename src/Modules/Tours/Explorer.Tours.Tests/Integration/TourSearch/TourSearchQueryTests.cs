@@ -15,7 +15,7 @@ namespace Explorer.Tours.Tests.Integration.TourSearch
         public TourSearchQueryTests(ToursTestFactory factory) : base(factory) { }
 
         [Theory]
-        [InlineData(15.31, 28.04, 100, 1, 1)]
+        [InlineData(15.31, 28.04, 100, 2, 2)]
         [InlineData(50, 50, 100, 0, 0)]
         public void Searches(double longitude, double latitude, double maxDistance, int expectedCount, int expectedTotalCount)
         {
