@@ -26,6 +26,20 @@ namespace Explorer.Tours.Core.Domain.ShoppingCarts
             IsPurchased = isPurchased;  //provjeriti
         }
 
+
+        public void AddOrderItem(OrderItem newOrderItem)
+        {
+            OrderItems.Add(newOrderItem);
+        }
+
+        public void RemoveOrderItem(long id)
+        {
+            var item = OrderItems.FirstOrDefault(x => x.Id== id);
+            OrderItems.Remove(item);
+
+        }
+
+
         public void SetTotalPrice()
         {
             TotalPrice = 0;
@@ -37,5 +51,6 @@ namespace Explorer.Tours.Core.Domain.ShoppingCarts
                 }
             }
         }
+
     }
 }

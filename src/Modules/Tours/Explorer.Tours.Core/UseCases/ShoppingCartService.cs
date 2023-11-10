@@ -18,10 +18,12 @@ namespace Explorer.Tours.Core.UseCases
     {
         private readonly IMapper _mapper;
         private readonly IShoppingCartRepository _cartRepository;
-        public ShoppingCartService(ICrudRepository<ShoppingCart> repository, IShoppingCartRepository cartRepository, IMapper mapper) : base(repository, mapper)
+        private readonly ICrudRepository<OrderItem> _orderItemRepository;
+        public ShoppingCartService(ICrudRepository<ShoppingCart> repository, IShoppingCartRepository cartRepository, ICrudRepository<OrderItem> orderItemRepository, IMapper mapper) : base(repository, mapper)
         {
             _mapper = mapper;
             _cartRepository = cartRepository;
+            _orderItemRepository = orderItemRepository;
         }
 
         public Result<ShoppingCartResponseDto> GetByTouristId(long id)
@@ -51,8 +53,45 @@ namespace Explorer.Tours.Core.UseCases
             return cart.IsPurchased;
         }
 
+        public Result AddOrderItem(OrderItemCreateDto item)
+        {
+            try
+            {
+                var cart = CrudRepository.Get(item.ShoppingCartId);
 
-        
+                if(cart.OrderItems.Any(o => o.TourId == item.TourId))
+                    return Result.Fail(FailureCode.InvalidArgument).WithError("Item already exists.");
+                var newOrderItem = _orderItemRepository.Create(_mapper.Map<OrderItemCreateDto, OrderItem>(item));
+                cart.AddOrderItem(newOrderItem);
+                CrudRepository.Update(cart);
+
+                return Result.Ok();
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+        public Result RemoveOrderItem(long id, long shoppingCartId)
+        {
+            try
+            {
+                var cart = CrudRepository.Get(shoppingCartId);
+                cart.RemoveOrderItem(id);
+                
+                _orderItemRepository.Delete(id);
+                CrudRepository.Update(cart);
+
+                return Result.Ok();
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+
 
     }
 }
