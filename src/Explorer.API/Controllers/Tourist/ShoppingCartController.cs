@@ -26,7 +26,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-       
+
 
         [HttpPost]
         public ActionResult<ShoppingCartResponseDto> Create([FromBody] ShoppingCartCreateDto cart)
@@ -58,6 +58,23 @@ namespace Explorer.API.Controllers.Tourist
         {
             var result = _cartService.Delete(id);
             return CreateResponse(result);
+        }
+
+
+        [HttpPost("addItem")]
+        public ActionResult AddOrderItem([FromBody] OrderItemCreateDto item)
+        {
+            var result = _cartService.AddOrderItem(item);
+            return CreateResponse(result);
+
+        }
+
+        [HttpDelete("removeItem/{id:int}/{shoppingCartId:int}")]
+        public ActionResult RemoveOrderItem(int id, int shoppingCartId)
+        {
+            var result = _cartService.RemoveOrderItem(id, shoppingCartId);
+            return CreateResponse(result);
+
         }
     }
 }

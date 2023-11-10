@@ -26,20 +26,18 @@ namespace Explorer.Tours.Core.Domain.ShoppingCarts
         }
 
 
-       /* public void AddOrderItem(long tourId, double price, string tourName, long shoppingCartId)
+        public void AddOrderItem(OrderItem newOrderItem)
         {
-            OrderItem storedItem = OrderItems.FirstOrDefault(r => r.TourId == tourId);
-            if (storedItem != null)
-            {
-                throw new ArgumentException("Order item already exists.\n");
-            }
-            else
-            {
-                OrderItems.Add(new OrderItem(tourId, tourName, price, shoppingCartId));
-            }
-            
+            OrderItems.Add(newOrderItem);
+        }
 
-        }*/
+        public void RemoveOrderItem(long id)
+        {
+            var item = OrderItems.FirstOrDefault(x => x.Id== id);
+            OrderItems.Remove(item);
+
+
+        }
 
     }
 }

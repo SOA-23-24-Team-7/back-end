@@ -16,5 +16,7 @@ namespace Explorer.Tours.API.Public
         Result<ShoppingCartResponseDto> Update<ShoppingCartUpdateDto>(ShoppingCartUpdateDto cart);
         Result Delete(long id);
         public bool IsPurchased(long id);
+        Result AddOrderItem(OrderItemCreateDto item);
+        Result RemoveOrderItem(long id, long shoppingCartId);
     }
 }
