@@ -25,6 +25,12 @@ public class UserDatabaseRepository : IUserRepository
         task.Wait();
         return task.Result;
     }
+    public PagedResult<User> SearchUsers(int page, int pageSize, string searchUsername, long id)
+    {
+        var task = _dbSet.Where(x => x.Username.ToLower().StartsWith(searchUsername.ToLower()) && x.Role != UserRole.Administrator && x.Id != id).GetPagedById(page, pageSize);
+        task.Wait();
+        return task.Result;
+    }
     /*
     public Result<PagedResult<User>> GetPagedFollowersByUserId(int page, int pageSize, long userId)
     {

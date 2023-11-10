@@ -15,9 +15,11 @@ namespace Explorer.API.Controllers
     public class FollowerController : BaseApiController
     {
         private readonly IFollowerService _followerService;
-        public FollowerController(IFollowerService followerService)
+        private readonly IUserService _userService;
+        public FollowerController(IFollowerService followerService, IUserService userService)
         {
             _followerService = followerService;
+            _userService = userService;
         }
 
         [HttpGet("followers")]
@@ -56,6 +58,19 @@ namespace Explorer.API.Controllers
         public ActionResult<FollowerResponseDto> Create([FromBody] FollowerCreateDto follower)
         {
             var result = _followerService.Create(follower);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("search/{searchUsername}")]
+        public ActionResult<PagedResult<UserResponseDto>> GetSearch([FromQuery] int page, [FromQuery] int pageSize, string searchUsername)
+        {
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _userService.SearchUsers(0, 0, searchUsername, userId);
             return CreateResponse(result);
         }
     }

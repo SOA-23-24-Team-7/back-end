@@ -10,4 +10,5 @@ public interface IUserRepository
     User Create(User user);
     long GetPersonId(long userId);
     PagedResult<User> GetPagedByAdmin(int page, int pageSize, long adminId);
+    public PagedResult<User> SearchUsers(int page, int pageSize, string searchUsername, long id);
 }

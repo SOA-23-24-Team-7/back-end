@@ -46,6 +46,11 @@ namespace Explorer.Stakeholders.Core.UseCases
             return MapToDto<UserResponseDto>(_userRepository.GetPagedByAdmin(page, pageSize, adminId));
         }
 
+        public Result<PagedResult<UserResponseDto>> SearchUsers(int page, int pageSize, string searchUserName, long id)
+        {
+            return MapToDto<UserResponseDto>(_userRepository.SearchUsers(page, pageSize, searchUserName, id));
+        }
+
         public Result<UserResponseDto> UpdateProfilePicture(long userId, string profilePicture)
         {
             try
