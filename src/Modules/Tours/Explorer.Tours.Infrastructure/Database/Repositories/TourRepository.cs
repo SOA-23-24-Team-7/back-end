@@ -62,7 +62,6 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return _dbSet.FirstOrDefault(t => t.Id == id).Name;
         }
 
-        //anja dodala
         public PagedResult<Tour> GetAll(int page, int pageSize)
         {
             var task = _dbSet.Include(x => x.KeyPoints).GetPagedById(page, pageSize);
@@ -70,7 +69,6 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return task.Result;
         }
 
-        //dodato
         public Tour GetById(long id)
         {
             var entity = _dbSet.Include(x => x.KeyPoints).First(x => x.Id == id);

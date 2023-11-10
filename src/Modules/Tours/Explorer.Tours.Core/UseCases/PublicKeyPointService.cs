@@ -26,7 +26,7 @@ namespace Explorer.Tours.Core.UseCases
             _mapper = mapper;
         }
 
-        public Result<KeyPointDto> CreatePrivateKeyPoint(int tourId, int publicKeyPointId)
+        public Result<KeyPointCreateDto> CreatePrivateKeyPoint(int tourId, int publicKeyPointId)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace Explorer.Tours.Core.UseCases
                 }
                 KeyPoint keypoint = new KeyPoint(tourId, publicKP);
                 var result = _keyPointRepository.Create(keypoint);
-                return _mapper.Map<KeyPointDto>(result);
+                return _mapper.Map<KeyPointCreateDto>(result);
             }
             catch(Exception e)
             {

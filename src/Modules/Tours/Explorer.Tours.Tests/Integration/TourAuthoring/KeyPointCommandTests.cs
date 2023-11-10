@@ -20,18 +20,19 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var newEntity = new KeyPointDto
+        var newEntity = new KeyPointCreateDto
         {
             Name = "Kej",
             Description = "Kej na obali Dunava.",
             Longitude = 12.542,
             Latitude = 54.3221,
+            LocationAddress = "adresa",
             ImagePath = "kej.png",
             Order = 2
         };
 
         // Act
-        var result = ((ObjectResult)controller.CreateKeyPoint(-1, newEntity).Result)?.Value as KeyPointDto;
+        var result = ((ObjectResult)controller.CreateKeyPoint(-1, newEntity).Result)?.Value as KeyPointResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -50,7 +51,7 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new KeyPointDto
+        var updatedEntity = new KeyPointCreateDto
         {
             Description = "Test"
         };
@@ -70,7 +71,7 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var updatedEntity = new KeyPointDto
+        var updatedEntity = new KeyPointUpdateDto
         {
             Id = -1,
             TourId = -1,
@@ -78,12 +79,13 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
             Description = "Rimokatolicka crkva u centru grada",
             Longitude = -12.643,
             Latitude = 78.54,
+            LocationAddress = "adresa",
             ImagePath = "new-image.png",
             Order = 0
         };
 
         // Act
-        var result = ((ObjectResult)controller.Update(-1, -1, updatedEntity).Result)?.Value as KeyPointDto;
+        var result = ((ObjectResult)controller.Update(-1, -1, updatedEntity).Result)?.Value as KeyPointResponseDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -92,6 +94,7 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
         result.Description.ShouldBe(updatedEntity.Description);
         result.Longitude.ShouldBe(updatedEntity.Longitude);
         result.Latitude.ShouldBe(updatedEntity.Latitude);
+        result.LocationAddress.ShouldBe(updatedEntity.LocationAddress);
         result.ImagePath.ShouldBe(updatedEntity.ImagePath);
         result.Order.ShouldBe(updatedEntity.Order);
 
@@ -101,6 +104,7 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
         storedEntity.Description.ShouldBe(updatedEntity.Description);
         storedEntity.Longitude.ShouldBe(updatedEntity.Longitude);
         storedEntity.Latitude.ShouldBe(updatedEntity.Latitude);
+        storedEntity.LocationAddress.ShouldBe(updatedEntity.LocationAddress);   
         storedEntity.ImagePath.ShouldBe(updatedEntity.ImagePath);
         storedEntity.Order.ShouldBe(updatedEntity.Order);
         var oldEntity = dbContext.KeyPoints.FirstOrDefault(i => i.Name == "Katedrala");
@@ -113,7 +117,7 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var updatedEntity = new KeyPointDto
+        var updatedEntity = new KeyPointUpdateDto
         {
             Id = -1000,
             TourId = -1,
@@ -121,6 +125,7 @@ public class KeyPointCommandTests : BaseToursIntegrationTest
             Description = "Test",
             Longitude = 0,
             Latitude = 0,
+            LocationAddress = "adresa",
             ImagePath = "Test",
             Order = 0
         };
