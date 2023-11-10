@@ -10,11 +10,15 @@ using FluentResults;
 namespace Explorer.Tours.Core.UseCases
 {
     public class TourExecutionService : BaseService<TourExecution>, ITourExecutionService
+
     {
+        private readonly ITourRepository _tourRepository;
         private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly IKeyPointRepository _keyPointRepository;
-        public TourExecutionService(IMapper mapper, ITourExecutionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository) : base(mapper)
+
+        public TourExecutionService(IMapper mapper, ITourRepository tourRepository, ITourExecutionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository) : base(mapper)
         {
+            _tourRepository = tourRepository;
             _tourExecutionRepository = tourExecutionRepository;
             _keyPointRepository = keyPointRepository;
         }
@@ -62,6 +66,39 @@ namespace Explorer.Tours.Core.UseCases
                 }
             }
             return MapToDto<TourExecutionResponseDto>(tourExecution);
+        }
+
+        public Result TrackProgress(long tourExecutionId, double longitude, double latitude)
+        {
+            var tourExecution = _tourExecutionRepository.Get(tourExecutionId);
+            var tour = _tourRepository.GetById(tourExecution.TourId);
+
+            var nextKeyPoint = _keyPointRepository.Get(tourExecution.NextKeyPointId);
+            var previoustKeyPoint = tour.GetPreviousKeyPoint(nextKeyPoint);
+            var nextPreviousDistance = nextKeyPoint.CalculateDistance(previoustKeyPoint);
+            var distanceToNext = nextKeyPoint.CalculateDistance(longitude, latitude);
+
+            var currentKeyPoint = tour.KeyPoints.ElementAt(0);
+            double distance = 0;
+            for (int i = 0; currentKeyPoint != previoustKeyPoint; ++i)
+            {
+                var next = tour.KeyPoints.ElementAt(i + 1);
+                distance += currentKeyPoint.CalculateDistance(next);
+                currentKeyPoint = next;
+            }
+            
+            var relativeDistance = nextPreviousDistance - distanceToNext;
+            if (relativeDistance < 0) relativeDistance = 0;
+
+            distance += relativeDistance;
+
+            var length = tour.CalculateLength();
+
+            var percentage = distance / length * 100;
+
+            tourExecution.UpdateProgress(percentage);
+
+            return Result.Ok(); // vratiti percentage
         }
     }
 }

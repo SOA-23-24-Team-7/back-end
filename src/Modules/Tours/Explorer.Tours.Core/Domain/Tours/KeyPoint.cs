@@ -50,6 +50,11 @@ public class KeyPoint : Entity
         if (string.IsNullOrWhiteSpace(ImagePath)) throw new ArgumentException("Invalid ImagePath");
     }
 
+    public double CalculateDistance(KeyPoint kp)
+    {
+        return CalculateDistance(kp.Longitude, kp.Latitude);
+    }
+
     public double CalculateDistance(double longitude, double latitude)
     {
         if (longitude < -180 || longitude > 180) throw new ArgumentException("Invalid Longitude");

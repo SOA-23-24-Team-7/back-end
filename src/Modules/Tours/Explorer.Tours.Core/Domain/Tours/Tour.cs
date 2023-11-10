@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Explorer.Tours.Core.Domain.Tours;
@@ -87,6 +88,38 @@ public class Tour : Entity
     public string GetStatusName()
     {
         return Status.ToString().ToLower();
+    }
+
+    public double CalculateLength()
+    {
+        double length = 0;
+
+        for (int i = 0; i <= KeyPoints.Count - 1; ++i)
+        {
+            var kp1 = KeyPoints.ElementAt(i);
+            var kp2 = KeyPoints.ElementAt(i + 1);
+
+            length += kp1.CalculateDistance(kp2.Longitude, kp2.Latitude);
+        }
+
+        return length;
+    }
+
+    public KeyPoint GetPreviousKeyPoint(KeyPoint keyPoint)
+    {
+        if (!KeyPoints.Contains(keyPoint)) throw new ArgumentException("Key point not in tour.");
+
+        var previous = KeyPoints.ElementAt(0);
+        foreach (var kp in KeyPoints)
+        {
+            if (kp == keyPoint)
+            {
+                break;
+            }
+            previous = kp;
+        }
+
+        return previous;
     }
 }
 
