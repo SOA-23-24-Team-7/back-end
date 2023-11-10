@@ -14,7 +14,7 @@ namespace Explorer.Tours.Core.Domain
         public long TouristId { get; init; }
         public long NextKeyPointId { get; private set; }
         public DateTime LastActivity { get; private set; }
-        public TourExecution(long tourId, long touristId, long nextKeyPointId) 
+        public TourExecution(long tourId, long touristId, long nextKeyPointId)
         {
             Status = TourExecutionStatus.Started;
             LastActivity = DateTime.UtcNow;
@@ -39,11 +39,11 @@ namespace Explorer.Tours.Core.Domain
             NextKeyPointId = keyPointId;
         }
     }
-}
 
-public enum TourExecutionStatus
-{
-    Started,
-    Abandoned,
-    Completed
+    public enum TourExecutionStatus
+    {
+        Started,
+        Abandoned,
+        Completed
+    }
 }
