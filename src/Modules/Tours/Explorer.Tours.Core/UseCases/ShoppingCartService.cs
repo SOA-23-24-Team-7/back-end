@@ -31,7 +31,20 @@ namespace Explorer.Tours.Core.UseCases
             return MapToDto<ShoppingCartResponseDto>(_cartRepository.GetByTouristId(id));
         }
 
-
+        public Result<ShoppingCartResponseDto> Update(ShoppingCartUpdateDto cart)
+        {
+            try
+            {
+                var shoppingCart = _cartRepository.GetByTouristId(cart.TouristId);
+                shoppingCart.SetTotalPrice();
+                CrudRepository.Update(shoppingCart);
+                return MapToDto<ShoppingCartResponseDto>(shoppingCart);
+            }
+            catch
+            {
+                return Result.Fail(FailureCode.NotFound);
+            }
+        }
 
         //dodajemo
         public bool IsPurchased(long id)
