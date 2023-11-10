@@ -36,6 +36,10 @@ namespace Explorer.Tours.Core.Domain.ShoppingCarts
             var item = OrderItems.FirstOrDefault(x => x.Id== id);
             OrderItems.Remove(item);
 
+        }
+
+        public void CountPrice()
+        {
 
         }
 
