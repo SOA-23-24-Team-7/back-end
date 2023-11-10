@@ -30,6 +30,7 @@
 
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\" />
     <Folder Include="Controllers\Author\" />
   </ItemGroup>
 
