@@ -2,9 +2,11 @@
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.Blog.Infrastructure.Database;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System.Security.Claims;
 using Xunit;
 
 namespace Explorer.Blog.Tests.Integration.Blog
@@ -19,16 +21,29 @@ namespace Explorer.Blog.Tests.Integration.Blog
         [Fact]
         public void Creates()
         {
-            // Arrange
+            // Arrangeusing var scope = Factory.Services.CreateScope();
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
+
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-12") }, "test");
+
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
             var dbContext = scope.ServiceProvider.GetRequiredService<BlogContext>();
             var newEntity = new BlogCreateDto
             {
                 Title = "Predlog",
                 Description = "Test",
                 Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                Status = BlogStatus.Published
+                Status = BlogStatus.Published,
+                AuthorId = -12
             };
 
             // Act
@@ -43,9 +58,6 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var storedEntity = dbContext.Blogs.FirstOrDefault(i => i.Id == result.Id);
             storedEntity.ShouldNotBeNull();
             storedEntity.Id.ShouldBe(result.Id);
-
-
-
         }
         [Fact]
         public void Create_fails_invalid_data()
@@ -53,12 +65,25 @@ namespace Explorer.Blog.Tests.Integration.Blog
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
+
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-12") }, "test");
+
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
             var updatedEntity = new BlogCreateDto
             {
                 //Title ="Predlog",
                 Description = "Test",
                 Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                Status = BlogStatus.Published
+                Status = BlogStatus.Published,
+                AuthorId = -12
             };
 
             // Act
