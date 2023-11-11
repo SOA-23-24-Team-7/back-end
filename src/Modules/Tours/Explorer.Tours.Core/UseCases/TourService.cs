@@ -5,6 +5,7 @@ using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases;
@@ -23,7 +24,8 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
     {
-        var allTours = _repository.GetPaged(page, pageSize);
+        //var allTours = _repository.GetPaged(page, pageSize);
+        var allTours = _tourRepository.GetAll(page, pageSize);  //anja dodala 
         var toursByAuthor = allTours.Results.Where(t => t.AuthorId == authorId).ToList();
         var pagedResult = new PagedResult<Tour>(toursByAuthor, toursByAuthor.Count);
         return MapToDto<TourResponseDto>(pagedResult);
@@ -62,8 +64,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
         }
     }
-
-
     public IEnumerable<long> GetAuthorsTours(long id)
     {
         return _tourRepository.GetAuthorsTours(id);
@@ -72,5 +72,58 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     public string GetToursName(long id)
     {
         return _tourRepository.GetToursName(id);
+    }
+
+    public Result<TourResponseDto> GetById(long id)
+    {
+        var entity = _tourRepository.GetById(id);
+        return MapToDto<TourResponseDto>(entity);
+    }
+
+    public Result Publish(long id, long authorId)
+    {
+        try
+        {
+            var entity = _tourRepository.GetById(id);
+            if (entity.Publish(authorId))
+            {
+                _repository.Update(entity);
+                return Result.Ok();
+            }
+
+            return Result.Fail(FailureCode.InvalidArgument).WithError("Invalid argument provided.");
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+    }
+
+    public Result Archive(long id, long authorId)
+    {
+        try
+        {
+            var entity = _tourRepository.GetById(id);
+            if (entity.Archive(authorId))
+            {
+                _repository.Update(entity);
+                return Result.Ok();
+            }
+
+            return Result.Fail(FailureCode.InvalidArgument).WithError("Invalid argument provided.");
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+    }
+
+
+    public Result<PagedResult<TourResponseDto>> GetPublished(int page, int pageSize)
+    {
+        var allTours = _tourRepository.GetAll(page, pageSize);
+        var publishedTours = allTours.Results.Where(t => t.Status == Domain.Tours.TourStatus.Published).ToList();
+        var pagedResult = new PagedResult<Tour>(publishedTours, publishedTours.Count);
+        return MapToDto<TourResponseDto>(pagedResult);
     }
 }

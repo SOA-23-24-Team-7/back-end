@@ -1,5 +1,8 @@
-﻿using Explorer.Tours.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Tours.Infrastructure.Database.Repositories
@@ -57,6 +60,20 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         public string GetToursName(long id)
         {
             return _dbSet.FirstOrDefault(t => t.Id == id).Name;
+        }
+
+        public PagedResult<Tour> GetAll(int page, int pageSize)
+        {
+            var task = _dbSet.Include(x => x.KeyPoints).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
+        }
+
+        public Tour GetById(long id)
+        {
+            var entity = _dbSet.Include(x => x.KeyPoints).First(x => x.Id == id);
+            if (entity == null) throw new KeyNotFoundException("Not found: " + id);
+            return entity;
         }
     }
 }
