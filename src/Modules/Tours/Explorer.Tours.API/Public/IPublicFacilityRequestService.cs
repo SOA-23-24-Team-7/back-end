@@ -14,6 +14,8 @@ namespace Explorer.Tours.API.Public
         Result<PublicFacilityRequestResponseDto> Create<PublicFacilityRequestCreateDto>(PublicFacilityRequestCreateDto request);
         Result<PagedResult<PublicFacilityRequestResponseDto>> GetPaged(int page, int pageSize);
         Result<PublicFacilityRequestResponseDto> Update<PublicFacilityRequestUpdateDto>(PublicFacilityRequestUpdateDto request);
-
+        Result Reject(long requestId,string comment);
+        Result Accept(long requestId);
+        Result<PagedResult<PublicFacilityRequestResponseDto>> GetPagedWithName(int page, int pageSize);
     }
 }
