@@ -4,12 +4,8 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.UseCases
 {
@@ -43,25 +39,25 @@ namespace Explorer.Tours.Core.UseCases
         public Result<TourExecutionResponseDto> CompleteKeyPoint(long tourId, long touristId)
         {
             TourExecution tourExecution = _tourExecutionRepository.Get(tourId, touristId);
-            if(tourExecution.Status != TourExecutionStatus.Started)
+            if (tourExecution.Status != TourExecutionStatus.Started)
             {
                 return null;
             }
             List<KeyPoint> keyPoints = _keyPointRepository.GetByTourId(tourId);
-            for(int i = 0; i < keyPoints.Count; i++)
+            for (int i = 0; i < keyPoints.Count; i++)
             {
                 if (keyPoints[i].Id == tourExecution.NextKeyPointId)
                 {
                     //ako je kompletirao poslednju kljucnu tacku -> kompletiraj turu
-                    if ((i + 1) >= keyPoints.Count)
+                    if (i + 1 >= keyPoints.Count)
                     {
-                       tourExecution = _tourExecutionRepository.CompleteTourExecution(tourExecution.Id);
-                       break;
+                        tourExecution = _tourExecutionRepository.CompleteTourExecution(tourExecution.Id);
+                        break;
                     }
                     else
                     {
-                       tourExecution = _tourExecutionRepository.UpdateNextKeyPoint(tourExecution.Id, keyPoints[i+1].Id);
-                       break;
+                        tourExecution = _tourExecutionRepository.UpdateNextKeyPoint(tourExecution.Id, keyPoints[i + 1].Id);
+                        break;
                     }
                 }
             }
