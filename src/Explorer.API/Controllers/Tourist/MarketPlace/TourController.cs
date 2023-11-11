@@ -3,7 +3,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Security.Claims;
 namespace Explorer.API.Controllers.Tourist.MarketPlace
 {
     [Route("api/market-place")]
@@ -23,5 +23,15 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
             var result = _tourService.GetPublishedLimitedView(page, pageSize);
             return CreateResponse(result);
         }
+
+        [Authorize(Policy ="touristPolicy")]
+        [Authorize(Roles = "tourist")]
+        [HttpGet("tours/inCart/{id:long}")]
+        public ActionResult<PagedResult<LimitedTourViewResponseDto>> GetToursInCart([FromQuery] int page, [FromQuery] int pageSize, long id)
+        {
+            var result = _tourService.GetToursInCart(page, pageSize, id);
+            return CreateResponse(result);
+        }
+
     }
 }
