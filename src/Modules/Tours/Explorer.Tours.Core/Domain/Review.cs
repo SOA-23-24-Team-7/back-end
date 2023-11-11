@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Explorer.BuildingBlocks.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.Domain;
 
 
 namespace Explorer.Tours.Core.Domain
@@ -25,7 +18,7 @@ namespace Explorer.Tours.Core.Domain
             if (rating < 1 || rating > 5) throw new ArgumentException("Invalid rating.");
             if (string.IsNullOrWhiteSpace(comment)) throw new ArgumentException("Invalid comment.");
             if (images.Count < 1) throw new ArgumentException("Invalid images input.");
-            
+
 
             Rating = rating;
             Comment = comment;

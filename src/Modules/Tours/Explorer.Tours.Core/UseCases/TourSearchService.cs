@@ -4,6 +4,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases;
@@ -28,10 +29,12 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
                 throw new ArgumentException("Max distance must be greater than 0.");
             }
 
-            var tours = _tourRepository.GetPaged(1, 1000); // ako ima vise od 1000 tura pravice problem
+            Coordinate mapCoordinate = new Coordinate(longitude, latitude);
+
+            var tours = _tourRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published); // ako ima vise od 1000 tura pravice problem
             var nearbyTours = new List<Tour>();
 
-            foreach (var tour in tours.Results)
+            foreach (var tour in tours)
             {
                 var keyPoints = _keyPointRepository.GetByTourId(tour.Id);
                 var nearbyKeypoints = keyPoints.Where(k => k.CalculateDistance(longitude, latitude) <= maxDistance);

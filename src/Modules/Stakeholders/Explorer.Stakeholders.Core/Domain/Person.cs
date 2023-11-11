@@ -1,4 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Explorer.BuildingBlocks.Core.Domain;
 using System.Net.Mail;
 
 namespace Explorer.Stakeholders.Core.Domain;
@@ -6,12 +7,12 @@ namespace Explorer.Stakeholders.Core.Domain;
 public class Person : Entity
 {
     public long UserId { get; private set; }
+    public User User { get; private set; }
     public string Name { get; private set; }
     public string Surname { get; private set; }
-    public string Email { get; private set; }
-    public string? ProfilePicture { get; private set; }
+    public string Email { get; init; }
     public string? Bio { get; private set; }
-    public string? Moto { get; private set; }
+    public string? Motto { get; private set; }
 
     public Person(long userId, string name, string surname, string email)
     {
@@ -22,8 +23,13 @@ public class Person : Entity
         Validate();
     }
 
-    public Person()
+    public void UpdatePerson(string name, string surname, string bio, string motto)
     {
+        Name = name;
+        Surname = surname;
+        Bio = bio;
+        Motto = motto;
+        Validate();
     }
 
     private void Validate()

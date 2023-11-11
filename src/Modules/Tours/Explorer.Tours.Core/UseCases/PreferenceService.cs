@@ -1,21 +1,14 @@
-﻿using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
-using Explorer.Tours.Core.Domain;
-using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security.Cryptography.X509Certificates;
-using AutoMapper;
-using System.Net;
+﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases
 {
-    public class PreferenceService : CrudService<PreferenceResponseDto,Preference>, IPreferenceService
+    public class PreferenceService : CrudService<PreferenceResponseDto, Preference>, IPreferenceService
     {
         private readonly IPreferenceRepository _tourPreferenceRepository;
         private readonly IMapper _mapper;

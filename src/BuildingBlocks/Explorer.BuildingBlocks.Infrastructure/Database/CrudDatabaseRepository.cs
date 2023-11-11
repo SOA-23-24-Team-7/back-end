@@ -1,6 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Explorer.BuildingBlocks.Infrastructure.Database;
 
@@ -57,5 +58,27 @@ public class CrudDatabaseRepository<TEntity, TDbContext> : ICrudRepository<TEnti
         var entity = Get(id);
         _dbSet.Remove(entity);
         DbContext.SaveChanges();
+    }
+
+    public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter)
+    {
+        IQueryable<TEntity> query = _dbSet;
+        query = query.Where(filter);
+        var entities = query.ToList();
+        return entities;
+    }
+
+    public List<TEntity> GetAll()
+    {
+        return _dbSet.ToList();
+    }
+
+    public TEntity Get(Expression<Func<TEntity, bool>> filter)
+    {
+        IQueryable<TEntity> query = _dbSet;
+        query = query.Where(filter);
+        var entity = query.FirstOrDefault();
+        if (entity == null) { throw new KeyNotFoundException("Not found."); }
+        return entity;
     }
 }

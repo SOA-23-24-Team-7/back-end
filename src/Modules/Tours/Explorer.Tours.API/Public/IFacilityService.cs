@@ -11,4 +11,5 @@ public interface IFacilityService
     Result<FacilityResponseDto> Create<FacilityCreateDto>(FacilityCreateDto facility);
     Result<FacilityResponseDto> Update<FacilityUpdateDto>(FacilityUpdateDto facility);
     Result Delete(long id);
+    Result<PagedResult<FacilityResponseDto>> GetPublic();
 }

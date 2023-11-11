@@ -20,7 +20,7 @@ public class KeyPointQueryTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetKeyPoints(-1).Result)?.Value as List<KeyPointDto>;
+        var result = ((ObjectResult)controller.GetKeyPoints(-1).Result)?.Value as List<KeyPointResponseDto>;
 
         // Assert
         result.ShouldNotBeNull();

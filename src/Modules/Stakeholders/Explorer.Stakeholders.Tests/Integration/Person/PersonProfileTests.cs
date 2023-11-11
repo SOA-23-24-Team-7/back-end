@@ -20,20 +20,19 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var updatedEntity = new PersonResponseDto
+            var updatedEntity = new PersonUpdateDto
             {
                 Id = -11,
                 UserId = -11,
                 Name = "Nikola",
                 Surname = "Nikolic",
-                Email = "nikola.nikolic@gmail.com",
                 ProfilePicture = "nikola.jpg",
                 Bio = "Programator",
-                Moto = "Clean code bajo"
+                Motto = "Clean code bajo"
             };
 
             // Act
-            var updateProfileResponse = (ObjectResult)controller.Update(updatedEntity).Result;
+            var updateProfileResponse = (ObjectResult)controller.Update(updatedEntity, updatedEntity.Id).Result;
             var updateProfileResult = updateProfileResponse?.Value as PersonResponseDto;
 
             // Assert - Response
@@ -41,20 +40,19 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             updateProfileResult.ShouldNotBeNull();
             updateProfileResult.Name.ShouldBe(updatedEntity.Name);
             updateProfileResult.Surname.ShouldBe(updatedEntity.Surname);
-            updateProfileResult.Email.ShouldBe(updatedEntity.Email);
-            updateProfileResult.ProfilePicture.ShouldBe(updatedEntity.ProfilePicture);
+            updateProfileResult.User.ProfilePicture.ShouldBe(updatedEntity.ProfilePicture);
             updateProfileResult.Bio.ShouldBe(updatedEntity.Bio);
-            updateProfileResult.Moto.ShouldBe(updatedEntity.Moto);
+            updateProfileResult.Motto.ShouldBe(updatedEntity.Motto);
 
             // Assert - Database
-            var storedEntity = dbContext.People.FirstOrDefault(i => i.Id == -11);
-            storedEntity.ShouldNotBeNull();
-            storedEntity.Name.ShouldBe(updatedEntity.Name);
-            storedEntity.Surname.ShouldBe(updatedEntity.Surname);
-            storedEntity.Email.ShouldBe(updatedEntity.Email);
-            storedEntity.ProfilePicture.ShouldBe(updatedEntity.ProfilePicture);
-            storedEntity.Bio.ShouldBe(updatedEntity.Bio);
-            storedEntity.Moto.ShouldBe(updatedEntity.Moto);
+            var storedPersonEntity = dbContext.People.FirstOrDefault(i => i.Id == -11);
+            var storedUserEntity = dbContext.Users.FirstOrDefault(i => i.Id == -11);
+            storedPersonEntity.ShouldNotBeNull();
+            storedPersonEntity.Name.ShouldBe(updatedEntity.Name);
+            storedPersonEntity.Surname.ShouldBe(updatedEntity.Surname);
+            storedUserEntity.ProfilePicture.ShouldBe(updatedEntity.ProfilePicture);
+            storedPersonEntity.Bio.ShouldBe(updatedEntity.Bio);
+            storedPersonEntity.Motto.ShouldBe(updatedEntity.Motto);
         }
 
         [Fact]
@@ -64,20 +62,19 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonResponseDto
+            var invalidEntity = new PersonUpdateDto
             {
                 Id = -11,
                 UserId = -11,
                 Name = "",
                 Surname = "",
-                Email = "",
                 ProfilePicture = "",
                 Bio = "",
-                Moto = ""
+                Motto = ""
             };
 
             // Act
-            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity).Result;
+            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity, invalidEntity.Id).Result;
 
             // Assert
             updateProfileResponse.StatusCode.ShouldBe(400);
@@ -90,46 +87,19 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonResponseDto
+            var invalidEntity = new PersonUpdateDto
             {
                 Id = -9999,
                 UserId = -11,
                 Name = "Nikola",
                 Surname = "Nikolic",
-                Email = "nikola.nikolic@gmail.com",
                 ProfilePicture = "nikola.jpg",
                 Bio = "Programator",
-                Moto = "Clean code bajo"
+                Motto = "Clean code bajo"
             };
 
             // Act
-            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity).Result;
-
-            // Assert
-            updateProfileResponse.StatusCode.ShouldBe(404);
-        }
-
-        [Fact]
-        public void Invalid_update_profile_userId()
-        {
-            // Arrange
-            using var scope = Factory.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-            var controller = CreateController(scope);
-            var invalidEntity = new PersonResponseDto
-            {
-                Id = -11,
-                UserId = -9999,
-                Name = "Nikola",
-                Surname = "Nikolic",
-                Email = "nikola.nikolic@gmail.com",
-                ProfilePicture = "nikola.jpg",
-                Bio = "Programator",
-                Moto = "Clean code bajo"
-            };
-
-            // Act
-            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity).Result;
+            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity, invalidEntity.Id).Result;
 
             // Assert
             updateProfileResponse.StatusCode.ShouldBe(404);
@@ -142,20 +112,19 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonResponseDto
+            var invalidEntity = new PersonUpdateDto
             {
                 Id = -11,
-                UserId = -9999,
+                UserId = -11,
                 Name = "",
                 Surname = "Nikolic",
-                Email = "nikola.nikolic@gmail.com",
                 ProfilePicture = "nikola.jpg",
                 Bio = "Programator",
-                Moto = "Clean code bajo"
+                Motto = "Clean code bajo"
             };
 
             // Act
-            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity).Result;
+            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity, invalidEntity.Id).Result;
 
             // Assert
             updateProfileResponse.StatusCode.ShouldBe(400);
@@ -168,75 +137,25 @@ namespace Explorer.Stakeholders.Tests.Integration.Person
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var controller = CreateController(scope);
-            var invalidEntity = new PersonResponseDto
+            var invalidEntity = new PersonUpdateDto
             {
                 Id = -11,
-                UserId = -9999,
+                UserId = -11,
                 Name = "Nikola",
                 Surname = "",
-                Email = "nikola.nikolic@gmail.com",
                 ProfilePicture = "nikola.jpg",
                 Bio = "Programator",
-                Moto = "Clean code bajo"
+                Motto = "Clean code bajo"
             };
 
             // Act
-            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity).Result;
+            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity, invalidEntity.Id).Result;
 
             // Assert
             updateProfileResponse.StatusCode.ShouldBe(400);
         }
 
-        [Fact]
-        public void Invalid_update_profile_email_format()
-        {
-            // Arrange
-            using var scope = Factory.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-            var controller = CreateController(scope);
-            var invalidEntity = new PersonResponseDto
-            {
-                Id = -11,
-                UserId = -9999,
-                Name = "Nikola",
-                Surname = "Nikolic",
-                Email = "nikola.nikolic",
-                ProfilePicture = "nikola.jpg",
-                Bio = "Programator",
-                Moto = "Clean code bajo"
-            };
 
-            // Act
-            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity).Result;
-
-            // Assert
-            updateProfileResponse.StatusCode.ShouldBe(400);
-        }
-
-        public void Invalid_update_profile_email()
-        {
-            // Arrange
-            using var scope = Factory.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-            var controller = CreateController(scope);
-            var invalidEntity = new PersonResponseDto
-            {
-                Id = -11,
-                UserId = -9999,
-                Name = "Nikola",
-                Surname = "Nikolic",
-                Email = "nikola.nikolic",
-                ProfilePicture = "nikola.jpg",
-                Bio = "Programator",
-                Moto = "Clean code bajo"
-            };
-
-            // Act
-            var updateProfileResponse = (ObjectResult)controller.Update(invalidEntity).Result;
-
-            // Assert
-            updateProfileResponse.StatusCode.ShouldBe(400);
-        }
 
         private static PersonController CreateController(IServiceScope scope)
         {
