@@ -13,10 +13,10 @@ namespace Explorer.API.Controllers.Tourist
     [Route("api/tourexecution/tourexecution")]
     public class TourExecutionSessionController : BaseApiController
     {
-        private readonly ITourExecutionService _tourExecutionService;
+        private readonly ITourExecutionSessionService _tourExecutionService;
         private readonly ITourService _tourService;
 
-        public TourExecutionSessionController(ITourExecutionService tourExecutionService, ITourService tourService)
+        public TourExecutionSessionController(ITourExecutionSessionService tourExecutionService, ITourService tourService)
         {
             _tourExecutionService = tourExecutionService;
             _tourService = tourService;

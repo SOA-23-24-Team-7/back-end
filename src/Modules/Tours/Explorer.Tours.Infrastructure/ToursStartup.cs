@@ -53,7 +53,7 @@ public static class ToursStartup
 
         services.AddScoped<ITouristEquipmentService, TouristEquipmentService>();
 
-        services.AddScoped<ITourExecutionService, TourExecutionSessionService>();
+        services.AddScoped<ITourExecutionSessionService, TourExecutionSessionService>();
 
         services.AddScoped<ITouristPositionService, TouristPositionService>();
 

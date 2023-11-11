@@ -9,7 +9,7 @@ using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases
 {
-    public class TourExecutionSessionService : BaseService<TourExecutionSession>, ITourExecutionService
+    public class TourExecutionSessionService : BaseService<TourExecutionSession>, ITourExecutionSessionService
     {
         private readonly ITourExecutionSessionRepository _tourExecutionRepository;
         private readonly IKeyPointRepository _keyPointRepository;
@@ -18,14 +18,14 @@ namespace Explorer.Tours.Core.UseCases
             _tourExecutionRepository = tourExecutionRepository;
             _keyPointRepository = keyPointRepository;
         }
-        public Result<TourExecutionResponseDto> StartTour(long tourId, long touristId)
+        public Result<TourExecutionSessionResponseDto> StartTour(long tourId, long touristId)
         {
             long keyPointId = _keyPointRepository.GetByTourId(tourId)[0].Id;
             TourExecutionSession tourExecution = new TourExecutionSession(tourId, touristId, keyPointId);
             _tourExecutionRepository.Add(tourExecution);
-            return MapToDto<TourExecutionResponseDto>(tourExecution);
+            return MapToDto<TourExecutionSessionResponseDto>(tourExecution);
         }
-        public Result<TourExecutionResponseDto> AbandonTour(long tourId, long touristId)
+        public Result<TourExecutionSessionResponseDto> AbandonTour(long tourId, long touristId)
         {
             TourExecutionSession execution = _tourExecutionRepository.Get(tourId, touristId);
             if (execution.Status != TourExecutionSessionStatus.Started)
@@ -33,10 +33,10 @@ namespace Explorer.Tours.Core.UseCases
                 return null;
             }
             execution = _tourExecutionRepository.Abandon(tourId, touristId);
-            return MapToDto<TourExecutionResponseDto>(execution);
+            return MapToDto<TourExecutionSessionResponseDto>(execution);
         }
 
-        public Result<TourExecutionResponseDto> CompleteKeyPoint(long tourId, long touristId)
+        public Result<TourExecutionSessionResponseDto> CompleteKeyPoint(long tourId, long touristId)
         {
             TourExecutionSession tourExecution = _tourExecutionRepository.Get(tourId, touristId);
             if(tourExecution.Status != TourExecutionSessionStatus.Started)
@@ -61,7 +61,7 @@ namespace Explorer.Tours.Core.UseCases
                     }
                 }
             }
-            return MapToDto<TourExecutionResponseDto>(tourExecution);
+            return MapToDto<TourExecutionSessionResponseDto>(tourExecution);
         }
     }
 }
