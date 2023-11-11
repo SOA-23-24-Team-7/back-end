@@ -1,6 +1,8 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -12,10 +14,25 @@ namespace Explorer.API.Controllers.Tourist
     public class TourExecutionSessionController : BaseApiController
     {
         private readonly ITourExecutionService _tourExecutionService;
+        private readonly ITourService _tourService;
 
-        public TourExecutionSessionController(ITourExecutionService tourExecutionService)
+        public TourExecutionSessionController(ITourExecutionService tourExecutionService, ITourService tourService)
         {
             _tourExecutionService = tourExecutionService;
+            _tourService = tourService;
+        }
+        [HttpGet]
+        [Route("purchasedtours")]
+        public ActionResult<PagedResult<TourResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _tourService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }
+        [HttpGet("{tourId:long}")]
+        public ActionResult<PagedResult<TourResponseDto>> GetById(long tourId)
+        {
+            var result = _tourService.GetById(tourId);
+            return CreateResponse(result);
         }
         [HttpPost]
         [Route("")]

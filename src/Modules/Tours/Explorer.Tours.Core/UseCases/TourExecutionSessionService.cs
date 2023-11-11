@@ -44,20 +44,20 @@ namespace Explorer.Tours.Core.UseCases
                 return null;
             }
             List<KeyPoint> keyPoints = _keyPointRepository.GetByTourId(tourId);
-            for(int i = 0; i < keyPoints.Count; i++)
+            for (int i = 0; i < keyPoints.Count; i++)
             {
                 if (keyPoints[i].Id == tourExecution.NextKeyPointId)
                 {
                     //ako je kompletirao poslednju kljucnu tacku -> kompletiraj turu
-                    if ((i + 1) >= keyPoints.Count)
+                    if (i + 1 >= keyPoints.Count)
                     {
-                       tourExecution = _tourExecutionRepository.CompleteTourExecution(tourExecution.Id);
-                       break;
+                        tourExecution = _tourExecutionRepository.CompleteTourExecution(tourExecution.Id);
+                        break;
                     }
                     else
                     {
-                       tourExecution = _tourExecutionRepository.UpdateNextKeyPoint(tourExecution.Id, keyPoints[i+1].Id);
-                       break;
+                        tourExecution = _tourExecutionRepository.UpdateNextKeyPoint(tourExecution.Id, keyPoints[i + 1].Id);
+                        break;
                     }
                 }
             }
