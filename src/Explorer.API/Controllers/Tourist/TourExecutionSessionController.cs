@@ -9,11 +9,11 @@ namespace Explorer.API.Controllers.Tourist
 {
     [Authorize(Policy = "touristPolicy")]
     [Route("api/tourexecution/tourexecution")]
-    public class TourExecutionController : BaseApiController
+    public class TourExecutionSessionController : BaseApiController
     {
         private readonly ITourExecutionService _tourExecutionService;
 
-        public TourExecutionController(ITourExecutionService tourExecutionService)
+        public TourExecutionSessionController(ITourExecutionService tourExecutionService)
         {
             _tourExecutionService = tourExecutionService;
         }

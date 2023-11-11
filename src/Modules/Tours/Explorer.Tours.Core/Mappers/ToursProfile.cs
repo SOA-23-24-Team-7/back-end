@@ -40,7 +40,7 @@ public class ToursProfile : Profile
         CreateMap<TouristEquipmentCreateDto, TouristEquipment>().ReverseMap();
         CreateMap<TouristEquipmentUpdateDto, TouristEquipment>().ReverseMap();
 
-        CreateMap<TourExecutionResponseDto, TourExecution>().ReverseMap();
+        CreateMap<TourExecutionResponseDto, TourExecutionSession>().ReverseMap();
 
         CreateMap<TouristPositionResponseDto, TouristPosition>().ReverseMap();
         CreateMap<TouristPositionCreateDto, TouristPosition>().ReverseMap();
