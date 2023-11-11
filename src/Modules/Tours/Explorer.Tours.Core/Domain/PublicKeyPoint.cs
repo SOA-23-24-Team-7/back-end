@@ -15,8 +15,9 @@ namespace Explorer.Tours.Core.Domain
         public double Latitude { get; init; }
         public string ImagePath { get; init; }
         public long Order { get; init; }
+        public string LocationAddress { get; init; }
 
-        public PublicKeyPoint(string name, string description, double longitude, double latitude, string imagePath, long order)
+        public PublicKeyPoint(string name, string description, double longitude, double latitude, string imagePath, long order, string locationAddress)
         {
             Name = name;
             Description = description;
@@ -25,6 +26,7 @@ namespace Explorer.Tours.Core.Domain
             ImagePath = imagePath;
             Order = order;
             Validate();
+            LocationAddress = locationAddress;
         }
 
         private void Validate()

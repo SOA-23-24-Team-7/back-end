@@ -103,7 +103,7 @@ namespace Explorer.Tours.Core.UseCases
         {
             //dobavljanje keypointa za koji je poslat zahtjev, preko njega pravim public keypoint
             var keyPoint = _keyPointRepository.Get(request.KeyPointId);
-            _publicKeyPointRepository.Create(new PublicKeyPoint(keyPoint.Name, keyPoint.Description, keyPoint.Longitude, keyPoint.Latitude, keyPoint.ImagePath, keyPoint.Order));
+            _publicKeyPointRepository.Create(new PublicKeyPoint(keyPoint.Name, keyPoint.Description, keyPoint.Longitude, keyPoint.Latitude, keyPoint.ImagePath, keyPoint.Order, keyPoint.LocationAddress));
         }
 
         public Result<PagedResult<PublicKeyPointRequestResponseDto>> GetPagedWithName(int page, int pageSize)
