@@ -1,5 +1,6 @@
 ﻿using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,14 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             //todo: provera da li postoji tour execution
             TourExecution execution = _dbContext.TourExecutions.FirstOrDefault(t => t.TourId == tourId && t.TouristId == touristId);
             return execution;
+        }
+        public List<TourExecution> GetForTourist(long touristId)
+        {
+            return _dbContext.TourExecutions.Where(te => te.TouristId == touristId).ToList();
+        }
+        public TourExecution? GetLive(long touristId)
+        {
+            return _dbContext.TourExecutions.Where(te => te.TouristId == touristId && te.Status == TourExecutionStatus.Started).FirstOrDefault();
         }
     }
 }

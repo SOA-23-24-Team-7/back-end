@@ -13,5 +13,7 @@ namespace Explorer.Tours.API.Public
         Result<TourExecutionResponseDto> StartTour(long tourId, long touristId);
         Result<TourExecutionResponseDto> AbandonTour(long tourId, long touristId);
         Result<TourExecutionResponseDto> CompleteKeyPoint(long tourId, long touristId);
+        Result<List<TourExecutionInfoDto>> GetAllFor(long touristId);
+        Result<TourExecutionResponseDto> GetLive(long touristId);
     }
 }

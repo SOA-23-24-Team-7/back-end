@@ -4,6 +4,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -21,17 +22,21 @@ namespace Explorer.API.Controllers.Tourist
         }
         [HttpPost]
         [Route("")]
-        public ActionResult<PagedResult<ClubResponseDto>> StartTour(long tourId)
+        public ActionResult<PagedResult<TourExecutionResponseDto>> StartTour(long tourId)
         {
             // treba provera da li je tura kupljena
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId = long.Parse(identity.FindFirst("id").Value);
+            if(_tourExecutionService.GetLive(touristId) != null)
+            {
+                return Conflict();
+            }
             var result = _tourExecutionService.StartTour(tourId, touristId);
             return CreateResponse(result);
         }
         [HttpPut]
         [Route("abandoning")]
-        public ActionResult<PagedResult<ClubResponseDto>> AbandonTour(long tourId)
+        public ActionResult<PagedResult<TourExecutionResponseDto>> AbandonTour(long tourId)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId = long.Parse(identity.FindFirst("id").Value);
@@ -44,7 +49,7 @@ namespace Explorer.API.Controllers.Tourist
         }
         [HttpPut]
         [Route("keypoint")]
-        public ActionResult<PagedResult<ClubResponseDto>> CompleteKeyPoint(long tourId)
+        public ActionResult<PagedResult<TourExecutionResponseDto>> CompleteKeyPoint(long tourId)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId = long.Parse(identity.FindFirst("id").Value);
@@ -56,12 +61,13 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
         [HttpGet]
-        [Route("Test")]
-        public ActionResult<PagedResult<TourResponseDto>> GetExecutedTour(long tourExecutionId)
+        [Route("allInfo")]
+        public ActionResult<PagedResult<TourExecutionInfoDto>> GetExecutedToursInfo()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId = long.Parse(identity.FindFirst("id").Value);
-            throw new NotImplementedException("Nisam jos uradio");
+            var result = _tourExecutionService.GetAllFor(touristId);
+            return CreateResponse(result);
         }
         [HttpGet]
         [Route("live")]
@@ -69,7 +75,12 @@ namespace Explorer.API.Controllers.Tourist
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId = long.Parse(identity.FindFirst("id").Value);
-            throw new NotImplementedException("Nisam jos uradio");
+            var result = _tourExecutionService.GetLive(touristId);
+            if(result == null)
+            {
+                return NoContent();
+            }
+            return CreateResponse(result);
         }
     }
 }

@@ -8,6 +8,7 @@ using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,10 +19,14 @@ namespace Explorer.Tours.Core.UseCases
     {
         private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly IKeyPointRepository _keyPointRepository;
-        public TourExecutionService(IMapper mapper, ITourExecutionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository) : base(mapper)
+        private readonly ITourRepository _tourRepository;
+        private readonly IMapper _mapper;
+        public TourExecutionService(IMapper mapper, ITourExecutionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository, ITourRepository tourRepository) : base(mapper)
         {
             _tourExecutionRepository = tourExecutionRepository;
             _keyPointRepository = keyPointRepository;
+            _tourRepository = tourRepository;
+            this._mapper = mapper;
         }
         public Result<TourExecutionResponseDto> StartTour(long tourId, long touristId)
         {
@@ -68,15 +73,28 @@ namespace Explorer.Tours.Core.UseCases
             }
             return MapToDto<TourExecutionResponseDto>(tourExecution);
         }
-        public Result<TourResponseDto> GetAllFor(long touristId)
+        public Result<List<TourExecutionInfoDto>> GetAllFor(long touristId)
         {
+            var tourExecutions = _tourExecutionRepository.GetForTourist(touristId);
+            List<TourExecutionInfoDto> tourExecutionInfos = new List<TourExecutionInfoDto>();
+            foreach(TourExecution tourExecution in tourExecutions)
+            {
+                var tour = _tourRepository.GetById(tourExecution.TourId);
+                var tourExecutionInfo = this._mapper.Map<TourExecutionInfoDto>(tour);
+                this._mapper.Map(tour, tourExecutionInfo);
+                tourExecutionInfos.Add(tourExecutionInfo);
+            }
 
-            throw new NotImplementedException("Nisam jos uradio");
+            return tourExecutionInfos;
         }
-        public Result<TourResponseDto> GetLive(long touristId)
+        public Result<TourExecutionResponseDto> GetLive(long touristId)
         {
-            //var liveTourExecution = _tourExecutionRepository.GetLive(touristId);
-            throw new NotImplementedException("Nisam jos uraido");
+            var liveTourExecution = _tourExecutionRepository.GetLive(touristId);
+            if (liveTourExecution == null)
+            {
+                return null;
+            }
+            return MapToDto<TourExecutionResponseDto>(liveTourExecution);
         }
     }
 }

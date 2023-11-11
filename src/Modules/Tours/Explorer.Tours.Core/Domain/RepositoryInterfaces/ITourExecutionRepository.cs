@@ -13,5 +13,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         TourExecution Abandon(long tourId, long touristId);
         TourExecution UpdateNextKeyPoint(long tourExecutionId, long nextKeyPointId);
         TourExecution CompleteTourExecution(long tourExecutionId);
+        List<TourExecution> GetForTourist(long touristId);
+        TourExecution? GetLive(long touristId);
     }
 }
