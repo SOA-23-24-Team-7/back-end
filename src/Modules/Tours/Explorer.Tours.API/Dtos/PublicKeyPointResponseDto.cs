@@ -15,5 +15,6 @@ namespace Explorer.Tours.API.Dtos
         public double Latitude { get; set; }
         public string ImagePath { get; set; }
         public long Order { get; set; }
+        public string LocationAddress { get; set; }
     }
 }
