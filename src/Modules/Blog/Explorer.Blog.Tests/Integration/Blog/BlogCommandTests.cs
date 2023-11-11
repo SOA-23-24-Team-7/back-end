@@ -1,4 +1,5 @@
 ﻿using Explorer.API.Controllers;
+using Explorer.API.Controllers.Tourist;
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.Blog.Infrastructure.Database;
@@ -23,7 +24,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
         {
             // Arrangeusing var scope = Factory.Services.CreateScope();
             using var scope = Factory.Services.CreateScope();
-            var controller = CreateController(scope);
+            var controller = CreateBlogController(scope);
 
             var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-12") }, "test");
 
@@ -42,7 +43,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
                 Title = "Predlog",
                 Description = "Test",
                 Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                Status = BlogStatus.Published,
+                Status = API.Dtos.BlogStatus.Published,
                 AuthorId = -12
             };
 
@@ -64,7 +65,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
         {
             // Arrange
             using var scope = Factory.Services.CreateScope();
-            var controller = CreateController(scope);
+            var controller = CreateBlogController(scope);
 
             var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-12") }, "test");
 
@@ -94,10 +95,74 @@ namespace Explorer.Blog.Tests.Integration.Blog
             result.StatusCode.ShouldBe(400);
         }
 
+        [Fact]
+        public void UpdateBlogStatus()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controllerBlog1 = CreateBlogController(scope);
+            var controllerBlog2 = CreateBlogController(scope);
+            var controllerComment1 = CreateCommentController(scope);
+            var controllerComment2 = CreateCommentController(scope);
 
-        private static BlogController CreateController(IServiceScope scope)
+            var contextUser1 = new ClaimsIdentity(new Claim[] { new Claim("id", "-11") }, "test1");
+            var contextUser2 = new ClaimsIdentity(new Claim[] { new Claim("id", "-13") }, "test2");
+
+            var context1 = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser1)
+            };
+
+            var context2 = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser2)
+            };
+
+            controllerBlog1.ControllerContext = new ControllerContext
+            {
+                HttpContext = context1
+            };
+            controllerBlog2.ControllerContext = new ControllerContext
+            {
+                HttpContext = context2
+            };
+            controllerComment1.ControllerContext = new ControllerContext
+            {
+                HttpContext = context1
+            };
+            controllerComment2.ControllerContext = new ControllerContext
+            {
+                HttpContext = context2
+            };
+            var newEntity1 = new CommentCreateDto()
+            {
+                BlogId = -1,
+                Text = "Komentar 2"
+            };
+
+            // Act
+            controllerBlog1.Upvote(-1);
+            controllerBlog2.Upvote(-1);
+            controllerComment1.Create(newEntity1);
+            var result = controllerBlog1.Get(-1).Result as ObjectResult;
+
+            // Assert
+            result.ShouldNotBeNull();
+            var resultValue = result.Value as BlogResponseDto;
+            resultValue.Status.ShouldBe(API.Dtos.BlogStatus.Active);
+        }
+
+        private static BlogController CreateBlogController(IServiceScope scope)
         {
             return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>())
+            {
+                ControllerContext = BuildContext("-1")
+            };
+        }
+
+        private static CommentController CreateCommentController(IServiceScope scope)
+        {
+            return new CommentController(scope.ServiceProvider.GetRequiredService<ICommentService>(), scope.ServiceProvider.GetRequiredService<IBlogService>())
             {
                 ControllerContext = BuildContext("-1")
             };

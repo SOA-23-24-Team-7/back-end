@@ -2,7 +2,7 @@
 
 namespace Explorer.Blog.API.Dtos
 {
-    public enum BlogStatus { Draft, Published, Closed };
+    public enum BlogStatus { Draft, Published, Closed, Active, Famous };
     public class BlogResponseDto
     {
         public int Id { get; set; }
