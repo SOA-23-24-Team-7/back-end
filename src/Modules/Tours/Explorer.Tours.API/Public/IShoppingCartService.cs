@@ -19,5 +19,6 @@ namespace Explorer.Tours.API.Public
         public bool IsPurchased(long id);
         Result AddOrderItem(OrderItemCreateDto item);
         Result RemoveOrderItem(long id, long shoppingCartId);
+        Result<OrderItemResponseDto> GetItemByTourId(long tourId, long touristId);
     }
 }

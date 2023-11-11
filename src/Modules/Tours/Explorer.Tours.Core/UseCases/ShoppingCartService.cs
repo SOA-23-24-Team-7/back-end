@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -93,6 +94,19 @@ namespace Explorer.Tours.Core.UseCases
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
+        }
+        public Result<OrderItemResponseDto> GetItemByTourId(long tourId,long touristId)
+        {
+                var cart = _cartRepository.GetByTouristId(touristId);
+            OrderItemResponseDto orderItemDto = new OrderItemResponseDto();
+                foreach (var item in cart.OrderItems)
+                {
+                    if (item.TourId == tourId)
+                    {
+                        orderItemDto = _mapper.Map<OrderItemResponseDto>(item);
+                    }
+                }
+            return orderItemDto;
         }
 
     }

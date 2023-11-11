@@ -76,5 +76,12 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
 
         }
+        [HttpGet("getItem/{tourId:long}/{touristId:long}")]
+        public ActionResult GetItemByTourId(long tourId,long touristId)
+        {
+            var result = _cartService.GetItemByTourId(tourId,touristId);
+            return CreateResponse(result);
+
+        }
     }
 }
