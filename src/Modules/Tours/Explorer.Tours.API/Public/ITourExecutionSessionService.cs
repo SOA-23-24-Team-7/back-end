@@ -12,6 +12,6 @@ namespace Explorer.Tours.API.Public
     {
         Result<TourExecutionSessionResponseDto> StartTour(long tourId, long touristId);
         Result<TourExecutionSessionResponseDto> AbandonTour(long tourId, long touristId);
-        Result<TourExecutionSessionResponseDto> CompleteKeyPoint(long tourId, long touristId);
+        Result<TourExecutionSessionResponseDto> CheckKeyPointCompletion(long tourId, long touristId, double longitude, double latitude);
     }
 }
