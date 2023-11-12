@@ -13,6 +13,7 @@
         public bool IsDeleted { get; set; }
         public double Distance { get; set; }
         public DateTime PublishDate { get; set; }
+        public DateTime ArchiveDate { get; set; }
         public List<TourDurationUpdateDto> Durations { get; set; }
     }
 }

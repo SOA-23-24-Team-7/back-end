@@ -10,22 +10,36 @@ public class KeyPoint : Entity
     public string Description { get; init; }
     public double Longitude { get; init; }
     public double Latitude { get; init; }
+    public string LocationAddress { get; init; }
     public string ImagePath { get; init; }
     public long Order { get; init; }
     public bool HaveSecret { get; init; }
     public KeyPointSecret? Secret { get; private set; }
 
-    public KeyPoint(long tourId, string name, string description, double longitude, double latitude, string imagePath, long order, KeyPointSecret? secret)
+    public KeyPoint(long tourId, string name, string description, double longitude, double latitude, string locationAddress, string imagePath, long order, KeyPointSecret? secret)
     {
         TourId = tourId;
         Name = name;
         Description = description;
         Longitude = longitude;
         Latitude = latitude;
+        LocationAddress = locationAddress;
         ImagePath = imagePath;
         Order = order;
         HaveSecret = secret != null;
         Secret = secret;
+        Validate();
+    }
+
+    public KeyPoint(long tourId, PublicKeyPoint publicKeyPoint) 
+    {
+        TourId = tourId;
+        Name = publicKeyPoint.Name;
+        Description = publicKeyPoint.Description;
+        Longitude = publicKeyPoint.Longitude;
+        Latitude = publicKeyPoint.Latitude;
+        ImagePath = publicKeyPoint.ImagePath;
+        Order= publicKeyPoint.Order;
         Validate();
     }
 
@@ -36,6 +50,7 @@ public class KeyPoint : Entity
         if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description");
         if (Longitude < -180 || Longitude > 180) throw new ArgumentException("Invalid Longitude");
         if (Latitude < -90 || Latitude > 90) throw new ArgumentException("Invalid Latitude");
+        if (string.IsNullOrWhiteSpace(LocationAddress)) throw new ArgumentException("Invalid Location Address");
         if (string.IsNullOrWhiteSpace(ImagePath)) throw new ArgumentException("Invalid ImagePath");
     }
 

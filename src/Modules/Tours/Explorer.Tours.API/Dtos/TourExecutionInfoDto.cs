@@ -18,6 +18,6 @@ namespace Explorer.Tours.API.Dtos
 
         //Tour execution info
         public DateTime LastActivity { get; private set; }
-        public TourExecutionStatus TourExecutionStatus { get; private set; }
+        public TourExecutionSessionStatus TourExecutionStatus { get; private set; }
     }
 }

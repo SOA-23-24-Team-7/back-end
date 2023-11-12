@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain
 {
-    public class TourExecution : Entity
+    public class TourExecutionSession : Entity
     {
-        public TourExecutionStatus Status { get; private set; }
+        public TourExecutionSessionStatus Status { get; private set; }
         public long TourId { get; init; }
         public long TouristId { get; init; }
         public long NextKeyPointId { get; private set; }
         public DateTime LastActivity { get; private set; }
-        public TourExecution(long tourId, long touristId, long nextKeyPointId) 
+        public TourExecutionSession(long tourId, long touristId, long nextKeyPointId) 
         {
-            Status = TourExecutionStatus.Started;
+            Status = TourExecutionSessionStatus.Started;
             LastActivity = DateTime.UtcNow;
             TourId = tourId;
             TouristId = touristId;
@@ -25,12 +25,12 @@ namespace Explorer.Tours.Core.Domain
         public void Abandon()
         {
             LastActivity = DateTime.UtcNow;
-            Status = TourExecutionStatus.Abandoned;
+            Status = TourExecutionSessionStatus.Abandoned;
         }
         public void Complete()
         {
             LastActivity = DateTime.UtcNow;
-            Status = TourExecutionStatus.Completed;
+            Status = TourExecutionSessionStatus.Completed;
             NextKeyPointId = -1;
         }
         public void SetNextKeyPointId(long keyPointId)
@@ -41,7 +41,7 @@ namespace Explorer.Tours.Core.Domain
     }
 }
 
-public enum TourExecutionStatus
+public enum TourExecutionSessionStatus
 {
     Started,
     Abandoned,
