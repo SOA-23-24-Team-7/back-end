@@ -36,9 +36,5 @@ namespace Explorer.Tours.Core.Domain
             if (string.IsNullOrWhiteSpace(ImagePath)) throw new ArgumentException("Invalid ImagePath");
         }
 
-        public void CreatePrivateKeyPoint()
-        {
-
-        }
     }
 }

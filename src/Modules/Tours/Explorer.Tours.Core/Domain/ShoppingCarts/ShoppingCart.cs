@@ -24,8 +24,13 @@ namespace Explorer.Tours.Core.Domain.ShoppingCarts
             TouristId = touristId;
             SetTotalPrice();
             IsPurchased = isPurchased;  //provjeriti
+            Validate();
         }
 
+        private void Validate()
+        {
+            if (TotalPrice < 0) throw new ArgumentException("Invalid total price.");
+        }
 
         public void AddOrderItem(OrderItem newOrderItem)
         {

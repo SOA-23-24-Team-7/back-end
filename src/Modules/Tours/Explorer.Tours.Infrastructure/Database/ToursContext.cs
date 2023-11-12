@@ -39,7 +39,7 @@ public class ToursContext : DbContext
         ConfigurePublicKeyPointRequest(modelBuilder);
         ConfigurePublicFacilityRequest(modelBuilder);
         ConfigureNotification(modelBuilder);
-        ConfigureShoppingCart(modelBuilder);
+        ConfigureOrderItem(modelBuilder);
         modelBuilder.Entity<Core.Domain.Tours.Tour>().Property(item => item.Durations).HasColumnType("jsonb");
     }
 
@@ -84,15 +84,12 @@ public class ToursContext : DbContext
         .HasForeignKey<PublicKeyPointNotification>(s => s.RequestId);
     }
 
-    private static void ConfigureShoppingCart(ModelBuilder modelBuilder)
+    private static void ConfigureOrderItem(ModelBuilder modelBuilder)
     {
-        /*modelBuilder.Entity<ShoppingCart>()
-            .HasMany(s => s.OrderItems)
-            .WithOne();
-
-        */
-
-
+        modelBuilder.Entity<OrderItem>()
+            .HasOne<Tour>()
+            .WithOne()
+            .HasForeignKey<OrderItem>(o => o.TourId);
     }
 
 }
