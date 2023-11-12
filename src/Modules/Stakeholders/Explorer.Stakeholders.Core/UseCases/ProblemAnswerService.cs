@@ -8,22 +8,22 @@ using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class ProblemAnswerService : CrudService<ProblemAnswerResponseDto, ProblemAnswer>, IProblemAnswerService
-    {
-        private readonly IProblemAnswerRepository _problemAnswerRepository;
-        public ProblemAnswerService(ICrudRepository<ProblemAnswer> repository, IProblemAnswerRepository problemAnswerRepository, IMapper mapper) : base(repository, mapper)
-        {
-            _problemAnswerRepository = problemAnswerRepository;
-        }
+    //public class ProblemAnswerService : CrudService<ProblemAnswerResponseDto, ProblemAnswer>, IProblemAnswerService
+    //{
+    //    private readonly IProblemAnswerRepository _problemAnswerRepository;
+    //    public ProblemAnswerService(ICrudRepository<ProblemAnswer> repository, IProblemAnswerRepository problemAnswerRepository, IMapper mapper) : base(repository, mapper)
+    //    {
+    //        _problemAnswerRepository = problemAnswerRepository;
+    //    }
 
-        public bool DoesAnswerExistsForProblem(long problemId)
-        {
-            return _problemAnswerRepository.DoesAnswerExistsForProblem(problemId);
-        }
+    //    public bool DoesAnswerExistsForProblem(long problemId)
+    //    {
+    //        return _problemAnswerRepository.DoesAnswerExistsForProblem(problemId);
+    //    }
 
-        public Result<ProblemAnswerResponseDto> GetByProblem(long problemId)
-        {
-            return MapToDto<ProblemAnswerResponseDto>(_problemAnswerRepository.GetByProblem(problemId));
-        }
-    }
+    //    public Result<ProblemAnswerResponseDto> GetByProblem(long problemId)
+    //    {
+    //        return MapToDto<ProblemAnswerResponseDto>(_problemAnswerRepository.GetByProblem(problemId));
+    //    }
+    //}
 }

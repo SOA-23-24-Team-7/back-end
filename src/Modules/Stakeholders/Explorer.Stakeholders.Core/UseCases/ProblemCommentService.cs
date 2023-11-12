@@ -8,17 +8,17 @@ using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class ProblemCommentService : CrudService<ProblemCommentResponseDto, ProblemComment>, IProblemCommentService
-    {
-        private readonly IProblemCommentRepository _problemCommentRepository;
-        public ProblemCommentService(ICrudRepository<ProblemComment> repository, IProblemCommentRepository problemCommentRepository, IMapper mapper) : base(repository, mapper)
-        {
-            _problemCommentRepository = problemCommentRepository;
-        }
+    //public class ProblemCommentService : CrudService<ProblemCommentResponseDto, ProblemComment>, IProblemCommentService
+    //{
+    //    private readonly IProblemCommentRepository _problemCommentRepository;
+    //    public ProblemCommentService(ICrudRepository<ProblemComment> repository, IProblemCommentRepository problemCommentRepository, IMapper mapper) : base(repository, mapper)
+    //    {
+    //        _problemCommentRepository = problemCommentRepository;
+    //    }
 
-        public Result<PagedResult<ProblemCommentResponseDto>> GetPagedByProblemAnswerId(int page, int pageSize, long adminId)
-        {
-            return MapToDto<ProblemCommentResponseDto>(_problemCommentRepository.GetPagedByProblemAnswerId(page, pageSize, adminId));
-        }
-    }
+    //    public Result<PagedResult<ProblemCommentResponseDto>> GetPagedByProblemAnswerId(int page, int pageSize, long adminId)
+    //    {
+    //        return MapToDto<ProblemCommentResponseDto>(_problemCommentRepository.GetPagedByProblemAnswerId(page, pageSize, adminId));
+    //    }
+    //}
 }

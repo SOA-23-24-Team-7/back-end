@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using System.Xml.Linq;
 
 namespace Explorer.Stakeholders.Core.Domain
 {
@@ -11,7 +12,8 @@ namespace Explorer.Stakeholders.Core.Domain
         public long TouristId { get; init; }
         public User Tourist { get; init; }
         public int TourId { get; init; }
-        public long AnswerId { get; private set; } = 0;
+        public ProblemAnswer Answer { get; set; }
+        public ICollection<ProblemComment> Comments { get; set; } = new List<ProblemComment>();
         public bool IsResolved { get; set; } = false;
         public bool IsAnswered { get; set; } = false;
         public DateTime Deadline { get; private set; } = DateTime.MaxValue;
@@ -27,10 +29,10 @@ namespace Explorer.Stakeholders.Core.Domain
             TourId = tourId;
         }
 
-        public void UpdateAnswerId(long answerId)
-        {
-            AnswerId = answerId;
-        }
+        //public void UpdateAnswerId(long answerId)
+        //{
+        //    AnswerId = answerId;
+        //}
 
         public void UpdateIsAnswered(bool isAnswered)
         {

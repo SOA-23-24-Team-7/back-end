@@ -4,25 +4,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 {
-    public class ProblemAnswerDatabaseRepository : IProblemAnswerRepository
-    {
-        private readonly StakeholdersContext _dbContext;
-        private readonly DbSet<ProblemAnswer> _dbSet;
-        public ProblemAnswerDatabaseRepository(StakeholdersContext dbContext)
-        {
-            _dbContext = dbContext;
-            _dbSet = _dbContext.Set<ProblemAnswer>();
-        }
+    //public class ProblemAnswerDatabaseRepository : IProblemAnswerRepository
+    //{
+    //    private readonly StakeholdersContext _dbContext;
+    //    private readonly DbSet<ProblemAnswer> _dbSet;
+    //    public ProblemAnswerDatabaseRepository(StakeholdersContext dbContext)
+    //    {
+    //        _dbContext = dbContext;
+    //        _dbSet = _dbContext.Set<ProblemAnswer>();
+    //    }
 
-        public bool DoesAnswerExistsForProblem(long problemId)
-        {
-            bool task = _dbSet.Any(obj => obj.ProblemId == problemId);
-            return task;
-        }
+    //    public bool DoesAnswerExistsForProblem(long problemId)
+    //    {
+    //        bool task = _dbSet.Any(obj => obj.ProblemId == problemId);
+    //        return task;
+    //    }
 
-        public ProblemAnswer GetByProblem(long problemId)
-        {
-            return _dbSet.FirstOrDefault(x => x.ProblemId == problemId);
-        }
-    }
+    //    public ProblemAnswer GetByProblem(long problemId)
+    //    {
+    //        return _dbSet.FirstOrDefault(x => x.ProblemId == problemId);
+    //    }
+    //}
 }

@@ -45,7 +45,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             try
             {
                 var problem = CrudRepository.Get(problemId);
-                problem.UpdateAnswerId(answerId);
+                //problem.UpdateAnswerId(answerId);
                 var result = CrudRepository.Update(problem);
                 return MapToDto<ProblemResponseDto>(result);
             }

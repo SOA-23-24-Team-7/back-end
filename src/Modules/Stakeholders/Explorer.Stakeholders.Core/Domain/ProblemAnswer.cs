@@ -1,17 +1,17 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using System.Text.Json.Serialization;
 
 namespace Explorer.Stakeholders.Core.Domain
 {
-    public class ProblemAnswer : Entity
+    public class ProblemAnswer : ValueObject
     {
         public long AuthorId { get; private set; }
-        public long ProblemId { get; private set; }
         public string Answer { get; private set; }
 
-        public ProblemAnswer(long authorId, long problemId, string answer)
+        [JsonConstructor]
+        public ProblemAnswer(long authorId, string answer)
         {
             AuthorId = authorId;
-            ProblemId = problemId;
             Answer = answer;
             Validate();
         }
@@ -19,6 +19,11 @@ namespace Explorer.Stakeholders.Core.Domain
         private void Validate()
         {
             if (string.IsNullOrWhiteSpace(Answer)) throw new ArgumentException("Invalid Answer");
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return AuthorId;
         }
     }
 }
