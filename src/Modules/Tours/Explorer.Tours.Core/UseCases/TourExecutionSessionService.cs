@@ -13,11 +13,14 @@ namespace Explorer.Tours.Core.UseCases
     {
         private readonly ITourExecutionSessionRepository _tourExecutionRepository;
         private readonly IKeyPointRepository _keyPointRepository;
-
-        public TourExecutionSessionService(IMapper mapper, ITourExecutionSessionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository) : base(mapper)
+        private readonly ITourRepository _tourRepository;
+        private readonly IMapper _mapper;
+        public TourExecutionSessionService(IMapper mapper, ITourExecutionSessionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository, ITourRepository tourRepository) : base(mapper)
         {
             _tourExecutionRepository = tourExecutionRepository;
             _keyPointRepository = keyPointRepository;
+            _tourRepository = tourRepository;
+            _mapper = mapper;
         }
 
         public Result<TourExecutionSessionResponseDto> StartTour(long tourId, long touristId)
@@ -69,6 +72,29 @@ namespace Explorer.Tours.Core.UseCases
                 }
             }
             return MapToDto<TourExecutionSessionResponseDto>(tourExecution);
+        }
+        public Result<List<TourExecutionInfoDto>> GetAllFor(long touristId)
+        {
+            var tourExecutions = _tourExecutionRepository.GetForTourist(touristId);
+            List<TourExecutionInfoDto> tourExecutionInfos = new List<TourExecutionInfoDto>();
+            foreach (TourExecutionSession tourExecution in tourExecutions)
+            {
+                var tour = _tourRepository.GetById(tourExecution.TourId);
+                var tourExecutionInfo = this._mapper.Map<TourExecutionInfoDto>(tour);
+                this._mapper.Map(tour, tourExecutionInfo);
+                tourExecutionInfos.Add(tourExecutionInfo);
+            }
+
+            return tourExecutionInfos;
+        }
+        public Result<TourExecutionSessionResponseDto> GetLive(long touristId)
+        {
+            var liveTourExecution = _tourExecutionRepository.GetLive(touristId);
+            if (liveTourExecution == null)
+            {
+                return null;
+            }
+            return MapToDto<TourExecutionSessionResponseDto>(liveTourExecution);
         }
     }
 }

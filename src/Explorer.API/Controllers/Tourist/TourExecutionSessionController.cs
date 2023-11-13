@@ -6,6 +6,7 @@ using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -45,6 +46,10 @@ namespace Explorer.API.Controllers.Tourist
             // treba provera da li je tura kupljena
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId = long.Parse(identity.FindFirst("id").Value);
+            if(_tourExecutionService.GetLive(touristId) != null)
+            {
+                return Conflict();
+            }
             var result = _tourExecutionService.StartTour(tourId, touristId);
             return CreateResponse(result);
         }
@@ -73,6 +78,28 @@ namespace Explorer.API.Controllers.Tourist
             if(result == null)
             {
                 return BadRequest();
+            }
+            return CreateResponse(result);
+        }
+        [HttpGet]
+        [Route("allInfo")]
+        public ActionResult<PagedResult<TourExecutionInfoDto>> GetExecutedToursInfo()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long touristId = long.Parse(identity.FindFirst("id").Value);
+            var result = _tourExecutionService.GetAllFor(touristId);
+            return CreateResponse(result);
+        }
+        [HttpGet]
+        [Route("live")]
+        public ActionResult<PagedResult<TourExecutionSessionResponseDto>> GetLiveTour()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long touristId = long.Parse(identity.FindFirst("id").Value);
+            var result = _tourExecutionService.GetLive(touristId);
+            if(result == null)
+            {
+                return NoContent();
             }
             return CreateResponse(result);
         }
