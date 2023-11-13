@@ -33,6 +33,7 @@ namespace Explorer.Tours.Core.Domain
         {
             LastActivity = DateTime.UtcNow;
             Status = TourExecutionSessionStatus.Completed;
+            Progress = 100;
             NextKeyPointId = -1;
         }
         public void SetNextKeyPointId(long keyPointId)

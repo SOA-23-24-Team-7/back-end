@@ -64,7 +64,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public PagedResult<Tour> GetAll(int page, int pageSize)
         {
-            var task = _dbSet.Include(x => x.KeyPoints).GetPagedById(page, pageSize);
+            var task = _dbSet.Include(x => x.KeyPoints).Include(x => x.Reviews).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
         }

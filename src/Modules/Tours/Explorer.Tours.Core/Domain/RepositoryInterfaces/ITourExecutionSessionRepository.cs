@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 {
-    public interface ITourExecutionSessionRepository
+    public interface ITourExecutionSessionRepository : ICrudRepository<TourExecutionSession>
     {
         TourExecutionSession Get(long tourId, long touristId);
         TourExecutionSession Add(TourExecutionSession tourExecution);

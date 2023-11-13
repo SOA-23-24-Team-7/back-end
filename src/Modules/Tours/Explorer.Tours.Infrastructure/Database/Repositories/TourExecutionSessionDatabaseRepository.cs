@@ -1,4 +1,5 @@
-﻿using Explorer.Tours.Core.Domain;
+﻿using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,11 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Infrastructure.Database.Repositories
 {
-    public class TourExecutionSessionDatabaseRepository : ITourExecutionSessionRepository
+    public class TourExecutionSessionDatabaseRepository : CrudDatabaseRepository<TourExecutionSession, ToursContext>, ITourExecutionSessionRepository
     {
         private readonly ToursContext _dbContext;
-        public TourExecutionSessionDatabaseRepository(ToursContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
+        public TourExecutionSessionDatabaseRepository(ToursContext dbContext) : base(dbContext) { }
+
         public TourExecutionSession Add(TourExecutionSession tourExecution)
         {
             _dbContext.TourExecutionSessions.Add(tourExecution);

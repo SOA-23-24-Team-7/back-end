@@ -13,6 +13,7 @@ namespace Explorer.Tours.API.Dtos
         public long TourId { get; set; }
         public long TouristId { get; set; }
         public long NextKeyPointId { get; set; }
+        public double Progress { get; set; }
         public DateTime LastActivity { get; set; }
     }
     public enum TourExecutionSessionStatus
