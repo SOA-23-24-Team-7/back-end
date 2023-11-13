@@ -37,15 +37,13 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
                 throw new ArgumentException("Max distance must be greater than 0.");
             }
 
-            Coordinate mapCoordinate = new Coordinate(longitude, latitude);
-
-            var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published); // ako ima vise od 1000 tura pravice problem
+            var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published);
             var nearbyTours = new List<Tour>();
 
             foreach (var tour in tours)
             {
                 var keyPoints = _keyPointRepository.GetByTourId(tour.Id);
-                var nearbyKeypoints = keyPoints.Where(k => mapCoordinate.CalculateDistance(k.Longitude, k.Latitude) <= maxDistance);
+                var nearbyKeypoints = keyPoints.Where(k => k.CalculateDistance(longitude, latitude) <= maxDistance);
                 if (nearbyKeypoints.Any())
                 {
                     nearbyTours.Add(tour);
