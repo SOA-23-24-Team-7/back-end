@@ -9,6 +9,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
     public interface ITourExecutionSessionRepository
     {
         TourExecutionSession Get(long tourId, long touristId);
+        TourExecutionSession GetStarted(long tourId, long touristId);
         TourExecutionSession Add(TourExecutionSession tourExecution);
         TourExecutionSession Abandon(long tourId, long touristId);
         TourExecutionSession UpdateNextKeyPoint(long tourExecutionId, long nextKeyPointId);
