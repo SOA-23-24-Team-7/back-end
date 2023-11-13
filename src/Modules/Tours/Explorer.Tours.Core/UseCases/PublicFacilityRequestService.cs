@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Utilities;
 using FluentResults;
 
@@ -25,7 +19,7 @@ namespace Explorer.Tours.Core.UseCases
             _notificationRepository = notificationRepository;
             _facilityRepository = facilityRepository;
         }
-        public Result Reject(long requestId,string comment)
+        public Result Reject(long requestId, string comment)
         {
             try
             {
@@ -59,10 +53,10 @@ namespace Explorer.Tours.Core.UseCases
                 notificationText = generator.GenerateAccepted(facility.Name);
                 request.Comment = "";
             }
-                
-            
             else
+            {
                 notificationText = generator.GenerateRejected(facility.Name);
+            }
 
             _notificationRepository.Create(new PublicFacilityNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow, isAccepted, request.Comment));
         }
