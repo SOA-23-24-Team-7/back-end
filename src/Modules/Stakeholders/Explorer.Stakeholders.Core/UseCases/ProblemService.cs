@@ -87,7 +87,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             var problem = _problemRepository.Get(problemId);
             if (problem != null) return _mapper.Map<ProblemAnswerDto>(problem.Answer);
 
-            return null;
+            return Result.Fail(FailureCode.InvalidArgument);
         }
 
         public Result<PagedResult<ProblemResponseDto>> GetAll(int page, int pageSize)
