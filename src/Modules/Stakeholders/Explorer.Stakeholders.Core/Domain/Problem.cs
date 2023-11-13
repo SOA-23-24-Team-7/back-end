@@ -30,15 +30,15 @@ namespace Explorer.Stakeholders.Core.Domain
             TourId = tourId;
         }
 
+        public void ResolveProblem()
+        {
+            IsResolved = true;
+        }
+
         public void CreateAnswer(string text, long authorId)
         {
             Answer = new ProblemAnswer(authorId, text);
             IsAnswered = true;
-        }
-
-        public void UpdateIsAnswered(bool isAnswered)
-        {
-            IsAnswered = isAnswered;
         }
 
         public void UpdateDeadline(DateTime deadline)

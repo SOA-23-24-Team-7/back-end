@@ -31,7 +31,7 @@ namespace Explorer.API.Controllers.Administrator
         }
 
         [HttpGet("{problemId:long}/resolve")]
-        public ActionResult<ProblemResponseDto> ResolveProblem(long problemId)
+        public ActionResult ResolveProblem(long problemId)
         {
             var problem = _problemService.Get(problemId).Value;
             if (!problem.IsResolved && problem.IsAnswered)
@@ -40,6 +40,13 @@ namespace Explorer.API.Controllers.Administrator
                 return CreateResponse(result);
             }
             return Forbid();
+        }
+
+        [HttpGet("{problemId:long}/problem-answer")]
+        public ActionResult<ProblemAnswerDto> GetProblemAnswer(long problemId)
+        {
+            var result = _problemService.GetAnswer(problemId);
+            return CreateResponse(result);
         }
     }
 }

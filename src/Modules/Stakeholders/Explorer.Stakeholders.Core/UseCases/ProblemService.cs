@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
@@ -23,53 +22,15 @@ namespace Explorer.Stakeholders.Core.UseCases
             _tourService = tourService;
         }
 
-        public Result<ProblemResponseDto> ResolveProblem(long problemId)
+        public Result ResolveProblem(long problemId)
         {
             try
             {
                 Problem problem = CrudRepository.Get(problemId);
-                problem.IsResolved = true;
+                problem.ResolveProblem();
 
                 var result = CrudRepository.Update(problem);
-                return MapToDto<ProblemResponseDto>(result);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
-            }
-        }
-
-        public Result<ProblemResponseDto> UpdateAnswerId(long problemId, long answerId)
-        {
-            try
-            {
-                var problem = CrudRepository.Get(problemId);
-                //problem.UpdateAnswerId(answerId);
-                var result = CrudRepository.Update(problem);
-                return MapToDto<ProblemResponseDto>(result);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
-            }
-            catch (ArgumentException e)
-            {
-                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
-            }
-        }
-
-        public Result<ProblemResponseDto> UpdateIsAnswered(long problemId, bool isAnswered)
-        {
-            try
-            {
-                var problem = CrudRepository.Get(problemId);
-                problem.UpdateIsAnswered(isAnswered);
-                var result = CrudRepository.Update(problem);
-                return MapToDto<ProblemResponseDto>(result);
+                return Result.Ok();
             }
             catch (KeyNotFoundException e)
             {

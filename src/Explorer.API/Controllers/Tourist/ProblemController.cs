@@ -53,7 +53,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("{problemId:long}/resolve")]
-        public ActionResult<ProblemResponseDto> ResolveProblem(long problemId)
+        public ActionResult ResolveProblem(long problemId)
         {
             var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var problem = _problemService.Get(problemId).Value;
@@ -76,6 +76,13 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<PagedResult<ProblemResponseDto>> GetByUserId([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _problemService.GetByUserId(page, pageSize, int.Parse(HttpContext.User.Claims.First(x => x.Type == "id").Value));
+            return CreateResponse(result);
+        }
+
+        [HttpGet("{problemId:long}/problem-answer")]
+        public ActionResult<ProblemAnswerDto> GetProblemAnswer(long problemId)
+        {
+            var result = _problemService.GetAnswer(problemId);
             return CreateResponse(result);
         }
     }
