@@ -6,5 +6,5 @@ namespace Explorer.Tours.API.Public;
 
 public interface ITourSearchService
 {
-    Result<PagedResult<TourResponseDto>> Search(double longitude, double latitude, double maxDistance, int page, int pageSize);
+    Result<PagedResult<LimitedTourViewResponseDto>> Search(double longitude, double latitude, double maxDistance, int page, int pageSize);
 }
