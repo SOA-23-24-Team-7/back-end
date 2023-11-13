@@ -65,7 +65,8 @@ namespace Explorer.Tours.Core.UseCases
                 if(cart.OrderItems.Any(o => o.TourId == item.TourId))
                     return Result.Fail(FailureCode.InvalidArgument).WithError("Item already exists.");
                 var newOrderItem = _orderItemRepository.Create(_mapper.Map<OrderItemCreateDto, OrderItem>(item));
-                cart.AddOrderItem(newOrderItem);
+                //cart.AddOrderItem(newOrderItem);
+                cart.SetTotalPrice();
                 CrudRepository.Update(cart);
 
                 return Result.Ok();
@@ -83,9 +84,10 @@ namespace Explorer.Tours.Core.UseCases
                 var cart = CrudRepository.Get(shoppingCartId);
                 var touristId = cart.TouristId;
                 cart = _cartRepository.GetByTouristId(touristId);
-                cart.RemoveOrderItem(id);
+                //cart.RemoveOrderItem(id);
                 
                 _orderItemRepository.Delete(id);
+                cart.SetTotalPrice();
                 CrudRepository.Update(cart);
 
                 return Result.Ok();

@@ -27,7 +27,7 @@ namespace Explorer.Tours.Tests.Integration.TourSearch
             int pageSize = 10;
 
             // Act
-            var result = ((ObjectResult)controller.SearchByGeoLocation(longitude, latitude, maxDistance, page, pageSize).Result)?.Value as PagedResult<TourResponseDto>;
+            var result = ((ObjectResult)controller.SearchByGeoLocation(longitude, latitude, maxDistance, page, pageSize).Result)?.Value as PagedResult<LimitedTourViewResponseDto>;
 
             // Assert - Response
             result.ShouldNotBeNull();

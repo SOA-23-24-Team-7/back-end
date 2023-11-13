@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Mvc;
+using Explorer.Tours.Core.UseCases;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -77,11 +78,12 @@ namespace Explorer.API.Controllers.Tourist
 
         }
         [HttpGet("getItem/{tourId:long}/{touristId:long}")]
-        public ActionResult GetItemByTourId(long tourId,long touristId)
+        public ActionResult<OrderItemResponseDto> GetItemByTourId(long tourId,long touristId)
         {
             var result = _cartService.GetItemByTourId(tourId,touristId);
             return CreateResponse(result);
 
         }
+ 
     }
 }
