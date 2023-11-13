@@ -44,8 +44,8 @@ namespace Explorer.Tours.Core.UseCases
 
         public Result<TourExecutionSessionResponseDto> CheckKeyPointCompletion(long tourId, long touristId, double longitude, double latitude)
         {
-            TourExecutionSession tourExecution = _tourExecutionRepository.Get(tourId, touristId);
-            if(tourExecution.Status != TourExecutionSessionStatus.Started)
+            TourExecutionSession tourExecution = _tourExecutionRepository.GetStarted(tourId, touristId);
+            if(tourExecution == null)
             {
                 return null;
             }

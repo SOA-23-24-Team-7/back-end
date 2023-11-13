@@ -43,6 +43,11 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         public TourExecutionSession Get(long tourId, long touristId)
         {
             //todo: provera da li postoji tour execution
+            TourExecutionSession execution = _dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId && t.TouristId == touristId);
+            return execution;
+        }
+        public TourExecutionSession GetStarted(long tourId, long touristId)
+        {
             TourExecutionSession execution = _dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId && t.TouristId == touristId && t.Status == TourExecutionSessionStatus.Started);
             return execution;
         }
