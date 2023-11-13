@@ -6,8 +6,10 @@ namespace Explorer.Tours.API.Public.TourAuthoring;
 
 public interface IKeyPointService
 {
-    Result<List<KeyPointDto>> GetByTourId(long tourId);
-    Result<KeyPointDto> Create(KeyPointDto keyPoint);
-    Result<KeyPointDto> Update(KeyPointDto keyPoint);
+    Result<List<KeyPointResponseDto>> GetByTourId(long tourId);
+    Result<KeyPointResponseDto> Create<KeyPointCreateDto>(KeyPointCreateDto keyPoint);
+    Result<KeyPointResponseDto> Update<KeyPointUpdateDto>(KeyPointUpdateDto keyPoint);
     Result Delete(long id);
+    Result<KeyPointResponseDto> GetFirstByTourId(long tourId);
+    Result<PagedResult<KeyPointResponseDto>> GetPaged(int page, int pageSize);
 }

@@ -1,4 +1,4 @@
-﻿namespace Explorer.BuildingBlocks.Core.Domain
+namespace Explorer.BuildingBlocks.Core.Domain
 {
     public abstract class ValueObject
     {

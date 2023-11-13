@@ -28,7 +28,8 @@ public class FacilityCommandTests : BaseToursIntegrationTest
             AuthorId = 1,
             Category = FacilityCategory.ParkingLot,
             Longitude = 45.0,
-            Latitude = 17.0
+            Latitude = 17.0,
+            //Status=PublicStatus.Accepted,
         };
 
         // Act
