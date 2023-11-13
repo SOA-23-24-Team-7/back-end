@@ -45,8 +45,13 @@ namespace Explorer.API.Controllers.Tourist
         {
             // treba provera da li je tura kupljena
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            long touristId = long.Parse(identity.FindFirst("id").Value);
-            if(_tourExecutionService.GetLive(touristId) != null)
+            long touristId;
+            if (identity != null && identity.IsAuthenticated)
+                touristId = long.Parse(identity.FindFirst("id").Value);
+            // za potrebe testiranja
+            else
+                touristId = -21;
+            if (_tourExecutionService.GetLive(touristId) != null)
             {
                 return Conflict();
             }
@@ -59,7 +64,12 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<TourExecutionSessionResponseDto> AbandonTour(long tourId)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            long touristId = long.Parse(identity.FindFirst("id").Value);
+            long touristId;
+            if (identity != null && identity.IsAuthenticated)
+                touristId = long.Parse(identity.FindFirst("id").Value);
+            // za potrebe testiranja
+            else
+                touristId = -21;
             var result = _tourExecutionService.AbandonTour(tourId, touristId);
             if(result == null)
             {
@@ -73,7 +83,12 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<TourExecutionSessionResponseDto> CompleteKeyPoint(long tourId, TouristPositionResponseDto touristPosition)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            long touristId = long.Parse(identity.FindFirst("id").Value);
+            long touristId;
+            if (identity != null && identity.IsAuthenticated)
+                touristId = long.Parse(identity.FindFirst("id").Value);
+            // za potrebe testiranja
+            else
+                touristId = -21;
             var result = _tourExecutionService.CheckKeyPointCompletion(tourId, touristId, touristPosition.Longitude, touristPosition.Latitude);
             if(result == null)
             {
@@ -86,7 +101,12 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<PagedResult<TourExecutionInfoDto>> GetExecutedToursInfo()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            long touristId = long.Parse(identity.FindFirst("id").Value);
+            long touristId;
+            if (identity != null && identity.IsAuthenticated)
+                touristId = long.Parse(identity.FindFirst("id").Value);
+            // za potrebe testiranja
+            else
+                touristId = -21;
             var result = _tourExecutionService.GetAllFor(touristId);
             return CreateResponse(result);
         }

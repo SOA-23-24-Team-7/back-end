@@ -33,12 +33,12 @@ namespace Explorer.Tours.Core.UseCases
 
         public Result<TourExecutionSessionResponseDto> AbandonTour(long tourId, long touristId)
         {
-            TourExecutionSession execution = _tourExecutionRepository.Get(tourId, touristId);
-            if (execution.Status != TourExecutionSessionStatus.Started)
+            TourExecutionSession execution = _tourExecutionRepository.GetStarted(tourId, touristId);
+            if (execution == null)
             {
                 return null;
             }
-            execution = _tourExecutionRepository.Abandon(tourId, touristId);
+            execution = _tourExecutionRepository.Abandon(execution.Id);
             return MapToDto<TourExecutionSessionResponseDto>(execution);
         }
 

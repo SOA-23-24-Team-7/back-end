@@ -16,10 +16,9 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             _dbContext.SaveChanges();
             return tourExecution;
         }
-        public TourExecutionSession Abandon(long tourId, long touristId)
+        public TourExecutionSession Abandon(long tourExecutionId)
         {
-            //todo: provera da li postoji tour execution
-            TourExecutionSession execution = _dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId && t.TouristId == touristId);
+            TourExecutionSession execution = _dbContext.TourExecutionSessions.FirstOrDefault(t => t.Id == tourExecutionId);
             execution.Abandon();
             _dbContext.SaveChanges();
             return execution;
