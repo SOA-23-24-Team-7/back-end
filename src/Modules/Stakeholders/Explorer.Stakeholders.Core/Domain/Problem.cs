@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Problems;
 
 namespace Explorer.Stakeholders.Core.Domain
 {

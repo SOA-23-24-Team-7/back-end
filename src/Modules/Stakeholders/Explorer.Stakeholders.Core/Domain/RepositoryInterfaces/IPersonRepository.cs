@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Core.Domain.Problems;
 using FluentResults;
 
 namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces

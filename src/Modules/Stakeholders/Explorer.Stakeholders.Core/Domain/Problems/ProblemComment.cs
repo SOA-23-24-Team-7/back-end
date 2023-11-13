@@ -1,7 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 using System.Text.Json.Serialization;
 
-namespace Explorer.Stakeholders.Core.Domain
+namespace Explorer.Stakeholders.Core.Domain.Problems
 {
     public class ProblemComment : ValueObject
     {

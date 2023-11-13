@@ -1,6 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
-using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 using Microsoft.EntityFrameworkCore;

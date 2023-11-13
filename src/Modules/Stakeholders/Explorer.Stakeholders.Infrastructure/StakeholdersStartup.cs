@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.Core.Mappers;
 using Explorer.Stakeholders.Core.UseCases;
