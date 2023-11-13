@@ -53,7 +53,7 @@ namespace Explorer.Tours.Core.UseCases
                 {
                     var keyPointCoordinate = new Coordinate(keyPoints[i].Longitude, keyPoints[i].Latitude);
 
-                    if (keyPointCoordinate.CalculateDistance(longitude, latitude) > 15) return null;
+                    if (keyPointCoordinate.CalculateDistance(longitude, latitude) > 200) break;
 
                     //ako je kompletirao poslednju kljucnu tacku -> kompletiraj turu
                     if (i + 1 >= keyPoints.Count)
