@@ -24,6 +24,13 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(result);
         }
 
+        [HttpPatch("{problemId:long}/problem-comments")]
+        public ActionResult CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
+        {
+            var result = _problemService.CreateComment(problemComment, problemId);
+            return CreateResponse(result);
+        }
+
         [HttpPatch("{problemId:long}/problem-answer")]
         public ActionResult CreateAnswer([FromBody] ProblemAnswerDto problemAnswer, long problemId)
         {
@@ -35,6 +42,13 @@ namespace Explorer.API.Controllers.Author
         public ActionResult<ProblemAnswerDto> GetProblemAnswer(long problemId)
         {
             var result = _problemService.GetAnswer(problemId);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("{problemId:long}/problem-comments")]
+        public ActionResult<ProblemCommentResponseDto> GetProblemComments(long problemId)
+        {
+            var result = _problemService.GetComments(problemId);
             return CreateResponse(result);
         }
     }

@@ -4,6 +4,7 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 
 public interface IUserRepository
 {
+    User? Get(long id);
     bool Exists(string username);
     User? GetActiveByName(string username);
     User Create(User user);

@@ -17,5 +17,7 @@ public interface IProblemService
     Result<ProblemResponseDto> GetByAnswerId(long id);
     Result<ProblemResponseDto> UpdateDeadline(long problemId, DateTime deadline);
     Result CreateAnswer(ProblemAnswerDto problemAnswer, long problemId);
+    Result CreateComment(ProblemCommentCreateDto problemComment, long problemId);
     Result<ProblemAnswerDto> GetAnswer(long problemId);
+    Result<PagedResult<ProblemCommentResponseDto>> GetComments(long problemId);
 }

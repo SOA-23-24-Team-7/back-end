@@ -13,13 +13,15 @@ namespace Explorer.Stakeholders.Core.UseCases
     {
         private readonly IProblemRepository _problemRepository;
         private readonly IInternalTourService _tourService;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public ProblemService(ICrudRepository<Problem> repository, IMapper mapper, IProblemRepository problemRepository, IInternalTourService tourService) : base(repository, mapper)
+        public ProblemService(ICrudRepository<Problem> repository, IMapper mapper, IProblemRepository problemRepository, IInternalTourService tourService, IUserRepository userRepository) : base(repository, mapper)
         {
             _problemRepository = problemRepository;
             _mapper = mapper;
             _tourService = tourService;
+            _userRepository = userRepository;
         }
 
         public Result ResolveProblem(long problemId)
@@ -49,7 +51,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             {
                 try
                 {
-                    problem.UpdateDeadline(deadline);
+                    problem.SetDeadline(deadline);
                     var result = CrudRepository.Update(problem);
                     return MapToDto<ProblemResponseDto>(result);
                 }
@@ -82,11 +84,40 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
+        public Result CreateComment(ProblemCommentCreateDto problemComment, long problemId)
+        {
+            try
+            {
+                var problem = _problemRepository.Get(problemId);
+                if (!problem.IsAnswered) throw new Exception();
+
+                var commenter = _userRepository.Get(problemComment.CommenterId);
+                problem.CreateComment(problemComment.Text, commenter, problemComment.CommenterId);
+                CrudRepository.Update(problem);
+                return Result.Ok();
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
         public Result<ProblemAnswerDto> GetAnswer(long problemId)
         {
             var problem = _problemRepository.Get(problemId);
             if (problem != null) return _mapper.Map<ProblemAnswerDto>(problem.Answer);
 
+            return Result.Fail(FailureCode.InvalidArgument);
+        }
+
+        public Result<PagedResult<ProblemCommentResponseDto>> GetComments(long problemId)
+        {
+            var problem = _problemRepository.Get(problemId);
+            if (problem != null)
+            {
+                var items = problem.Comments.Select(_mapper.Map<ProblemCommentResponseDto>).ToList();
+                return new PagedResult<ProblemCommentResponseDto>(items, items.Count());
+            }
             return Result.Fail(FailureCode.InvalidArgument);
         }
 

@@ -1,6 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System.Xml.Linq;
-using Explorer.Stakeholders.API.Dtos;
 
 namespace Explorer.Stakeholders.Core.Domain
 {
@@ -41,7 +39,12 @@ namespace Explorer.Stakeholders.Core.Domain
             IsAnswered = true;
         }
 
-        public void UpdateDeadline(DateTime deadline)
+        public void CreateComment(string text, User commenter, long commenterId)
+        {
+            Comments.Add(new ProblemComment(commenterId, commenter, text));
+        }
+
+        public void SetDeadline(DateTime deadline)
         {
             Deadline = deadline;
         }

@@ -10,9 +10,10 @@ namespace Explorer.Stakeholders.Core.Domain
         public string Text { get; private set; }
 
         [JsonConstructor]
-        public ProblemComment(long commenterId, string text)
+        public ProblemComment(long commenterId, User commenter, string text)
         {
             CommenterId = commenterId;
+            Commenter = commenter;
             Text = text;
             Validate();
         }

@@ -48,5 +48,12 @@ namespace Explorer.API.Controllers.Administrator
             var result = _problemService.GetAnswer(problemId);
             return CreateResponse(result);
         }
+
+        [HttpGet("{problemId:long}/problem-comments")]
+        public ActionResult<ProblemCommentResponseDto> GetProblemComments(long problemId)
+        {
+            var result = _problemService.GetComments(problemId);
+            return CreateResponse(result);
+        }
     }
 }

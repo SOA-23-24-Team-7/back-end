@@ -39,6 +39,27 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        //[Authorize(Policy = "nonAdministratorPolicy")]
+        //[HttpPost]
+        //public ActionResult<ProblemCommentDto> Create([FromBody] ProblemCommentCreateDto problemComment)
+        //{
+        //    var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+        //    var problem = _problemService.GetByAnswerId(problemComment.ProblemAnswerId).Value;
+        //    if ((loggedInUserId == problem.TouristId || loggedInUserId == problem.TourAuthorId) && !problem.IsResolved && problem.IsAnswered)
+        //    {
+        //        var result = _problemCommentService.Create(problemComment);
+        //        return CreateResponse(result);
+        //    }
+        //    return Forbid();
+        //}
+
+        [HttpPatch("{problemId:long}/problem-comments")]
+        public ActionResult CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
+        {
+            var result = _problemService.CreateComment(problemComment, problemId);
+            return CreateResponse(result);
+        }
+
         [HttpPut("{id:int}")]
         public ActionResult<ProblemResponseDto> Update([FromBody] ProblemUpdateDto problem)
         {
@@ -85,5 +106,13 @@ namespace Explorer.API.Controllers.Tourist
             var result = _problemService.GetAnswer(problemId);
             return CreateResponse(result);
         }
+
+        [HttpGet("{problemId:long}/problem-comments")]
+        public ActionResult<ProblemCommentResponseDto> GetProblemComments(long problemId)
+        {
+            var result = _problemService.GetComments(problemId);
+            return CreateResponse(result);
+        }
+
     }
 }
