@@ -48,7 +48,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         public TourExecutionSession Get(long tourId, long touristId)
         {
             //todo: provera da li postoji tour execution
-            TourExecutionSession execution = _dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId && t.TouristId == touristId);
+            TourExecutionSession execution = _dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId && t.TouristId == touristId && t.Status == TourExecutionSessionStatus.Started);
             return execution;
         }
     }
