@@ -30,11 +30,11 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var controller = CreateController(scope);
 
             // Act
-            var result = controller.Get(-1).Result as ObjectResult;
+            var result = (controller.Get(-2).Result as ObjectResult)?.Value as BlogResponseDto;
 
             // Assert
             result.ShouldNotBeNull();
-            //result.Votes.Count.ShouldBe(2);
+            result.Votes.Count.ShouldBe(2);
         }
 
         private static BlogController CreateController(IServiceScope scope)

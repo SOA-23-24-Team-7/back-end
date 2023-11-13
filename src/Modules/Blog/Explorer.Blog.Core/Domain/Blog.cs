@@ -79,9 +79,13 @@ namespace Explorer.Blog.Core.Domain
             {
                 Status = BlogStatus.Famous;
             }
-            else if (VoteCount >= 2 || Comments.Count >= 2)
+            else if (VoteCount >= 2 && Comments.Count >= 2)
             {
                 Status = BlogStatus.Active;
+            }
+            else
+            {
+                Status = BlogStatus.Published;
             }
         }
     }
