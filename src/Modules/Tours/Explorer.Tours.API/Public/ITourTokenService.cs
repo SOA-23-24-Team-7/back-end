@@ -11,5 +11,6 @@ namespace Explorer.Tours.API.Public
     public interface ITourTokenService
     {
         Result<TourTokenResponseDto> AddToken(TourTokenCreateDto token);
+        Result<List<TourTokenResponseDto>> GetTouristsTokens(long touristId);
     }
 }

@@ -31,5 +31,19 @@ namespace Explorer.API.Controllers.Tourist
             var result = _tokenService.AddToken(dto);
             return CreateResponse(result);
         }
+
+        [HttpGet("tourists")]
+        public ActionResult<List<TourTokenResponseDto>> GetTouristsTokens()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long id = 0;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                id = long.Parse(identity.FindFirst("id").Value);
+            }
+
+            var result = _tokenService.GetTouristsTokens(id);
+            return CreateResponse(result);
+        }
     }
 }

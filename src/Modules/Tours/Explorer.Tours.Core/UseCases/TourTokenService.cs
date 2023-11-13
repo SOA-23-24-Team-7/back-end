@@ -51,5 +51,11 @@ namespace Explorer.Tours.Core.UseCases
             }
 
         }
+
+        public Result<List<TourTokenResponseDto>> GetTouristsTokens(long touristId)
+        {
+            var tokens = _repository.GetAll().FindAll(token => token.TouristId == touristId);
+            return MapToDto<TourTokenResponseDto>(tokens);
+        }
     }
 }
