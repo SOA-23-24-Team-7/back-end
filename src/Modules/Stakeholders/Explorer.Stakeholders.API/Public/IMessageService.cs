@@ -16,6 +16,7 @@ namespace Explorer.Stakeholders.API.Public
         Result<MessageResponseDto> Update<MessageDto>(MessageDto message);
         Result<MessageResponseDto> Get(long id);
         public Result<PagedResult<MessageResponseWithUsernamesDto>> GetMessages(int page, int pageSize, long userId);
+        Result<MessageResponseDto> UpdateStatus(MessageUpdateDto message);
         Result<MessageResponseDto> UpdateMessage(MessageCreateDto message);
         public Result Delete(long id);
 

@@ -86,7 +86,7 @@ public class StakeholderProfile : Profile
         CreateMap<MessageResponseDto, Message>().ReverseMap();
         CreateMap<MessageUpdateDto, Message>().ReverseMap();
         CreateMap<Message, MessageResponseWithUsernamesDto>()
-            .ConstructUsing(src => new MessageResponseWithUsernamesDto { Id = src.Id, UserReciverId = src.UserReciverId, ReciverUsername = src.UserReciver.Username, UserSenderId = src.UserSenderId, SenderUsername = src.UserSender.Username, Text = src.Text, StatusOfMessage = src.StatusOfMessage.ToString() });
+            .ConstructUsing(src => new MessageResponseWithUsernamesDto { Id = src.Id, UserReciverId = src.UserReciverId, ReciverUsername = src.UserReciver.Username, UserSenderId = src.UserSenderId, SenderUsername = src.UserSender.Username, Text = src.Text, StatusOfMessage = (API.Dtos.MessageStatus)src.StatusOfMessage });
 
     }
 }

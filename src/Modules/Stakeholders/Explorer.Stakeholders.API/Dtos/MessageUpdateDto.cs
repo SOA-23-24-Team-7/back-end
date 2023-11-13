@@ -14,4 +14,8 @@ namespace Explorer.Stakeholders.API.Dtos
         public string Text { get; set; }
         public MessageStatus StatusOfMessage { get; set; }
     }
+
+
+
+
 }

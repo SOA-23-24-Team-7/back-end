@@ -28,14 +28,24 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
+        [HttpPut("update-status")]
+        public ActionResult<MessageResponseDto> UpdateStatus([FromBody] MessageUpdateDto message)
+        {
+
+            var result = _messageService.UpdateStatus(message);
+            return CreateResponse(result);
+        }
+
+
         [HttpPost("create")]
         public ActionResult<MessageResponseDto> Create([FromBody] MessageCreateDto message)
-        {
-           
+        {           
             var result = _messageService.Create(message);
             return CreateResponse(result);
         }
+
        
+      
         [HttpDelete("{id:long}")]
         public ActionResult Delete(long id)
         {

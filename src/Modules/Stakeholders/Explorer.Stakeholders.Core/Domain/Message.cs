@@ -11,5 +11,24 @@ namespace Explorer.Stakeholders.Core.Domain
         public User UserReciver { get; set; }
         public string Text { get; set; }
         public MessageStatus StatusOfMessage { get; set; }
+
+
+
+        public Message(long userSenderId, long userReciverId, string text, MessageStatus statusOfMessage)
+        {
+            UserSenderId= userSenderId;
+            UserReciverId= userReciverId;
+            Text= text;
+            StatusOfMessage= statusOfMessage;
+        }
+
+        public void UpdateStatus()
+        {
+            StatusOfMessage = MessageStatus.Seen;
+        }
+
     }
+    
+    
+
 }

@@ -10,7 +10,7 @@ namespace Explorer.Stakeholders.API.Dtos
     public class MessageCreateDto
     {
         public long UserSenderId { get; set; }
-        public long UserReciverId { get; set; }
+        public long UserReciverId  { get; set; }
         public string Text { get; set; }
         public MessageStatus StatusOfMessage { get; set; }
     }

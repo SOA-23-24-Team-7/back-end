@@ -29,8 +29,24 @@ namespace Explorer.Stakeholders.Core.UseCases
             throw new NotImplementedException();
         }
 
-      
 
-        
+        public Result<MessageResponseDto> UpdateStatus(MessageUpdateDto messageUpdateDto)
+        {
+            try
+            {
+                var message = CrudRepository.Get(messageUpdateDto.Id);
+                message.UpdateStatus();
+                CrudRepository.Update(message);
+
+                return MapToDto<MessageResponseDto>(message);
+
+            }
+            catch
+            {
+
+                return Result.Fail(FailureCode.NotFound);
+            }
+        }
+
     }
 }
