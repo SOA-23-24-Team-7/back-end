@@ -124,6 +124,26 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         var allTours = _tourRepository.GetAll(page, pageSize);
         var publishedTours = allTours.Results.Where(t => t.Status == Domain.Tours.TourStatus.Published).ToList();
         var pagedResult = new PagedResult<Tour>(publishedTours, publishedTours.Count);
-        return MapToDto<TourResponseDto>(pagedResult);
+        var dtos = MapToDto<TourResponseDto>(pagedResult);
+        for (int i = 0; i < publishedTours.Count; i++)
+        {
+            var averageRating = publishedTours.ElementAt(i).GetAverageRating();
+            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
+        }
+        return dtos;
+    }
+
+
+    public Result<PagedResult<TourResponseDto>> GetAllPaged(int page, int pageSize)
+    {
+        var allTours = _tourRepository.GetAll(page, pageSize).Results;
+        var pagedResult = new PagedResult<Tour>(allTours, allTours.Count);
+        var dtos = MapToDto<TourResponseDto>(pagedResult);
+        for (int i = 0; i < allTours.Count; i++)
+        {
+            var averageRating = allTours.ElementAt(i).GetAverageRating();
+            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
+        }
+        return dtos;
     }
 }

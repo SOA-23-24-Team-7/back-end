@@ -87,6 +87,7 @@ public class Tour : Entity
 
     public double GetAverageRating()
     {
+        if (Reviews == null || Reviews.Count == 0) return 0;
         return Reviews.Average(r => r.Rating);
     }
 

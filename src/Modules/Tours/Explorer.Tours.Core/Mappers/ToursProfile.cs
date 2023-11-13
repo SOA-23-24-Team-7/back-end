@@ -19,7 +19,7 @@ public class ToursProfile : Profile
         CreateMap<ReviewUpdateDto, Review>().ReverseMap();
         CreateMap<ReviewResponseDto, Review>().ReverseMap();
 
-        CreateMap<TourResponseDto, Tour>().ReverseMap().ForMember(dest => dest.AverageRating, opt => opt.MapFrom(src => src.GetAverageRating()));
+        CreateMap<TourResponseDto, Tour>().ReverseMap();
         CreateMap<TourCreateDto, Tour>().ReverseMap();
         CreateMap<TourUpdateDto, Tour>().ReverseMap().ForMember(dest => dest.Durations, opt => opt.MapFrom(src => src.Durations.Select(d => new TourDuration(d.Duration, (Domain.Tours.TransportType)d.TransportType))));
         CreateMap<TourResponseDto, Tour>().ReverseMap().ForMember(dest => dest.Durations, opt => opt.MapFrom(src => src.Durations.Select(d => new TourDuration(d.Duration, (Domain.Tours.TransportType)d.TransportType))));

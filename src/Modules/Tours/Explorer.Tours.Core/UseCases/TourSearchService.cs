@@ -28,7 +28,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
                 throw new ArgumentException("Max distance must be greater than 0.");
             }
 
-            var tours = _tourRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published); // ako ima vise od 1000 tura pravice problem
+            var tours = _tourRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published, include: "Reviews"); // ako ima vise od 1000 tura pravice problem
             var nearbyTours = new List<Tour>();
 
             foreach (var tour in tours)
