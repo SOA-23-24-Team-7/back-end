@@ -1,12 +1,12 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Author
 {
+    [Authorize(Policy = "authorPolicy")]
     [Route("api/author/problem")]
     public class ProblemController : BaseApiController
     {
@@ -17,11 +17,24 @@ namespace Explorer.API.Controllers.Author
             _problemService = problemService;
         }
 
-        [Authorize(Policy = "authorPolicy")]
         [HttpGet]
         public ActionResult<PagedResult<ProblemResponseDto>> GetByAuthor([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _problemService.GetByAuthor(page, pageSize, long.Parse(HttpContext.User.Claims.First(x => x.Type == "id").Value));
+            return CreateResponse(result);
+        }
+
+        [HttpPatch("{problemId:long}/problem-answer")]
+        public ActionResult CreateAnswer([FromBody] ProblemAnswerDto problemAnswer, long problemId)
+        {
+            var result = _problemService.CreateAnswer(problemAnswer, problemId);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("{problemId:long}/problem-answer")]
+        public ActionResult<ProblemAnswerDto> GetProblemAnswer(long problemId)
+        {
+            var result = _problemService.GetAnswer(problemId);
             return CreateResponse(result);
         }
     }

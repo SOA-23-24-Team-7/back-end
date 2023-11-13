@@ -1,4 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
+using FluentResults;
 
 namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
 {

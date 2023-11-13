@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 using System.Xml.Linq;
+using Explorer.Stakeholders.API.Dtos;
 
 namespace Explorer.Stakeholders.Core.Domain
 {
@@ -29,10 +30,11 @@ namespace Explorer.Stakeholders.Core.Domain
             TourId = tourId;
         }
 
-        //public void UpdateAnswerId(long answerId)
-        //{
-        //    AnswerId = answerId;
-        //}
+        public void CreateAnswer(string text, long authorId)
+        {
+            Answer = new ProblemAnswer(authorId, text);
+            IsAnswered = true;
+        }
 
         public void UpdateIsAnswered(bool isAnswered)
         {

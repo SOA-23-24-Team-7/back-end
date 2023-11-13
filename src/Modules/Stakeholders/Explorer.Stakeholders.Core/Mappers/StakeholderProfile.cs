@@ -33,6 +33,7 @@ public class StakeholderProfile : Profile
         CreateMap<Club, ClubResponseWithOwnerDto>()
             .ConstructUsing(src => new ClubResponseWithOwnerDto { Id = src.Id, OwnerId = src.OwnerId, Username = src.Owner.Username, Name = src.Name, Description = src.Description, Image = src.Image });
         CreateMap<ClubCreateDto, Club>().ReverseMap();
+        CreateMap<ProblemAnswerDto, ProblemAnswer>().ReverseMap();
         CreateMap<Person, PersonResponseDto>().ConstructUsing(src => new PersonResponseDto
         {
             Id = src.Id,
@@ -73,8 +74,6 @@ public class StakeholderProfile : Profile
         }).ForMember(x => x.Tourist, opt => opt.MapFrom(src => src.Tourist));
         CreateMap<ProblemCreateDto, Problem>().ReverseMap();
         CreateMap<ProblemUpdateDto, Problem>().ReverseMap();
-        CreateMap<ProblemAnswerCreateDto, ProblemAnswer>().ReverseMap();
-        CreateMap<ProblemAnswerResponseDto, ProblemAnswer>().ReverseMap();
         CreateMap<ProblemCommentCreateDto, ProblemComment>().ReverseMap();
         CreateMap<ProblemComment, ProblemCommentResponseDto>().ConstructUsing(src => new ProblemCommentResponseDto
         {

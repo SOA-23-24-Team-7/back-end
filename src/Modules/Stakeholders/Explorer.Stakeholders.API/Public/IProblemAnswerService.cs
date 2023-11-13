@@ -5,9 +5,9 @@ namespace Explorer.Stakeholders.API.Public
 {
     public interface IProblemAnswerService
     {
-        Result<ProblemAnswerResponseDto> Create<ProblemAnswerCreateDto>(ProblemAnswerCreateDto problemAnswer);
-        Result<ProblemAnswerResponseDto> Get(long id);
-        bool DoesAnswerExistsForProblem(long problemId);
-        Result<ProblemAnswerResponseDto> GetByProblem(long problemId);
+        //Result<ProblemAnswerResponseDto> Create<ProblemAnswerCreateDto>(ProblemAnswerCreateDto problemAnswer);
+        //Result<ProblemAnswerResponseDto> Get(long id);
+        //bool DoesAnswerExistsForProblem(long problemId);
+        //Result<ProblemAnswerResponseDto> GetByProblem(long problemId);
     }
 }

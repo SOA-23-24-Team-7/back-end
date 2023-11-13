@@ -14,9 +14,12 @@ namespace Explorer.Stakeholders.Core.UseCases
     {
         private readonly IProblemRepository _problemRepository;
         private readonly IInternalTourService _tourService;
+        private readonly IMapper _mapper;
+
         public ProblemService(ICrudRepository<Problem> repository, IMapper mapper, IProblemRepository problemRepository, IInternalTourService tourService) : base(repository, mapper)
         {
             _problemRepository = problemRepository;
+            _mapper = mapper;
             _tourService = tourService;
         }
 
@@ -85,7 +88,6 @@ namespace Explorer.Stakeholders.Core.UseCases
             {
                 try
                 {
-
                     problem.UpdateDeadline(deadline);
                     var result = CrudRepository.Update(problem);
                     return MapToDto<ProblemResponseDto>(result);
@@ -100,6 +102,31 @@ namespace Explorer.Stakeholders.Core.UseCases
                 }
             }
             return Result.Fail(FailureCode.Forbidden).WithError("Deadline has already been set.");
+        }
+
+        public Result CreateAnswer(ProblemAnswerDto problemAnswer, long problemId)
+        {
+            try
+            {
+                var problem = _problemRepository.Get(problemId);
+                if (problem.IsAnswered) throw new Exception();
+
+                problem.CreateAnswer(problemAnswer.Answer, problemAnswer.AuthorId);
+                CrudRepository.Update(problem);
+                return Result.Ok();
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+        public Result<ProblemAnswerDto> GetAnswer(long problemId)
+        {
+            var problem = _problemRepository.Get(problemId);
+            if (problem != null) return _mapper.Map<ProblemAnswerDto>(problem.Answer);
+
+            return null;
         }
 
         public Result<PagedResult<ProblemResponseDto>> GetAll(int page, int pageSize)

@@ -7,18 +7,18 @@ namespace Explorer.API.Controllers
     [Route("api/problem-answer")]
     public class ProblemAnswerController : BaseApiController
     {
-        private readonly IProblemAnswerService _problemAnswerService;
+        //private readonly IProblemAnswerService _problemAnswerService;
 
-        public ProblemAnswerController(IProblemAnswerService problemAnswerService)
-        {
-            _problemAnswerService = problemAnswerService;
-        }
+        //public ProblemAnswerController(IProblemAnswerService problemAnswerService)
+        //{
+        //    _problemAnswerService = problemAnswerService;
+        //}
 
-        [HttpGet("problem/{problemId:long}")]
-        public ActionResult<ProblemAnswerResponseDto> Get(long problemId)
-        {
-            var result = _problemAnswerService.GetByProblem(problemId);
-            return CreateResponse(result);
-        }
+        //[HttpGet("problem/{problemId:long}")]
+        //public ActionResult<ProblemAnswerResponseDto> Get(long problemId)
+        //{
+        //    var result = _problemAnswerService.GetByProblem(problemId);
+        //    return CreateResponse(result);
+        //}
     }
 }
