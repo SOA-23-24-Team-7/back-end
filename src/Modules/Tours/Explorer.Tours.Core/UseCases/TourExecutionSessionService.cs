@@ -31,7 +31,7 @@ namespace Explorer.Tours.Core.UseCases
         public Result<TourExecutionSessionResponseDto> AbandonTour(long tourId, long touristId)
         {
             TourExecutionSession execution = _tourExecutionRepository.Get(tourId, touristId);
-            if (execution.Status != TourExecutionSessionStatus.Started)
+            if (execution.Status != Explorer.Tours.Core.Domain.TourExecutionSessionStatus.Started)
             {
                 return null;
             }
@@ -42,7 +42,7 @@ namespace Explorer.Tours.Core.UseCases
         public Result<TourExecutionSessionResponseDto> CheckKeyPointCompletion(long tourId, long touristId, double longitude, double latitude)
         {
             TourExecutionSession tourExecution = _tourExecutionRepository.Get(tourId, touristId);
-            if(tourExecution.Status != TourExecutionSessionStatus.Started)
+            if(tourExecution.Status != Explorer.Tours.Core.Domain.TourExecutionSessionStatus.Started)
             {
                 return null;
             }
@@ -51,9 +51,8 @@ namespace Explorer.Tours.Core.UseCases
             {
                 if (keyPoints[i].Id == tourExecution.NextKeyPointId)
                 {
-                    var keyPointCoordinate = new Coordinate(keyPoints[i].Longitude, keyPoints[i].Latitude);
 
-                    if (keyPointCoordinate.CalculateDistance(longitude, latitude) > 200) break;
+                    if (keyPoints[i].CalculateDistance(longitude, latitude) > 200) break;
 
                     //ako je kompletirao poslednju kljucnu tacku -> kompletiraj turu
                     if (i + 1 >= keyPoints.Count)
