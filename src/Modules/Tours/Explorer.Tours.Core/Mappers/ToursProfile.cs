@@ -76,6 +76,9 @@ public class ToursProfile : Profile
 
         CreateMap<LimitedTourViewResponseDto, Tour>().ReverseMap();
 
+        CreateMap<TourTokenResponseDto, TourToken>().ReverseMap();
+        CreateMap<TourTokenCreateDto, TourToken>().ReverseMap();
+
 
 
 

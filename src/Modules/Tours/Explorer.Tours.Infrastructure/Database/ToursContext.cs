@@ -21,6 +21,7 @@ public class ToursContext : DbContext
     public DbSet<PublicKeyPointNotification> PublicKeyPointNotifications { get; set; }
     public DbSet<PublicFacilityNotification> PublicFacilityNotifications { get; set; }
     public DbSet<PublicKeyPoint> PublicKeyPoints { get; set; }
+    public DbSet<TourToken> tourTokens { get; set; }
 
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
