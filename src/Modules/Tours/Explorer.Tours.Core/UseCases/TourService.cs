@@ -163,8 +163,25 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         {
             var shoppingCart = _cartRepository.GetByTouristId(id);
             List<LimitedTourViewResponseDto> dtos = new List<LimitedTourViewResponseDto>();
+            if (shoppingCart != null)
+            {
+                foreach (var item in shoppingCart.OrderItems)
+                {
+                    Tour tour = _tourRepository.GetById(item.TourId);
 
-            foreach (var item in shoppingCart.OrderItems)
+                    LimitedTourViewResponseDto dto = _mapper.Map<LimitedTourViewResponseDto>(tour);
+                    dto.KeyPoint = _mapper.Map<KeyPointResponseDto>(tour.KeyPoints.First());
+                    var reviews = _reviewRepository.GetPagedByTourId(0, 0, tour.Id);
+                    dto.Reviews = reviews.Results.Select(_mapper.Map<ReviewResponseDto>).ToList();
+                    dtos.Add(dto);
+                }
+                return new PagedResult<LimitedTourViewResponseDto>(dtos, dtos.Count);
+            }
+            else
+            {
+                return Result.Fail(FailureCode.Internal);
+            }
+            /*foreach (var item in shoppingCart.OrderItems)
             {
                 Tour tour = _tourRepository.GetById(item.TourId);
 
@@ -174,7 +191,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
                 dto.Reviews = reviews.Results.Select(_mapper.Map<ReviewResponseDto>).ToList();
                 dtos.Add(dto);
             }
-            return new PagedResult<LimitedTourViewResponseDto>(dtos, dtos.Count);
+            return new PagedResult<LimitedTourViewResponseDto>(dtos, dtos.Count);*/
         }
         catch (ArgumentException e)
         {
