@@ -25,17 +25,29 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPatch("{problemId:long}/problem-comments")]
-        public ActionResult<ProblemCommentResponseDto> CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
+        public ActionResult CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
         {
-            var result = _problemService.CreateComment(problemComment, problemId);
-            return CreateResponse(result);
+            var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var problem = _problemService.Get(problemId).Value;
+            if ((loggedInUserId == problem.TouristId || loggedInUserId == problem.TourAuthorId) && (problemComment.CommenterId == problem.TouristId || problemComment.CommenterId == problem.TourAuthorId) && !problem.IsResolved && problem.IsAnswered)
+            {
+                var result = _problemService.CreateComment(problemComment, problemId);
+                return CreateResponse(result);
+            }
+            return Forbid();
         }
 
         [HttpPatch("{problemId:long}/problem-answer")]
         public ActionResult CreateAnswer([FromBody] ProblemAnswerDto problemAnswer, long problemId)
         {
-            var result = _problemService.CreateAnswer(problemAnswer, problemId);
-            return CreateResponse(result);
+            var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var problem = _problemService.Get(problemId).Value;
+            if (loggedInUserId == problem.TourAuthorId && problem.TourAuthorId == problemAnswer.AuthorId && !problem.IsResolved && !problem.IsAnswered)
+            {
+                var result = _problemService.CreateAnswer(problemAnswer, problemId);
+                return CreateResponse(result);
+            }
+            return Forbid();
         }
 
         [HttpGet("{problemId:long}/problem-answer")]

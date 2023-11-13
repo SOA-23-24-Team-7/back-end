@@ -26,8 +26,13 @@ namespace Explorer.API.Controllers.Administrator
         [HttpPut("set-deadline/{problemId:long}")]
         public ActionResult<ProblemResponseDto> SetDeadline([FromBody] ProblemDeadlineUpdateDto problem)
         {
-            var result = _problemService.UpdateDeadline(problem.Id, problem.Deadline);
-            return CreateResponse(result);
+            var prob = _problemService.Get(problem.Id);
+            if (problem.Deadline > DateTime.UtcNow && !prob.Value.IsResolved)
+            {
+                var result = _problemService.UpdateDeadline(problem.Id, problem.Deadline);
+                return CreateResponse(result);
+            }
+            return Forbid();
         }
 
         [HttpGet("{problemId:long}/resolve")]

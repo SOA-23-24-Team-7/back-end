@@ -39,25 +39,17 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        //[Authorize(Policy = "nonAdministratorPolicy")]
-        //[HttpPost]
-        //public ActionResult<ProblemCommentDto> Create([FromBody] ProblemCommentCreateDto problemComment)
-        //{
-        //    var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-        //    var problem = _problemService.GetByAnswerId(problemComment.ProblemAnswerId).Value;
-        //    if ((loggedInUserId == problem.TouristId || loggedInUserId == problem.TourAuthorId) && !problem.IsResolved && problem.IsAnswered)
-        //    {
-        //        var result = _problemCommentService.Create(problemComment);
-        //        return CreateResponse(result);
-        //    }
-        //    return Forbid();
-        //}
-
         [HttpPatch("{problemId:long}/problem-comments")]
         public ActionResult CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
         {
-            var result = _problemService.CreateComment(problemComment, problemId);
-            return CreateResponse(result);
+            var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var problem = _problemService.Get(problemId).Value;
+            if ((loggedInUserId == problem.TouristId || loggedInUserId == problem.TourAuthorId) && (problemComment.CommenterId == problem.TouristId || problemComment.CommenterId == problem.TourAuthorId) && !problem.IsResolved && problem.IsAnswered)
+            {
+                var result = _problemService.CreateComment(problemComment, problemId);
+                return CreateResponse(result);
+            }
+            return Forbid();
         }
 
         [HttpPut("{id:int}")]

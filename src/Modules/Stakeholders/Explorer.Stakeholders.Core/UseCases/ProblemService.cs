@@ -164,14 +164,6 @@ namespace Explorer.Stakeholders.Core.UseCases
 
             return results;
         }
-
-        public Result<ProblemResponseDto> GetByAnswerId(long id)
-        {
-            var result = MapToDto<ProblemResponseDto>(_problemRepository.GetByAnswerId(id));
-            result.TourName = _tourService.GetToursName(result.TourId);
-            result.TourAuthorId = _tourService.GetAuthorsId(result.TourId);
-            return result;
-        }
     }
 }
 
