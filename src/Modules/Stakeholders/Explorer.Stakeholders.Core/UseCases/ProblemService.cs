@@ -84,7 +84,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
-        public Result CreateComment(ProblemCommentCreateDto problemComment, long problemId)
+        public Result<ProblemCommentResponseDto> CreateComment(ProblemCommentCreateDto problemComment, long problemId)
         {
             try
             {
@@ -92,9 +92,9 @@ namespace Explorer.Stakeholders.Core.UseCases
                 if (!problem.IsAnswered) throw new Exception();
 
                 var commenter = _userRepository.Get(problemComment.CommenterId);
-                problem.CreateComment(problemComment.Text, commenter, problemComment.CommenterId);
+                var comment = problem.CreateComment(problemComment.Text, commenter, problemComment.CommenterId);
                 CrudRepository.Update(problem);
-                return Result.Ok();
+                return _mapper.Map<ProblemCommentResponseDto>(comment);
             }
             catch (Exception e)
             {

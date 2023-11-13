@@ -25,7 +25,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPatch("{problemId:long}/problem-comments")]
-        public ActionResult CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
+        public ActionResult<ProblemCommentResponseDto> CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
         {
             var result = _problemService.CreateComment(problemComment, problemId);
             return CreateResponse(result);

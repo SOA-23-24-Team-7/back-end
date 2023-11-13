@@ -39,9 +39,11 @@ namespace Explorer.Stakeholders.Core.Domain
             IsAnswered = true;
         }
 
-        public void CreateComment(string text, User commenter, long commenterId)
+        public ProblemComment CreateComment(string text, User commenter, long commenterId)
         {
-            Comments.Add(new ProblemComment(commenterId, commenter, text));
+            var comment = new ProblemComment(commenterId, commenter, text);
+            Comments.Add(comment);
+            return comment;
         }
 
         public void SetDeadline(DateTime deadline)
