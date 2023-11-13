@@ -11,16 +11,24 @@ namespace Explorer.Tours.Core.UseCases;
 
 public class TourSearchService : BaseService<Tour>, ITourSearchService
 {
-    private readonly ICrudRepository<Tour> _tourRepository;
+    //CHANGED REPOSITORY
+    private readonly ITourRepository _tourRepository;
+    private readonly ICrudRepository<Tour> _tourCrudRepository;
     private readonly IKeyPointRepository _keyPointRepository;
+    private readonly IMapper _mapper;
+    private readonly IReviewRepository _reviewRepository;
 
-    public TourSearchService(ICrudRepository<Tour> tourRepository, IKeyPointRepository keyPointRepository, IMapper mapper) : base(mapper)
+    public TourSearchService( IKeyPointRepository keyPointRepository, IMapper mapper, ITourRepository tourRepository, IReviewRepository reviewRepository, ICrudRepository<Tour> tourCrudRepository) : base(mapper)
     {
         _tourRepository = tourRepository;
         _keyPointRepository = keyPointRepository;
+        _mapper = mapper;
+        _reviewRepository = reviewRepository;
+        _tourCrudRepository = tourCrudRepository;
     }
 
-    public Result<PagedResult<TourResponseDto>> Search(double longitude, double latitude, double maxDistance, int page, int pageSize)
+    //MOZDA OBRISATI PAGE I PAGESIZE
+    public Result<PagedResult<LimitedTourViewResponseDto>> Search(double longitude, double latitude, double maxDistance, int page, int pageSize)
     {
         try
         {
@@ -31,7 +39,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
 
             Coordinate mapCoordinate = new Coordinate(longitude, latitude);
 
-            var tours = _tourRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published); // ako ima vise od 1000 tura pravice problem
+            var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published); // ako ima vise od 1000 tura pravice problem
             var nearbyTours = new List<Tour>();
 
             foreach (var tour in tours)
@@ -44,13 +52,28 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
                 }
             }
 
-            var pagedResult = new PagedResult<Tour>(nearbyTours, nearbyTours.Count);
+            var mappedResult = MapToLimitedTourViewDto(nearbyTours);
+            return new PagedResult<LimitedTourViewResponseDto>(mappedResult, mappedResult.Count);
 
-            return MapToDto<TourResponseDto>(pagedResult);
+            
         }
         catch (ArgumentException e)
         {
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
+    }
+
+    private List<LimitedTourViewResponseDto> MapToLimitedTourViewDto(List<Tour> result)
+    {
+        List<LimitedTourViewResponseDto> dtos = new List<LimitedTourViewResponseDto>();
+            foreach (var tour in result)
+            {
+                LimitedTourViewResponseDto dto = _mapper.Map<LimitedTourViewResponseDto>(tour);
+                dto.KeyPoint = _mapper.Map<KeyPointResponseDto>(tour.KeyPoints.First());
+                var reviews = _reviewRepository.GetPagedByTourId(0, 0, tour.Id);
+                dto.Reviews = reviews.Results.Select(_mapper.Map<ReviewResponseDto>).ToList();
+               dtos.Add(dto);
+            }
+        return dtos;
     }
 }
