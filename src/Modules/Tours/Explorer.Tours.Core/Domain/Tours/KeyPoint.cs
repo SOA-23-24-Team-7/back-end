@@ -12,7 +12,7 @@ public class KeyPoint : Entity
     public double Latitude { get; init; }
     public string LocationAddress { get; init; }
     public string ImagePath { get; init; }
-    public long Order { get; init; }
+    public long Order { get; set; }
 
     public KeyPoint(long tourId, string name, string description, double longitude, double latitude, string locationAddress, string imagePath, long order)
     {
