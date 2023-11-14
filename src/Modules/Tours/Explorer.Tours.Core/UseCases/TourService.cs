@@ -7,6 +7,7 @@ using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
+using System.ComponentModel;
 
 namespace Explorer.Tours.Core.UseCases;
 
@@ -15,11 +16,15 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository) : base(repository, mapper)
+    private readonly IReviewRepository _reviewRepository;
+    private readonly IShoppingCartRepository _cartRepository;
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository) : base(repository, mapper)
     {
         _repository = repository;
         _mapper = mapper;
         _tourRepository = tourRepository;
+        _reviewRepository = reviewRepository;
+        _cartRepository = cartRepository;
     }
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
@@ -126,4 +131,77 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         var pagedResult = new PagedResult<Tour>(publishedTours, publishedTours.Count);
         return MapToDto<TourResponseDto>(pagedResult);
     }
+
+    public Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize)
+    {
+        try
+        {
+            var result = _tourRepository.GetPublishedTours(page, pageSize);
+            List<LimitedTourViewResponseDto> dtos = new List<LimitedTourViewResponseDto>();
+            foreach (var tour in result.Results)
+            {
+                LimitedTourViewResponseDto dto = _mapper.Map<LimitedTourViewResponseDto>(tour);
+                dto.KeyPoint = _mapper.Map<KeyPointResponseDto>(tour.KeyPoints.First());
+                var reviews = _reviewRepository.GetPagedByTourId(0,0,tour.Id);
+                dto.Reviews = reviews.Results.Select(_mapper.Map<ReviewResponseDto>).ToList();
+                dtos.Add(dto);
+            }
+            return new PagedResult<LimitedTourViewResponseDto>(dtos, dtos.Count);
+        }
+        catch(ArgumentException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail(FailureCode.Internal);
+        }
+    }
+    public Result<PagedResult<LimitedTourViewResponseDto>> GetToursInCart(int page, int pageSize, long id)
+    {
+        try
+        {
+            var shoppingCart = _cartRepository.GetByTouristId(id);
+            List<LimitedTourViewResponseDto> dtos = new List<LimitedTourViewResponseDto>();
+            if (shoppingCart != null)
+            {
+                foreach (var item in shoppingCart.OrderItems)
+                {
+                    Tour tour = _tourRepository.GetById(item.TourId);
+
+                    LimitedTourViewResponseDto dto = _mapper.Map<LimitedTourViewResponseDto>(tour);
+                    dto.KeyPoint = _mapper.Map<KeyPointResponseDto>(tour.KeyPoints.First());
+                    var reviews = _reviewRepository.GetPagedByTourId(0, 0, tour.Id);
+                    dto.Reviews = reviews.Results.Select(_mapper.Map<ReviewResponseDto>).ToList();
+                    dtos.Add(dto);
+                }
+                return new PagedResult<LimitedTourViewResponseDto>(dtos, dtos.Count);
+            }
+            else
+            {
+                return Result.Fail(FailureCode.Internal);
+            }
+            /*foreach (var item in shoppingCart.OrderItems)
+            {
+                Tour tour = _tourRepository.GetById(item.TourId);
+
+                LimitedTourViewResponseDto dto = _mapper.Map<LimitedTourViewResponseDto>(tour);
+                dto.KeyPoint = _mapper.Map<KeyPointResponseDto>(tour.KeyPoints.First());
+                var reviews = _reviewRepository.GetPagedByTourId(0, 0, tour.Id);
+                dto.Reviews = reviews.Results.Select(_mapper.Map<ReviewResponseDto>).ToList();
+                dtos.Add(dto);
+            }
+            return new PagedResult<LimitedTourViewResponseDto>(dtos, dtos.Count);*/
+        }
+        catch (ArgumentException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail(FailureCode.Internal);
+        }
+
+    }
+
 }
