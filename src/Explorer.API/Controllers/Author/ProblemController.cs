@@ -63,5 +63,12 @@ namespace Explorer.API.Controllers.Author
             var result = _problemService.GetComments(problemId);
             return CreateResponse(result);
         }
+
+        [HttpGet("{problemId:long}")]
+        public ActionResult<ProblemResponseDto> Get(long problemId)
+        {
+            var result = _problemService.Get(problemId);
+            return CreateResponse(result);
+        }
     }
 }

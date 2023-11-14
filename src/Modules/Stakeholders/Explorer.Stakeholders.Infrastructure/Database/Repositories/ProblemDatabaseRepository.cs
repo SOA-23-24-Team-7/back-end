@@ -43,7 +43,7 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 
         public Problem Get(long id)
         {
-            var task = _dbContext.Problem.FirstOrDefault(problem => problem.Id == id);
+            var task = _dbContext.Problem.Include(x => x.Tourist).FirstOrDefault(problem => problem.Id == id);
             return task;
         }
 
