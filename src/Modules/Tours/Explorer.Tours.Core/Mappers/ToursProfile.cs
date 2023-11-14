@@ -3,6 +3,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristEquipment;
 using Explorer.Tours.API.Dtos.TouristPosition;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.ShoppingCarts;
 using Explorer.Tours.Core.Domain.Tours;
 
 namespace Explorer.Tours.Core.Mappers;
@@ -47,12 +48,10 @@ public class ToursProfile : Profile
         CreateMap<TouristPositionUpdateDto, TouristPosition>().ReverseMap();
         CreateMap<PublicKeyPointRequestCreateDto, PublicKeyPointRequest>().ReverseMap();
         CreateMap<PublicKeyPointRequestResponseDto, PublicKeyPointRequest>().ReverseMap();
-        //CreateMap<PublicKeyPointRequestResponseDto, Domain.PublicKeyPointRequest>().ReverseMap().ForMember(x => x.KeyPoint, opt => opt.MapFrom(src => src.KeyPoint));
         CreateMap<PublicKeyPointRequestUpdateDto, PublicKeyPointRequest>().ReverseMap();
 
         CreateMap<PublicFacilityRequestCreateDto, PublicFacilityRequest>().ReverseMap();
         CreateMap<PublicFacilityRequestResponseDto, PublicFacilityRequest>().ReverseMap();
-        //CreateMap<PublicKeyPointRequestResponseDto, Domain.PublicKeyPointRequest>().ReverseMap().ForMember(x => x.KeyPoint, opt => opt.MapFrom(src => src.KeyPoint));
         CreateMap<PublicFacilityRequestUpdateDto, PublicFacilityRequest>().ReverseMap();
 
         CreateMap<TourDurationResponseDto, TourDuration>().ReverseMap(); 
@@ -66,5 +65,23 @@ public class ToursProfile : Profile
 
         CreateMap<PublicKeyPointResponseDto, PublicKeyPoint>().ReverseMap();
         CreateMap<PublicKeyPointCreateDto, PublicKeyPoint>().ReverseMap();
+
+
+        CreateMap<ShoppingCartResponseDto, ShoppingCart>().ReverseMap().ForMember(x => x.OrderItems, opt => opt.MapFrom(src => src.OrderItems));
+        CreateMap<ShoppingCartCreateDto, ShoppingCart>().ReverseMap();
+        CreateMap<ShoppingCartUpdateDto, ShoppingCart>().ReverseMap();
+
+        CreateMap<OrderItemResponseDto, OrderItem>().ReverseMap();
+        CreateMap<OrderItemCreateDto, OrderItem>().ReverseMap();
+        CreateMap<OrderItemUpdateDto, OrderItem>().ReverseMap();
+
+        CreateMap<LimitedTourViewResponseDto, Tour>().ReverseMap();
+
+        CreateMap<TourTokenResponseDto, TourToken>().ReverseMap();
+        CreateMap<TourTokenCreateDto, TourToken>().ReverseMap();
+
+
+
+
     }
 }

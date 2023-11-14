@@ -21,9 +21,9 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("tours/published")]
-        public ActionResult<PagedResult<TourResponseDto>> GetPublishedTours([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<LimitedTourViewResponseDto>> GetPublishedTours([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _tourService.GetPublished(page, pageSize);
+            var result = _tourService.GetPublishedLimitedView(page, pageSize);
             return CreateResponse(result);
         }
 
@@ -45,5 +45,14 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         {
             return long.Parse((HttpContext.User.Identity as ClaimsIdentity).FindFirst("id").Value);
         }
+        [Authorize(Policy ="touristPolicy")]
+        [Authorize(Roles = "tourist")]
+        [HttpGet("tours/inCart/{id:long}")]
+        public ActionResult<PagedResult<LimitedTourViewResponseDto>> GetToursInCart([FromQuery] int page, [FromQuery] int pageSize, long id)
+        {
+            var result = _tourService.GetToursInCart(page, pageSize, id);
+            return CreateResponse(result);
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Tours.Core.Domain.Tours;
 
@@ -36,6 +36,7 @@ public class KeyPoint : Entity
         Latitude = publicKeyPoint.Latitude;
         ImagePath = publicKeyPoint.ImagePath;
         Order= publicKeyPoint.Order;
+        LocationAddress= publicKeyPoint.LocationAddress;
         Validate();
     }
 
@@ -78,4 +79,3 @@ public class KeyPoint : Entity
         return distance;
     }
 }
-

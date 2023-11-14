@@ -75,5 +75,12 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             if (entity == null) throw new KeyNotFoundException("Not found: " + id);
             return entity;
         }
+
+        public PagedResult<Tour> GetPublishedTours(int page, int pageSize)
+        {
+            var task = _dbSet.Include(x => x.KeyPoints).Where(s => s.Status == TourStatus.Published).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
+        }
     }
 }

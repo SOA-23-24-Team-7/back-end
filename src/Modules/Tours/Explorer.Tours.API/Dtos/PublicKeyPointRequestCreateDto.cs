@@ -14,6 +14,7 @@ namespace Explorer.Tours.API.Dtos
         public PublicStatus Status { get; set; }
         public DateTime? Created { get; set; }
         public string AuthorName { get; set; }
+
     }
 }
 public enum PublicStatus
