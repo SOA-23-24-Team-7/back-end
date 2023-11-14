@@ -26,8 +26,8 @@ namespace Explorer.Stakeholders.Tests.Integration.Messages
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var newEntity = new MessageCreateDto
             {
-                UserSenderId = -22,
-                UserReciverId = -11,
+                UserSenderId = -21,
+                UserReciverId = -22,
                 Text = "Okej je.",
                 StatusOfMessage = MessageStatus.NotSeen
             };
@@ -38,7 +38,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Messages
             // Assert - Response
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);
-            result.UserReciverId.ShouldBe(-11);
+            result.UserReciverId.ShouldBe(-22);
             result.Text.ShouldBe(newEntity.Text);
 
             // Assert - Database

@@ -29,7 +29,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Followers
             var newEntity = new FollowerCreateDto
             {
                 UserId = -11,
-                FollowedById = -21,
+                FollowedById = -23,
             };
 
             // Act
@@ -39,7 +39,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Followers
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);
             result.UserId.ShouldBe(-11);
-            result.FollowedById.ShouldBe(-21);
+            result.FollowedById.ShouldBe(-23);
 
             // Assert - Database
             var storedEntity = dbContext.Followers.FirstOrDefault(f => f.FollowedById == newEntity.FollowedById && f.UserId == newEntity.UserId);
