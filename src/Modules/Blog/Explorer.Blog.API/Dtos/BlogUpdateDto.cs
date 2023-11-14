@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Explorer.Blog.API.Dtos
 {
-    
+
     public class BlogUpdateDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public List<string>? Pictures { get; init; }
+        public DateTime Date { get; set; }
         public BlogStatus Status { get; init; }
-
+        public int AuthorId { get; set; }
     }
 }
