@@ -27,7 +27,7 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
             TouristId = 3,
             TourVisitDate = DateOnly.MinValue,
             CommentDate = DateOnly.MinValue,
-            TourId = 2,
+            TourId = -2,
             Images = new List<string> { "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1697414400&semt=sph" }
         };
 
@@ -92,7 +92,7 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
             TouristId = 3,
             TourVisitDate = new DateOnly(),
             CommentDate = new DateOnly(),
-            TourId = 2,
+            TourId = -2,
             Images = new List<string> { "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1697414400&semt=sph", "https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8=" }
         };
 

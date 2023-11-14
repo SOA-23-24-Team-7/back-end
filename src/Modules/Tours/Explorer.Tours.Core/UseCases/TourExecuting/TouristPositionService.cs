@@ -5,8 +5,7 @@ using Explorer.Tours.API.Public.TourExecution;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-
-namespace Explorer.Tours.Core.UseCases.TourExecution;
+namespace Explorer.Tours.Core.UseCases;
 
 public class TouristPositionService : CrudService<TouristPositionResponseDto, TouristPosition>, ITouristPositionService
 {

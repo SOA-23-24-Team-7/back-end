@@ -16,15 +16,21 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
+    private readonly ITourExecutionSessionRepository _tourExecutionSessionRepository;
     private readonly IReviewRepository _reviewRepository;
     private readonly IShoppingCartRepository _cartRepository;
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository) : base(repository, mapper)
+    private readonly ICrudRepository<TourToken> _tourTokenRepository;
+    
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository,
+        ICrudRepository<TourToken> tourTokenRepository) : base(repository, mapper)
     {
         _repository = repository;
         _mapper = mapper;
         _tourRepository = tourRepository;
+        _tourExecutionSessionRepository = tourExecutionSessionRepository;
         _reviewRepository = reviewRepository;
         _cartRepository = cartRepository;
+        _tourTokenRepository = tourTokenRepository;
     }
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
@@ -82,7 +88,8 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     public Result<TourResponseDto> GetById(long id)
     {
         var entity = _tourRepository.GetById(id);
-        return MapToDto<TourResponseDto>(entity);
+        var dto = MapToDto<TourResponseDto>(entity);
+        return dto;
     }
 
     public Result Publish(long id, long authorId)
@@ -129,9 +136,48 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         var allTours = _tourRepository.GetAll(page, pageSize);
         var publishedTours = allTours.Results.Where(t => t.Status == Domain.Tours.TourStatus.Published).ToList();
         var pagedResult = new PagedResult<Tour>(publishedTours, publishedTours.Count);
-        return MapToDto<TourResponseDto>(pagedResult);
+        var dtos = MapToDto<TourResponseDto>(pagedResult);
+        for (int i = 0; i < publishedTours.Count; i++)
+        {
+            var averageRating = publishedTours.ElementAt(i).GetAverageRating();
+            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
+        }
+        return dtos;
     }
 
+
+    public Result<PagedResult<TourResponseDto>> GetAllPaged(int page, int pageSize)
+    {
+        var allTours = _tourRepository.GetAll(page, pageSize).Results;
+        var pagedResult = new PagedResult<Tour>(allTours, allTours.Count);
+        var dtos = MapToDto<TourResponseDto>(pagedResult);
+        for (int i = 0; i < allTours.Count; i++)
+        {
+            var averageRating = allTours.ElementAt(i).GetAverageRating();
+            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
+        }
+        return dtos;
+    }
+
+    public Result<bool> CanTourBeRated(long tourId, long userId)
+    {
+        var tourExecutions = _tourExecutionSessionRepository.GetAll(te => te.TourId == tourId &&
+                                                                   (te.Status == Domain.TourExecutionSessionStatus.Completed || te.Status == Domain.TourExecutionSessionStatus.Abandoned) &&
+                                                                    te.TouristId == userId && te.Progress >= 35 && (te.LastActivity > DateTime.UtcNow.AddDays(-7)));
+        return tourExecutions.Any();
+    }
+
+    public Result<List<TourResponseDto>> GetPurchasedTours(long touristId)
+    {
+        List<TourResponseDto> tourResponseDtos = new List<TourResponseDto>();
+        List<TourToken> tourTokens = _tourTokenRepository.GetAll().Where(tk => tk.TouristId == touristId).ToList();
+        foreach(TourToken tourToken in tourTokens)
+        {
+            TourResponseDto tour = MapToDto<TourResponseDto>(_tourRepository.GetById(tourToken.TourId));
+            tourResponseDtos.Add(tour);
+        }
+        return tourResponseDtos;
+    }
     public Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize)
     {
         try

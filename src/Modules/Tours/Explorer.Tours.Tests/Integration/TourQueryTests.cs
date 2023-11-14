@@ -30,6 +30,22 @@ public class TourQueryTests : BaseToursIntegrationTest
     }
 
     [Fact]
+    public void Retrieves_published()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+
+        // Act
+        var result = ((ObjectResult)controller.GetPublished(0, 0).Result)?.Value as PagedResult<TourResponseDto>;
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.Results.Count.ShouldBe(2);
+        result.TotalCount.ShouldBe(2);
+    }
+
+    [Fact]
     public void Retrieve_Tour_Equipment()
     {
         // Arrange
