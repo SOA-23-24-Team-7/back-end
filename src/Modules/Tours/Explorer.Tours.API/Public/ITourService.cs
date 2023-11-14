@@ -20,4 +20,5 @@ public interface ITourService
     Result<PagedResult<TourResponseDto>> GetPublished(int page, int pageSize);
     Result Archive(long id, long authorId);
     Result<PagedResult<TourResponseDto>> GetAllPaged(int page, int pageSize);
+    Result<bool> CanTourBeRated(long tourId, long userId);
 }

@@ -15,11 +15,13 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository) : base(repository, mapper)
+    private readonly ITourExecutionSessionRepository _tourExecutionSessionRepository;
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository) : base(repository, mapper)
     {
         _repository = repository;
         _mapper = mapper;
         _tourRepository = tourRepository;
+        _tourExecutionSessionRepository = tourExecutionSessionRepository;
     }
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
@@ -77,7 +79,8 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     public Result<TourResponseDto> GetById(long id)
     {
         var entity = _tourRepository.GetById(id);
-        return MapToDto<TourResponseDto>(entity);
+        var dto = MapToDto<TourResponseDto>(entity);
+        return dto;
     }
 
     public Result Publish(long id, long authorId)
@@ -145,5 +148,11 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
             dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
         }
         return dtos;
+    }
+
+    public Result<bool> CanTourBeRated(long tourId, long userId)
+    {
+        var tourExecutions = _tourExecutionSessionRepository.GetAll(te => te.TourId == tourId && te.TouristId == userId && te.Progress >= 35 && (te.LastActivity > DateTime.UtcNow.AddDays(-7)));
+        return tourExecutions.Any();
     }
 }
