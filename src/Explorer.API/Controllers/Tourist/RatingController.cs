@@ -1,8 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
+﻿using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Tours.API.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -27,6 +24,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 rating.UserId = long.Parse(identity.FindFirst("id").Value);
             }
+            rating.DateTime = DateTime.UtcNow.AddHours(1);
             var result = _ratingService.Create(rating);
             return CreateResponse(result);
         }

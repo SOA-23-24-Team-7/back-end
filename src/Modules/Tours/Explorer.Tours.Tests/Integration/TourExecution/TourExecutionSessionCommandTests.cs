@@ -83,8 +83,9 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             // Assert - Database
             var storedEntity = dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId);
             storedEntity.ShouldNotBeNull();
-            storedEntity.Status.ShouldBe(TourExecutionSessionStatus.Abandoned);
+            storedEntity.Status.ToString().ShouldBe(TourExecutionSessionStatus.Abandoned.ToString());
         }
+
         private static TourExecutionSessionController CreateController(IServiceScope scope)
         {
             return new TourExecutionSessionController(scope.ServiceProvider.GetRequiredService<ITourExecutionSessionService>(),

@@ -11,7 +11,6 @@ namespace Explorer.Blog.Infrastructure.Database.Repositories
         private readonly BlogContext _dbContext;
         private readonly DbSet<Comment> _dbSet;
 
-
         public CommentDatabaseRepository(BlogContext dbContext)
         {
             _dbContext = dbContext;

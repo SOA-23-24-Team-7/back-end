@@ -3,7 +3,6 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 namespace Explorer.API.Controllers.Administrator
 {
     [Authorize(Policy = "administratorPolicy")]

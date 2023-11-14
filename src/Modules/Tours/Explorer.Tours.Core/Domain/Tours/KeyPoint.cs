@@ -1,4 +1,4 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Tours.Core.Domain.Tours;
 
@@ -15,6 +15,8 @@ public class KeyPoint : Entity
     public long Order { get; set; }
     public bool HaveSecret { get; init; }
     public KeyPointSecret? Secret { get; private set; }
+
+    public KeyPoint() { }
 
     public KeyPoint(long tourId, string name, string description, double longitude, double latitude, string locationAddress, string imagePath, long order, KeyPointSecret? secret)
     {
@@ -55,10 +57,11 @@ public class KeyPoint : Entity
         if (string.IsNullOrWhiteSpace(ImagePath)) throw new ArgumentException("Invalid ImagePath");
     }
 
-    public void HideSecret()
+    public double CalculateDistance(KeyPoint kp)
     {
-        Secret = null;
+        return CalculateDistance(kp.Longitude, kp.Latitude);
     }
+
     public double CalculateDistance(double longitude, double latitude)
     {
         if (longitude < -180 || longitude > 180) throw new ArgumentException("Invalid Longitude");
@@ -81,5 +84,9 @@ public class KeyPoint : Entity
 
         return distance;
     }
-}
 
+    public void HideSecret()
+    {
+        Secret = null;
+    }
+}

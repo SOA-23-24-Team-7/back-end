@@ -1,4 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos.TouristEquipment;
+using Explorer.Stakeholders.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristEquipment;
 using Explorer.Tours.API.Public;
@@ -39,19 +41,20 @@ namespace Explorer.API.Controllers.Tourist
         {
             int touristId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             touristEquipment.TouristId = touristId;
-            if(GetForTourist(touristId) != null)
+            if (GetForTourist(touristId) != null)
             {
                 return BadRequest();
             }
             var result = _touristEquipmentService.Create(touristEquipment);
             return CreateResponse(result);
         }
-        
+
         [HttpPut]
         public ActionResult<TouristEquipmentResponseDto> Update([FromBody] TouristEquipmentUpdateDto touristEquipment)
         {
             int touristId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            if (touristEquipment.TouristId != touristId){
+            if (touristEquipment.TouristId != touristId)
+            {
                 return Unauthorized();
             }
             var result = _touristEquipmentService.Update(touristEquipment);

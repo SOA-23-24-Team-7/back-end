@@ -1,7 +1,5 @@
-﻿using Explorer.API.Controllers.Administrator.Administration;
-using Explorer.API.Controllers.Tourist;
+﻿using Explorer.API.Controllers.Tourist;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.Tests;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;

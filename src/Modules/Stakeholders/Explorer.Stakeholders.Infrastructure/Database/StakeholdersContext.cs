@@ -8,6 +8,7 @@ public class StakeholdersContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Person> People { get; set; }
+    public DbSet<Follower> Followers { get; set; }
     public DbSet<ClubInvitation> ClubInvitations { get; set; }
     public DbSet<ClubMembership> ClubMemberships { get; set; }
     public DbSet<Club> Clubs { get; set; }
@@ -16,6 +17,7 @@ public class StakeholdersContext : DbContext
     public DbSet<Problem> Problem { get; set; }
     public DbSet<ProblemAnswer> ProblemAnswer { get; set; }
     public DbSet<ProblemComment> ProblemComment { get; set; }
+    public DbSet<Message> Messages { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options)
     {
@@ -64,5 +66,7 @@ public class StakeholdersContext : DbContext
            .HasOne(s => s.User)
            .WithOne()
            .HasForeignKey<Rating>(s => s.UserId);
+
+        
     }
 }
