@@ -8,11 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\Explorer.BuildingBlocks.Infrastructure\Explorer.BuildingBlocks.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Stakeholders\Explorer.Stakeholders.Core\Explorer.Stakeholders.Core.csproj" />
     <ProjectReference Include="..\Explorer.Blog.Core\Explorer.Blog.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Database\Repositories\" />
   </ItemGroup>
 
   <ItemGroup>

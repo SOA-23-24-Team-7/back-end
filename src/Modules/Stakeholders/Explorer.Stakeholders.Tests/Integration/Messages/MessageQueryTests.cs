@@ -18,7 +18,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Messages
         public MessageQueryTests(StakeholdersTestFactory factory) : base(factory)
         {
         }
-
+        [Fact]
         public void Retrieves_all_by_recieverId()
         {
             // Arrange
@@ -26,7 +26,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Messages
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.GetByRecieverId(0, 0, -22).Result)?.Value as PagedResult<MessageResponseWithUsernamesDto>;
+            var result = ((ObjectResult)controller.GetByRecieverId(0, 0, -21).Result)?.Value as PagedResult<MessageResponseWithUsernamesDto>;
 
             // Assert
             result.ShouldNotBeNull();
