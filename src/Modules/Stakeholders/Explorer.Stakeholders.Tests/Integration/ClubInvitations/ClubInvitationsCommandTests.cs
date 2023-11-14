@@ -23,7 +23,7 @@ public class ClubInvitationsCommandTests : BaseStakeholdersIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var newEntity = new ClubInvitationWithUsernameDto()
         {
-            ClubId = 2,
+            ClubId = -2,
             Username = "autor2"
         };
 

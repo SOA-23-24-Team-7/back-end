@@ -5,13 +5,6 @@ using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TourController = Explorer.API.Controllers.Author.TourController;
-
 
 namespace Explorer.Tours.Tests.Integration;
 [Collection("Sequential")]
@@ -494,9 +487,6 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.ShouldNotBeNull();
         storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
     }
-
-
-
 
     private static TourController CreateController(IServiceScope scope)
     {
