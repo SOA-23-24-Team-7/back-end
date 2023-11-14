@@ -40,8 +40,7 @@ public static class StakeholdersStartup
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<IInternalProblemService, InternalProblemService>();
         services.AddScoped<IProblemService, ProblemService>();
-        //services.AddScoped<IProblemAnswerService, ProblemAnswerService>();
-        //services.AddScoped<IProblemCommentService, ProblemCommentService>();
+        services.AddScoped<IProblemResolvingNotificationService, ProblemResolvingNotificationService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -59,7 +58,9 @@ public static class StakeholdersStartup
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IPersonRepository, PersonDataBaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Problem>), typeof(CrudDatabaseRepository<Problem, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<ProblemResolvingNotification>), typeof(CrudDatabaseRepository<ProblemResolvingNotification, StakeholdersContext>));
         services.AddScoped<IProblemRepository, ProblemDatabaseRepository>();
+        services.AddScoped<IProblemResolvingNotificationRepository, ProblemResolvingNotificationDatabaseRepository>();
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", "stakeholders")));

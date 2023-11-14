@@ -1,4 +1,5 @@
-﻿using Explorer.Stakeholders.API.Public;
+﻿using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,14 @@ namespace Explorer.API.Controllers
         public ProblemResolvingNotificationController(IProblemResolvingNotificationService problemResolvingNotificationService)
         {
             _notificationService = problemResolvingNotificationService;
+        }
+
+        [HttpGet]
+        public ActionResult<ProblemResolvingNotificationResponseDto> GetByLoggedInUser(int page, int pageSize)
+        {
+            var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _notificationService.GetByLoggedInUser(page, pageSize, loggedInUserId);
+            return CreateResponse(result);
         }
     }
 }

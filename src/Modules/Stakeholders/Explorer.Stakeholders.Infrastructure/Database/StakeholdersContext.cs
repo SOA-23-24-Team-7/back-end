@@ -15,6 +15,7 @@ public class StakeholdersContext : DbContext
     public DbSet<ClubJoinRequest> ClubJoinRequests { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<Problem> Problem { get; set; }
+    public DbSet<ProblemResolvingNotification> ProblemResolvingNotifications { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options)
     {

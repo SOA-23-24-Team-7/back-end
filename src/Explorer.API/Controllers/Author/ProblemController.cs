@@ -27,7 +27,7 @@ namespace Explorer.API.Controllers.Author
         [HttpPatch("{problemId:long}/problem-comments")]
         public ActionResult CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
         {
-            var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            long loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var problem = _problemService.Get(problemId).Value;
             if ((loggedInUserId == problem.TouristId || loggedInUserId == problem.TourAuthorId) && (problemComment.CommenterId == problem.TouristId || problemComment.CommenterId == problem.TourAuthorId) && !problem.IsResolved && problem.IsAnswered)
             {

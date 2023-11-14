@@ -26,10 +26,11 @@ namespace Explorer.API.Controllers.Administrator
         [HttpPut("set-deadline/{problemId:long}")]
         public ActionResult<ProblemResponseDto> SetDeadline([FromBody] ProblemDeadlineUpdateDto problem)
         {
+            var adminID = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var prob = _problemService.Get(problem.Id);
             if (problem.Deadline > DateTime.UtcNow && !prob.Value.IsResolved)
             {
-                var result = _problemService.UpdateDeadline(problem.Id, problem.Deadline);
+                var result = _problemService.UpdateDeadline(problem.Id, problem.Deadline, adminID);
                 return CreateResponse(result);
             }
             return Forbid();

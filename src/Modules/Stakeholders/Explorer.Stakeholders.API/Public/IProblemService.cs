@@ -14,7 +14,7 @@ public interface IProblemService
     Result Delete(long id);
     Result<PagedResult<ProblemResponseDto>> GetByAuthor(int page, int pageSize, long id);
     Result<PagedResult<ProblemResponseDto>> GetByUserId(int page, int pageSize, long id);
-    Result<ProblemResponseDto> UpdateDeadline(long problemId, DateTime deadline);
+    Result<ProblemResponseDto> UpdateDeadline(long problemId, DateTime deadline, long adminID);
     Result CreateAnswer(ProblemAnswerDto problemAnswer, long problemId);
     Result<ProblemCommentResponseDto> CreateComment(ProblemCommentCreateDto problemComment, long problemId);
     Result<ProblemAnswerDto> GetAnswer(long problemId);
