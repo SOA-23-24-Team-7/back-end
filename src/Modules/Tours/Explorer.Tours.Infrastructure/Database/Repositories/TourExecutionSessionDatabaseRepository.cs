@@ -1,15 +1,17 @@
-﻿using Explorer.Tours.Core.Domain;
+﻿using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 
 namespace Explorer.Tours.Infrastructure.Database.Repositories
 {
-    public class TourExecutionSessionDatabaseRepository : ITourExecutionSessionRepository
+    public class TourExecutionSessionDatabaseRepository : CrudDatabaseRepository<TourExecutionSession, ToursContext>, ITourExecutionSessionRepository
     {
         private readonly ToursContext _dbContext;
-        public TourExecutionSessionDatabaseRepository(ToursContext dbContext)
+        public TourExecutionSessionDatabaseRepository(ToursContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
+
         public TourExecutionSession Add(TourExecutionSession tourExecution)
         {
             _dbContext.TourExecutionSessions.Add(tourExecution);

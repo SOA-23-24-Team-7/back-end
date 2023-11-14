@@ -64,14 +64,14 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public PagedResult<Tour> GetAll(int page, int pageSize)
         {
-            var task = _dbSet.Include(x => x.KeyPoints).GetPagedById(page, pageSize);
+            var task = _dbSet.Include(x => x.KeyPoints).Include(x => x.Reviews).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
         }
 
         public Tour GetById(long id)
         {
-            var entity = _dbSet.Include(x => x.KeyPoints).First(x => x.Id == id);
+            var entity = _dbSet.Include(x => x.KeyPoints).Include(x => x.Reviews).First(x => x.Id == id);
             if (entity == null) throw new KeyNotFoundException("Not found: " + id);
             return entity;
         }

@@ -85,6 +85,13 @@ public class ToursContext : DbContext
         .HasForeignKey<PublicKeyPointNotification>(s => s.RequestId);
     }
 
+    private static void ConfigureTourReview(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Review>()
+            .HasOne<Tour>()
+            .WithMany(t => t.Reviews)
+            .HasForeignKey(r => r.TourId);
+    }
     private static void ConfigureOrderItem(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<OrderItem>()

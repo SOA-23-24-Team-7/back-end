@@ -13,6 +13,7 @@ namespace Explorer.Tours.Core.Domain
         public long TourId { get; init; }
         public long TouristId { get; init; }
         public long NextKeyPointId { get; private set; }
+        public double Progress { get; private set; }
         public DateTime LastActivity { get; private set; }
         public TourExecutionSession(long tourId, long touristId, long nextKeyPointId) 
         {
@@ -21,6 +22,7 @@ namespace Explorer.Tours.Core.Domain
             TourId = tourId;
             TouristId = touristId;
             NextKeyPointId = nextKeyPointId;
+            Progress = 0;
         }
         public void Abandon()
         {
@@ -31,6 +33,7 @@ namespace Explorer.Tours.Core.Domain
         {
             LastActivity = DateTime.UtcNow;
             Status = TourExecutionSessionStatus.Completed;
+            Progress = 100;
             NextKeyPointId = -1;
         }
         public void SetNextKeyPointId(long keyPointId)
@@ -38,12 +41,17 @@ namespace Explorer.Tours.Core.Domain
             LastActivity = DateTime.UtcNow;
             NextKeyPointId = keyPointId;
         }
-    }
-}
 
-public enum TourExecutionSessionStatus
-{
-    Started,
-    Abandoned,
-    Completed
+        public void UpdateProgress(double progress)
+        {
+            if (progress > Progress) Progress = progress;
+        }
+    }
+
+    public enum TourExecutionSessionStatus
+    {
+        Started,
+        Abandoned,
+        Completed
+    }
 }

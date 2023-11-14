@@ -1,4 +1,4 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Tours.Core.Domain.Tours;
 
@@ -42,7 +42,7 @@ public class KeyPoint : Entity
         Latitude = publicKeyPoint.Latitude;
         ImagePath = publicKeyPoint.ImagePath;
         Order= publicKeyPoint.Order;
-        LocationAddress= publicKeyPoint.LocationAddress;
+        LocationAddress = publicKeyPoint.LocationAddress;
         Validate();
     }
 
@@ -57,9 +57,9 @@ public class KeyPoint : Entity
         if (string.IsNullOrWhiteSpace(ImagePath)) throw new ArgumentException("Invalid ImagePath");
     }
 
-    public void HideSecret()
+    public double CalculateDistance(KeyPoint kp)
     {
-        Secret = null;
+        return CalculateDistance(kp.Longitude, kp.Latitude);
     }
 
     public double CalculateDistance(double longitude, double latitude)
@@ -84,5 +84,9 @@ public class KeyPoint : Entity
 
         return distance;
     }
-}
 
+    public void HideSecret()
+    {
+        Secret = null;
+    }
+}
