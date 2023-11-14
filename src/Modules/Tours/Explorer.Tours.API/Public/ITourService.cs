@@ -23,4 +23,5 @@ public interface ITourService
     Result<bool> CanTourBeRated(long tourId, long userId);
     Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize);
     Result<PagedResult<LimitedTourViewResponseDto>> GetToursInCart(int page, int pageSize, long id);
+    Result<List<TourResponseDto>> GetPurchasedTours(long touristId);
 }

@@ -1,11 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Tours.Infrastructure.Database.Repositories
 {
@@ -23,10 +18,9 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             _dbContext.SaveChanges();
             return tourExecution;
         }
-        public TourExecutionSession Abandon(long tourId, long touristId)
+        public TourExecutionSession Abandon(long tourExecutionId)
         {
-            //todo: provera da li postoji tour execution
-            TourExecutionSession execution = _dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId && t.TouristId == touristId);
+            TourExecutionSession execution = _dbContext.TourExecutionSessions.FirstOrDefault(t => t.Id == tourExecutionId);
             execution.Abandon();
             _dbContext.SaveChanges();
             return execution;
@@ -50,8 +44,21 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         public TourExecutionSession Get(long tourId, long touristId)
         {
             //todo: provera da li postoji tour execution
+            TourExecutionSession execution = _dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId && t.TouristId == touristId);
+            return execution;
+        }
+        public TourExecutionSession GetStarted(long tourId, long touristId)
+        {
             TourExecutionSession execution = _dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId && t.TouristId == touristId && t.Status == TourExecutionSessionStatus.Started);
             return execution;
+        }
+        public List<TourExecutionSession> GetForTourist(long touristId)
+        {
+            return _dbContext.TourExecutionSessions.Where(te => te.TouristId == touristId).ToList();
+        }
+        public TourExecutionSession? GetLive(long touristId)
+        {
+            return _dbContext.TourExecutionSessions.Where(te => te.TouristId == touristId && te.Status == TourExecutionSessionStatus.Started).FirstOrDefault();
         }
     }
 }

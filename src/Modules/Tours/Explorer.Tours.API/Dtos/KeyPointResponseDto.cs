@@ -11,5 +11,7 @@
         public string LocationAddress { get; set; }
         public string ImagePath { get; set; }
         public long Order { get; set; }
+        public bool HaveSecret { get; set; }
+        public KeyPointSecretDto? Secret { get; set; }
     }
 }
