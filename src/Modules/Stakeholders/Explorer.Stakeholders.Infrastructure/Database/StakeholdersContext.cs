@@ -1,4 +1,5 @@
 ﻿using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Problems;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database;

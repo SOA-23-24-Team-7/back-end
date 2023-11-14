@@ -1,6 +1,7 @@
 using AutoMapper;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Problems;
 
 namespace Explorer.Stakeholders.Core.Mappers;
 

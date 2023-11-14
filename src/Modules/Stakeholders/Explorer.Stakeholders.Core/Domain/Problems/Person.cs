@@ -1,8 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Explorer.BuildingBlocks.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.Domain;
 using System.Net.Mail;
 
-namespace Explorer.Stakeholders.Core.Domain;
+namespace Explorer.Stakeholders.Core.Domain.Problems;
 
 public class Person : Entity
 {

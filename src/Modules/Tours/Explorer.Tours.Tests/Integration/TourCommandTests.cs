@@ -1,11 +1,7 @@
-﻿using Explorer.API.Controllers.Administrator.Administration;
-using Explorer.API.Controllers.Author;
-using Explorer.Tours.API.Dtos;
+﻿using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
-using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System;
@@ -14,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TourController = Explorer.API.Controllers.Author.TourController;
+
 
 namespace Explorer.Tours.Tests.Integration;
 [Collection("Sequential")]
@@ -308,9 +305,9 @@ public class TourCommandTests : BaseToursIntegrationTest
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(404);
     }
-    private static TourController CreateController(IServiceScope scope)
+    private static Explorer.API.Controllers.Author.TourController CreateController(IServiceScope scope)
     {
-        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())
+        return new Explorer.API.Controllers.Author.TourController(scope.ServiceProvider.GetRequiredService<ITourService>())
         {
             ControllerContext = BuildContext("-1")
         };
