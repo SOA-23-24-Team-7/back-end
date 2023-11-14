@@ -17,10 +17,10 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
     private readonly ITourExecutionSessionRepository _tourExecutionSessionRepository;
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository) : base(repository, mapper)
     private readonly IReviewRepository _reviewRepository;
     private readonly IShoppingCartRepository _cartRepository;
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository) : base(repository, mapper)
+
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository) : base(repository, mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -158,7 +158,9 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
 
     public Result<bool> CanTourBeRated(long tourId, long userId)
     {
-        var tourExecutions = _tourExecutionSessionRepository.GetAll(te => te.TourId == tourId && te.TouristId == userId && te.Progress >= 35 && (te.LastActivity > DateTime.UtcNow.AddDays(-7)));
+        var tourExecutions = _tourExecutionSessionRepository.GetAll(te => te.TourId == tourId &&
+                                                                   (te.Status == Domain.TourExecutionSessionStatus.Completed || te.Status == Domain.TourExecutionSessionStatus.Abandoned) &&
+                                                                    te.TouristId == userId && te.Progress >= 35 && (te.LastActivity > DateTime.UtcNow.AddDays(-7)));
         return tourExecutions.Any();
     }
 
