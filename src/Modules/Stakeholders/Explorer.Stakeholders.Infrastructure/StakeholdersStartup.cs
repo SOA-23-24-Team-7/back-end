@@ -1,5 +1,6 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
@@ -42,6 +43,7 @@ public static class StakeholdersStartup
         services.AddScoped<IProblemCommentService, ProblemCommentService>();
         services.AddScoped<IMessageService, MessageService>();
 
+        services.AddScoped<IInternalUserService, UserService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -51,7 +53,7 @@ public static class StakeholdersStartup
         services.AddScoped<IClubInvitationRepository, ClubInvitationDatabaseRepository>();
         services.AddScoped<IClubMembershipRepository, ClubMembershipDatabaseRepository>();
         services.AddScoped<IClubRepository, ClubRepository>();
-        services.AddScoped(typeof(ICrudRepository<Message>), typeof(CrudDatabaseRepository<Message, StakeholdersContext>)); 
+        services.AddScoped(typeof(ICrudRepository<Message>), typeof(CrudDatabaseRepository<Message, StakeholdersContext>));
         services.AddScoped<IFollowerRepository, FollowerDatabaseRepository>();
         services.AddScoped<IMessageRepository, MessageDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Follower>), typeof(CrudDatabaseRepository<Follower, StakeholdersContext>));

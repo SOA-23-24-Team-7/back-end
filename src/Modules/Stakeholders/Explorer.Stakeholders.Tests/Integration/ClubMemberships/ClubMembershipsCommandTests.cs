@@ -1,5 +1,4 @@
 ﻿using Explorer.API.Controllers.Tourist;
-using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Microsoft.AspNetCore.Http;

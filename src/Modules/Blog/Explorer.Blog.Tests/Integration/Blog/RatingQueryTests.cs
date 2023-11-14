@@ -1,18 +1,26 @@
-﻿using Explorer.API.Controllers.Tourist;
+﻿using Explorer.API.Controllers;
+using Explorer.API.Controllers.Tourist;
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Explorer.Blog.Tests.Integration.Blog
 {
     [Collection("Sequential")]
-    public class CommentQueryTests : BaseBlogIntegrationTest
+    public class RatingQueryTests : BaseBlogIntegrationTest
     {
-        public CommentQueryTests(BlogTestFactory factory) : base(factory) { }
+        public RatingQueryTests(BlogTestFactory factory) : base(factory)
+        {
+        }
 
         [Fact]
         public void Retrieves_all()
@@ -22,17 +30,16 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.GetAll(0, 0, -1).Result)?.Value as PagedResult<CommentResponseDto>;
+            var result = (controller.Get(-2).Result as ObjectResult)?.Value as BlogResponseDto;
 
             // Assert
             result.ShouldNotBeNull();
-            result.TotalCount.ShouldBe(1);
-            result.Results.Count.ShouldBe(1);
+            result.Votes.Count.ShouldBe(2);
         }
 
-        private static CommentController CreateController(IServiceScope scope)
+        private static BlogController CreateController(IServiceScope scope)
         {
-            return new CommentController(scope.ServiceProvider.GetRequiredService<ICommentService>(), scope.ServiceProvider.GetRequiredService<IBlogService>())
+            return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>())
             {
                 ControllerContext = BuildContext("-1")
             };
