@@ -22,10 +22,10 @@ namespace Explorer.API.Controllers
             _userService = userService;
         }
 
-        [HttpGet("followers")]
-        public ActionResult<PagedResult<FollowerResponseWithUsernameDto>> GetFollowers([FromQuery] int page, [FromQuery] int pageSize)
+        [HttpGet("followers/{id:long}")]
+        public ActionResult<PagedResult<FollowerResponseWithUsernameDto>> GetFollowers([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
-            long userId = 0;
+            long userId = id;
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
             {
@@ -34,10 +34,10 @@ namespace Explorer.API.Controllers
             var result = _followerService.GetFollowers(page, pageSize, userId);
             return CreateResponse(result);
         }
-        [HttpGet("followings")]
-        public ActionResult<PagedResult<FollowingResponseWithUsernameDto>> GetFollowings([FromQuery] int page, [FromQuery] int pageSize)
+        [HttpGet("followings/{id:long}")]
+        public ActionResult<PagedResult<FollowingResponseWithUsernameDto>> GetFollowings([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
-            long userId = 0;
+            long userId = id;
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
             {
