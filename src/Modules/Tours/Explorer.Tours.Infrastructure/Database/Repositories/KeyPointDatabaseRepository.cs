@@ -19,6 +19,8 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public KeyPoint Create(KeyPoint keyPoint)
         {
+            keyPoint.Order = _dbContext.KeyPoints.Where(kp => kp.TourId == keyPoint.TourId).Count();
+
             var tour = _dbContext.Tours
                              .Include(t => t.KeyPoints)
                              .Single(t => t.Id == keyPoint.TourId);

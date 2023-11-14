@@ -40,6 +40,11 @@ public class ToursProfile : Profile
         CreateMap<TourExecutionSession, TourExecutionInfoDto>().ForMember(dest => dest.TourStatus, opt => opt.MapFrom(src => src.Status));
         CreateMap<Tour, TourExecutionInfoDto>().ForMember(dest => dest.TourExecutionStatus, opt => opt.MapFrom(src => src.Status));
 
+        CreateMap<TouristPositionResponseDto, TouristPosition>().ReverseMap();
+        CreateMap<TouristPositionCreateDto, TouristPosition>().ReverseMap();
+        CreateMap<TouristPositionUpdateDto, TouristPosition>().ReverseMap();
+
+
         CreateMap<PreferenceResponseDto, Preference>().ReverseMap();
         CreateMap<PreferenceCreateDto, Preference>().ReverseMap();
         CreateMap<PreferenceUpdateDto, Preference>().ReverseMap();

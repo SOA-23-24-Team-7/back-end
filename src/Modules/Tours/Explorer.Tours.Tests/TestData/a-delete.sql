@@ -1,3 +1,4 @@
+DELETE FROM tours."TourExecutionSessions";
 DELETE FROM tours."TouristPositions";
 DELETE FROM tours."Equipment";
 DELETE FROM tours."KeyPoints";
@@ -9,3 +10,4 @@ DELETE FROM tours."Preferences";
 DELETE FROM tours."TouristEquipments";
 DELETE FROM tours."OrderItems";
 DELETE FROM tours."ShoppingCarts";
+DELETE FROM tours."TourExecutionSessions";

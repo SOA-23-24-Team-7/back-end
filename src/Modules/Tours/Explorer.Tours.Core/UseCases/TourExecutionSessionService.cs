@@ -22,6 +22,7 @@ namespace Explorer.Tours.Core.UseCases
             _tourRepository = tourRepository;
             _mapper = mapper;
         }
+
         public Result<TourExecutionSessionResponseDto> StartTour(long tourId, long touristId)
         {
             long keyPointId = _keyPointRepository.GetByTourId(tourId)[0].Id;
@@ -29,21 +30,22 @@ namespace Explorer.Tours.Core.UseCases
             _tourExecutionRepository.Add(tourExecution);
             return MapToDto<TourExecutionSessionResponseDto>(tourExecution);
         }
+
         public Result<TourExecutionSessionResponseDto> AbandonTour(long tourId, long touristId)
         {
-            TourExecutionSession execution = _tourExecutionRepository.Get(tourId, touristId);
-            if (execution.Status != TourExecutionSessionStatus.Started)
+            TourExecutionSession execution = _tourExecutionRepository.GetStarted(tourId, touristId);
+            if (execution == null)
             {
                 return null;
             }
-            execution = _tourExecutionRepository.Abandon(tourId, touristId);
+            execution = _tourExecutionRepository.Abandon(execution.Id);
             return MapToDto<TourExecutionSessionResponseDto>(execution);
         }
 
-        public Result<TourExecutionSessionResponseDto> CompleteKeyPoint(long tourId, long touristId)
+        public Result<TourExecutionSessionResponseDto> CheckKeyPointCompletion(long tourId, long touristId, double longitude, double latitude)
         {
-            TourExecutionSession tourExecution = _tourExecutionRepository.Get(tourId, touristId);
-            if(tourExecution.Status != TourExecutionSessionStatus.Started)
+            TourExecutionSession tourExecution = _tourExecutionRepository.GetStarted(tourId, touristId);
+            if(tourExecution == null)
             {
                 return null;
             }
@@ -52,17 +54,21 @@ namespace Explorer.Tours.Core.UseCases
             {
                 if (keyPoints[i].Id == tourExecution.NextKeyPointId)
                 {
+                    var keyPointCoordinate = new Coordinate(keyPoints[i].Longitude, keyPoints[i].Latitude);
+
+                    if (keyPointCoordinate.CalculateDistance(longitude, latitude) > 200) break;
+
                     //ako je kompletirao poslednju kljucnu tacku -> kompletiraj turu
                     if (i + 1 >= keyPoints.Count)
                     {
                         tourExecution = _tourExecutionRepository.CompleteTourExecution(tourExecution.Id);
-                        break;
                     }
                     else
                     {
                         tourExecution = _tourExecutionRepository.UpdateNextKeyPoint(tourExecution.Id, keyPoints[i + 1].Id);
-                        break;
                     }
+
+                    break;
                 }
             }
             return MapToDto<TourExecutionSessionResponseDto>(tourExecution);
