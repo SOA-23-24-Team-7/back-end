@@ -14,7 +14,6 @@ namespace Explorer.Tours.Core.UseCases
         private readonly ITourRepository _tourRepository;
         private readonly ITourExecutionSessionRepository _tourExecutionRepository;
         private readonly IKeyPointRepository _keyPointRepository;
-        private readonly ITourRepository _tourRepository;
         private readonly IMapper _mapper;
         public TourExecutionSessionService(IMapper mapper, ITourExecutionSessionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository, ITourRepository tourRepository) : base(mapper)
         {

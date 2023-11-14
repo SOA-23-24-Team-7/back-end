@@ -21,7 +21,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly IShoppingCartRepository _cartRepository;
     private readonly ICrudRepository<TourToken> _tourTokenRepository;
     
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository,
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository,
         ICrudRepository<TourToken> tourTokenRepository) : base(repository, mapper)
     {
         _repository = repository;
