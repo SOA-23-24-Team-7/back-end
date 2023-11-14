@@ -9,13 +9,13 @@ namespace Explorer.Tours.Core.Utilities
     public class NotificationGenerator
     {
         public NotificationGenerator() { }
-        public string GenerateRejected(string name,string comment)
+        public string GenerateRejected(string name)
         {
-            return "Your request for public " + name + " has been rejected. " + comment;
+            return "Your request for publishing " + name + " has been REJECTED. ";
         }
         public string GenerateAccepted(string name)
         {
-            return "Your request for public " + name + " has been accepted.";
+            return "Your request for publishing - " + name + " has been ACCEPTED.";
         }
     }
 }

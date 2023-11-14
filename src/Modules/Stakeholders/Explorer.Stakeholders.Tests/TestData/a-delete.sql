@@ -8,3 +8,5 @@ DELETE FROM stakeholders."Problem";
 DELETE FROM stakeholders."ProblemAnswer";
 DELETE FROM stakeholders."ProblemComment";
 DELETE FROM stakeholders."Ratings";
+DELETE FROM stakeholders."Followers";
+DELETE FROM stakeholders."Messages";

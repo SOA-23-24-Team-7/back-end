@@ -1,4 +1,5 @@
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.ShoppingCarts;
 using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
@@ -21,7 +22,11 @@ public class ToursContext : DbContext
     public DbSet<PublicKeyPointNotification> PublicKeyPointNotifications { get; set; }
     public DbSet<PublicFacilityNotification> PublicFacilityNotifications { get; set; }
     public DbSet<PublicKeyPoint> PublicKeyPoints { get; set; }
+    public DbSet<TourToken> tourTokens { get; set; }
 
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+
+    public DbSet<OrderItem> OrderItems { get; set; }
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,7 +42,7 @@ public class ToursContext : DbContext
         ConfigurePublicKeyPointRequest(modelBuilder);
         ConfigurePublicFacilityRequest(modelBuilder);
         ConfigureNotification(modelBuilder);
-
+        ConfigureOrderItem(modelBuilder);
         modelBuilder.Entity<Core.Domain.Tours.Tour>().Property(item => item.Durations).HasColumnType("jsonb");
         modelBuilder.Entity<Core.Domain.Tours.KeyPoint>().Property(item => item.Secret).HasColumnType("jsonb");
     }
@@ -79,4 +84,13 @@ public class ToursContext : DbContext
         .WithOne()
         .HasForeignKey<PublicKeyPointNotification>(s => s.RequestId);
     }
+
+    private static void ConfigureOrderItem(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<OrderItem>()
+            .HasOne<Tour>()
+            .WithOne()
+            .HasForeignKey<OrderItem>(o => o.TourId);
+    }
+
 }

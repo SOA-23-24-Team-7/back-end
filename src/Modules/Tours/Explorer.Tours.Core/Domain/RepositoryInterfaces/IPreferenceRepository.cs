@@ -1,5 +1,4 @@
-﻿
-namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
+﻿namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 {
     public interface IPreferenceRepository
     {

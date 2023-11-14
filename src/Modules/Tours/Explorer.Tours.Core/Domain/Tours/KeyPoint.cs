@@ -40,6 +40,7 @@ public class KeyPoint : Entity
         Latitude = publicKeyPoint.Latitude;
         ImagePath = publicKeyPoint.ImagePath;
         Order= publicKeyPoint.Order;
+        LocationAddress= publicKeyPoint.LocationAddress;
         Validate();
     }
 
@@ -57,6 +58,29 @@ public class KeyPoint : Entity
     public void HideSecret()
     {
         Secret = null;
+    }
+
+    public double CalculateDistance(double longitude, double latitude)
+    {
+        if (longitude < -180 || longitude > 180) throw new ArgumentException("Invalid Longitude");
+        if (latitude < -90 || latitude > 90) throw new ArgumentException("Invalid Latitude");
+
+        const double earthRadius = 6371000;
+        double latitude1 = this.Latitude * Math.PI / 180;
+        double longitude1 = this.Longitude * Math.PI / 180;
+        double latitude2 = latitude * Math.PI / 180;
+        double longitude2 = longitude * Math.PI / 180;
+
+        double latitudeDistance = latitude2 - latitude1;
+        double longitudeDistance = longitude2 - longitude1;
+
+        double a = Math.Sin(latitudeDistance / 2) * Math.Sin(latitudeDistance / 2) +
+                   Math.Cos(latitude1) * Math.Cos(latitude2) *
+                   Math.Sin(longitudeDistance / 2) * Math.Sin(longitudeDistance / 2);
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+        double distance = earthRadius * c;
+
+        return distance;
     }
 }
 
