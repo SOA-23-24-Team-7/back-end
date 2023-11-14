@@ -40,6 +40,7 @@ public class KeyPoint : Entity
         Latitude = publicKeyPoint.Latitude;
         ImagePath = publicKeyPoint.ImagePath;
         Order= publicKeyPoint.Order;
+        LocationAddress = publicKeyPoint.LocationAddress;
         Validate();
     }
 
