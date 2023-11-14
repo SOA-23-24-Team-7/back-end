@@ -61,7 +61,7 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             // Assert - Database
             var storedEntity = dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId);
             storedEntity.ShouldNotBeNull();
-            storedEntity.NextKeyPointId.ShouldBe(-11);
+            storedEntity.NextKeyPointId.ShouldBe(-10);
         }
 
         [Fact]
