@@ -21,4 +21,5 @@ public interface ITourService
     Result Archive(long id, long authorId);
     Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize);
     Result<PagedResult<LimitedTourViewResponseDto>> GetToursInCart(int page, int pageSize, long id);
+    Result<List<TourResponseDto>> GetPurchasedTours(long touristId);
 }

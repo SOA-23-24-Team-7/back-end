@@ -27,9 +27,12 @@ namespace Explorer.API.Controllers.Tourist
 
         [HttpGet]
         [Route("purchasedtours")]
-        public ActionResult<PagedResult<TourResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<TourResponseDto>> GetPurchasedTours()
         {
-            var result = _tourService.GetPaged(page, pageSize);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long touristId;
+            touristId = long.Parse(identity.FindFirst("id").Value);
+            var result = _tourService.GetPurchasedTours(touristId);
             return CreateResponse(result);
         }
 

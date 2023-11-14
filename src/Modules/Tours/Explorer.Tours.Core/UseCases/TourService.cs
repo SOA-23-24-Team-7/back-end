@@ -18,13 +18,16 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly ITourRepository _tourRepository;
     private readonly IReviewRepository _reviewRepository;
     private readonly IShoppingCartRepository _cartRepository;
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository) : base(repository, mapper)
+    private readonly ICrudRepository<TourToken> _tourTokenRepository;
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository,
+        ICrudRepository<TourToken> tourTokenRepository) : base(repository, mapper)
     {
         _repository = repository;
         _mapper = mapper;
         _tourRepository = tourRepository;
         _reviewRepository = reviewRepository;
         _cartRepository = cartRepository;
+        _tourTokenRepository = tourTokenRepository;
     }
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
@@ -132,6 +135,17 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         return MapToDto<TourResponseDto>(pagedResult);
     }
 
+    public Result<List<TourResponseDto>> GetPurchasedTours(long touristId)
+    {
+        List<TourResponseDto> tourResponseDtos = new List<TourResponseDto>();
+        List<TourToken> tourTokens = _tourTokenRepository.GetAll().Where(tk => tk.TouristId == touristId).ToList();
+        foreach(TourToken tourToken in tourTokens)
+        {
+            TourResponseDto tour = MapToDto<TourResponseDto>(_tourRepository.GetById(tourToken.TourId));
+            tourResponseDtos.Add(tour);
+        }
+        return tourResponseDtos;
+    }
     public Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize)
     {
         try
