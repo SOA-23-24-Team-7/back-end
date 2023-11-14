@@ -13,11 +13,13 @@ namespace Explorer.Stakeholders.Core.UseCases
     {
 
         private readonly IUserRepository _userRepository;
+        private readonly IFollowerRepository _followerRepository;
 
-        public UserService(ICrudRepository<User> repository, IUserRepository userRepository, IMapper mapper) : base(
+        public UserService(ICrudRepository<User> repository, IFollowerRepository followerRepository, IUserRepository userRepository, IMapper mapper) : base(
             repository, mapper)
         {
             _userRepository = userRepository;
+            _followerRepository = followerRepository;
         }
 
         public Result<UserResponseDto> DisableAccount(long userId)
@@ -48,6 +50,11 @@ namespace Explorer.Stakeholders.Core.UseCases
         public Result<PagedResult<UserResponseDto>> GetPagedByAdmin(int page, int pageSize, long adminId)
         {
             return MapToDto<UserResponseDto>(_userRepository.GetPagedByAdmin(page, pageSize, adminId));
+        }
+
+        public Result<PagedResult<UserResponseDto>> SearchUsers(int page, int pageSize, string searchUserName, long id)
+        {
+            return MapToDto<UserResponseDto>(_userRepository.SearchUsers(page, pageSize, searchUserName, id));
         }
 
         public Result<UserResponseDto> UpdateProfilePicture(long userId, string profilePicture)
