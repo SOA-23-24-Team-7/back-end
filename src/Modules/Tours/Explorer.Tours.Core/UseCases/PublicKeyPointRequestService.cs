@@ -59,12 +59,13 @@ namespace Explorer.Tours.Core.UseCases
             if (isAccepted)
             {
                 notificationText = generator.GenerateAccepted(keyPoint.Name);
+                request.Comment = "";
             }
             else
             {
-                notificationText = generator.GenerateRejected(keyPoint.Name,request.Comment);
+                notificationText = generator.GenerateRejected(keyPoint.Name);
             }
-            _notificationRepository.Create(new PublicKeyPointNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow));
+            _notificationRepository.Create(new PublicKeyPointNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow, isAccepted, request.Comment));
         }
 
         public Result Accept(long requestId)
@@ -102,7 +103,7 @@ namespace Explorer.Tours.Core.UseCases
         {
             //dobavljanje keypointa za koji je poslat zahtjev, preko njega pravim public keypoint
             var keyPoint = _keyPointRepository.Get(request.KeyPointId);
-            _publicKeyPointRepository.Create(new PublicKeyPoint(keyPoint.Name, keyPoint.Description, keyPoint.Longitude, keyPoint.Latitude, keyPoint.ImagePath, keyPoint.Order));
+            _publicKeyPointRepository.Create(new PublicKeyPoint(keyPoint.Name, keyPoint.Description, keyPoint.Longitude, keyPoint.Latitude, keyPoint.ImagePath, keyPoint.Order, keyPoint.LocationAddress));
         }
 
         public Result<PagedResult<PublicKeyPointRequestResponseDto>> GetPagedWithName(int page, int pageSize)
@@ -115,6 +116,7 @@ namespace Explorer.Tours.Core.UseCases
                 dto.KeyPointName = _keyPointRepository.Get(req.KeyPointId).Name;
                 resultsDto.Add(dto);
             }
+            resultsDto.Reverse();
             return new PagedResult<PublicKeyPointRequestResponseDto>(resultsDto, resultsDto.Count);
         }
     }

@@ -55,12 +55,16 @@ namespace Explorer.Tours.Core.UseCases
             string notificationText;
 
             if (isAccepted)
+            {
                 notificationText = generator.GenerateAccepted(facility.Name);
+                request.Comment = "";
+            }
+                
             
             else
-                notificationText = generator.GenerateRejected(facility.Name,request.Comment);
+                notificationText = generator.GenerateRejected(facility.Name);
 
-            _notificationRepository.Create(new PublicFacilityNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow));
+            _notificationRepository.Create(new PublicFacilityNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow, isAccepted, request.Comment));
         }
 
         public Result Accept(long requestId)
@@ -100,6 +104,7 @@ namespace Explorer.Tours.Core.UseCases
                 dto.FacilityName = _facilityRepository.Get(req.FacilityId).Name;
                 resultsDto.Add(dto);
             }
+            resultsDto.Reverse();
             return new PagedResult<PublicFacilityRequestResponseDto>(resultsDto, resultsDto.Count);
         }
     }

@@ -8,3 +8,5 @@ DELETE FROM tours."TourEquipment";
 DELETE FROM tours."Tours";
 DELETE FROM tours."Preferences";
 DELETE FROM tours."TouristEquipments";
+DELETE FROM tours."OrderItems";
+DELETE FROM tours."ShoppingCarts";
