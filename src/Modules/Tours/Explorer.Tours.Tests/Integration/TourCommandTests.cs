@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TourController = Explorer.API.Controllers.Author.TourController;
 
 namespace Explorer.Tours.Tests.Integration;
 [Collection("Sequential")]

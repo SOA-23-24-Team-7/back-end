@@ -4,7 +4,6 @@ using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System.Security.Claims;
@@ -25,7 +24,7 @@ public class ClubInvitationsCommandTests : BaseStakeholdersIntegrationTest
         var newEntity = new ClubInvitationWithUsernameDto()
         {
             ClubId = 2,
-            Username = "autor2@gmail.com"
+            Username = "autor2"
         };
 
         // Act

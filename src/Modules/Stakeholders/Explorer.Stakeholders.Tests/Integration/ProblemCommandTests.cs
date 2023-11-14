@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Explorer.Stakeholders.Tests;
+using FluentResults;
 
 namespace Explorer.Stakeholders.Tests.Integration;
 
@@ -85,7 +86,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
             Priority = "Bitno",
             Description = "Nije bilo nekih vecih problema.",
             ReportedTime = DateTime.UtcNow,
-            TourId = 1,
+            TourId = -1,
             TouristId = -21,
         };
 
