@@ -2,6 +2,7 @@
 {
     public class ProblemResolvingNotificationResponseDto
     {
+        public long Id { get; set; }
         public long ProblemId { get; set; }
         public long ReceiverId { get; set; }
         public long SenderId { get; set; }

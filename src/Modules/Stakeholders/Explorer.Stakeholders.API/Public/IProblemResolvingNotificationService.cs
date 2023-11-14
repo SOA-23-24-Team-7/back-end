@@ -8,5 +8,6 @@ namespace Explorer.Stakeholders.API.Public
     {
         Result<ProblemResolvingNotificationResponseDto> Create<ProblemResolvingNotificationCreateDto>(ProblemResolvingNotificationCreateDto notification);
         public Result<PagedResult<ProblemResolvingNotificationResponseDto>> GetByLoggedInUser(int page, int pageSize, long id);
+        Result<ProblemResolvingNotificationResponseDto> SetSeenStatus(long id);
     }
 }

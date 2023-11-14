@@ -10,7 +10,7 @@ namespace Explorer.Stakeholders.Core.Domain.Problems
         public User Sender { get; init; }
         public string Message { get; init; }
         public DateTime Created { get; init; }
-        public bool HasSeen { get; init; } = false;
+        public bool HasSeen { get; private set; } = false;
 
         public ProblemResolvingNotification(long problemId, long receiverId, long senderId, string message, DateTime created)
         {
@@ -20,6 +20,11 @@ namespace Explorer.Stakeholders.Core.Domain.Problems
             Message = message;
             Created = created;
             Validate(message);
+        }
+
+        public void SetSeenStatus()
+        {
+            HasSeen = true;
         }
 
         private void Validate(string message)

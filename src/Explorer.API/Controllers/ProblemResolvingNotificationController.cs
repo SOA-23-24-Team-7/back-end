@@ -22,5 +22,12 @@ namespace Explorer.API.Controllers
             var result = _notificationService.GetByLoggedInUser(page, pageSize, loggedInUserId);
             return CreateResponse(result);
         }
+
+        [HttpGet("set-seen/{notificationId:long}")]
+        public ActionResult<ProblemResolvingNotificationResponseDto> SetSeenStatus(long notificationId)
+        {
+            var result = _notificationService.SetSeenStatus(notificationId);
+            return CreateResponse(result);
+        }
     }
 }

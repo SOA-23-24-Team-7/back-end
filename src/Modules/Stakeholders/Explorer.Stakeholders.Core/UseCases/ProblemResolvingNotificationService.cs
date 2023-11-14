@@ -21,5 +21,27 @@ namespace Explorer.Stakeholders.Core.UseCases
             var results = MapToDto<ProblemResolvingNotificationResponseDto>(_problemResolvingNotificationRepository.GetByLoggedInUser(page, pageSize, id));
             return results;
         }
+        public Result<ProblemResolvingNotificationResponseDto> SetSeenStatus(long id)
+        {
+            try
+            {
+                ProblemResolvingNotification notification = CrudRepository.Get(id);
+                if (!notification.HasSeen)
+                {
+                    notification.SetSeenStatus();
+                    var result = CrudRepository.Update(notification);
+                    return MapToDto<ProblemResolvingNotificationResponseDto>(result);
+                }
+                return Result.Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
     }
 }
