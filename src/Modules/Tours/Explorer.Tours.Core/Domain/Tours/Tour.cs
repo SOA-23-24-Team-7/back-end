@@ -100,7 +100,7 @@ public class Tour : Entity
     {
         double length = 0;
 
-        for (int i = 0; i <= KeyPoints.Count - 1; ++i)
+        for (int i = 0; i <= KeyPoints.Count - 2; ++i)
         {
             var kp1 = KeyPoints.ElementAt(i);
             var kp2 = KeyPoints.ElementAt(i + 1);
@@ -114,6 +114,8 @@ public class Tour : Entity
     public KeyPoint GetPreviousKeyPoint(KeyPoint keyPoint)
     {
         if (!KeyPoints.Contains(keyPoint)) throw new ArgumentException("Key point not in tour.");
+
+        if (KeyPoints == KeyPoints.ElementAt(0)) return null;
 
         var previous = KeyPoints.ElementAt(0);
         foreach (var kp in KeyPoints)

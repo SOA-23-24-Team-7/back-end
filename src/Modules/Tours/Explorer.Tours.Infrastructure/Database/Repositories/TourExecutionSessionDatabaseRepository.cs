@@ -12,7 +12,10 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
     public class TourExecutionSessionDatabaseRepository : CrudDatabaseRepository<TourExecutionSession, ToursContext>, ITourExecutionSessionRepository
     {
         private readonly ToursContext _dbContext;
-        public TourExecutionSessionDatabaseRepository(ToursContext dbContext) : base(dbContext) { }
+        public TourExecutionSessionDatabaseRepository(ToursContext dbContext) : base(dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
         public TourExecutionSession Add(TourExecutionSession tourExecution)
         {

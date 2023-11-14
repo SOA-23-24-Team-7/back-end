@@ -25,7 +25,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             return CreateResponse(result);
         }
 
-        [HttpGet]
+        [HttpGet("published")]
         public ActionResult<PagedResult<TourResponseDto>> GetPublished([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _tourService.GetPublished(page, pageSize);

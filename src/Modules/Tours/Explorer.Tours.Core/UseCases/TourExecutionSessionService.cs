@@ -49,11 +49,11 @@ namespace Explorer.Tours.Core.UseCases
                 return null;
             }
             List<KeyPoint> keyPoints = _keyPointRepository.GetByTourId(tourId);
+            TrackProgress(tourExecution, longitude, latitude);
             for (int i = 0; i < keyPoints.Count; i++)
             {
                 if (keyPoints[i].Id == tourExecution.NextKeyPointId)
                 {
-                    TrackProgress(tourExecution, longitude, latitude);
 
                     if (keyPoints[i].CalculateDistance(longitude, latitude) > 200) break;
 
@@ -79,6 +79,8 @@ namespace Explorer.Tours.Core.UseCases
 
             var nextKeyPoint = _keyPointRepository.Get(tourExecutionSession.NextKeyPointId);
             var previoustKeyPoint = tour.GetPreviousKeyPoint(nextKeyPoint);
+            if (previoustKeyPoint == null) return;
+
             var nextPreviousDistance = nextKeyPoint.CalculateDistance(previoustKeyPoint);
             var distanceToNext = nextKeyPoint.CalculateDistance(longitude, latitude);
 
