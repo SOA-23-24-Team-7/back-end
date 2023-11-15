@@ -230,6 +230,116 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(404);
     }
+
+
+    [Fact]
+    public void Problem_answer_creates()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateAuthorController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-11") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(contextUser)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+
+        var newProblemAnswer = new ProblemAnswerDto()
+        {
+            AuthorId = -11,
+            Answer = "Neki jako bitan odgovor"
+        };
+
+        // Act
+        var result = (OkResult)controller.CreateAnswer(newProblemAnswer, -1);
+
+        // Assert - Response
+        result.StatusCode.ShouldBe(200);
+        // Assert - Database
+        var storedCourse = dbContext.Problem.FirstOrDefault(x => x.Id == -1).Answer;
+        storedCourse.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Problem_answer_create_fails_invalid_data()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateAuthorController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-11") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(contextUser)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+
+        var newProblemAnswer = new ProblemAnswerDto()
+        {
+            AuthorId = -1,
+            Answer = "Neki jako bitan odgovor"
+        };
+
+        // Act
+        var result = (ForbidResult)controller.CreateAnswer(newProblemAnswer, -1);
+
+
+        // Assert - Database
+        var storedCourse = dbContext.Problem.FirstOrDefault(x => x.Id == -1).Answer;
+        storedCourse.ShouldBeNull();
+    }
+
+    [Fact]
+    public void Problem_resolve_succeeds()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateTouristController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-21") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(contextUser)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+
+        // Act
+        var result = (OkResult)controller.ResolveProblem(-4);
+
+        // Assert - Database
+        var storedCourse = dbContext.Problem.FirstOrDefault(x => x.Id == -4).IsResolved;
+        storedCourse.ShouldBe(true);
+    }
+
+
+    private static Explorer.API.Controllers.Author.ProblemController CreateAuthorController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Author.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        {
+            ControllerContext = BuildContext("-1")
+        };
+    }
+
     private static Explorer.API.Controllers.Tourist.ProblemController CreateTouristController(IServiceScope scope)
     {
         return new Explorer.API.Controllers.Tourist.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
@@ -241,14 +351,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
     private static Explorer.API.Controllers.Administrator.ProblemController CreateAdministratorController(IServiceScope scope)
     {
         return new Explorer.API.Controllers.Administrator.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
-        {
-            ControllerContext = BuildContext("-1")
-        };
-    }
 
-    private static Explorer.API.Controllers.Author.ProblemController CreateAuthorController(IServiceScope scope)
-    {
-        return new Explorer.API.Controllers.Author.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
         {
             ControllerContext = BuildContext("-1")
         };

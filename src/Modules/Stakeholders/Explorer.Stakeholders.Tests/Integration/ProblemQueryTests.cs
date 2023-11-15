@@ -1,5 +1,4 @@
-﻿using Explorer.API.Controllers.Tourist;
-using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,7 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope);
+        var controller = CreateTouristController(scope);
 
         // Act
         var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<ProblemResponseDto>;
@@ -31,11 +30,11 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
 
 
     [Fact]
-    public void Retrieves_all_comments_for_problem_id()
+    public void Retrieves_all_comments_for_problem()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope);
+        var controller = CreateTouristController(scope);
 
         // Act
         var result = ((ObjectResult)controller.GetComments(-5).Result)?.Value as PagedResult<ProblemCommentResponseDto>;
@@ -46,9 +45,67 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
         result.TotalCount.ShouldBe(1);
     }
 
-    private static ProblemController CreateController(IServiceScope scope)
+    [Fact]
+    public void Retrieves_tourist_answer()
     {
-        return new ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateTouristController(scope);
+
+        // Act
+        var result = ((ObjectResult)controller.GetProblemAnswer(-4).Result)?.Value as ProblemAnswerDto;
+
+        // Assert
+        result.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Retrieves_author_answer()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateAuthorController(scope);
+
+        // Act
+        var result = ((ObjectResult)controller.GetProblemAnswer(-4).Result)?.Value as ProblemAnswerDto;
+
+        // Assert
+        result.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Retrieves_admin_answer()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateAdminController(scope);
+
+        // Act
+        var result = ((ObjectResult)controller.GetProblemAnswer(-4).Result)?.Value as ProblemAnswerDto;
+
+        // Assert
+        result.ShouldNotBeNull();
+    }
+
+    private static Explorer.API.Controllers.Tourist.ProblemController CreateTouristController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Tourist.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        {
+            ControllerContext = BuildContext("-1")
+        };
+    }
+
+    private static Explorer.API.Controllers.Author.ProblemController CreateAuthorController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Author.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        {
+            ControllerContext = BuildContext("-1")
+        };
+    }
+
+    private static Explorer.API.Controllers.Administrator.ProblemController CreateAdminController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Administrator.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
         {
             ControllerContext = BuildContext("-1")
         };
