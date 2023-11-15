@@ -25,7 +25,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPatch("{problemId:long}/problem-comments")]
-        public ActionResult CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
+        public ActionResult<ProblemCommentResponseDto> CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
         {
             long loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var problem = _problemService.Get(problemId).Value;

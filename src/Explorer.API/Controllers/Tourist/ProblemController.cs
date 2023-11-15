@@ -40,10 +40,12 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPatch("{problemId:long}/problem-comments")]
-        public ActionResult CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
+        public ActionResult<ProblemCommentResponseDto> CreateComment([FromBody] ProblemCommentCreateDto problemComment, long problemId)
         {
             var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var problem = _problemService.Get(problemId).Value;
+            if (problem == null)
+                return NotFound();
             if ((loggedInUserId == problem.TouristId || loggedInUserId == problem.TourAuthorId) && (problemComment.CommenterId == problem.TouristId || problemComment.CommenterId == problem.TourAuthorId) && !problem.IsResolved && problem.IsAnswered)
             {
                 var result = _problemService.CreateComment(problemComment, problemId);
@@ -100,7 +102,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("{problemId:long}/problem-comments")]
-        public ActionResult<ProblemCommentResponseDto> GetProblemComments(long problemId)
+        public ActionResult<PagedResult<ProblemCommentResponseDto>> GetComments(long problemId)
         {
             var result = _problemService.GetComments(problemId);
             return CreateResponse(result);

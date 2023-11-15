@@ -25,8 +25,25 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(3);
-        result.TotalCount.ShouldBe(3);
+        result.Results.Count.ShouldBe(4);
+        result.TotalCount.ShouldBe(4);
+    }
+
+
+    [Fact]
+    public void Retrieves_all_comments_for_problem_id()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+
+        // Act
+        var result = ((ObjectResult)controller.GetComments(-5).Result)?.Value as PagedResult<ProblemCommentResponseDto>;
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.Results.Count.ShouldBe(1);
+        result.TotalCount.ShouldBe(1);
     }
 
     private static ProblemController CreateController(IServiceScope scope)

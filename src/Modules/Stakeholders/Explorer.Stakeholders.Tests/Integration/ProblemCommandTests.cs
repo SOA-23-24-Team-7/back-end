@@ -1,11 +1,11 @@
-﻿using Explorer.API.Controllers.Tourist;
-using Explorer.Stakeholders.API.Dtos;
+﻿using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Infrastructure.Database;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-
+using System.Security.Claims;
 
 namespace Explorer.Stakeholders.Tests.Integration;
 
@@ -19,7 +19,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope);
+        var controller = CreateTouristController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var newEntity = new ProblemCreateDto
         {
@@ -50,7 +50,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope);
+        var controller = CreateTouristController(scope);
         var updatedEntity = new ProblemCreateDto
         {
             Category = "",
@@ -70,11 +70,73 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
     }
 
     [Fact]
+    public void Problem_comment_creates()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateTouristController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-21") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(contextUser)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+
+        var newEntity = new ProblemCommentCreateDto
+        {
+            CommenterId = -21,
+            Text = "Bitno",
+        };
+
+        // Act
+        var result = (ObjectResult)controller.CreateComment(newEntity, -4).Result;
+        // Assert
+        result.StatusCode.ShouldBe(200);
+    }
+
+    [Fact]
+    public void Problem_comment_fails_invalid_commenter_id()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateTouristController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-21") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(contextUser)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+
+        var newEntity = new ProblemCommentCreateDto
+        {
+            CommenterId = -10,
+            Text = "Bitno",
+        };
+
+        // Act
+        var result = (ForbidResult)controller.CreateComment(newEntity, -4).Result;
+    }
+
+    [Fact]
     public void Updates()
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope);
+        var controller = CreateTouristController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var updatedEntity = new ProblemUpdateDto
         {
@@ -114,7 +176,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope);
+        var controller = CreateTouristController(scope);
         var updatedEntity = new ProblemUpdateDto
         {
             Id = -1000,
@@ -139,7 +201,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope);
+        var controller = CreateTouristController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
 
         // Act
@@ -159,7 +221,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope);
+        var controller = CreateTouristController(scope);
 
         // Act
         var result = (ObjectResult)controller.Delete(-1000);
@@ -168,10 +230,25 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(404);
     }
-
-    private static ProblemController CreateController(IServiceScope scope)
+    private static Explorer.API.Controllers.Tourist.ProblemController CreateTouristController(IServiceScope scope)
     {
-        return new ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        return new Explorer.API.Controllers.Tourist.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        {
+            ControllerContext = BuildContext("-1")
+        };
+    }
+
+    private static Explorer.API.Controllers.Administrator.ProblemController CreateAdministratorController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Administrator.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        {
+            ControllerContext = BuildContext("-1")
+        };
+    }
+
+    private static Explorer.API.Controllers.Author.ProblemController CreateAuthorController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Author.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
         {
             ControllerContext = BuildContext("-1")
         };
