@@ -19,7 +19,7 @@ public class LoginTests : BaseStakeholdersIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var loginSubmission = new CredentialsDto { Username = "turista1@gmail.com", Password = "turista1" };
+        var loginSubmission = new CredentialsDto { Username = "turista1", Password = "turista1" };
 
         // Act
         var authenticationResponse = ((ObjectResult)controller.Login(loginSubmission).Result).Value as AuthenticationTokensDto;

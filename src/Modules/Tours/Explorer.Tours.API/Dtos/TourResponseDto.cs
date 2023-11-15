@@ -2,7 +2,7 @@
 
 public class TourResponseDto
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
     public long AuthorId { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
@@ -11,9 +11,17 @@ public class TourResponseDto
     public TourStatus Status { get; set; }
     public double Price { get; set; }
     public bool IsDeleted { get; set; }
+    public double Distance { get; set; }
+    public double? AverageRating { get; set; }
+    public List<KeyPointResponseDto> KeyPoints { get; set; }
+    public List<TourDurationResponseDto> Durations { get; set; }
+    public DateTime PublishDate { get; set; }
+    public DateTime ArchiveDate { get; set; }
 }
+
 public enum TourStatus
 {
     Draft,
-    Published
+    Published,
+    Archived
 }

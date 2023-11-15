@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Explorer.Tours.API.Dtos
+﻿namespace Explorer.Tours.API.Dtos
 {
     public class TourUpdateDto
     {
@@ -17,5 +11,9 @@ namespace Explorer.Tours.API.Dtos
         public TourStatus Status { get; set; }
         public double Price { get; set; }
         public bool IsDeleted { get; set; }
+        public double Distance { get; set; }
+        public DateTime PublishDate { get; set; }
+        public DateTime ArchiveDate { get; set; }
+        public List<TourDurationUpdateDto> Durations { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
-using Explorer.Tours.API.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +19,7 @@ namespace Explorer.API.Controllers.Administrator
         public ActionResult<PagedResult<RatingWithUserDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _ratingService.GetRatingsPaged(page, pageSize);
-            
+
             return CreateResponse(result);
         }
     }

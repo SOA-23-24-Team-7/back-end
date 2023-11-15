@@ -22,7 +22,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.GetAll(0, 0, 1).Result)?.Value as PagedResult<CommentResponseDto>;
+            var result = ((ObjectResult)controller.GetAll(0, 0, -1).Result)?.Value as PagedResult<CommentResponseDto>;
 
             // Assert
             result.ShouldNotBeNull();
@@ -32,7 +32,7 @@ namespace Explorer.Blog.Tests.Integration.Blog
 
         private static CommentController CreateController(IServiceScope scope)
         {
-            return new CommentController(scope.ServiceProvider.GetRequiredService<ICommentService>())
+            return new CommentController(scope.ServiceProvider.GetRequiredService<ICommentService>(), scope.ServiceProvider.GetRequiredService<IBlogService>())
             {
                 ControllerContext = BuildContext("-1")
             };

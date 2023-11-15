@@ -1,23 +1,12 @@
-﻿using Explorer.API.Controllers.Administrator.Administration;
-using Explorer.API.Controllers.Tourist;
+﻿using Explorer.API.Controllers.Tourist;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Infrastructure.Database;
-using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
-using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
 {
@@ -35,7 +24,7 @@ namespace Explorer.Stakeholders.Tests.Integration.ClubJoinRequests
             var touristId = -11;
             var page = 1;
             var pageSize = 10;
-            
+
             var claims = new[] { new Claim("id", touristId.ToString()) };
             var identity = new ClaimsIdentity(claims, "test");
             var user = new ClaimsPrincipal(identity);

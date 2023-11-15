@@ -1,18 +1,18 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Explorer.Tours.Core.Domain.Tours;
 
 namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 {
     public interface ITourRepository
     {
-        
         List<Equipment> GetEquipment(long tourId);
         void AddEquipment(long tourId, long equipmentId);
         void DeleteEquipment(long tourId, long equipmentId);
+        PagedResult<Tour> GetAll(int page, int pageSize);   //dodato
+        Tour GetById(long id);  //dodato
+        IEnumerable<long> GetAuthorsTours(long id);
+        string GetToursName(long id);
+        long GetAuthorsId(long id);
+        PagedResult<Tour> GetPublishedTours(int page, int pageSize);
     }
 }

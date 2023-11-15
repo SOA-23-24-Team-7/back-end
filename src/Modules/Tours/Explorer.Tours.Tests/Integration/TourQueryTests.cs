@@ -1,4 +1,4 @@
-﻿using Explorer.API.Controllers.Author;
+﻿using Explorer.API.Controllers.Author.TourAuthoring;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
@@ -25,8 +25,24 @@ public class TourQueryTests : BaseToursIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(3);
-        result.TotalCount.ShouldBe(3);
+        result.Results.Count.ShouldBe(8);
+        result.TotalCount.ShouldBe(8);
+    }
+
+    [Fact]
+    public void Retrieves_published()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+
+        // Act
+        var result = ((ObjectResult)controller.GetPublished(0, 0).Result)?.Value as PagedResult<TourResponseDto>;
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.Results.Count.ShouldBe(2);
+        result.TotalCount.ShouldBe(2);
     }
 
     [Fact]
@@ -37,7 +53,7 @@ public class TourQueryTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetEquipment(tourId:-1))?.Value as PagedResult<EquipmentResponseDto>;
+        var result = ((ObjectResult)controller.GetEquipment(tourId: -1))?.Value as PagedResult<EquipmentResponseDto>;
 
         // Assert
         result.ShouldNotBeNull();

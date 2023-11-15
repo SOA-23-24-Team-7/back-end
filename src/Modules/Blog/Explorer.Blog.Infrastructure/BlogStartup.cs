@@ -33,6 +33,8 @@ public static class BlogStartup
     {
         services.AddScoped(typeof(ICrudRepository<Core.Domain.Blog>), typeof(CrudDatabaseRepository<Core.Domain.Blog, BlogContext>));
         services.AddScoped(typeof(ICrudRepository<Comment>), typeof(CrudDatabaseRepository<Comment, BlogContext>));
+
+        services.AddScoped<IBlogRepository, BlogDatabaseRepository>();
         services.AddScoped<ICommentRepository, CommentDatabaseRepository>();
 
         services.AddDbContext<BlogContext>(opt =>

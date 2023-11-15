@@ -2,9 +2,11 @@
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System.Security.Claims;
 using Xunit;
 
 namespace Explorer.Blog.Tests.Integration.Blog
@@ -28,15 +30,15 @@ namespace Explorer.Blog.Tests.Integration.Blog
 
             // Assert
             result.ShouldNotBeNull();
-            result.Results.Count.ShouldBe(3);
-            result.TotalCount.ShouldBe(3);
+            result.Results.Count.ShouldBe(4);
+            result.TotalCount.ShouldBe(4);
         }
 
         private static BlogController CreateController(IServiceScope scope)
         {
             return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>())
             {
-                ControllerContext = BuildContext("-1")
+                ControllerContext = BuildContext("-12")
             };
         }
     }

@@ -1,8 +1,6 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Tours.API.Dtos;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,25 +21,75 @@ namespace Explorer.API.Controllers
 
         [Authorize(Policy = "userPolicy")]
         [HttpPost("create")]
-        public ActionResult<BlogResponseDto> Create([FromBody] BlogResponseDto blog)
+        public ActionResult<BlogResponseDto> Create([FromBody] BlogCreateDto blog)
         {
+            blog.Date = DateTime.UtcNow;
+            blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _blogService.Create(blog);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Policy = "userPolicy")]
+        [HttpPut("update")]
+        public ActionResult<BlogResponseDto> Update([FromBody] BlogUpdateDto blog)
+        {
+            blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _blogService.Update(blog);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Policy = "userPolicy")]
+        [HttpDelete("delete/{id:long}")]
+        public ActionResult<BlogResponseDto> Delete(int id)
+        {
+            var result = _blogService.Delete(id);
             return CreateResponse(result);
         }
 
         [HttpGet]
         public ActionResult<PagedResult<BlogResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _blogService.GetPaged(page, pageSize);
+            var result = _blogService.GetAll(page, pageSize);
             return CreateResponse(result);
         }
 
-        [HttpGet("{id:int}")]
-        public ActionResult<BlogResponseDto> Get(int id)
+        [HttpGet("{id:long}")]
+        public ActionResult<BlogResponseDto> Get(long id)
         {
-            var result = _blogService.Get(id);
+            var result = _blogService.GetById(id);
             return CreateResponse(result);
         }
 
+        [HttpPut("{id:int}")]
+        public ActionResult<BlogResponseDto> Update([FromBody] BlogUpdateDto blog, int id)
+        {
+            blog.Id = id;
+            var result = _blogService.UpdateBlog(blog);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Policy = "userPolicy")]
+        [HttpGet("upvote/{id:long}")]
+        public ActionResult Upvote(long id)
+        {
+            if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+
+            var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _blogService.SetVote(id, userId, VoteType.UPVOTE);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Policy = "userPolicy")]
+        [HttpGet("downvote/{id:long}")]
+        public ActionResult Downvote(long id)
+        {
+            if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+
+            var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _blogService.SetVote(id, userId, VoteType.DOWNVOTE);
+            return CreateResponse(result);
+        }
     }
+
 }
+

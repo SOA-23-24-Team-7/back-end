@@ -1,5 +1,9 @@
-﻿using Explorer.Stakeholders.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using FluentResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 {
@@ -7,16 +11,32 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
     {
 
         private readonly StakeholdersContext _dbContext;
+        private readonly DbSet<Person> _dbSet;
 
         public PersonDataBaseRepository(StakeholdersContext dbContext)
         {
             _dbContext = dbContext;
+            _dbSet = _dbContext.Set<Person>();
         }
 
         public Person? GetByUserId(long id)
         {
-            var person = _dbContext.People.FirstOrDefault(person => person.UserId == id);
+            var person = _dbContext.People.Include(x => x.User).FirstOrDefault(person => person.UserId == id);
             return person;
+        }
+
+        public Result<PagedResult<Person>> GetPagedByAdmin(int page, int pageSize, long adminId)
+        {
+            var task = _dbSet.Include(x => x.User).Where(x => x.UserId != adminId).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
+        }
+
+        public Result<PagedResult<Person>> GetAll(int page, int pageSize)
+        {
+            var task = _dbContext.People.Include(x => x.User).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
@@ -23,11 +18,11 @@ namespace Explorer.Tours.Core.UseCases
             _reviewRepository = reviewRepository;
         }
 
-        public Result<PagedResult<ReviewResponseDto>> GetPagedByTourId(int page, int pageSize, int tourId)
+        public Result<PagedResult<ReviewResponseDto>> GetPagedByTourId(int page, int pageSize, long tourId)
         {
             return MapToDto<ReviewResponseDto>(_reviewRepository.GetPagedByTourId(page, pageSize, tourId));
         }
-        public Result<Boolean> ReviewExists(long touristId, int tourId)
+        public Result<Boolean> ReviewExists(long touristId, long tourId)
         {
             return _reviewRepository.ReviewExists(touristId, tourId);
         }
