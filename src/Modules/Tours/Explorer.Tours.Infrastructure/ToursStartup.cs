@@ -13,7 +13,6 @@ using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases;
 using Explorer.Tours.Core.UseCases.Administration;
 using Explorer.Tours.Core.UseCases.TourAuthoring;
-using Explorer.Tours.Core.UseCases.TourExecution;
 using Explorer.Tours.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +53,8 @@ public static class ToursStartup
 
         services.AddScoped<ITouristEquipmentService, TouristEquipmentService>();
 
+        services.AddScoped<ITourExecutionSessionService, TourExecutionSessionService>();
+
         services.AddScoped<ITouristPositionService, TouristPositionService>();
 
         services.AddScoped<IPublicKeyPointRequestService, PublicKeyPointRequestService>();
@@ -93,6 +94,8 @@ public static class ToursStartup
 
         services.AddScoped(typeof(ICrudRepository<Tour>), typeof(CrudDatabaseRepository<Tour, ToursContext>));
         services.AddScoped(typeof(ITourRepository), typeof(TourRepository));
+
+        services.AddScoped(typeof(ITourExecutionSessionRepository), typeof(TourExecutionSessionDatabaseRepository));
 
         services.AddScoped(typeof(ICrudRepository<TouristEquipment>), typeof(CrudDatabaseRepository<TouristEquipment, ToursContext>));
 

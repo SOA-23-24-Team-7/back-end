@@ -2,6 +2,8 @@
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using FluentResults;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories;
@@ -30,7 +32,23 @@ public class UserDatabaseRepository : IUserRepository
         task.Wait();
         return task.Result;
     }
-
+    public PagedResult<User> SearchUsers(int page, int pageSize, string searchUsername, long id)
+    {
+        var task = _dbSet.Where(x => x.Username.ToLower().StartsWith(searchUsername.ToLower()) && x.Role != UserRole.Administrator && x.Id != id).GetPagedById(page, pageSize);
+        task.Wait();
+        return task.Result;
+    }
+    /*
+    public Result<PagedResult<User>> GetPagedFollowersByUserId(int page, int pageSize, long userId)
+    {
+        var entity = _dbSet.Find(userId);
+        if (entity == null) throw new KeyNotFoundException("Not found: " + userId);
+        var a = entity.Followers;
+        var task = _dbSet.Include(m => m.Followers).GetPagedById(pageSize, page);
+        task.Wait();
+        return task.Result;
+    }
+    */
     public bool Exists(string username)
     {
         return _dbContext.Users.Any(user => user.Username == username);
@@ -53,5 +71,10 @@ public class UserDatabaseRepository : IUserRepository
         var person = _dbContext.People.FirstOrDefault(i => i.UserId == userId);
         if (person == null) throw new KeyNotFoundException("Not found.");
         return person.Id;
+    }
+
+    public string GetNameById(long id)
+    {
+        return _dbContext.Users.FirstOrDefault(u => u.Id == id).Username;
     }
 }

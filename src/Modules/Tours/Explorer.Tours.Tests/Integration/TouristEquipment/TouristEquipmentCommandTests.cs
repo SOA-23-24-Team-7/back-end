@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System.Security.Claims;
 using Explorer.Tours.API.Dtos.TouristEquipment;
+using Explorer.Stakeholders.API.Dtos.TouristEquipment;
 
 namespace Explorer.Tours.Tests.Integration.TouristEquipmentInteraction
 {

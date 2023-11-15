@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Explorer.Tours.Core.Domain.Tours;
@@ -20,6 +21,7 @@ public class Tour : Entity
     [InverseProperty("Tour")]
     public ICollection<KeyPoint> KeyPoints { get; } = new List<KeyPoint>();
     public ICollection<TourDuration> Durations { get; } = new List<TourDuration>();
+    public ICollection<Review> Reviews { get; init; }
 
     public Tour(long authorId, string name, string description, int difficulty, List<string> tags,DateTime? archiveDate = null ,DateTime? publishDate = null, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
     {
@@ -83,10 +85,49 @@ public class Tour : Entity
         return false;
     }
 
+    public double GetAverageRating()
+    {
+        if (Reviews == null || Reviews.Count == 0) return 0;
+        return Reviews.Average(r => r.Rating);
+    }
 
     public string GetStatusName()
     {
         return Status.ToString().ToLower();
+    }
+
+    public double CalculateLength()
+    {
+        double length = 0;
+
+        for (int i = 0; i <= KeyPoints.Count - 2; ++i)
+        {
+            var kp1 = KeyPoints.ElementAt(i);
+            var kp2 = KeyPoints.ElementAt(i + 1);
+
+            length += kp1.CalculateDistance(kp2.Longitude, kp2.Latitude);
+        }
+
+        return length;
+    }
+
+    public KeyPoint GetPreviousKeyPoint(KeyPoint keyPoint)
+    {
+        if (!KeyPoints.Contains(keyPoint)) throw new ArgumentException("Key point not in tour.");
+
+        if (KeyPoints == KeyPoints.ElementAt(0)) return null;
+
+        var previous = KeyPoints.ElementAt(0);
+        foreach (var kp in KeyPoints)
+        {
+            if (kp == keyPoint)
+            {
+                break;
+            }
+            previous = kp;
+        }
+
+        return previous;
     }
 }
 

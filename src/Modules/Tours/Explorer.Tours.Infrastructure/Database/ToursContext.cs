@@ -15,6 +15,7 @@ public class ToursContext : DbContext
     public DbSet<Preference> Preferences { get; set; }
     public DbSet<PublicKeyPointRequest> PublicKeyPointRequests { get; set; }
     public DbSet<TouristEquipment> TouristEquipments { get; set; }
+    public DbSet<TourExecutionSession> TourExecutionSessions { get; set; }
     public DbSet<TouristPosition> TouristPositions { get; set; }
     public DbSet<PublicFacilityRequest> PublicFacilityRequests { get; set; }
     public DbSet<PublicKeyPointNotification> PublicKeyPointNotifications { get; set; }
@@ -43,18 +44,16 @@ public class ToursContext : DbContext
         ConfigureNotification(modelBuilder);
         ConfigureOrderItem(modelBuilder);
         modelBuilder.Entity<Core.Domain.Tours.Tour>().Property(item => item.Durations).HasColumnType("jsonb");
+        modelBuilder.Entity<Core.Domain.Tours.KeyPoint>().Property(item => item.Secret).HasColumnType("jsonb");
     }
 
     private static void ConfigureKeyPoint(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Tour>()
             .HasMany(t => t.KeyPoints)
-            .WithOne(k => k.Tour);
-
-        modelBuilder.Entity<KeyPoint>()
-            .HasOne<Tour>()
-            .WithMany(t => t.KeyPoints)
-            .HasForeignKey(kp => kp.TourId);
+            .WithOne(k => k.Tour)
+            .HasForeignKey(k => k.TourId)
+            .IsRequired();
     }
 
 
@@ -87,6 +86,13 @@ public class ToursContext : DbContext
         .HasForeignKey<PublicKeyPointNotification>(s => s.RequestId);
     }
 
+    private static void ConfigureTourReview(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Review>()
+            .HasOne<Tour>()
+            .WithMany(t => t.Reviews)
+            .HasForeignKey(r => r.TourId);
+    }
     private static void ConfigureOrderItem(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<OrderItem>()

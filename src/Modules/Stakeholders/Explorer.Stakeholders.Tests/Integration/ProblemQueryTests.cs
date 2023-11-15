@@ -1,9 +1,9 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Shouldly;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
 
 namespace Explorer.Stakeholders.Tests.Integration;
 

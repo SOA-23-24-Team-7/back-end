@@ -60,10 +60,17 @@ public class CrudDatabaseRepository<TEntity, TDbContext> : ICrudRepository<TEnti
         DbContext.SaveChanges();
     }
 
-    public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter)
+    public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter, string? include = null)
     {
         IQueryable<TEntity> query = _dbSet;
         query = query.Where(filter);
+        if (!string.IsNullOrEmpty(include))
+        {
+            foreach (var property in include.Split(","))
+            {
+                query = query.Include(property);
+            }
+        }
         var entities = query.ToList();
         return entities;
     }
@@ -73,10 +80,17 @@ public class CrudDatabaseRepository<TEntity, TDbContext> : ICrudRepository<TEnti
         return _dbSet.ToList();
     }
 
-    public TEntity Get(Expression<Func<TEntity, bool>> filter)
+    public TEntity Get(Expression<Func<TEntity, bool>> filter, string? include = null)
     {
         IQueryable<TEntity> query = _dbSet;
         query = query.Where(filter);
+        if (!string.IsNullOrEmpty(include))
+        {
+            foreach (var property in include.Split(","))
+            {
+                query = query.Include(property);
+            }
+        }
         var entity = query.FirstOrDefault();
         if (entity == null) { throw new KeyNotFoundException("Not found."); }
         return entity;

@@ -1,4 +1,4 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.Core.Domain.Tours;
 
 namespace Explorer.Tours.Core.Domain.RepositoryInterfaces

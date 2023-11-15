@@ -21,7 +21,7 @@ public class ReviewsQueryTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetAllByTourId(0, 0, 5).Result)?.Value as PagedResult<ReviewResponseDto>;
+        var result = ((ObjectResult)controller.GetAllByTourId(0, 0, -5).Result)?.Value as PagedResult<ReviewResponseDto>;
 
         // Assert
         result.ShouldNotBeNull();

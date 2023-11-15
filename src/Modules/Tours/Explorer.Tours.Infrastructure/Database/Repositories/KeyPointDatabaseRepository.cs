@@ -19,6 +19,8 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public KeyPoint Create(KeyPoint keyPoint)
         {
+            keyPoint.Order = _dbContext.KeyPoints.Where(kp => kp.TourId == keyPoint.TourId).Count();
+
             var tour = _dbContext.Tours
                              .Include(t => t.KeyPoints)
                              .Single(t => t.Id == keyPoint.TourId);
@@ -41,6 +43,14 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         {
             var keyPoints = _dbContext.KeyPoints.Where(i => i.TourId == tourId).OrderBy(i => i.Order);
             return keyPoints.ToList();
+        }
+
+        public List<KeyPoint> GetByTourIdWithoutSercrets(long tourId)
+        {
+            var keyPoints = _dbContext.KeyPoints.Where(i => i.TourId == tourId).OrderBy(i => i.Order);
+            List<KeyPoint> keyPointsWithoutSecret = keyPoints.ToList();
+            keyPointsWithoutSecret.ForEach(kp => kp.HideSecret());
+            return keyPointsWithoutSecret;
         }
 
         public KeyPoint Update(KeyPoint keyPoint)
