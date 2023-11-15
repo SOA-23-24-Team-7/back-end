@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
@@ -7,7 +8,6 @@ using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
-using System.ComponentModel;
 
 namespace Explorer.Tours.Core.UseCases;
 
@@ -16,19 +16,22 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
-    private readonly ITourExecutionSessionRepository _tourExecutionSessionRepository;
-    private readonly IReviewRepository _reviewRepository;
-    private readonly IShoppingCartRepository _cartRepository;
     private readonly ICrudRepository<TourToken> _tourTokenRepository;
-    
+    private readonly ITourExecutionSessionRepository _tourExecutionSessionRepository;
+    private readonly IInternalProblemService _problemService;
+    private readonly IShoppingCartRepository _cartRepository;
+    private readonly IReviewRepository _reviewRepository;
+
     public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository,
-        ICrudRepository<TourToken> tourTokenRepository) : base(repository, mapper)
+        ICrudRepository<TourToken> tourTokenRepository, IInternalProblemService problemService) : base(repository, mapper)
+
     {
         _repository = repository;
         _mapper = mapper;
         _tourRepository = tourRepository;
-        _tourExecutionSessionRepository = tourExecutionSessionRepository;
+        _problemService = problemService;
         _reviewRepository = reviewRepository;
+        _tourExecutionSessionRepository = tourExecutionSessionRepository;
         _cartRepository = cartRepository;
         _tourTokenRepository = tourTokenRepository;
     }
@@ -75,6 +78,21 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
         }
     }
+
+    public Result DeleteCascade(long tourId)
+    {
+        try
+        {
+            _problemService.DeleteProblemByTour(tourId);
+            CrudRepository.Delete(tourId);
+            return Result.Ok();
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+    }
+
     public IEnumerable<long> GetAuthorsTours(long id)
     {
         return _tourRepository.GetAuthorsTours(id);
@@ -83,6 +101,11 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     public string GetToursName(long id)
     {
         return _tourRepository.GetToursName(id);
+    }
+
+    public long GetAuthorsId(long id)
+    {
+        return _tourRepository.GetAuthorsId(id);
     }
 
     public Result<TourResponseDto> GetById(long id)
@@ -171,7 +194,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     {
         List<TourResponseDto> tourResponseDtos = new List<TourResponseDto>();
         List<TourToken> tourTokens = _tourTokenRepository.GetAll().Where(tk => tk.TouristId == touristId).ToList();
-        foreach(TourToken tourToken in tourTokens)
+        foreach (TourToken tourToken in tourTokens)
         {
             TourResponseDto tour = MapToDto<TourResponseDto>(_tourRepository.GetById(tourToken.TourId));
             tourResponseDtos.Add(tour);
@@ -188,13 +211,13 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
             {
                 LimitedTourViewResponseDto dto = _mapper.Map<LimitedTourViewResponseDto>(tour);
                 dto.KeyPoint = _mapper.Map<KeyPointResponseDto>(tour.KeyPoints.First());
-                var reviews = _reviewRepository.GetPagedByTourId(0,0,tour.Id);
+                var reviews = _reviewRepository.GetPagedByTourId(0, 0, tour.Id);
                 dto.Reviews = reviews.Results.Select(_mapper.Map<ReviewResponseDto>).ToList();
                 dtos.Add(dto);
             }
             return new PagedResult<LimitedTourViewResponseDto>(dtos, dtos.Count);
         }
-        catch(ArgumentException e)
+        catch (ArgumentException e)
         {
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
@@ -249,5 +272,4 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
 
     }
-
 }

@@ -1,9 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain
 {
@@ -15,9 +10,10 @@ namespace Explorer.Tours.Core.Domain
         public DateTime Created { get; set; }
         public bool IsAccepted { get; init; }
         public string Comment { get; init; }
-        public PublicKeyPointNotification(string description,long authorId, long requestId, DateTime created, bool isAccepted, string comment ) {
+        public PublicKeyPointNotification(string description, long authorId, long requestId, DateTime created, bool isAccepted, string comment)
+        {
             Validate(description);
-            Description = description;    
+            Description = description;
             AuthorId = authorId;
             RequestId = requestId;
             Created = created;

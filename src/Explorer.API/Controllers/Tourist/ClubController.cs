@@ -17,12 +17,14 @@ namespace Explorer.API.Controllers.Tourist
         {
             _clubService = clubService;
         }
+
         [HttpGet]
         public ActionResult<PagedResult<ClubResponseWithOwnerDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _clubService.GetClubsPaged(page, pageSize);
             return CreateResponse(result);
         }
+
         [HttpGet]
         [Route("ownerclubs")]
         public ActionResult<PagedResult<ClubResponseDto>> GetOwnerClubs()
@@ -32,6 +34,7 @@ namespace Explorer.API.Controllers.Tourist
             var result = _clubService.GetOwnerClubs(ownerId);
             return CreateResponse(result);
         }
+
         [HttpPost]
         public ActionResult<ClubResponseDto> Create([FromBody] ClubCreateDto club)
         {
@@ -43,6 +46,7 @@ namespace Explorer.API.Controllers.Tourist
             var result = _clubService.Create(club);
             return CreateResponse(result);
         }
+
         [HttpPut]
         public ActionResult<ClubResponseDto> Update([FromBody] ClubResponseDto club)
         {
@@ -51,7 +55,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 //kompletna provera bi bila kada bih uzeo club na osnovu njegovog id-a
                 // i onda njegov OwnerId uporedio sa ulogovanim
-                if(club.OwnerId != long.Parse(identity.FindFirst("id").Value))
+                if (club.OwnerId != long.Parse(identity.FindFirst("id").Value))
                 {
                     return Forbid();
                 }
@@ -59,6 +63,7 @@ namespace Explorer.API.Controllers.Tourist
             var result = _clubService.Update(club);
             return CreateResponse(result);
         }
+
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {

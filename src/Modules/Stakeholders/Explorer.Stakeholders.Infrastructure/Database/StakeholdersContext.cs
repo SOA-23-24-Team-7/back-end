@@ -1,4 +1,5 @@
 ﻿using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Problems;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database;
@@ -15,8 +16,7 @@ public class StakeholdersContext : DbContext
     public DbSet<ClubJoinRequest> ClubJoinRequests { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<Problem> Problem { get; set; }
-    public DbSet<ProblemAnswer> ProblemAnswer { get; set; }
-    public DbSet<ProblemComment> ProblemComment { get; set; }
+    public DbSet<ProblemResolvingNotification> ProblemResolvingNotifications { get; set; }
     public DbSet<Message> Messages { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options)
@@ -32,6 +32,10 @@ public class StakeholdersContext : DbContext
         modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
 
         modelBuilder.Entity<ClubJoinRequest>().HasKey(r => r.Id);
+
+        modelBuilder.Entity<Problem>().Property(item => item.Answer).HasColumnType("jsonb").IsRequired(false);
+
+        modelBuilder.Entity<Problem>().Property(item => item.Comments).HasColumnType("jsonb");
 
         ConfigureStakeholder(modelBuilder);
     }
@@ -67,6 +71,6 @@ public class StakeholdersContext : DbContext
            .WithOne()
            .HasForeignKey<Rating>(s => s.UserId);
 
-        
+
     }
 }

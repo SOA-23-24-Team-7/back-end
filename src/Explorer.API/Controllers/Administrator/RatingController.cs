@@ -19,7 +19,7 @@ namespace Explorer.API.Controllers.Administrator
         public ActionResult<PagedResult<RatingWithUserDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _ratingService.GetRatingsPaged(page, pageSize);
-            
+
             return CreateResponse(result);
         }
     }

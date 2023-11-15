@@ -2,7 +2,6 @@ using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.ShoppingCarts;
 using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace Explorer.Tours.Infrastructure.Database;
 
@@ -26,19 +25,20 @@ public class ToursContext : DbContext
 
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
+    public ToursContext(DbContextOptions<ToursContext> options) : base(options) { }
     public DbSet<OrderItem> OrderItems { get; set; }
-    public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("tours");
-        
+
         modelBuilder.Entity<Tour>()
             .HasMany(t => t.EquipmentList)
             .WithMany(e => e.Tours)
             .UsingEntity(j => j.ToTable("TourEquipment"));
 
         ConfigureKeyPoint(modelBuilder);
+
         ConfigurePublicKeyPointRequest(modelBuilder);
         ConfigurePublicFacilityRequest(modelBuilder);
         ConfigureNotification(modelBuilder);
@@ -55,6 +55,7 @@ public class ToursContext : DbContext
             .HasForeignKey(k => k.TourId)
             .IsRequired();
     }
+
 
     private static void ConfigurePublicKeyPointRequest(ModelBuilder modelBuilder)
     {

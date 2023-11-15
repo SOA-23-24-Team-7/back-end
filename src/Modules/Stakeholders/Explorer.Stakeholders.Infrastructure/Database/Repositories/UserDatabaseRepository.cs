@@ -19,6 +19,13 @@ public class UserDatabaseRepository : IUserRepository
         _dbSet = _dbContext.Set<User>();
     }
 
+    public User Get(long id)
+    {
+        var entity = _dbSet.Find(id);
+        if (entity == null) throw new KeyNotFoundException("Not found: " + id);
+        return entity;
+    }
+
     public PagedResult<User> GetPagedByAdmin(int page, int pageSize, long adminId)
     {
         var task = _dbSet.Where(x => x.Id != adminId).GetPagedById(page, pageSize);

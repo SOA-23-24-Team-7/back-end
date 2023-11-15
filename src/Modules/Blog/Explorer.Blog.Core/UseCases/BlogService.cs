@@ -10,6 +10,7 @@ namespace Explorer.Blog.Core.UseCases
 {
     public class BlogService : CrudService<BlogResponseDto, Domain.Blog>, IBlogService
     {
+
         private readonly IBlogRepository _repository;
         private readonly IInternalUserService _internalUserService;
         private readonly IMapper _mapper;
@@ -82,6 +83,5 @@ namespace Explorer.Blog.Core.UseCases
             }
             return false;
         }
-
     }
 }

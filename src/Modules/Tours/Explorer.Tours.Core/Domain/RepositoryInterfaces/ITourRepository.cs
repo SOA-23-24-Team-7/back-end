@@ -1,4 +1,3 @@
-﻿
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.Core.Domain.Tours;
 
@@ -13,6 +12,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         Tour GetById(long id);  //dodato
         IEnumerable<long> GetAuthorsTours(long id);
         string GetToursName(long id);
+        long GetAuthorsId(long id);
         PagedResult<Tour> GetPublishedTours(int page, int pageSize);
     }
 }

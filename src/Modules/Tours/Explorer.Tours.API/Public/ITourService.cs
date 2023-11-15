@@ -10,7 +10,7 @@ public interface ITourService
     Result<TourResponseDto> Get(long id);
     Result<TourResponseDto> Create<TourCreateDto>(TourCreateDto tour);
     Result<TourResponseDto> Update<TourUpdateDto>(TourUpdateDto tour);
-    Result Delete(long id);
+    Result DeleteCascade(long tourId);
     Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long id, int page, int pageSize);
     Result<PagedResult<EquipmentResponseDto>> GetEquipment(long tourId);
     Result AddEquipment(long tourId, long equipmentId);

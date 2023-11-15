@@ -62,6 +62,11 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return _dbSet.FirstOrDefault(t => t.Id == id).Name;
         }
 
+        public long GetAuthorsId(long id)
+        {
+            return _dbSet.FirstOrDefault(t => t.Id == id).AuthorId;
+        }
+
         public PagedResult<Tour> GetAll(int page, int pageSize)
         {
             var task = _dbSet.Include(x => x.KeyPoints).Include(x => x.Reviews).GetPagedById(page, pageSize);

@@ -4,5 +4,6 @@
     {
         IEnumerable<long> GetAuthorsTours(long id);
         string GetToursName(long id);
+        long GetAuthorsId(long id);
     }
 }

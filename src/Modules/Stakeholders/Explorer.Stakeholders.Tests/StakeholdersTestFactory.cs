@@ -10,12 +10,12 @@ public class StakeholdersTestFactory : BaseTestFactory<StakeholdersContext>
 {
     protected override IServiceCollection ReplaceNeededDbContexts(IServiceCollection services)
     {
-        var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<StakeholdersContext>));
-        services.Remove(descriptor!);
+        var descriptorStakeholder = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<StakeholdersContext>));
+        services.Remove(descriptorStakeholder!);
         services.AddDbContext<StakeholdersContext>(SetupTestContext());
 
-        descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ToursContext>));
-        services.Remove(descriptor!);
+        var descriptorTours = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ToursContext>));
+        services.Remove(descriptorTours!);
         services.AddDbContext<ToursContext>(SetupTestContext());
 
         return services;

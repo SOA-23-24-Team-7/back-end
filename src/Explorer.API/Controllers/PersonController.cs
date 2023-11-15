@@ -1,5 +1,6 @@
 ﻿using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,13 +17,21 @@ public class PersonController : BaseApiController
         _personService = personService;
     }
 
-    //staviti proveru da li je to taj person
     [HttpPut("update/{personId:long}")]
     public ActionResult<PersonResponseDto> Update([FromBody] PersonUpdateDto person, long personId)
     {
-        person.Id = personId;
-        var result = _personService.UpdatePerson(person);
-        return CreateResponse(result);
+        var loggedInUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+        var response = _personService.Get(personId);
+        if (response.IsFailed) return CreateResponse(response);
+
+        var userId = response.Value.UserId;
+        if (loggedInUserId == userId)
+        {
+            person.Id = personId;
+            var result = _personService.UpdatePerson(person);
+            return CreateResponse(result);
+        }
+        return Forbid();
     }
 
     [HttpGet]

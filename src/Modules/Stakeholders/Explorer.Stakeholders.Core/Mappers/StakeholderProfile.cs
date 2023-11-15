@@ -1,7 +1,7 @@
 using AutoMapper;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Core.Domain;
-using System.Xml.Linq;
+using Explorer.Stakeholders.Core.Domain.Problems;
 
 namespace Explorer.Stakeholders.Core.Mappers;
 
@@ -34,6 +34,7 @@ public class StakeholderProfile : Profile
         CreateMap<Club, ClubResponseWithOwnerDto>()
             .ConstructUsing(src => new ClubResponseWithOwnerDto { Id = src.Id, OwnerId = src.OwnerId, Username = src.Owner.Username, Name = src.Name, Description = src.Description, Image = src.Image });
         CreateMap<ClubCreateDto, Club>().ReverseMap();
+        CreateMap<ProblemAnswerDto, ProblemAnswer>().ReverseMap();
         CreateMap<Person, PersonResponseDto>().ConstructUsing(src => new PersonResponseDto
         {
             Id = src.Id,
@@ -71,22 +72,21 @@ public class StakeholderProfile : Profile
             Category = src.Category,
             Priority = src.Priority,
             Description = src.Description,
-            DateTime = src.DateTime,
+            ReportedTime = src.ReportedTime,
             TouristId = src.TouristId,
             TourId = src.TourId,
             IsResolved = src.IsResolved
         }).ForMember(x => x.Tourist, opt => opt.MapFrom(src => src.Tourist));
         CreateMap<ProblemCreateDto, Problem>().ReverseMap();
         CreateMap<ProblemUpdateDto, Problem>().ReverseMap();
-        CreateMap<ProblemAnswerCreateDto, ProblemAnswer>().ReverseMap();
-        CreateMap<ProblemAnswerResponseDto, ProblemAnswer>().ReverseMap();
         CreateMap<ProblemCommentCreateDto, ProblemComment>().ReverseMap();
         CreateMap<ProblemCommentResponseDto, ProblemComment>().ReverseMap();
+        CreateMap<ProblemResolvingNotificationResponseDto, ProblemResolvingNotification>().ReverseMap();
+        CreateMap<ProblemResolvingNotificationCreateDto, ProblemResolvingNotification>().ReverseMap();
         CreateMap<MessageCreateDto, Message>().ReverseMap();
         CreateMap<MessageResponseDto, Message>().ReverseMap();
         CreateMap<MessageUpdateDto, Message>().ReverseMap();
         CreateMap<Message, MessageResponseWithUsernamesDto>()
             .ConstructUsing(src => new MessageResponseWithUsernamesDto { Id = src.Id, UserReciverId = src.UserReciverId, ReciverUsername = src.UserReciver.Username, UserSenderId = src.UserSenderId, SenderUsername = src.UserSender.Username, Text = src.Text, StatusOfMessage = (API.Dtos.MessageStatus)src.StatusOfMessage });
-
     }
 }

@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.Core.Mappers;
 using Explorer.Stakeholders.Core.UseCases;
@@ -37,12 +38,11 @@ public static class StakeholdersStartup
         services.AddScoped<IClubService, ClubService>();
         services.AddScoped<IClubMemberManagementService, ClubMemberManagementService>();
         services.AddScoped<IRatingService, RatingService>();
-        services.AddScoped<IFollowerService, FollowerService>();
+        services.AddScoped<IInternalProblemService, InternalProblemService>();
         services.AddScoped<IProblemService, ProblemService>();
-        services.AddScoped<IProblemAnswerService, ProblemAnswerService>();
-        services.AddScoped<IProblemCommentService, ProblemCommentService>();
+        services.AddScoped<IProblemResolvingNotificationService, ProblemResolvingNotificationService>();
+        services.AddScoped<IFollowerService, FollowerService>();
         services.AddScoped<IMessageService, MessageService>();
-
         services.AddScoped<IInternalUserService, UserService>();
     }
 
@@ -65,10 +65,9 @@ public static class StakeholdersStartup
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped<IPersonRepository, PersonDataBaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Problem>), typeof(CrudDatabaseRepository<Problem, StakeholdersContext>));
-        services.AddScoped(typeof(ICrudRepository<ProblemAnswer>), typeof(CrudDatabaseRepository<ProblemAnswer, StakeholdersContext>));
-        services.AddScoped(typeof(ICrudRepository<ProblemComment>), typeof(CrudDatabaseRepository<ProblemComment, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<ProblemResolvingNotification>), typeof(CrudDatabaseRepository<ProblemResolvingNotification, StakeholdersContext>));
         services.AddScoped<IProblemRepository, ProblemDatabaseRepository>();
-        services.AddScoped<IProblemCommentRepository, ProblemCommentDatabaseRepository>();
+        services.AddScoped<IProblemResolvingNotificationRepository, ProblemResolvingNotificationDatabaseRepository>();
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", "stakeholders")));
