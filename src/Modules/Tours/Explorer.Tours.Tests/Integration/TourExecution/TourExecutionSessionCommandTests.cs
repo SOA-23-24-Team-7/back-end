@@ -3,9 +3,11 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristPosition;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Infrastructure.Database;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System.Security.Claims;
 
 namespace Explorer.Tours.Tests.Integration.TourExecution
 {
@@ -22,6 +24,18 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
             long tourId = -8;
 
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-12") }, "test");
+
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
             // Act
             var result = ((ObjectResult)controller.StartTour(tourId).Result)?.Value as TourExecutionSessionResponseDto;
 
@@ -35,7 +49,7 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             storedEntity.ShouldNotBeNull();
             storedEntity.Id.ShouldBe(result.Id);
         }
-        
+
         [Fact]
         public void CompletesKeyPoint()
         {
@@ -49,6 +63,19 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
                 Longitude = 15.31,
                 Latitude = 28.04
             };
+
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-12") }, "test");
+
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
             // Act
             controller.StartTour(tourId);
             var result = ((ObjectResult)controller.CompleteKeyPoint(tourId, position).Result)?.Value as TourExecutionSessionResponseDto;
@@ -72,6 +99,19 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
             long tourId = -8;
+
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-12") }, "test");
+
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
             // Act
             var result = ((ObjectResult)controller.AbandonTour(tourId).Result)?.Value as TourExecutionSessionResponseDto;
 

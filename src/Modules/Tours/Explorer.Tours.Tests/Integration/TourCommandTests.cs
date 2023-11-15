@@ -2,9 +2,11 @@ using Explorer.API.Controllers.Author.TourAuthoring;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Infrastructure.Database;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System.Security.Claims;
 
 namespace Explorer.Tours.Tests.Integration;
 [Collection("Sequential")]
@@ -315,6 +317,18 @@ public class TourCommandTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-11") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(contextUser)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+
         // Act
         var result = (OkResult)controller.Publish(tourId).Result;
 
@@ -419,6 +433,18 @@ public class TourCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-11") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(contextUser)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
 
         // Act
         var result = (OkResult)controller.Archive(tourId).Result;
