@@ -406,8 +406,6 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
     }
 
-
-
     [Fact]
     public void Archive_succeeds()
     {
