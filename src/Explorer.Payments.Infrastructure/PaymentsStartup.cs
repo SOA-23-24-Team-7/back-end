@@ -1,9 +1,7 @@
-﻿
-
-using Explorer.Payments.Core.Mappers;
+﻿using Explorer.Payments.Core.Mappers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Explorer.Payments.Infrastructure.Database;
+namespace Explorer.Payments.Infrastructure;
 
 public static class PaymentsStartup
 {

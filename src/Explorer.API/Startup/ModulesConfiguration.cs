@@ -1,5 +1,5 @@
 using Explorer.Blog.Infrastructure;
-using Explorer.Payments.Infrastructure.Database;
+using Explorer.Payments.Infrastructure;
 using Explorer.Stakeholders.Infrastructure;
 using Explorer.Tours.Infrastructure;
 
