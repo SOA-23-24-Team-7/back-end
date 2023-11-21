@@ -1,0 +1,10 @@
+﻿using Explorer.Payments.API.Dtos;
+using FluentResults;
+
+namespace Explorer.Payments.API.Public;
+
+public interface ITourTokenService
+{
+    Result<TourTokenResponseDto> AddToken(TourTokenCreateDto token);
+    Result<List<TourTokenResponseDto>> GetTouristsTokens(long touristId);
+}
