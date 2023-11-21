@@ -1,7 +1,6 @@
 ﻿using Explorer.API.Controllers.Tourist;
-using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
+using Explorer.Payments.API.Dtos;
+using Explorer.Payments.API.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -10,14 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 
-namespace Explorer.Tours.Tests.Integration
+namespace Explorer.Payments.Tests.Integration
 {
-    /*[Collection("Sequential")]
-    public class ShoppingCartQueryTest : BaseToursIntegrationTest
+    [Collection("Sequential")]
+    public class ShoppingCartQueryTest : BasePaymentsIntegrationTest
     {
-        public ShoppingCartQueryTest(ToursTestFactory factory) : base(factory) { }
+        public ShoppingCartQueryTest(PaymentsTestFactory factory) : base(factory) { }
 
         [Fact]
         public void Retrieves_all()
@@ -41,5 +39,5 @@ namespace Explorer.Tours.Tests.Integration
                 ControllerContext = BuildContext("-1")
             };
         }
-    }*/
+    }
 }

@@ -1,9 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Explorer.Payments.Core.Domain;
+using Explorer.Payments.Core.Domain.ShoppingCarts;
+using Explorer.Tours.Core.Domain.Tours;
+using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Payments.Infrastructure.Database;
 
 public class PaymentsContext : DbContext
 {
+
+    public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<TourToken> tourTokens { get; set; }
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+
+    public PaymentsContext(DbContextOptions<PaymentsContext> options) : base(options) { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("payments");
@@ -13,6 +22,14 @@ public class PaymentsContext : DbContext
 
     private static void ConfigurePayments(ModelBuilder modelBuilder)
     {
+        ConfigureOrderItem(modelBuilder);
+    }
 
+    private static void ConfigureOrderItem(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<OrderItem>()
+            .HasOne<Tour>() 
+            .WithOne()
+            .HasForeignKey<OrderItem>(o => o.TourId);
     }
 }
