@@ -20,7 +20,14 @@ namespace Explorer.API.Controllers.Tourist
         [HttpGet]
         public ActionResult<PagedResult<TourResponseDto>> SearchByGeoLocation([FromQuery] double longitude, [FromQuery] double latitude, [FromQuery] double maxDistance, [FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _tourSearchService.Search(longitude, latitude, maxDistance, page, pageSize);
+            var result = _tourSearchService.SearchByLocation(longitude, latitude, maxDistance, page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("search")]
+        public ActionResult<PagedResult<TourResponseDto>> Search([FromQuery] TourSearchFilterDto tourSearchFilterDto)
+        {
+            var result = _tourSearchService.Search(tourSearchFilterDto);
             return CreateResponse(result);
         }
     }

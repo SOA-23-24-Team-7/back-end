@@ -16,9 +16,9 @@ namespace Explorer.Tours.API.Dtos
         public List<string> Tags { get; set; }
         public double Price { get; set; }
         public double Distance { get; set; }
-        public KeyPointResponseDto KeyPoint { get; set; }
-        public List<TourDurationResponseDto> Durations { get; set; }
-        public List<ReviewResponseDto> Reviews { get; set; }
+        public KeyPointResponseDto? KeyPoint { get; set; }
+        public List<TourDurationResponseDto>? Durations { get; set; }
+        public List<ReviewResponseDto>? Reviews { get; set; }
       
     }
 }
