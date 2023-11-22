@@ -22,14 +22,6 @@ public class PaymentsContext : DbContext
 
     private static void ConfigurePayments(ModelBuilder modelBuilder)
     {
-        ConfigureOrderItem(modelBuilder);
-    }
 
-    private static void ConfigureOrderItem(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<OrderItem>()
-            .HasOne<Tour>() 
-            .WithOne()
-            .HasForeignKey<OrderItem>(o => o.TourId);
     }
 }

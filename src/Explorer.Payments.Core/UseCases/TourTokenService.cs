@@ -58,5 +58,11 @@ namespace Explorer.Payments.Core.UseCases
             return MapToDto<TourTokenResponseDto>(tokens);
         }
 
+        public Result<List<long>> GetTouristToursId(long touristId)
+        {
+            var tokens = _repository.GetAll().FindAll(token => token.TouristId == touristId);
+            return tokens.Select(token => token.TourId).ToList();
+        }
+
     }
 }

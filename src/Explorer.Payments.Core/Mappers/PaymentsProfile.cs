@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Explorer.Payments.API.Dtos;
+using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
 
 namespace Explorer.Payments.Core.Mappers;
@@ -15,5 +16,8 @@ public class PaymentsProfile : Profile
         CreateMap<OrderItemResponseDto, OrderItem>().ReverseMap();
         CreateMap<OrderItemCreateDto, OrderItem>().ReverseMap();
         CreateMap<OrderItemUpdateDto, OrderItem>().ReverseMap();
+
+        CreateMap<TourTokenResponseDto, TourToken>().ReverseMap();
+        CreateMap<TourTokenCreateDto, TourToken>().ReverseMap();
     }
 }
