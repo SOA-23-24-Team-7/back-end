@@ -1,6 +1,6 @@
 ﻿namespace Explorer.Encounters.API.Dtos
 {
-    public class EncounterResponseDto
+    public class EncounterUpdateDto
     {
         public long Id { get; set; }
         public string Title { get; set; }

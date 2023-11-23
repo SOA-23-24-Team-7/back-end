@@ -8,7 +8,9 @@ public class EncountersProfile : Profile
     public EncountersProfile()
     {
         CreateMap<EncounterCreateDto,Encounter.Core.Domain.Encounter>().ReverseMap();
+        CreateMap<EncounterUpdateDto,Encounter.Core.Domain.Encounter>().ReverseMap();
         CreateMap<EncounterResponseDto,Encounter.Core.Domain.Encounter>().ReverseMap();
         CreateMap<EncounterCreateDto, EncounterResponseDto>().ReverseMap();
+        CreateMap<EncounterUpdateDto, EncounterResponseDto>().ReverseMap();
     }
 }
