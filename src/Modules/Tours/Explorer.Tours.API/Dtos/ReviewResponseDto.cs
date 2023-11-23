@@ -1,4 +1,6 @@
-﻿namespace Explorer.Tours.API.Dtos
+﻿using Explorer.Stakeholders.API.Dtos;
+
+namespace Explorer.Tours.API.Dtos
 {
     public class ReviewResponseDto
     {
@@ -10,5 +12,6 @@
         public DateOnly CommentDate { get; set; }
         public long TourId { get; set; }
         public List<string> Images { get; set; }
+        public UserResponseDto Tourist { get; set; }
     }
 }
