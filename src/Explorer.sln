@@ -49,13 +49,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Explorer.Blog.Tests", "Modu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Encounters", "Encounters", "{61F3FED1-88C5-406D-854E-0D5A4E7A33B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.API", "Explorer.Encounters.API\Explorer.Encounters.API.csproj", "{EB371D2B-2447-4A37-B60A-AA670A22642F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.API", "Modules\Encounters\Explorer.Encounters.API\Explorer.Encounters.API.csproj", "{EB371D2B-2447-4A37-B60A-AA670A22642F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Core", "Explorer.Encounters.Core\Explorer.Encounters.Core.csproj", "{F483880B-8602-4EAE-9767-C8DA3FBAE070}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Core", "Modules\Encounters\Explorer.Encounters.Core\Explorer.Encounters.Core.csproj", "{F483880B-8602-4EAE-9767-C8DA3FBAE070}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Infrastructure", "Explorer.Encounters.Infrastructure\Explorer.Encounters.Infrastructure.csproj", "{7D1EA500-E601-4580-BAFD-286D823AE52E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Infrastructure", "Modules\Encounters\Explorer.Encounters.Infrastructure\Explorer.Encounters.Infrastructure.csproj", "{7D1EA500-E601-4580-BAFD-286D823AE52E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Tests", "Explorer.Encounters.Tests\Explorer.Encounters.Tests.csproj", "{7694C3E6-B890-4FFD-A8D0-5FCAA8C25C82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Tests", "Modules\Encounters\Explorer.Encounters.Tests\Explorer.Encounters.Tests.csproj", "{7694C3E6-B890-4FFD-A8D0-5FCAA8C25C82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
