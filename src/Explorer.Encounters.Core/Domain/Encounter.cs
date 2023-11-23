@@ -10,8 +10,6 @@ namespace Explorer.Encounter.Core.Domain
         public long Xp { get; init; }
         public EncounterStatus Status { get; init; }
         public EncounterType Type { get; init; }
-        public bool IsActive { get; init; } = true;
-
         public Encounter(string title, string description, string location, long xp, EncounterStatus status, EncounterType type)
         {
             Title = title;
@@ -22,7 +20,6 @@ namespace Explorer.Encounter.Core.Domain
             Type = type;
             Validate();
         }
-
         private void Validate()
         {
             if (string.IsNullOrWhiteSpace(Title)) throw new ArgumentException("Invalid Title");
@@ -31,9 +28,6 @@ namespace Explorer.Encounter.Core.Domain
             if (Xp < 0) throw new ArgumentException("XP cannot be negative");
         }
     }
-
-
-
     public enum EncounterStatus { Active, Draft, Archieved };
     public enum EncounterType { Social, Location, Misc };
 
