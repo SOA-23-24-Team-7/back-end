@@ -9,6 +9,7 @@ namespace Explorer.Encounters.API.Public
         Result<EncounterResponseDto> Create<EncounterCreateDto>(EncounterCreateDto encounter);
         Result<EncounterResponseDto> Update<EncounterUpdateDto>(EncounterUpdateDto encounter);
         Result<PagedResult<EncounterResponseDto>> GetPaged(int page, int pageSize);
+        Result<PagedResult<EncounterResponseDto>> GetActive(int page, int pageSize);
         Result<EncounterResponseDto> Get(long id);
         Result Delete(long id);
     }

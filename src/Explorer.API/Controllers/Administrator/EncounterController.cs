@@ -51,6 +51,13 @@ namespace Explorer.API.Controllers.Administrator
             return CreateResponse(result);
         }
 
+        [HttpGet("active")]
+        public ActionResult<PagedResult<EncounterResponseDto>> GetActive([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _encounterService.GetActive(page, pageSize);
+            return CreateResponse(result);
+        }
+
         [HttpDelete("{id:long}")]
         public ActionResult Delete(long id)
         {
