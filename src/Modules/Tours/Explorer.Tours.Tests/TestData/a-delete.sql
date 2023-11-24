@@ -1,6 +1,5 @@
 DELETE FROM tours."PublicKeyPointNotifications";
 DELETE FROM tours."PublicKeyPointRequests";
-DELETE FROM tours."tourTokens";
 DELETE FROM tours."PublicFacilityNotifications";
 DELETE FROM tours."PublicFacilityRequests";
 DELETE FROM tours."TourExecutionSessions";
@@ -9,9 +8,7 @@ DELETE FROM tours."KeyPoints";
 DELETE FROM tours."Facilities";
 DELETE FROM tours."Reviews";
 DELETE FROM tours."TourEquipment";
-DELETE FROM tours."OrderItems";
 DELETE FROM tours."Tours";
 DELETE FROM tours."Preferences";
 DELETE FROM tours."TouristEquipments";
-DELETE FROM tours."ShoppingCarts";
 DELETE FROM tours."Equipment";

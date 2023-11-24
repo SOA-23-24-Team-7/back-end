@@ -1,4 +1,5 @@
 ﻿using Explorer.API.Controllers.Tourist;
+using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristPosition;
 using Explorer.Tours.API.Public;
@@ -129,7 +130,8 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
         private static TourExecutionSessionController CreateController(IServiceScope scope)
         {
             return new TourExecutionSessionController(scope.ServiceProvider.GetRequiredService<ITourExecutionSessionService>(),
-                scope.ServiceProvider.GetRequiredService<ITourService>())
+                scope.ServiceProvider.GetRequiredService<ITourService>(),
+                scope.ServiceProvider.GetRequiredService<ITourTokenService>())
             {
                 ControllerContext = BuildContext("-1")
             };

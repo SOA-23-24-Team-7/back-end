@@ -16,15 +16,11 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
-    private readonly ICrudRepository<TourToken> _tourTokenRepository;
     private readonly ITourExecutionSessionRepository _tourExecutionSessionRepository;
     private readonly IInternalProblemService _problemService;
-    private readonly IShoppingCartRepository _cartRepository;
     private readonly IReviewRepository _reviewRepository;
 
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository, IReviewRepository reviewRepository, IShoppingCartRepository cartRepository,
-        ICrudRepository<TourToken> tourTokenRepository, IInternalProblemService problemService) : base(repository, mapper)
-
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository, IReviewRepository reviewRepository, IInternalProblemService problemService) : base(repository, mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -32,8 +28,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         _problemService = problemService;
         _reviewRepository = reviewRepository;
         _tourExecutionSessionRepository = tourExecutionSessionRepository;
-        _cartRepository = cartRepository;
-        _tourTokenRepository = tourTokenRepository;
     }
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
@@ -189,18 +183,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
                                                                     te.TouristId == userId && te.Progress >= 35 && (te.LastActivity > DateTime.UtcNow.AddDays(-7)));
         return tourExecutions.Any();
     }
-
-    public Result<List<TourResponseDto>> GetPurchasedTours(long touristId)
-    {
-        List<TourResponseDto> tourResponseDtos = new List<TourResponseDto>();
-        List<TourToken> tourTokens = _tourTokenRepository.GetAll().Where(tk => tk.TouristId == touristId).ToList();
-        foreach (TourToken tourToken in tourTokens)
-        {
-            TourResponseDto tour = MapToDto<TourResponseDto>(_tourRepository.GetById(tourToken.TourId));
-            tourResponseDtos.Add(tour);
-        }
-        return tourResponseDtos;
-    }
     public Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize)
     {
         try
@@ -226,33 +208,14 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
             return Result.Fail(FailureCode.Internal);
         }
     }
-    public Result<PagedResult<LimitedTourViewResponseDto>> GetToursInCart(int page, int pageSize, long id)
+    public Result<PagedResult<LimitedTourViewResponseDto>> GetLimitedInfoTours(int page, int pageSize, List<long> ids)
     {
         try
         {
-            var shoppingCart = _cartRepository.GetByTouristId(id);
             List<LimitedTourViewResponseDto> dtos = new List<LimitedTourViewResponseDto>();
-            if (shoppingCart != null)
+            foreach (var id in ids)
             {
-                foreach (var item in shoppingCart.OrderItems)
-                {
-                    Tour tour = _tourRepository.GetById(item.TourId);
-
-                    LimitedTourViewResponseDto dto = _mapper.Map<LimitedTourViewResponseDto>(tour);
-                    dto.KeyPoint = _mapper.Map<KeyPointResponseDto>(tour.KeyPoints.First());
-                    var reviews = _reviewRepository.GetPagedByTourId(0, 0, tour.Id);
-                    dto.Reviews = reviews.Results.Select(_mapper.Map<ReviewResponseDto>).ToList();
-                    dtos.Add(dto);
-                }
-                return new PagedResult<LimitedTourViewResponseDto>(dtos, dtos.Count);
-            }
-            else
-            {
-                return Result.Fail(FailureCode.Internal);
-            }
-            /*foreach (var item in shoppingCart.OrderItems)
-            {
-                Tour tour = _tourRepository.GetById(item.TourId);
+                Tour tour = _tourRepository.GetById(id);
 
                 LimitedTourViewResponseDto dto = _mapper.Map<LimitedTourViewResponseDto>(tour);
                 dto.KeyPoint = _mapper.Map<KeyPointResponseDto>(tour.KeyPoints.First());
@@ -260,7 +223,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
                 dto.Reviews = reviews.Results.Select(_mapper.Map<ReviewResponseDto>).ToList();
                 dtos.Add(dto);
             }
-            return new PagedResult<LimitedTourViewResponseDto>(dtos, dtos.Count);*/
+            return new PagedResult<LimitedTourViewResponseDto>(dtos, dtos.Count);
         }
         catch (ArgumentException e)
         {
@@ -270,6 +233,16 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         {
             return Result.Fail(FailureCode.Internal);
         }
+    }
 
+    public Result<List<TourResponseDto>> GetTours(List<long> toursIds)
+    {
+        List<TourResponseDto> tourResponseDtos = new List<TourResponseDto>();
+        foreach (long id in toursIds)
+        {
+            TourResponseDto tour = MapToDto<TourResponseDto>(_tourRepository.GetById(id));
+            tourResponseDtos.Add(tour);
+        }
+        return tourResponseDtos;
     }
 }
