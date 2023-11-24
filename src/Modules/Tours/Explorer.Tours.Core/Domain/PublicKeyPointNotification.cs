@@ -10,6 +10,7 @@ namespace Explorer.Tours.Core.Domain
         public DateTime Created { get; set; }
         public bool IsAccepted { get; init; }
         public string Comment { get; init; }
+        public bool isSeen { get; private set; }
         public PublicKeyPointNotification(string description, long authorId, long requestId, DateTime created, bool isAccepted, string comment)
         {
             Validate(description);
@@ -23,6 +24,11 @@ namespace Explorer.Tours.Core.Domain
         private void Validate(string description)
         {
             if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Invalid Description.");
+        }
+
+        public void SetSeenStatus()
+        {
+            isSeen = true;
         }
     }
 }

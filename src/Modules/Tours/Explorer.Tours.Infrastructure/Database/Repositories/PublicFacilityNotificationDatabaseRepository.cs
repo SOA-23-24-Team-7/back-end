@@ -1,4 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
@@ -27,6 +28,23 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             task.Wait();
             return task.Result;
         }
-        
+
+        public int CountNotSeen(long userId)
+        {
+            return _dbSet.Count(x => !x.isSeen && x.AuthorId == userId);
+        }
+
+        public void Update(PublicFacilityNotification notification)
+        {
+            try
+            {
+                _dbContext.Update(notification);
+                _dbContext.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new KeyNotFoundException(e.Message);
+            }
+        }
     }
 }

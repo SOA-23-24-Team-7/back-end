@@ -5,6 +5,7 @@ using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.Core.Utilities;
 using Explorer.Tours.API.Internal;
 using FluentResults;
 
@@ -56,10 +57,11 @@ namespace Explorer.Stakeholders.Core.UseCases
                 {
                     problem.SetDeadline(deadline);
                     var result = CrudRepository.Update(problem);
-                    var message = "Deadline set till: " + deadline;
-                    var notification = new ProblemResolvingNotification(problem.Id, problem.Answer.AuthorId, adminID, message, DateTime.UtcNow);
-                    var notifactionCreateDto = _mapper.Map<ProblemResolvingNotificationCreateDto>(notification);
-                    _problemResolvingNotificationService.Create(notifactionCreateDto);
+                    var tourName = _tourService.GetToursName(problem.TourId);
+                    var message = NotificationGenerator.GenerateDeadlineMessage(tourName, deadline);
+                    var header = NotificationGenerator.GenerateDeadlineHeader(tourName);
+                    var notification = new ProblemResolvingNotification(problem.Id, problem.Answer.AuthorId, adminID, message, DateTime.UtcNow, header);
+                    _problemResolvingNotificationService.Create(notification);
                     return MapToDto<ProblemResponseDto>(result);
                 }
                 catch (KeyNotFoundException e)
@@ -83,10 +85,10 @@ namespace Explorer.Stakeholders.Core.UseCases
 
                 problem.CreateAnswer(problemAnswer.Answer, problemAnswer.AuthorId);
                 CrudRepository.Update(problem);
+                var header = NotificationGenerator.GenerateAnswerHeader(_tourService.GetToursName(problem.TourId));
 
-                var notification = new ProblemResolvingNotification(problem.Id, problem.TouristId, problem.Answer.AuthorId, problemAnswer.Answer, DateTime.UtcNow);
-                var notifactionCreateDto = _mapper.Map<ProblemResolvingNotificationCreateDto>(notification);
-                _problemResolvingNotificationService.Create(notifactionCreateDto);
+                var notification = new ProblemResolvingNotification(problem.Id, problem.TouristId, problem.Answer.AuthorId, problemAnswer.Answer, DateTime.UtcNow, header);
+                _problemResolvingNotificationService.Create(notification);
                 return Result.Ok();
             }
             catch (Exception e)
@@ -118,9 +120,10 @@ namespace Explorer.Stakeholders.Core.UseCases
                     senderId = problem.TouristId;
                     receiverId = problem.Answer.AuthorId;
                 }
-                var notification = new ProblemResolvingNotification(problem.Id, receiverId, senderId, problemComment.Text, DateTime.UtcNow);
-                var notifactionCreateDto = _mapper.Map<ProblemResolvingNotificationCreateDto>(notification);
-                _problemResolvingNotificationService.Create(notifactionCreateDto);
+
+                var header = NotificationGenerator.GenerateCommentHeader(_tourService.GetToursName(problem.TourId));
+                var notification = new ProblemResolvingNotification(problem.Id, receiverId, senderId, problemComment.Text, DateTime.UtcNow, header);
+                _problemResolvingNotificationService.Create(notification);
 
                 return _mapper.Map<ProblemCommentResponseDto>(comment);
             }

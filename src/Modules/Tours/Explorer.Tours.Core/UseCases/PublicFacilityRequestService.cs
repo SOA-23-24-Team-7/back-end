@@ -42,6 +42,7 @@ namespace Explorer.Tours.Core.UseCases
             }
         }
 
+        //ToDo:add name and picture here
         private void CreateNotification(PublicFacilityRequest request, bool isAccepted)
         {
             var facility = _facilityRepository.Get(request.FacilityId);

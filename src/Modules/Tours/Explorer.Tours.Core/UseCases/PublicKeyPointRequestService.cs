@@ -27,7 +27,7 @@ namespace Explorer.Tours.Core.UseCases
             _keyPointRepository = keyPointRepository;
             _publicKeyPointRepository = publicKeyPointRepository;
         }
-        public Result Reject(long requestId,string comment)
+        public Result Reject(long requestId, string comment)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Explorer.Tours.Core.UseCases
                 request.Comment = comment;
 
                 _repository.Update(request);
-                CreateNotification(request,false);
+                CreateNotification(request, false);
 
                 return Result.Ok().WithSuccess("Request rejected successfully.");
             }
@@ -51,6 +51,8 @@ namespace Explorer.Tours.Core.UseCases
                 return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
             }
         }
+
+        //ToDo:add name and picture here
         private void CreateNotification(PublicKeyPointRequest request, bool isAccepted)
         {
             var keyPoint = _keyPointRepository.Get(request.KeyPointId);
@@ -93,7 +95,7 @@ namespace Explorer.Tours.Core.UseCases
                 return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
             }
         }
-    
+
         private bool isPending(PublicKeyPointRequest request)
         {
             return request.Status == PublicStatus.Pending;
@@ -110,7 +112,7 @@ namespace Explorer.Tours.Core.UseCases
         {
             var result = _repository.GetPaged(page, pageSize).Results;
             var resultsDto = new List<PublicKeyPointRequestResponseDto>();
-            foreach (PublicKeyPointRequest  req in result)
+            foreach (PublicKeyPointRequest req in result)
             {
                 var dto = MapToDto<PublicKeyPointRequestResponseDto>(req);
                 dto.KeyPointName = _keyPointRepository.Get(req.KeyPointId).Name;
