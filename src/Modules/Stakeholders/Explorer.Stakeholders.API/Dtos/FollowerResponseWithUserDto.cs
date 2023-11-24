@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.API.Dtos
 {
-    public class FollowingResponseWithUsernameDto
+    public class FollowerResponseWithUserDto
     {
         public long Id { get; set; }
-        public long FollowingId { get; set; }
-        public string FollowingUsername { get; set; }
+        public UserResponseDto FollowedBy { get; set; }
+        public PersonResponseDto FollowedByPerson { get; set; }
     }
 }
