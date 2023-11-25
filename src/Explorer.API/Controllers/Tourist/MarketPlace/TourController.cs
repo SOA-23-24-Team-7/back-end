@@ -1,10 +1,9 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
-using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.Eventing.Reader;
 using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Tourist.MarketPlace
@@ -13,10 +12,12 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
     public class TourController : BaseApiController
     {
         private readonly ITourService _tourService;
+        private readonly IShoppingCartService _shoppingCartService;
 
-        public TourController(ITourService service)
+        public TourController(ITourService service, IShoppingCartService shoppingCartService)
         {
             _tourService = service;
+            _shoppingCartService = shoppingCartService;
         }
 
         [Authorize(Roles = "author, tourist")]
@@ -50,7 +51,13 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         [HttpGet("tours/inCart/{id:long}")]
         public ActionResult<PagedResult<LimitedTourViewResponseDto>> GetToursInCart([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
-            var result = _tourService.GetToursInCart(page, pageSize, id);
+            var cart = _shoppingCartService.GetByTouristId(id);
+            if(cart == null)
+            {
+                return NotFound();
+            }
+            var tourIds = cart.Value.OrderItems.Select(order => order.TourId).ToList();
+            var result = _tourService.GetLimitedInfoTours(page, pageSize, tourIds);
             return CreateResponse(result);
         }
 

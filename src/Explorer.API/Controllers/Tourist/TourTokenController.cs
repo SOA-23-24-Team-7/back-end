@@ -1,5 +1,5 @@
-﻿using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
+﻿using Explorer.Payments.API.Dtos;
+using Explorer.Payments.API.Public;
 using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
