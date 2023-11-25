@@ -33,7 +33,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public int CountNotSeen(long userId)
         {
-            return _dbSet.Count(x => !x.isSeen && x.AuthorId == userId);
+            return _dbSet.Count(x => !x.IsSeen && x.AuthorId == userId);
         }
 
         public void Update(PublicKeyPointNotification notification)

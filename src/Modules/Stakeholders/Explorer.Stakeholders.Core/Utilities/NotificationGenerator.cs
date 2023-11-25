@@ -2,7 +2,6 @@
 
 public class NotificationGenerator
 {
-    public NotificationGenerator() { }
     public static string GenerateAnswerHeader(string tourName)
     {
         return "Publisher answer on: " + tourName.ToUpper();

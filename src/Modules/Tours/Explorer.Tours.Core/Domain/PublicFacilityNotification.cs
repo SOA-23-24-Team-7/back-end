@@ -10,9 +10,12 @@ namespace Explorer.Tours.Core.Domain
         public DateTime Created { get; set; }
         public bool IsAccepted { get; init; }
         public string Comment { get; init; }
-        public bool isSeen { get; private set; }
+        public bool IsSeen { get; private set; }
+        public string? SenderPicture { get; init; }
+        public string SenderName { get; init; }
+        public string Header { get; init; }
 
-        public PublicFacilityNotification(string description, long authorId, long requestId, DateTime created, bool isAccepted, string comment)
+        public PublicFacilityNotification(string description, long authorId, long requestId, DateTime created, bool isAccepted, string comment, string senderPicture, string senderName, string header)
         {
             Validate(description);
             Description = description;
@@ -21,6 +24,9 @@ namespace Explorer.Tours.Core.Domain
             Created = created;
             IsAccepted = isAccepted;
             Comment = comment;
+            SenderPicture = senderPicture;
+            SenderName = senderName;
+            Header = header;
         }
         private void Validate(string description)
         {
@@ -29,7 +35,7 @@ namespace Explorer.Tours.Core.Domain
 
         public void SetSeenStatus()
         {
-            isSeen = true;
+            IsSeen = true;
         }
     }
 }

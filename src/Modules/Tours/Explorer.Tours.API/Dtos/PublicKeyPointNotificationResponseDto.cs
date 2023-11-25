@@ -15,5 +15,8 @@ namespace Explorer.Tours.API.Dtos
         public DateTime Created { get; set; }
         public bool IsAccepted { get; set; }
         public string? Comment { get; set; }
+        public string SenderName { get; set; }
+        public string SenderPicture { get; set; }
+        public string Header { get; set; }
     }
 }

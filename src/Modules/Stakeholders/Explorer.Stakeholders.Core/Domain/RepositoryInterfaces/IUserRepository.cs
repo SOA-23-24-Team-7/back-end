@@ -13,4 +13,5 @@ public interface IUserRepository
     PagedResult<User> GetPagedByAdmin(int page, int pageSize, long adminId);
     public PagedResult<User> SearchUsers(int page, int pageSize, string searchUsername, long id);
     string GetNameById(long id);
+    string GetProfilePicture(long adminId);
 }

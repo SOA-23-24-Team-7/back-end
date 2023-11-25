@@ -25,7 +25,7 @@ namespace Explorer.Tours.Core.UseCases
         public Result<PagedResult<PublicFacilityNotificationResponseDto>> GetFacilityNotificationsByAuthorId(int page, int pageSize, long id)
         {
             PagedResult<PublicFacilityNotification> notifications = _facilityNotificationRepository.GetByAuthorId(page, pageSize, id);
-            notifications.Results.Where(x => !x.isSeen && x.AuthorId == id).ToList().ForEach(x =>
+            notifications.Results.Where(x => !x.IsSeen && x.AuthorId == id).ToList().ForEach(x =>
             {
                 x.SetSeenStatus();
                 _facilityNotificationRepository.Update(x);
@@ -38,7 +38,7 @@ namespace Explorer.Tours.Core.UseCases
         public Result<PagedResult<PublicKeyPointNotificationResponseDto>> GetKeyPointNotificationsByAuthorId(int page, int pageSize, long id)
         {
             PagedResult<PublicKeyPointNotification> notifications = _keypointNotificationRepository.GetByAuthorId(page, pageSize, id);
-            notifications.Results.Where(x => !x.isSeen && x.AuthorId == id).ToList().ForEach(x =>
+            notifications.Results.Where(x => !x.IsSeen && x.AuthorId == id).ToList().ForEach(x =>
             {
                 x.SetSeenStatus();
                 _keypointNotificationRepository.Update(x);

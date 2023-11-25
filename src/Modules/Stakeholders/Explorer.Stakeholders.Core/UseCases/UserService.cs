@@ -47,6 +47,11 @@ namespace Explorer.Stakeholders.Core.UseCases
             return _userRepository.GetNameById(id);
         }
 
+        public string GetProfilePicture(long adminId)
+        {
+            return _userRepository.GetProfilePicture(adminId);
+        }
+
         public Result<PagedResult<UserResponseDto>> GetPagedByAdmin(int page, int pageSize, long adminId)
         {
             return MapToDto<UserResponseDto>(_userRepository.GetPagedByAdmin(page, pageSize, adminId));

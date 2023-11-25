@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
@@ -20,14 +21,17 @@ namespace Explorer.Tours.Core.UseCases
         private readonly ICrudRepository<PublicKeyPointNotification> _notificationRepository;
         private readonly IKeyPointRepository _keyPointRepository;
         private readonly ICrudRepository<PublicKeyPoint> _publicKeyPointRepository;
-        public PublicKeyPointRequestService(ICrudRepository<PublicKeyPointRequest> repository, ICrudRepository<PublicKeyPoint> publicKeyPointRepository, ICrudRepository<PublicKeyPointNotification> notificationRepository, IKeyPointRepository keyPointRepository, IMapper mapper) : base(repository, mapper)
+        private readonly IInternalUserService _userService;
+
+        public PublicKeyPointRequestService(ICrudRepository<PublicKeyPointRequest> repository, ICrudRepository<PublicKeyPoint> publicKeyPointRepository, ICrudRepository<PublicKeyPointNotification> notificationRepository, IKeyPointRepository keyPointRepository, IMapper mapper, IInternalUserService userService) : base(repository, mapper)
         {
             _repository = repository;
             _notificationRepository = notificationRepository;
             _keyPointRepository = keyPointRepository;
+            _userService = userService;
             _publicKeyPointRepository = publicKeyPointRepository;
         }
-        public Result Reject(long requestId, string comment)
+        public Result Reject(long requestId, string comment, long adminId)
         {
             try
             {
@@ -42,7 +46,7 @@ namespace Explorer.Tours.Core.UseCases
                 request.Comment = comment;
 
                 _repository.Update(request);
-                CreateNotification(request, false);
+                CreateNotification(request, false, adminId);
 
                 return Result.Ok().WithSuccess("Request rejected successfully.");
             }
@@ -53,24 +57,30 @@ namespace Explorer.Tours.Core.UseCases
         }
 
         //ToDo:add name and picture here
-        private void CreateNotification(PublicKeyPointRequest request, bool isAccepted)
+        private void CreateNotification(PublicKeyPointRequest request, bool isAccepted, long adminId)
         {
             var keyPoint = _keyPointRepository.Get(request.KeyPointId);
-            NotificationGenerator generator = new NotificationGenerator();
             string notificationText;
+            string notificationHeader;
+
             if (isAccepted)
             {
-                notificationText = generator.GenerateAccepted(keyPoint.Name);
+                notificationText = NotificationGenerator.GenerateAccepted(keyPoint.Name);
+                notificationHeader = NotificationGenerator.GenerateApprovalHeader();
                 request.Comment = "";
             }
             else
             {
-                notificationText = generator.GenerateRejected(keyPoint.Name);
+                notificationText = NotificationGenerator.GenerateRejected(keyPoint.Name);
+                notificationHeader = NotificationGenerator.GenerateRejectionHeader();
             }
-            _notificationRepository.Create(new PublicKeyPointNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow, isAccepted, request.Comment));
+
+            string senderPicture = _userService.GetProfilePicture(adminId);
+            string senderName = _userService.GetNameById(adminId).Value;
+            _notificationRepository.Create(new PublicKeyPointNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow, isAccepted, request.Comment, senderPicture, senderName, notificationHeader));
         }
 
-        public Result Accept(long requestId)
+        public Result Accept(long requestId, long adminId)
         {
             try
             {
@@ -86,7 +96,7 @@ namespace Explorer.Tours.Core.UseCases
 
                 CreatePublicKeypoint(request);
 
-                CreateNotification(request, true);
+                CreateNotification(request, true, adminId);
 
                 return Result.Ok().WithSuccess("Request accepted successfully.");
             }
