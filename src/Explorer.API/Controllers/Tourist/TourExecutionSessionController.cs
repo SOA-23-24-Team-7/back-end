@@ -1,14 +1,15 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristPosition;
 using Explorer.Tours.API.Public;
-using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Core.UseCases;
+using Explorer.Payments.API.Public;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Explorer.Payments.Core.Domain;
+using Explorer.Payments.API.Dtos;
+using FluentResults;
+using System.Collections.Generic;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -18,11 +19,13 @@ namespace Explorer.API.Controllers.Tourist
     {
         private readonly ITourExecutionSessionService _tourExecutionService;
         private readonly ITourService _tourService;
+        private readonly ITourTokenService _tourTokenService;
 
-        public TourExecutionSessionController(ITourExecutionSessionService tourExecutionService, ITourService tourService)
+        public TourExecutionSessionController(ITourExecutionSessionService tourExecutionService, ITourService tourService, ITourTokenService tourTokenService)
         {
             _tourExecutionService = tourExecutionService;
             _tourService = tourService;
+            _tourTokenService = tourTokenService;
         }
 
         [HttpGet]
@@ -32,8 +35,10 @@ namespace Explorer.API.Controllers.Tourist
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId;
             touristId = long.Parse(identity.FindFirst("id").Value);
-            var result = _tourService.GetPurchasedTours(touristId);
-            return CreateResponse(result);
+            var purchasedTourIds = _tourTokenService.GetTouristToursId(touristId).Value;
+            var result = _tourService.GetTours(purchasedTourIds);
+            var temp = CreateResponse(result);
+            return temp;
         }
 
         [HttpGet("{tourId:long}")]
