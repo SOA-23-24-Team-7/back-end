@@ -60,7 +60,13 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         }
     }
 
-    public Result<PagedResult<LimitedTourViewResponseDto>> Search(TourSearchFilterDto tourSearchFilterDto)
+    public Result<PagedResult<TourResponseDto>> Search(TourTouristSearchFilterDto tourSearchFilterDto)
+    {
+        var filter = new TourAuthorSearchFilterDto(tourSearchFilterDto);
+        return Search(filter);
+    }
+
+    public Result<PagedResult<TourResponseDto>> Search(TourAuthorSearchFilterDto tourSearchFilterDto)
     {
         try
         {
@@ -69,10 +75,12 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
             var filtered = tours;
             filtered = searchByDifficulty(filtered, tourSearchFilterDto.MinDifficulty, tourSearchFilterDto.MaxDifficulty);
             filtered = searchByAverageRating(filtered, tourSearchFilterDto.MinAverageRating);
+            filtered = searchByAuthorId(filtered, tourSearchFilterDto.AuthodId);
+            filtered = searchPublishedTours(filtered, tourSearchFilterDto.TourStatus);
 
-            var mappedResult = MapToLimitedTourViewDto(filtered);
+            var mappedResult = MapToResponseDto(filtered);
 
-            return new PagedResult<LimitedTourViewResponseDto>(mappedResult, mappedResult.Count);
+            return new PagedResult<TourResponseDto>(mappedResult, mappedResult.Count);
         }
         catch (ArgumentException e)
         {
@@ -104,6 +112,27 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         return filtered;
     }
 
+    private List<Tour> searchByAuthorId(List<Tour> tours, int? authorId)
+    {
+        var filtered = tours;
+        if (authorId != null)
+        {
+            filtered = tours.FindAll(t => t.AuthorId == authorId);
+        }
+        return filtered;
+    }
+
+    private List<Tour> searchPublishedTours(List<Tour> tours, string? isPublished)
+    {
+        var filtered = tours;
+        if (isPublished != null)
+        {
+            Enum.TryParse(isPublished, out Domain.Tours.TourStatus myStatus);
+            filtered = filtered.FindAll(t => t.Status == myStatus);
+        }
+        return filtered;
+    }
+
     private List<LimitedTourViewResponseDto> MapToLimitedTourViewDto(List<Tour> result)
     {
         List<LimitedTourViewResponseDto> dtos = new List<LimitedTourViewResponseDto>();
@@ -116,5 +145,15 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
                dtos.Add(dto);
             }
         return dtos;
+    }
+
+    private List<TourResponseDto> MapToResponseDto(List<Tour> tours)
+    {
+        List<TourResponseDto> mapped = new List<TourResponseDto>();
+        foreach(var tour in tours)
+        {
+            mapped.Add(_mapper.Map<TourResponseDto>(tour));
+        }
+        return mapped;
     }
 }

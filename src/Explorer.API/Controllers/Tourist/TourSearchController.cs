@@ -25,7 +25,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("search")]
-        public ActionResult<PagedResult<TourResponseDto>> Search([FromQuery] TourSearchFilterDto tourSearchFilterDto)
+        public ActionResult<PagedResult<TourResponseDto>> Search([FromQuery] TourTouristSearchFilterDto tourSearchFilterDto)
         {
             var result = _tourSearchService.Search(tourSearchFilterDto);
             return CreateResponse(result);
