@@ -70,7 +70,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
     {
         try
         {
-            var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published, include: "Reviews");
+            var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published, include: "KeyPoints,Reviews");
 
             var filtered = tours;
             filtered = searchByDifficulty(filtered, tourSearchFilterDto.MinDifficulty, tourSearchFilterDto.MaxDifficulty);
@@ -152,6 +152,11 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         List<TourResponseDto> mapped = new List<TourResponseDto>();
         foreach(var tour in tours)
         {
+            var dto = _mapper.Map<TourResponseDto>(tour);
+            foreach (var keyPoint in tour.KeyPoints)
+            {
+                dto.KeyPoints.Add(_mapper.Map<KeyPointResponseDto>(keyPoint));
+            }
             mapped.Add(_mapper.Map<TourResponseDto>(tour));
         }
         return mapped;
