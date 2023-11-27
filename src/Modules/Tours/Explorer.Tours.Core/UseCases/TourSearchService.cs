@@ -102,7 +102,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         return filtered;
     }
 
-    private List<Tour> searchByAverageRating(List<Tour> tours, int? minAverageRating)
+    private List<Tour> searchByAverageRating(List<Tour> tours, double? minAverageRating)
     {
         var filtered = tours;
         if (minAverageRating != null)
