@@ -9,7 +9,7 @@ public class TourTouristSearchFilterDto
     public int? MaxDifficulty { get; set; }
     public double? MinDuration { get; set; }
     public double? MaxDuration { get; set; }
-    public int? MinAverageRating { get; set; }
+    public double? MinAverageRating { get; set; }
     public double? MinLength { get; set; }
     public double? MaxLength { get; set; }
     public double? Longitude { get; set; }
