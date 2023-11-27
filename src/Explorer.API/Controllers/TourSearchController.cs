@@ -30,5 +30,12 @@ namespace Explorer.API.Controllers
             var result = _tourSearchService.Search(tourSearchFilterDto);
             return CreateResponse(result);
         }
+
+        [HttpGet("author-search")]
+        public ActionResult<PagedResult<TourResponseDto>> Search([FromQuery] TourAuthorSearchFilterDto tourSearchFilterDto)
+        {
+            var result = _tourSearchService.Search(tourSearchFilterDto);
+            return CreateResponse(result);
+        }
     }
 }
