@@ -75,7 +75,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
             var filtered = tours;
             filtered = searchByDifficulty(filtered, tourSearchFilterDto.MinDifficulty, tourSearchFilterDto.MaxDifficulty);
             filtered = searchByAverageRating(filtered, tourSearchFilterDto.MinAverageRating);
-            filtered = searchByAuthorId(filtered, tourSearchFilterDto.AuthodId);
+            filtered = searchByAuthorId(filtered, tourSearchFilterDto.AuthorId);
             filtered = searchPublishedTours(filtered, tourSearchFilterDto.TourStatus);
 
             var mappedResult = MapToResponseDto(filtered);

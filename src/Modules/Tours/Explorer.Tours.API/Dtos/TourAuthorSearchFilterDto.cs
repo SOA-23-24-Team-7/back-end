@@ -21,7 +21,7 @@ public class TourAuthorSearchFilterDto : TourTouristSearchFilterDto
         this.MaxDistance = dto.MaxDistance;
         this.Page = dto.Page;
         this.PageSize = dto.PageSize;
-        this.AuthodId = dto.AuthodId;
+        this.AuthorId = dto.AuthorId;
         this.TourStatus = "Published";
     }
 }

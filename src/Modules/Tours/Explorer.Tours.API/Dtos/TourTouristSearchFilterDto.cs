@@ -17,5 +17,5 @@ public class TourTouristSearchFilterDto
     public double? MaxDistance { get; set; }
     public int? Page { get; set; }
     public int? PageSize { get; set; }
-    public int? AuthodId { get; set; }
+    public int? AuthorId { get; set; }
 }

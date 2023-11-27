@@ -4,9 +4,9 @@ using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Explorer.API.Controllers.Tourist
+namespace Explorer.API.Controllers
 {
-    [Authorize(Policy = "touristPolicy")]
+    [Authorize(Policy = "nonAdministratorPolicy")]
     [Route("api/tourist/tour")]
     public class TourSearchController : BaseApiController
     {
