@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System.Security.Claims;
 
-namespace Explorer.Tours.Tests.Integration;
+namespace Explorer.Tours.Tests.Integration.TourAuthoring;
 [Collection("Sequential")]
 public class TourCommandTests : BaseToursIntegrationTest
 {
