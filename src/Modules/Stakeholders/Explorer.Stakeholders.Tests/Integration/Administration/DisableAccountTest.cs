@@ -1,4 +1,5 @@
 ﻿using Explorer.API.Controllers.Administrator.Administration;
+using Explorer.Payments.API.Public;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Infrastructure.Database;
@@ -55,7 +56,8 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
 
         private static UserController CreateController(IServiceScope scope)
         {
-            return new UserController(scope.ServiceProvider.GetRequiredService<IUserService>());
+            return new UserController(scope.ServiceProvider.GetRequiredService<IUserService>(),
+                scope.ServiceProvider.GetRequiredService<IWalletService>());
         }
     }
 }

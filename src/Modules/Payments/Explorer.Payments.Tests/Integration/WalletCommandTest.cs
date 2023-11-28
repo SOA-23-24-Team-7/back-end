@@ -1,5 +1,6 @@
 ﻿using Explorer.API.Controllers.Tourist;
 using Explorer.Payments.API.Dtos;
+using Explorer.Payments.API.Public;
 using Explorer.Payments.Infrastructure.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,19 +24,22 @@ namespace Explorer.Payments.Tests.Integration
 
             var newEntity = new WalletUpdateDto
             {
-                Id = -1,
-                AdventureCoin = 1,
+                Id = -67,
+                AdventureCoin = 15,
             };
 
             var result = ((ObjectResult)controller.UpdateWallet(newEntity).Result)?.Value as WalletResponseDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
-            result.Id.ShouldNotBe(-1);
+            result.Id.ShouldBe(-67);
             result.AdventureCoin.ShouldBe(newEntity.AdventureCoin);
 
             // Assert - Database
-            //TODO
+            var storedEntity = dbContext.Wallets.FirstOrDefault(w => w.Id == result.Id);
+            storedEntity.ShouldNotBeNull();
+            storedEntity.TouristId.ShouldBe(result.TouristId);
+            storedEntity.AdventureCoin.ShouldBe(newEntity.AdventureCoin);
         }
 
         [Fact]
@@ -46,7 +50,7 @@ namespace Explorer.Payments.Tests.Integration
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
 
-            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "1") }, "test");
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-42") }, "test");
             var context = new DefaultHttpContext()
             {
                 User = new ClaimsPrincipal(contextUser)
@@ -60,14 +64,12 @@ namespace Explorer.Payments.Tests.Integration
 
             // Assert - Response
             result.ShouldNotBeNull();
-
-            // Assert - Database
-            //TODO
+            result.TouristId.ShouldBe(-42);
         }
 
         private static WalletController CreateController(IServiceScope scope)
         {
-            return new WalletController()
+            return new WalletController(scope.ServiceProvider.GetRequiredService<IWalletService>())
             {
                 ControllerContext = BuildContext("-1")
             };

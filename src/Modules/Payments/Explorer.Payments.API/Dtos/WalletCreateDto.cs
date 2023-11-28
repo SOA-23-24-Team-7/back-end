@@ -9,5 +9,10 @@ namespace Explorer.Payments.API.Dtos
     public class WalletCreateDto
     {
         public long TouristId { get; set; }
+
+        public WalletCreateDto(long touristId)
+        {
+            TouristId = touristId;
+        }
     }
 }
