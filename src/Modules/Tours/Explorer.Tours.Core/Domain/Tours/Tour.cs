@@ -1,5 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Explorer.Tours.Core.Domain.Tours;
@@ -23,7 +22,7 @@ public class Tour : Entity
     public ICollection<TourDuration> Durations { get; } = new List<TourDuration>();
     public ICollection<Review> Reviews { get; init; }
 
-    public Tour(long authorId, string name, string description, List<string> tags, int difficulty = 1,DateTime? archiveDate = null ,DateTime? publishDate = null, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
+    public Tour(long authorId, string name, string description, List<string> tags, int difficulty = 1, DateTime? archiveDate = null, DateTime? publishDate = null, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
     {
         AuthorId = authorId;
         Name = name;
@@ -130,7 +129,7 @@ public class Tour : Entity
         return previous;
     }
 
-
+    // Dodala najlepsa devojka na svetu
     public bool MarkAsReady(long authorId)
     {
         if (Status == TourStatus.Draft && AuthorId == authorId && KeyPoints.Count >= 2)
@@ -142,7 +141,6 @@ public class Tour : Entity
 
         return false;
     }
-
 }
 
 public enum TourStatus

@@ -25,8 +25,8 @@ public class KeyPointQueryTests : BaseToursIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(11);
-        result.TotalCount.ShouldBe(11);
+        result.Results.Count.ShouldBe(14);
+        result.TotalCount.ShouldBe(14);
     }
 
     private static KeyPointController CreateController(IServiceScope scope)

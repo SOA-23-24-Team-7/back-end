@@ -193,7 +193,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        int tourId = -3;
+        int tourId = -10;
         int equipmentId = -3;
 
         //Act
@@ -208,7 +208,6 @@ public class TourCommandTests : BaseToursIntegrationTest
                                 .Where(e => e.Tours.Any(t => t.Id == tourId));
         tour_eq.ShouldNotBeNull();
         tour_eq.Count().ShouldBe(2);
-
     }
 
     [Fact]
@@ -244,6 +243,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(404);
     }
+
     [Fact]
     public void Delete_Tour_Equipment()
     {
@@ -301,7 +301,6 @@ public class TourCommandTests : BaseToursIntegrationTest
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(404);
     }
-
 
     [Fact]
     public void Publish_succeeds()
@@ -464,7 +463,7 @@ public class TourCommandTests : BaseToursIntegrationTest
     public void Archive_fails_invalid_status()
     {
         // Arrange - Input data
-        var tourId = -3;
+        var tourId = -9;
         var expectedResponseCode = 400;
         var expectedStatus = TourStatus.Draft;
         // Arrange - Controller and dbContext
@@ -484,8 +483,6 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.ShouldNotBeNull();
         storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
     }
-
-
 
     [Fact]
     public void Archive_fails_wrong_author()
@@ -512,12 +509,11 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
     }
 
-
     [Fact]
     public void Ready_succeeds()
     {
         // Arrange - Input data
-        var tourId = -3;
+        var tourId = -10;
         var expectedResponseCode = 200;
         var expectedStatus = TourStatus.Ready;
         //var expectedDate = "0001-01-01 12:00:00.789123+00:00";
@@ -557,7 +553,7 @@ public class TourCommandTests : BaseToursIntegrationTest
     public void Ready_fails_invalid_keypoints()
     {
         // Arrange - Input data
-        var tourId = -4;
+        var tourId = -9;
         var expectedResponseCode = 400;
         var expectedStatus = TourStatus.Draft;
         // Arrange - Controller and dbContext
@@ -577,8 +573,6 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.ShouldNotBeNull();
         storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
     }
-
-
 
     private static TourController CreateController(IServiceScope scope)
     {

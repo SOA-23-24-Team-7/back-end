@@ -22,3 +22,9 @@ VALUES (-7, -11,'TOPHILL NS', 'Najvece brdo u ns', 1,  ARRAY ['istorija', 'kultu
 INSERT INTO tours."Tours"(
 	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations")
 VALUES (-8, -12,'TOPHILL NS', 'Najvece brdo u ns', 1,  ARRAY ['istorija', 'kultura'], 1, 0, false, 0, '0001-01-01 12:00:00.789123+00:00', '0001-01-01 12:00:00.789123+00:00', '[{{"Duration":81, "TransportType":0}}, {{"Duration":40, "TransportType":2}}]');
+INSERT INTO tours."Tours"(
+	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations")
+VALUES (-9, -11,'Tura za ready', 'Ova treba da padne', 1,  ARRAY ['istorija', 'kultura'], 0, 0, false, 0, '0001-01-01 12:00:00.789123+00:00', '0001-01-01 12:00:00.789123+00:00', '[{{"Duration":81, "TransportType":0}}, {{"Duration":40, "TransportType":2}}]');
+INSERT INTO tours."Tours"(
+	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations")
+VALUES (-10, -11,'Tura za ready', 'Ova treba da prodje', 1,  ARRAY ['istorija', 'kultura'], 0, 0, false, 0, '0001-01-01 12:00:00.789123+00:00', '0001-01-01 12:00:00.789123+00:00', '[{{"Duration":81, "TransportType":0}}, {{"Duration":40, "TransportType":2}}]');

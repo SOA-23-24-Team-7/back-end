@@ -31,3 +31,12 @@ INSERT INTO tours."KeyPoints"(
 INSERT INTO tours."KeyPoints"(
 	"Id", "TourId", "Name", "Description", "Longitude", "Latitude", "LocationAddress", "ImagePath", "Order", "HaveSecret", "Secret")
 	VALUES (-11, -8, 'Sushirito', 'Uskoro.', 12.78, 54.04, 'Ulica i broj mrzi me vise', 'ftn.png', 1, true, '{{"Images":["Slika1", "Slika2"], "Description":"Neki opis"}}');
+INSERT INTO tours."KeyPoints"(
+	"Id", "TourId", "Name", "Description", "Longitude", "Latitude", "LocationAddress", "ImagePath", "Order", "HaveSecret", "Secret")
+	VALUES (-12, -9, 'Ready1', 'Pada.', 12.78, 54.04, 'Ulica i broj mrzi me vise', 'ftn.png', 1, true, '{{"Images":["Slika1", "Slika2"], "Description":"Neki opis"}}');
+INSERT INTO tours."KeyPoints"(
+	"Id", "TourId", "Name", "Description", "Longitude", "Latitude", "LocationAddress", "ImagePath", "Order", "HaveSecret", "Secret")
+	VALUES (-13, -10, 'Ready2', 'Prolazi.', 12.78, 54.04, 'Ulica i broj mrzi me vise', 'ftn.png', 1, true, '{{"Images":["Slika1", "Slika2"], "Description":"Neki opis"}}');
+INSERT INTO tours."KeyPoints"(
+	"Id", "TourId", "Name", "Description", "Longitude", "Latitude", "LocationAddress", "ImagePath", "Order", "HaveSecret", "Secret")
+	VALUES (-14, -10, 'Ready2', 'Prolazi.', 12.78, 54.04, 'Ulica i broj mrzi me vise', 'ftn.png', 1, true, '{{"Images":["Slika1", "Slika2"], "Description":"Neki opis"}}');
