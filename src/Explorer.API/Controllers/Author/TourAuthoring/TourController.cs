@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Author.TourAuthoring
 {
-    [Authorize(Policy = "authorPolicy")] 
+    
     [Route("api/tour")] 
     public class TourController : BaseApiController
     {
@@ -18,20 +18,21 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             _tourService = tourService;
         }
 
+        [Authorize(Roles = "author")]
         [HttpGet]
         public ActionResult<PagedResult<TourResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _tourService.GetAllPaged(page, pageSize);
             return CreateResponse(result);
         }
-
+        [Authorize(Roles = "author")]
         [HttpGet("published")]
         public ActionResult<PagedResult<TourResponseDto>> GetPublished([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _tourService.GetPublished(page, pageSize);
             return CreateResponse(result);
         }
-
+        [Authorize(Roles = "author")]
         [HttpGet("authors")]
         public ActionResult<PagedResult<TourResponseDto>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
         {
@@ -40,6 +41,8 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
             return CreateResponse(result);
         }
+
+        [Authorize(Roles = "author, tourist")]
 
         [HttpPost]
         public ActionResult<TourResponseDto> Create([FromBody] TourCreateDto tour)
@@ -53,6 +56,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             return CreateResponse(result);
         }
 
+        [Authorize(Roles = "author, tourist")]
         [HttpPut("{id:int}")]
         public ActionResult<TourResponseDto> Update([FromBody] TourUpdateDto tour)
         {
@@ -64,42 +68,42 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             var result = _tourService.Update(tour);
             return CreateResponse(result);
         }
-
+        [Authorize(Roles = "author, tourist")]
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
             var result = _tourService.DeleteCascade(id);
             return CreateResponse(result);
         }
-
+        [Authorize(Roles = "author, tourist")]
         [HttpGet("equipment/{tourId:int}")]
         public ActionResult GetEquipment(int tourId)
         {
             var result = _tourService.GetEquipment(tourId);
             return CreateResponse(result);
         }
-
+        [Authorize(Roles = "author, tourist")]
         [HttpPost("equipment/{tourId:int}/{equipmentId:int}")]
         public ActionResult AddEquipment(int tourId, int equipmentId)
         {
             var result = _tourService.AddEquipment(tourId, equipmentId);
             return CreateResponse(result);
         }
-
+        [Authorize(Roles = "author, tourist")]
         [HttpDelete("equipment/{tourId:int}/{equipmentId:int}")]
         public ActionResult DeleteEquipment(int tourId, int equipmentId)
         {
             var result = _tourService.DeleteEquipment(tourId, equipmentId);
             return CreateResponse(result);
         }
-
+        [Authorize(Roles = "author, tourist")]
         [HttpGet("{tourId:long}")]
         public ActionResult<PagedResult<TourResponseDto>> GetById(long tourId)
         {
             var result = _tourService.GetById(tourId);
             return CreateResponse(result);
         }
-
+        [Authorize(Roles = "author")]
         [HttpPut("publish/{id:int}")]
         public ActionResult<TourResponseDto> Publish(long id)
         {
@@ -112,7 +116,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             var result = _tourService.Publish(id, authorId);
             return CreateResponse(result);
         }
-
+        [Authorize(Roles = "author")]
         [HttpPut("archive/{id:int}")]
         public ActionResult<TourResponseDto> Archive(long id)
         {
@@ -125,6 +129,36 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             var result = _tourService.Archive(id, authorId);
             return CreateResponse(result);
         }
+
+        [Authorize(Roles = "tourist")]
+        [HttpPut("markAsReady/{id:int}")]
+        public ActionResult<TourResponseDto> MarkAsReady(long id)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long authorId = -1;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                authorId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _tourService.MarkAsReady(id, authorId);
+            return CreateResponse(result);
+        }
+
+        [Authorize(Roles = "tourist")]
+        [HttpGet("recommended")]
+        public ActionResult<TourResponseDto> GetRecommended(List<long> publicKeyPointIds)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            long authorId = -1;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                authorId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _tourService.GetToursBasedOnSelectedKeyPoints(publicKeyPointIds);
+            return CreateResponse(result);
+        }
+
+
 
     }
 }

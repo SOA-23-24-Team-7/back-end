@@ -512,6 +512,74 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
     }
 
+
+    [Fact]
+    public void Ready_succeeds()
+    {
+        // Arrange - Input data
+        var tourId = -3;
+        var expectedResponseCode = 200;
+        var expectedStatus = TourStatus.Ready;
+        //var expectedDate = "0001-01-01 12:00:00.789123+00:00";
+
+        // Arrange - Controller and dbContext
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-11") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(contextUser)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+
+        // Act
+        var result = (OkResult)controller.MarkAsReady(tourId).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedResponseCode);
+
+        // Assert - Database
+        var storedEntity = dbContext.Tours.FirstOrDefault(t => t.Id == tourId);
+        storedEntity.ShouldNotBeNull();
+        storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
+        //storedEntity.PublishDate.ToString().Equals(expectedDate);
+    }
+
+    [Fact]
+    public void Ready_fails_invalid_keypoints()
+    {
+        // Arrange - Input data
+        var tourId = -4;
+        var expectedResponseCode = 400;
+        var expectedStatus = TourStatus.Draft;
+        // Arrange - Controller and dbContext
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result = (ObjectResult)controller.MarkAsReady(tourId).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedResponseCode);
+
+        // Assert - Database
+        var storedEntity = dbContext.Tours.FirstOrDefault(t => t.Id == tourId);
+        storedEntity.ShouldNotBeNull();
+        storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
+    }
+
+
+
     private static TourController CreateController(IServiceScope scope)
     {
         return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())
