@@ -1,5 +1,6 @@
 ﻿using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
+using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,8 @@ public class PaymentsContext : DbContext
 
     public DbSet<Wallet> Wallets { get; set; }
 
+    public DbSet<Record> Records { get; set; }
+
     public PaymentsContext(DbContextOptions<PaymentsContext> options) : base(options) { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,6 +27,11 @@ public class PaymentsContext : DbContext
 
     private static void ConfigurePayments(ModelBuilder modelBuilder)
     {
-
+        modelBuilder.Entity<Record>()
+            .HasOne<Tour>()
+            .WithOne()
+            .HasForeignKey<Record>(s => s.TourId);
     }
+
+    
 }

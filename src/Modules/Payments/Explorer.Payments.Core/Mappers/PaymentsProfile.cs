@@ -23,5 +23,8 @@ public class PaymentsProfile : Profile
         CreateMap<WalletResponseDto, Wallet>().ReverseMap();
         CreateMap<WalletUpdateDto, Wallet>().ReverseMap();
         CreateMap<WalletCreateDto, Wallet>().ReverseMap();
+
+        CreateMap<RecordCreateDto, Record>().ReverseMap();
+        CreateMap<RecordResponseDto, Record>().ReverseMap();
     }
 }

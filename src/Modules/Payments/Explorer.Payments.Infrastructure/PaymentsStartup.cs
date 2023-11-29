@@ -33,6 +33,8 @@ public static class PaymentsStartup
         services.AddScoped<ITourTokenService, TourTokenService>();
 
         services.AddScoped<IWalletService, WalletService>();
+
+        services.AddScoped<IRecordService, RecordService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -44,6 +46,8 @@ public static class PaymentsStartup
         services.AddScoped(typeof(ICrudRepository<TourToken>), typeof(CrudDatabaseRepository<TourToken, PaymentsContext>));
 
         services.AddScoped(typeof(ICrudRepository<Wallet>), typeof(CrudDatabaseRepository<Wallet, PaymentsContext>));
+
+        services.AddScoped(typeof(ICrudRepository<Record>), typeof(CrudDatabaseRepository<Record, PaymentsContext>));
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),
