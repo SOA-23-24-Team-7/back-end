@@ -43,6 +43,8 @@ namespace Explorer.Payments.Core.UseCases
                 }
                 var newToken = _repository.Create(MapToDomain<TourTokenCreateDto>(token));
 
+                //kreirati record
+
                 return MapToDto<TourTokenResponseDto>(newToken);
             }
             catch (KeyNotFoundException e)

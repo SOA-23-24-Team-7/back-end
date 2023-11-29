@@ -27,10 +27,7 @@ public class PaymentsContext : DbContext
 
     private static void ConfigurePayments(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Record>()
-            .HasOne<Tour>()
-            .WithOne()
-            .HasForeignKey<Record>(s => s.TourId);
+       
     }
 
     
