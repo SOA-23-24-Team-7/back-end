@@ -3,12 +3,14 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours; //GREH , kliknula sam -  add reference 
 using FluentResults;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,12 +20,14 @@ namespace Explorer.Payments.Core.UseCases
     {
         private readonly ICrudRepository<TourToken> _repository;
         private readonly ICrudRepository<Tour> _tourRepository;
+        private readonly ICrudRepository<Record> _recordRepository;
         IMapper _mapper;
-        public TourTokenService(ICrudRepository<TourToken> repository, IMapper mapper, ICrudRepository<Tour> tourRepository) : base(repository, mapper)
+        public TourTokenService(ICrudRepository<TourToken> repository, IMapper mapper, ICrudRepository<Tour> tourRepository, ICrudRepository<Record> recordRepository) : base(repository, mapper)
         {
             _repository = repository;
             _tourRepository = tourRepository;
             _mapper = mapper;
+            _recordRepository = recordRepository;
         }
 
         public Result<TourTokenResponseDto> AddToken(TourTokenCreateDto token)
@@ -42,6 +46,11 @@ namespace Explorer.Payments.Core.UseCases
                     return Result.Fail(FailureCode.InvalidArgument).WithError("Tour already bought");
                 }
                 var newToken = _repository.Create(MapToDomain<TourTokenCreateDto>(token));
+                var newRecord=CreateRecord(token.TouristId, token.TourId, tour.Price);
+                if(newRecord == null)
+                {
+                    return Result.Fail(FailureCode.InvalidArgument).WithError("Error in creating record");
+                }
 
                 //kreirati record
 
@@ -64,6 +73,11 @@ namespace Explorer.Payments.Core.UseCases
         {
             var tokens = _repository.GetAll().FindAll(token => token.TouristId == touristId);
             return tokens.Select(token => token.TourId).ToList();
+        }
+
+        private Record CreateRecord(long touristId, long tourId, double price)
+        {
+            return _recordRepository.Create(new Record(touristId, tourId, price)); 
         }
 
     }

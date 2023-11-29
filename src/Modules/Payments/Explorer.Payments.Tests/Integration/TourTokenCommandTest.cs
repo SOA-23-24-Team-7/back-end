@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Explorer.API.Controllers.Tourist;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
+using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Infrastructure.Database;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
@@ -35,14 +36,16 @@ namespace Explorer.Payments.Tests.Integration
             };
 
             // Act
-            var result = ((ObjectResult)controller.AddToken(newEntity.TourId, newEntity.TouristId).Result)?.Value as TourTokenResponseDto;
+            var helperResult = ((ObjectResult)controller.AddToken(newEntity.TourId, newEntity.TouristId).Result);
+            var result = helperResult?.Value as TourTokenResponseDto;
+            
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);
             result.TouristId.ShouldBe(newEntity.TouristId);
             result.TourId.ShouldBe(newEntity.TourId);
-
+            helperResult.StatusCode.ShouldBe(200);
             // Assert - Database
             var storedEntity = dbContext.Records.FirstOrDefault(i => i.TouristId == newEntity.TouristId);
             storedEntity.ShouldNotBeNull();
