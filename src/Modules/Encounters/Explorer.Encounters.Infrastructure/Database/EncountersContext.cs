@@ -6,6 +6,7 @@ namespace Explorer.Encounters.Infrastructure.Database;
 public class EncountersContext : DbContext
 {
     public DbSet<Encounter> Encounters { get; set; }
+    public DbSet<SocialEncounter> SocialEncounters { get; set; }
     public DbSet<TouristProgress> TouristProgress { get; set; }
 
     public EncountersContext(DbContextOptions<EncountersContext> options) : base(options)

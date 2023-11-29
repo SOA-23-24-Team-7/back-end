@@ -13,6 +13,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public EncounterStatus Status { get; private set; }
         public List<EncounterInstance> Instances { get; } = new List<EncounterInstance>();
 
+        public Encounter() { }
         public Encounter(string title, string description, double longitude, double latitude, int xp, EncounterStatus status)
         {
             Title = title;

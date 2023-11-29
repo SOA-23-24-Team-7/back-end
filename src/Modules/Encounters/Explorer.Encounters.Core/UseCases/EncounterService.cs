@@ -22,5 +22,9 @@ namespace Explorer.Encounters.Core.UseCases
             return MapToDto<EncounterResponseDto>(entities);
         }
 
+        public Result<SocialEncounterResponseDto> Activate<SocialEncounterActivationDto>(SocialEncounterActivationDto encounter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

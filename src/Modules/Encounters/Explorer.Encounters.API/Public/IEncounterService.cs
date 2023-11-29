@@ -12,5 +12,6 @@ namespace Explorer.Encounters.API.Public
         Result<PagedResult<EncounterResponseDto>> GetActive(int page, int pageSize);
         Result<EncounterResponseDto> Get(long id);
         Result Delete(long id);
+        Result<SocialEncounterResponseDto> Activate<SocialEncounterActivationDto>(SocialEncounterActivationDto encounter);
     }
 }
