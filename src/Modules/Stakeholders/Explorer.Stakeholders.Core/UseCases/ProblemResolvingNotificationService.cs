@@ -4,6 +4,7 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.API.Internal;
 using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases
@@ -11,9 +12,11 @@ namespace Explorer.Stakeholders.Core.UseCases
     public class ProblemResolvingNotificationService : CrudService<ProblemResolvingNotificationResponseDto, ProblemResolvingNotification>, IProblemResolvingNotificationService
     {
         private readonly IProblemResolvingNotificationRepository _problemResolvingNotificationRepository;
-        public ProblemResolvingNotificationService(ICrudRepository<ProblemResolvingNotification> repository, IMapper mapper, IProblemResolvingNotificationRepository problemResolvingNotificationRepository) : base(repository, mapper)
+        private readonly IInternalNotificationService _internalNotificationService;
+        public ProblemResolvingNotificationService(ICrudRepository<ProblemResolvingNotification> repository, IMapper mapper, IProblemResolvingNotificationRepository problemResolvingNotificationRepository, IInternalNotificationService internalNotificationService) : base(repository, mapper)
         {
             _problemResolvingNotificationRepository = problemResolvingNotificationRepository;
+            _internalNotificationService = internalNotificationService;
         }
 
         public Result<PagedResult<ProblemResolvingNotificationResponseDto>> GetByLoggedInUser(int page, int pageSize, long id)
@@ -33,6 +36,26 @@ namespace Explorer.Stakeholders.Core.UseCases
                     return MapToDto<ProblemResolvingNotificationResponseDto>(result);
                 }
                 return Result.Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+        public Result<int> CountUnseenNotifications(long userId)
+        {
+            try
+            {
+                int count = 0;
+                count += _problemResolvingNotificationRepository.CountNotSeen(userId);
+                count += _internalNotificationService.CountNotSeen(userId);
+
+                return count;
             }
             catch (KeyNotFoundException e)
             {

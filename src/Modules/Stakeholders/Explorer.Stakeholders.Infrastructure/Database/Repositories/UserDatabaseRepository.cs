@@ -77,4 +77,9 @@ public class UserDatabaseRepository : IUserRepository
     {
         return _dbContext.Users.FirstOrDefault(u => u.Id == id).Username;
     }
+
+    public string GetProfilePicture(long adminId)
+    {
+        return _dbSet.FirstOrDefault(x => x.Id == adminId).ProfilePicture;
+    }
 }
