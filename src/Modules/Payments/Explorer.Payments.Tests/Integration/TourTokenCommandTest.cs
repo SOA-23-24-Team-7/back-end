@@ -32,7 +32,7 @@ namespace Explorer.Payments.Tests.Integration
             var newEntity = new TourTokenCreateDto
             {
                 TouristId = 4,
-                TourId = -8
+                TourId = -1500
             };
 
             // Act

@@ -4,8 +4,7 @@ using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
-using Explorer.Payments.Core.Domain.ShoppingCarts;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.Core.Domain.Tours; //GREH , kliknula sam -  add reference 
 using FluentResults;
 
@@ -25,8 +24,9 @@ namespace Explorer.Payments.Core.UseCases
         private readonly ICrudRepository<Record> _recordRepository;
         private readonly IWalletService _walletService;
         private readonly IShoppingCartRepository _shoppingCartRepository;
+        private IInternalTourService _tourService;
         IMapper _mapper;
-        public TourTokenService(ICrudRepository<TourToken> repository, IMapper mapper, ICrudRepository<Tour> tourRepository, ICrudRepository<Record> recordRepository, IWalletService walletService,IShoppingCartRepository shoppingCartRepository) : base(repository, mapper)
+        public TourTokenService(ICrudRepository<TourToken> repository, IMapper mapper, ICrudRepository<Tour> tourRepository, ICrudRepository<Record> recordRepository, IWalletService walletService,IShoppingCartRepository shoppingCartRepository, IInternalTourService tourService) : base(repository, mapper)
         {
             _repository = repository;
             _tourRepository = tourRepository;
@@ -34,6 +34,7 @@ namespace Explorer.Payments.Core.UseCases
             _recordRepository = recordRepository;
             _walletService = walletService;
             _shoppingCartRepository = shoppingCartRepository;
+            _tourService = tourService;
         }
 
         public Result<TourTokenResponseDto> AddToken(TourTokenCreateDto token)
@@ -43,11 +44,12 @@ namespace Explorer.Payments.Core.UseCases
             {
                 var wallet = _walletService.GetForTourist(token.TouristId);
                 var shoppingCart = _shoppingCartRepository.GetByTouristId(token.TouristId);
-                var newTour = _tourRepository.GetAll(); //count 0; ne ucita ture uopste
-                var tour = _tourRepository.Get(token.TourId);
+                //var newTour = _tourRepository.GetAll(); //count 0; ne ucita ture uopste
+                //var tour = _tourRepository.Get(token.TourId);
+                var tour = _tourService.Get(token.TourId)?.Value;
                 if (wallet.Value.AdventureCoin >= shoppingCart.TotalPrice)
                 {
-                    if (tour == null || tour.Status == TourStatus.Archived) //OVDE JE PRE PISALO TOURS.DOMAIN
+                    if (tour == null || (TourStatus)tour.Status == TourStatus.Archived) //OVDE JE PRE PISALO TOURS.DOMAIN
                     {
                         return Result.Fail(FailureCode.InvalidArgument);
                     }
