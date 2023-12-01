@@ -18,7 +18,7 @@ namespace Explorer.API.Controllers.Tourist
             _tokenService = tokenService;
         }
 
-        [HttpPost("{tourId:long}")]
+        [HttpPost("{tourId:long}/{touristId:long}")]
         public ActionResult<TourTokenResponseDto> AddToken(long tourId, long touristId)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
