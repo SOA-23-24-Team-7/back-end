@@ -1,6 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
+using Explorer.Payments.API.Dtos; //MENJANO
+using Explorer.Payments.API.Public; //MENJANO
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 

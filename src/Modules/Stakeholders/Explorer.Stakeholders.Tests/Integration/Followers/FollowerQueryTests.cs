@@ -25,7 +25,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Followers
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.GetFollowers(0, 0, -21).Result)?.Value as PagedResult<FollowerResponseWithUsernameDto>;
+            var result = ((ObjectResult)controller.GetFollowers(0, 0, -21).Result)?.Value as PagedResult<FollowerResponseWithUserDto>;
 
             // Assert
             result.ShouldNotBeNull();
@@ -41,7 +41,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Followers
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.GetFollowings(0, 0, -21).Result)?.Value as PagedResult<FollowingResponseWithUsernameDto>;
+            var result = ((ObjectResult)controller.GetFollowings(0, 0, -21).Result)?.Value as PagedResult<FollowingResponseWithUserDto>;
 
             // Assert
             result.ShouldNotBeNull();

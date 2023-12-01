@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Explorer.Stakeholders.API.Dtos
+{
+    public class FollowerResponseWithUserDto
+    {
+        public long Id { get; set; }
+        public UserResponseDto FollowedBy { get; set; }
+        public PersonResponseDto FollowedByPerson { get; set; }
+    }
+}
