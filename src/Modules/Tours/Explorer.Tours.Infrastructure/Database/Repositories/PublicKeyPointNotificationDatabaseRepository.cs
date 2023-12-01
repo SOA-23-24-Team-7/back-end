@@ -30,6 +30,23 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             task.Wait();
             return task.Result;
         }
-        
+
+        public int CountNotSeen(long userId)
+        {
+            return _dbSet.Count(x => !x.IsSeen && x.AuthorId == userId);
+        }
+
+        public void Update(PublicKeyPointNotification notification)
+        {
+            try
+            {
+                _dbContext.Update(notification);
+                _dbContext.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new KeyNotFoundException(e.Message);
+            }
+        }
     }
 }

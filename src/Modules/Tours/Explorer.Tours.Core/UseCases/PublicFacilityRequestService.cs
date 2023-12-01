@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
@@ -13,13 +14,16 @@ namespace Explorer.Tours.Core.UseCases
         private readonly ICrudRepository<PublicFacilityRequest> _repository;
         private readonly ICrudRepository<PublicFacilityNotification> _notificationRepository;
         private readonly ICrudRepository<Facility> _facilityRepository;
-        public PublicFacilityRequestService(ICrudRepository<PublicFacilityRequest> repository, IMapper mapper, ICrudRepository<PublicFacilityNotification> notificationRepository, ICrudRepository<Facility> facilityRepository) : base(repository, mapper)
+        private readonly IInternalUserService _userService;
+
+        public PublicFacilityRequestService(ICrudRepository<PublicFacilityRequest> repository, IMapper mapper, ICrudRepository<PublicFacilityNotification> notificationRepository, ICrudRepository<Facility> facilityRepository, IInternalUserService userService) : base(repository, mapper)
         {
             _repository = repository;
             _notificationRepository = notificationRepository;
             _facilityRepository = facilityRepository;
+            _userService = userService;
         }
-        public Result Reject(long requestId, string comment)
+        public Result Reject(long requestId, string comment, long adminId)
         {
             try
             {
@@ -32,7 +36,7 @@ namespace Explorer.Tours.Core.UseCases
                 request.Comment = comment;
 
                 _repository.Update(request);
-                CreateNotification(request, false);
+                CreateNotification(request, false, adminId);
 
                 return Result.Ok().WithSuccess("Request rejected successfully.");
             }
@@ -42,26 +46,31 @@ namespace Explorer.Tours.Core.UseCases
             }
         }
 
-        private void CreateNotification(PublicFacilityRequest request, bool isAccepted)
+        //ToDo:add name and picture here
+        private void CreateNotification(PublicFacilityRequest request, bool isAccepted, long adminId)
         {
             var facility = _facilityRepository.Get(request.FacilityId);
-            NotificationGenerator generator = new NotificationGenerator();
             string notificationText;
+            string notificationHeader;
 
             if (isAccepted)
             {
-                notificationText = generator.GenerateAccepted(facility.Name);
+                notificationText = NotificationGenerator.GenerateAccepted(facility.Name);
+                notificationHeader = NotificationGenerator.GenerateApprovalHeader();
                 request.Comment = "";
             }
             else
             {
-                notificationText = generator.GenerateRejected(facility.Name);
+                notificationText = NotificationGenerator.GenerateRejected(facility.Name);
+                notificationHeader = NotificationGenerator.GenerateRejectionHeader();
             }
 
-            _notificationRepository.Create(new PublicFacilityNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow, isAccepted, request.Comment));
+            var senderPicture = _userService.GetProfilePicture(adminId);
+            var senderName = _userService.GetNameById(adminId).Value;
+            _notificationRepository.Create(new PublicFacilityNotification(notificationText, request.AuthorId, request.Id, DateTime.UtcNow, isAccepted, request.Comment, senderPicture, senderName, notificationHeader));
         }
 
-        public Result Accept(long requestId)
+        public Result Accept(long requestId, long adminId)
         {
             try
             {
@@ -73,7 +82,7 @@ namespace Explorer.Tours.Core.UseCases
                 request.Status = PublicStatus.Accepted;
 
                 _repository.Update(request);
-                CreateNotification(request, true);
+                CreateNotification(request, true, adminId);
 
                 return Result.Ok().WithSuccess("Request accepted successfully.");
             }

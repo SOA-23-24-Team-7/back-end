@@ -1,5 +1,7 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Payments.API.Public;
+using Explorer.Payments.Core.UseCases;
 using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
@@ -35,11 +37,11 @@ public static class ToursStartup
         services.AddScoped<IEquipmentService, EquipmentService>();
 
         services.AddScoped<IFacilityService, FacilityService>();
-      
+
         services.AddScoped<ITourService, TourService>();
 
         services.AddScoped<ITourSearchService, TourSearchService>();
-      
+
         services.AddScoped<IKeyPointService, KeyPointService>();
 
         services.AddScoped<IReviewService, ReviewService>();
@@ -61,11 +63,21 @@ public static class ToursStartup
         services.AddScoped<IPublicFacilityRequestService, PublicFacilityRequestService>();
 
         services.AddScoped<INotificationService, NotificationService>();
+
         services.AddScoped<IPublicKeyPointService, PublicKeyPointService>();
+
+        services.AddScoped<IShoppingCartService, ShoppingCartService>();
+
+        services.AddScoped<IOrderItemService, OrderItemService>();
+
+        services.AddScoped<ITourTokenService, TourTokenService>();
+
+        services.AddScoped<IInternalNotificationService, NotificationService>();
+
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
-{
+    {
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
 
         services.AddScoped(typeof(ICrudRepository<Facility>), typeof(CrudDatabaseRepository<Facility, ToursContext>));
