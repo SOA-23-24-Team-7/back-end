@@ -1,0 +1,14 @@
+Add-Migration -Name Init -Context StakeholdersContext -Project Explorer.Stakeholders.Infrastructure -StartupProject Explorer.API
+Update-Database -Context StakeholdersContext -Project Explorer.Stakeholders.Infrastructure -StartupProject Explorer.API
+
+Add-Migration -Name Init -Context ToursContext -Project Explorer.Tours.Infrastructure -StartupProject Explorer.API
+Update-Database -Context ToursContext -Project Explorer.Tours.Infrastructure -StartupProject Explorer.API
+
+Add-Migration -Name Init -Context BlogContext -Project Explorer.Blog.Infrastructure -StartupProject Explorer.API
+Update-Database -Context BlogContext -Project Explorer.Blog.Infrastructure -StartupProject Explorer.API
+
+Add-Migration -Name Init -Context PaymentsContext -Project Explorer.Payments.Infrastructure -StartupProject Explorer.API
+Update-Database -Context PaymentsContext -Project Explorer.Payments.Infrastructure -StartupProject Explorer.API
+
+Add-Migration -Name Init -Context EncountersContext -Project Explorer.Encounters.Infrastructure -StartupProject Explorer.API
+Update-Database -Context EncountersContext -Project Explorer.Encounters.Infrastructure -StartupProject Explorer.API
