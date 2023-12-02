@@ -245,4 +245,12 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
         return tourResponseDtos;
     }
-}
+
+    public Result<TourResponseDto> Get(long id)
+    {
+        var entity = _tourRepository.GetById(id);
+        var dto = MapToDto<TourResponseDto>(entity);
+        return dto;
+    }
+
+ }

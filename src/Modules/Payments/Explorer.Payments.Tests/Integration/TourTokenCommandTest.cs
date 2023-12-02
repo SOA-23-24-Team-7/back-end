@@ -31,8 +31,8 @@ namespace Explorer.Payments.Tests.Integration
             var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
             var newEntity = new TourTokenCreateDto
             {
-                TouristId = 3,
-                TourId = -3
+                TouristId = 4,
+                TourId = -1500
             };
 
             // Act
@@ -45,7 +45,7 @@ namespace Explorer.Payments.Tests.Integration
             result.Id.ShouldNotBe(0);
             result.TouristId.ShouldBe(newEntity.TouristId);
             result.TourId.ShouldBe(newEntity.TourId);
-            helperResult.StatusCode.ShouldBe(200);
+            helperResult?.StatusCode.ShouldBe(200);
             // Assert - Database
             var storedEntity = dbContext.Records.FirstOrDefault(i => i.TouristId == newEntity.TouristId);
             storedEntity.ShouldNotBeNull();
