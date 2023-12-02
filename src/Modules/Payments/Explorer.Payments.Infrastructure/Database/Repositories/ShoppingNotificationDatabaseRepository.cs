@@ -29,5 +29,9 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
             task.Wait();
             return task.Result;
         }
+        public int CountNotSeen(long userId)
+        {
+            return _dbSet.Count(x => !x.HasSeen && x.TouristId == userId);
+        }
     }
 }

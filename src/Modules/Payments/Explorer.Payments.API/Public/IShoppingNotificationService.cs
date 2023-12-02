@@ -13,5 +13,7 @@ namespace Explorer.Payments.API.Public
     {
         Result<PagedResult<ShoppingNotificationResponseDto>> GetByTouristId(int page, int pageSize, long id);
         Result<ShoppingNotificationResponseDto> Create<ShoppingNotificationCreateDto>(ShoppingNotificationCreateDto notification);
+        Result<ShoppingNotificationResponseDto> SetSeenStatus(long id);
+        Result<int> CountUnseenNotifications(long userId);
     }
 }
