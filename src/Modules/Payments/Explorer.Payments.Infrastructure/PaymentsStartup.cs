@@ -39,6 +39,8 @@ public static class PaymentsStartup
         services.AddScoped<IRecordService, RecordService>();
 
         services.AddScoped<IShoppingNotificationService, ShoppingNotificationService>();
+
+        services.AddScoped<ICouponService, CouponService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)

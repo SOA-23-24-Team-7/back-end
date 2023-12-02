@@ -32,7 +32,7 @@ namespace Explorer.Payments.Tests.Integration
             var newEntity = new TourTokenCreateDto
             {
                 TouristId = 4,
-                TourId = -1500
+                TourId = -1800
             };
 
             // Act
@@ -45,9 +45,9 @@ namespace Explorer.Payments.Tests.Integration
             result.Id.ShouldNotBe(0);
             result.TouristId.ShouldBe(newEntity.TouristId);
             result.TourId.ShouldBe(newEntity.TourId);
-            helperResult?.StatusCode.ShouldBe(200);
+            helperResult?.StatusCode.ShouldBe(200); //zbog recorda
             // Assert - Database
-            var storedEntity = dbContext.Records.FirstOrDefault(i => i.TouristId == newEntity.TouristId);
+            var storedEntity = dbContext.tourTokens.FirstOrDefault(i => i.TouristId == newEntity.TouristId);
             storedEntity.ShouldNotBeNull();
             storedEntity.Id.ShouldBe(result.Id);
             storedEntity.TouristId.ShouldBe(result.TouristId);
