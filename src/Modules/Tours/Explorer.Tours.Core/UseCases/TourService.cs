@@ -42,7 +42,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         var pagedResult = new PagedResult<Tour>(toursByAuthor, toursByAuthor.Count);
         return MapToDto<TourResponseDto>(pagedResult);
     }
-    //BEBO JEDNA BEBASTA PREKINI DA VICES U FLASUUU BLESAAVAAAAAA ZVUCI KAO DA SE DAVIS BREEEEEE BLESICIIIIIIII BEBOOOOOO
+    
     public Result<PagedResult<EquipmentResponseDto>> GetEquipment(long tourId)
     {
         var equipment = _tourRepository.GetEquipment(tourId);
@@ -271,19 +271,26 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     }
 
     //Dobavlja ture koje imaju sve kljucne tacke koje je korisnik uzeo
-    public Result<List<TourResponseDto>> GetToursBasedOnSelectedKeyPoints(int page, int pageSize, List<long> publicKeyPointIds, long authorId)
+    public Result<PagedResult<TourResponseDto>> GetToursBasedOnSelectedKeyPoints(int page, int pageSize, List<long> publicKeyPointIds, long authorId)
     {
         List<TourResponseDto> tourResponseDtos = new List<TourResponseDto>();
         var allTours = _tourRepository.GetAll(page, pageSize).Results.ToList();
         var publicKeyPoints = _publicKeyPointRepository.GetAll();
         int publicKeyPointNumber = publicKeyPointIds.Count;
-    
+        var wantedList = new List<KeyPoint>();
+
+        foreach(long id in publicKeyPointIds)
+        {
+            wantedList.Add(_keyPointRepository.Get(id));
+        }
+
+
         foreach (var tour in allTours)
         {
-            if(tour.AuthorId != authorId && tour.GetStatusName() == "Published")
+            if(tour.AuthorId != authorId && tour.GetStatusName() == "published")
             {
                 int counter = 0;
-                foreach (var publicKeyPoint in publicKeyPoints)
+                foreach (var publicKeyPoint in wantedList)
                 {
                     foreach (var keyPoint in tour.KeyPoints)
                     {
@@ -299,11 +306,9 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
                     tourResponseDtos.Add(tourResponse);
                 }
             }
-           
-            // ovo nam ne valja zato sto recimo kada stavim jednu kt on ce mi izbaciti samo ture koje imaju JEDINO NJU, nece i one koje imaju jos jednu. Mozda da uradimo nesto preko flega.
             
         }
-        return tourResponseDtos;
+        return new PagedResult<TourResponseDto>(tourResponseDtos, tourResponseDtos.Count);
     }
 
 
