@@ -13,5 +13,7 @@ namespace Explorer.Payments.API.Dtos
         public long TouristId { get; init; }
         public string Description { get; set; }
         public DateTime? Created { get; set; }
+        public bool HasSeen { get; set; }
+        public string Header { get; set; }
     }
 }

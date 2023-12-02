@@ -11,5 +11,6 @@ namespace Explorer.Payments.Core.Domain.RepositoryInterfaces
     public interface IShoppingNotificationRepository
     {
         PagedResult<ShoppingNotification> GetByTouristId(int page,int pageSize,long id);
+        int CountNotSeen(long userId);
     }
 }
