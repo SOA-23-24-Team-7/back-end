@@ -13,5 +13,6 @@ namespace Explorer.Payments.API.Dtos
         public long TourId { get; set; }
         public double Price { get; set; }
         public DateTime PurchasedDate { get; set; }
+        public string? TourName { get; set; }
     }
 }

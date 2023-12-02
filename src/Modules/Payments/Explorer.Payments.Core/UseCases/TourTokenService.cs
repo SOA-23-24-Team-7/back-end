@@ -8,13 +8,6 @@ using Explorer.Tours.API.Internal;
 using Explorer.Tours.Core.Domain.Tours; //GREH , kliknula sam -  add reference 
 using FluentResults;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Explorer.Payments.Core.UseCases
 {
     public class TourTokenService : CrudService<TourTokenResponseDto, TourToken>, ITourTokenService
