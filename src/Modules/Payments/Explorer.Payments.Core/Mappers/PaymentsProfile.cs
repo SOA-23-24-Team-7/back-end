@@ -29,5 +29,9 @@ public class PaymentsProfile : Profile
 
         CreateMap<ShoppingNotificationCreateDto, ShoppingNotification>().ReverseMap();
         CreateMap<ShoppingNotificationResponseDto, ShoppingNotification>().ReverseMap();
+
+        CreateMap<CouponResponseDto, Coupon>().ReverseMap();
+        CreateMap<CouponCreateDto, Coupon>().ReverseMap();
+        CreateMap<CouponUpdateDto, Coupon>().ReverseMap();
     }
 }

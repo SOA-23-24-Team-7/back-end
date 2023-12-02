@@ -58,6 +58,9 @@ public static class PaymentsStartup
         services.AddScoped(typeof(IShoppingNotificationRepository), typeof(ShoppingNotificationDatabaseRepository));
         services.AddScoped(typeof(IRecordRepository), typeof(RecordDatabaseRepository));
 
+        services.AddScoped(typeof(ICouponRepository), typeof(CouponDatabaseRepository));
+        services.AddScoped(typeof(ICrudRepository<Coupon>), typeof(CrudDatabaseRepository<Coupon, PaymentsContext>));
+
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),

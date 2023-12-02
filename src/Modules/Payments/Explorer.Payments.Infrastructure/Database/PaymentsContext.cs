@@ -18,6 +18,7 @@ public class PaymentsContext : DbContext
     public DbSet<Record> Records { get; set; }
 
     public DbSet<ShoppingNotification> ShoppingNotifications { get; set; }
+    public DbSet<Coupon> Coupons { get; set; }
 
     public PaymentsContext(DbContextOptions<PaymentsContext> options) : base(options) { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
