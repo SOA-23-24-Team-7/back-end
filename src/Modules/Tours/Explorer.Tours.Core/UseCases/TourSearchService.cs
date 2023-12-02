@@ -73,6 +73,8 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
             var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published, include: "KeyPoints,Reviews");
 
             var filtered = tours;
+            filtered = searchByName(filtered, tourSearchFilterDto.Name);
+            filtered = searchByPrice(filtered, tourSearchFilterDto.MinPrice, tourSearchFilterDto.MaxPrice);
             filtered = searchByDifficulty(filtered, tourSearchFilterDto.MinDifficulty, tourSearchFilterDto.MaxDifficulty);
             filtered = searchByAverageRating(filtered, tourSearchFilterDto.MinAverageRating);
             filtered = searchByAuthorId(filtered, tourSearchFilterDto.AuthorId);
@@ -86,6 +88,30 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         {
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
+    }
+
+    private List<Tour> searchByName(List<Tour> tours, string? name)
+    {
+        var filtered = tours;
+        if (name != null)
+        {
+            filtered = tours.FindAll(t => t.Name.ToLower().Contains(name.ToLower()));
+        }
+        return filtered;
+    }
+
+    private List<Tour> searchByPrice(List<Tour> tours, double? minPrice, double? maxPrice)
+    {
+        var filtered = tours;
+        if (minPrice != null)
+        {
+            filtered = tours.FindAll(t => t.Difficulty >= minPrice);
+        }
+        if (maxPrice != null)
+        {
+            filtered = tours.FindAll(t => t.Difficulty <= maxPrice);
+        }
+        return filtered;
     }
 
     private List<Tour> searchByDifficulty(List<Tour> tours, int? minDifficulty, int? maxDifficulty)
