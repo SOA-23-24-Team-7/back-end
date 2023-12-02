@@ -27,7 +27,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
     }
 
     //MOZDA OBRISATI PAGE I PAGESIZE
-    public Result<PagedResult<LimitedTourViewResponseDto>> Search(double longitude, double latitude, double maxDistance, int page, int pageSize)
+    public Result<PagedResult<LimitedTourViewResponseDto>> SearchByLocation(double longitude, double latitude, double maxDistance, int page, int pageSize)
     {
         try
         {
@@ -60,17 +60,131 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         }
     }
 
+    public Result<PagedResult<TourResponseDto>> Search(TourTouristSearchFilterDto tourSearchFilterDto)
+    {
+        var filter = new TourAuthorSearchFilterDto(tourSearchFilterDto);
+        return Search(filter);
+    }
+
+    public Result<PagedResult<TourResponseDto>> Search(TourAuthorSearchFilterDto tourSearchFilterDto)
+    {
+        try
+        {
+            var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published, include: "KeyPoints,Reviews");
+
+            var filtered = tours;
+            filtered = searchByName(filtered, tourSearchFilterDto.Name);
+            filtered = searchByPrice(filtered, tourSearchFilterDto.MinPrice, tourSearchFilterDto.MaxPrice);
+            filtered = searchByDifficulty(filtered, tourSearchFilterDto.MinDifficulty, tourSearchFilterDto.MaxDifficulty);
+            filtered = searchByAverageRating(filtered, tourSearchFilterDto.MinAverageRating);
+            filtered = searchByAuthorId(filtered, tourSearchFilterDto.AuthorId);
+            filtered = searchPublishedTours(filtered, tourSearchFilterDto.TourStatus);
+
+            var mappedResult = MapToResponseDto(filtered);
+
+            return new PagedResult<TourResponseDto>(mappedResult, mappedResult.Count);
+        }
+        catch (ArgumentException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+    }
+
+    private List<Tour> searchByName(List<Tour> tours, string? name)
+    {
+        var filtered = tours;
+        if (name != null)
+        {
+            filtered = tours.FindAll(t => t.Name.ToLower().Contains(name.ToLower()));
+        }
+        return filtered;
+    }
+
+    private List<Tour> searchByPrice(List<Tour> tours, double? minPrice, double? maxPrice)
+    {
+        var filtered = tours;
+        if (minPrice != null)
+        {
+            filtered = tours.FindAll(t => t.Difficulty >= minPrice);
+        }
+        if (maxPrice != null)
+        {
+            filtered = tours.FindAll(t => t.Difficulty <= maxPrice);
+        }
+        return filtered;
+    }
+
+    private List<Tour> searchByDifficulty(List<Tour> tours, int? minDifficulty, int? maxDifficulty)
+    {
+        var filtered = tours;
+        if (minDifficulty != null)
+        {
+            filtered = tours.FindAll(t => t.Difficulty >= minDifficulty);
+        }
+        if (minDifficulty != null)
+        {
+            filtered = tours.FindAll(t => t.Difficulty <= maxDifficulty);
+        }
+        return filtered;
+    }
+
+    private List<Tour> searchByAverageRating(List<Tour> tours, double? minAverageRating)
+    {
+        var filtered = tours;
+        if (minAverageRating != null)
+        {
+            filtered = tours.FindAll(t => t.GetAverageRating() >= minAverageRating);
+        }
+        return filtered;
+    }
+
+    private List<Tour> searchByAuthorId(List<Tour> tours, int? authorId)
+    {
+        var filtered = tours;
+        if (authorId != null)
+        {
+            filtered = tours.FindAll(t => t.AuthorId == authorId);
+        }
+        return filtered;
+    }
+
+    private List<Tour> searchPublishedTours(List<Tour> tours, string? isPublished)
+    {
+        var filtered = tours;
+        if (isPublished != null)
+        {
+            Enum.TryParse(isPublished, out Domain.Tours.TourStatus myStatus);
+            filtered = filtered.FindAll(t => t.Status == myStatus);
+        }
+        return filtered;
+    }
+
     private List<LimitedTourViewResponseDto> MapToLimitedTourViewDto(List<Tour> result)
     {
         List<LimitedTourViewResponseDto> dtos = new List<LimitedTourViewResponseDto>();
             foreach (var tour in result)
             {
                 LimitedTourViewResponseDto dto = _mapper.Map<LimitedTourViewResponseDto>(tour);
-                dto.KeyPoint = _mapper.Map<KeyPointResponseDto>(tour.KeyPoints.First());
+                dto.KeyPoint = _mapper.Map<KeyPointResponseDto>(tour.KeyPoints.FirstOrDefault());
                 var reviews = _reviewRepository.GetPagedByTourId(0, 0, tour.Id);
                 dto.Reviews = reviews.Results.Select(_mapper.Map<ReviewResponseDto>).ToList();
                dtos.Add(dto);
             }
         return dtos;
+    }
+
+    private List<TourResponseDto> MapToResponseDto(List<Tour> tours)
+    {
+        List<TourResponseDto> mapped = new List<TourResponseDto>();
+        foreach(var tour in tours)
+        {
+            var dto = _mapper.Map<TourResponseDto>(tour);
+            foreach (var keyPoint in tour.KeyPoints)
+            {
+                dto.KeyPoints.Add(_mapper.Map<KeyPointResponseDto>(keyPoint));
+            }
+            mapped.Add(_mapper.Map<TourResponseDto>(tour));
+        }
+        return mapped;
     }
 }

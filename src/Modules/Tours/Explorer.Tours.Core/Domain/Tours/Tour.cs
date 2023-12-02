@@ -19,9 +19,9 @@ public class Tour : Entity
     public ICollection<Equipment> EquipmentList { get; init; }
 
     [InverseProperty("Tour")]
-    public ICollection<KeyPoint> KeyPoints { get; } = new List<KeyPoint>();
-    public ICollection<TourDuration> Durations { get; } = new List<TourDuration>();
-    public ICollection<Review> Reviews { get; init; }
+    public ICollection<KeyPoint>? KeyPoints { get; } = new List<KeyPoint>();
+    public ICollection<TourDuration>? Durations { get; } = new List<TourDuration>();
+    public ICollection<Review>? Reviews { get; init; }
 
     public Tour(long authorId, string name, string description, int difficulty, List<string> tags,DateTime? archiveDate = null ,DateTime? publishDate = null, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
     {

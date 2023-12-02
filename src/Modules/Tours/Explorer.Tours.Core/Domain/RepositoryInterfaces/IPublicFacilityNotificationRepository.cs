@@ -10,5 +10,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
     public interface IPublicFacilityNotificationRepository
     {
         PagedResult<PublicFacilityNotification> GetByAuthorId(int page, int pageSize, long authorId);
+        int CountNotSeen(long userId);
+        void Update(PublicFacilityNotification notification);
     }
 }
