@@ -153,8 +153,8 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         }
 
         [Authorize(Roles = "tourist")]
-        [HttpGet("recommended")]
-        public ActionResult<TourResponseDto> GetRecommended(List<long> publicKeyPointIds)
+        [HttpGet("recommended/{publicKeyPointIds}")]
+        public ActionResult<TourResponseDto> GetRecommended([FromQuery] int page, [FromQuery] int pageSize, string publicKeyPointIds)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long authorId = -1;
@@ -162,7 +162,12 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             {
                 authorId = long.Parse(identity.FindFirst("id").Value);
             }
-            var result = _tourService.GetToursBasedOnSelectedKeyPoints(publicKeyPointIds);
+
+            var keyValuePairs = publicKeyPointIds.Split('=');
+
+            var keyPointIdsList = keyValuePairs[1].Split(',').Select(long.Parse).ToList();
+
+            var result = _tourService.GetToursBasedOnSelectedKeyPoints(page, pageSize, keyPointIdsList, authorId);
             return CreateResponse(result);
         }
     }
