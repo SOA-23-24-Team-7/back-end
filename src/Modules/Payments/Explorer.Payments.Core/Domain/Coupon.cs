@@ -12,13 +12,15 @@ namespace Explorer.Payments.Core.Domain
     public class Coupon : Entity
     {
         public string Code { get; init; }
-        public string Discount { get;init; }
+        public double Discount { get;init; }
         public long TourId { get; init; }
         public DateTime ExpirationDate { get; init; }
         public bool AllFromAuthor { get; init; }    //ako se checkbox odabere da vazi za sve ture tog autora
 
-        public Coupon(string discount, long tourId, DateTime expirationDate, bool allFromAuthor)
+        public Coupon(double discount, long tourId, DateTime expirationDate, bool allFromAuthor)
         {
+            if (discount < 0) throw new ArgumentException("Invalid discount.");
+
             Discount = discount;
             TourId = tourId;
             ExpirationDate = expirationDate;
