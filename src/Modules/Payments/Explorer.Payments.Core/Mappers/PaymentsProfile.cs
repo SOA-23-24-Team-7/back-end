@@ -26,5 +26,8 @@ public class PaymentsProfile : Profile
 
         CreateMap<RecordCreateDto, Record>().ReverseMap();
         CreateMap<RecordResponseDto, Record>().ReverseMap();
+
+        CreateMap<ShoppingNotificationCreateDto, Record>().ReverseMap();
+        CreateMap<ShoppingNotificationResponseDto, Record>().ReverseMap();
     }
 }

@@ -20,21 +20,21 @@ namespace Explorer.Payments.Core.UseCases
     public class TourTokenService : CrudService<TourTokenResponseDto, TourToken>, ITourTokenService
     {
         private readonly ICrudRepository<TourToken> _repository;
-        private readonly ICrudRepository<Tour> _tourRepository;
         private readonly ICrudRepository<Record> _recordRepository;
+        private readonly ICrudRepository<ShoppingNotification> _shoppingNotificationRepository;
         private readonly IWalletService _walletService;
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private IInternalTourService _tourService;
         IMapper _mapper;
-        public TourTokenService(ICrudRepository<TourToken> repository, IMapper mapper, ICrudRepository<Tour> tourRepository, ICrudRepository<Record> recordRepository, IWalletService walletService,IShoppingCartRepository shoppingCartRepository, IInternalTourService tourService) : base(repository, mapper)
+        public TourTokenService(ICrudRepository<TourToken> repository, IMapper mapper, ICrudRepository<Record> recordRepository, IWalletService walletService,IShoppingCartRepository shoppingCartRepository, IInternalTourService tourService, ICrudRepository<ShoppingNotification> shoppingNotificationRepository) : base(repository, mapper)
         {
             _repository = repository;
-            _tourRepository = tourRepository;
             _mapper = mapper;
             _recordRepository = recordRepository;
             _walletService = walletService;
             _shoppingCartRepository = shoppingCartRepository;
             _tourService = tourService;
+            _shoppingNotificationRepository= shoppingNotificationRepository;
         }
 
         public Result<TourTokenResponseDto> AddToken(TourTokenCreateDto token)
@@ -44,8 +44,6 @@ namespace Explorer.Payments.Core.UseCases
             {
                 var wallet = _walletService.GetForTourist(token.TouristId);
                 var shoppingCart = _shoppingCartRepository.GetByTouristId(token.TouristId);
-                //var newTour = _tourRepository.GetAll(); //count 0; ne ucita ture uopste
-                //var tour = _tourRepository.Get(token.TourId);
                 var tour = _tourService.Get(token.TourId)?.Value;
                 if (wallet.Value.AdventureCoin >= shoppingCart.TotalPrice)
                 {
@@ -60,13 +58,11 @@ namespace Explorer.Payments.Core.UseCases
                     }
                     var newToken = _repository.Create(MapToDomain<TourTokenCreateDto>(token));
                     var newRecord = CreateRecord(token.TouristId, token.TourId, tour.Price);
+                    CreateNotfication(token.TouristId, token.TourId);
                     if (newRecord == null)
                     {
                         return Result.Fail(FailureCode.InvalidArgument).WithError("Error in creating record");
                     }
-
-                    //kreirati record
-
                     return MapToDto<TourTokenResponseDto>(newToken);
                 }
                 else
@@ -98,6 +94,13 @@ namespace Explorer.Payments.Core.UseCases
         {
             return _recordRepository.Create(new Record(touristId, tourId, price)); 
         }
-
+        private void CreateNotfication(long touristId, long tourId)
+        {
+            var tour= _tourService.Get(tourId)?.Value;
+            var description="";
+            if(tour!=null)
+                description = "Tour " + tour.Name + " is successfully added to your tours collection.";
+            _shoppingNotificationRepository.Create(new ShoppingNotification(description,touristId, tourId));
+        }
     }
 }

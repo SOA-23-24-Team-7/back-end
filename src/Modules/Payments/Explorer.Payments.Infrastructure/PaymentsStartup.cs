@@ -8,6 +8,7 @@ using Explorer.Payments.Core.Mappers;
 using Explorer.Payments.Core.UseCases;
 using Explorer.Payments.Infrastructure.Database;
 using Explorer.Payments.Infrastructure.Database.Repositories;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -35,6 +36,8 @@ public static class PaymentsStartup
         services.AddScoped<IWalletService, WalletService>();
 
         services.AddScoped<IRecordService, RecordService>();
+
+        services.AddScoped<IShoppingNotificationService, ShoppingNotificationService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -48,6 +51,10 @@ public static class PaymentsStartup
         services.AddScoped(typeof(ICrudRepository<Wallet>), typeof(CrudDatabaseRepository<Wallet, PaymentsContext>));
 
         services.AddScoped(typeof(ICrudRepository<Record>), typeof(CrudDatabaseRepository<Record, PaymentsContext>));
+
+        services.AddScoped(typeof(ICrudRepository<ShoppingNotification>), typeof(CrudDatabaseRepository<ShoppingNotification, PaymentsContext>));
+
+        services.AddScoped(typeof(IShoppingNotificationRepository), typeof(ShoppingNotificationDatabaseRepository));
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),
