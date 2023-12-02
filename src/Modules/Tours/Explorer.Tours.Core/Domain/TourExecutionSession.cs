@@ -15,6 +15,7 @@ namespace Explorer.Tours.Core.Domain
         public long NextKeyPointId { get; private set; }
         public double Progress { get; private set; }
         public DateTime LastActivity { get; private set; }
+        public bool IsCampaign { get; private set; } = false;
         public TourExecutionSession(long tourId, long touristId, long nextKeyPointId) 
         {
             Status = TourExecutionSessionStatus.Started;
