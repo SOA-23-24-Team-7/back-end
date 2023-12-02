@@ -13,13 +13,13 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public EncounterStatus Status { get; private set; }
         public List<EncounterInstance> Instances { get; } = new List<EncounterInstance>();
 
-        public Encounter(string title, string description, double longitude, double latitude, int xp, EncounterStatus status)
+        public Encounter(string title, string description, double longitude, double latitude, int xpReward, EncounterStatus status)
         {
             Title = title;
             Description = description;
             Longitude = longitude;
             Latitude = latitude;
-            XpReward = xp;
+            XpReward = xpReward;
             Status = status;
             Validate();
         }
@@ -54,9 +54,29 @@ namespace Explorer.Encounters.Core.Domain.Encounter
             Instances.Add(new EncounterInstance(userId));
         }
 
-        protected void CompleteEncounter(long userId)
+        public virtual void CompleteEncounter(long userId)
         {
-            Instances.First(x => x.UserId == userId).Complete();
+            try
+            {
+                CompleteEncounterInstance(userId);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        protected void CompleteEncounterInstance(long userId)
+        {
+            try
+            {
+                Instances.First(x => x.UserId == userId).Complete();
+            }
+            catch (Exception)
+            {
+
+                throw new ArgumentException("Invalid user id.");
+            }
         }
 
         protected bool hasUserActivatedEncounter(long userId)
