@@ -91,7 +91,7 @@ namespace Explorer.Payments.Tests.Integration
             {
                 Id = -2,
                 Discount = 18,
-                TourId = -1500, //ovo ce se mozda morati promijeniti ako dodamo da 1 tura ne smije imati vise kupona
+                TourId = -1600, //ovo ce se mozda morati promijeniti ako dodamo da 1 tura ne smije imati vise kupona
                 ExpirationDate = DateTime.Now.AddDays(10),
                 AllFromAuthor = false
             };
@@ -150,14 +150,14 @@ namespace Explorer.Payments.Tests.Integration
             var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
 
             // Act
-            var result = (OkResult)controller.Delete(-1);
+            var result = (OkResult)controller.Delete(-3);
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.StatusCode.ShouldBe(200);
 
             // Assert - Database
-            var storedCourse = dbContext.Coupons.FirstOrDefault(i => i.Id == -1);
+            var storedCourse = dbContext.Coupons.FirstOrDefault(i => i.Id == -3);
             storedCourse.ShouldBeNull();*/
         }
 
