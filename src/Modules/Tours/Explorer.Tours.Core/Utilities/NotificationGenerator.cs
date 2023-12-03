@@ -8,14 +8,23 @@ namespace Explorer.Tours.Core.Utilities
 {
     public class NotificationGenerator
     {
-        public NotificationGenerator() { }
-        public string GenerateRejected(string name)
+        public static string GenerateRejected(string name)
         {
-            return "Your request for publishing " + name + " has been REJECTED. ";
+            return "After thorough review of your request I decided to REJECT publishing of: " + name.ToUpper();
         }
-        public string GenerateAccepted(string name)
+        public static string GenerateAccepted(string name)
         {
-            return "Your request for publishing - " + name + " has been ACCEPTED.";
+            return "After thorough review of your request I decided to APPROVE publishing of: " + name.ToUpper();
+        }
+
+        public static string GenerateApprovalHeader()
+        {
+            return "Publishing approval";
+        }
+
+        public static string GenerateRejectionHeader()
+        {
+            return "Publishing rejection";
         }
     }
 }
