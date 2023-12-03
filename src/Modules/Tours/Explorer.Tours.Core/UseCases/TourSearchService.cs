@@ -70,7 +70,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
     {
         try
         {
-            var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published, include: "KeyPoints,Reviews");
+            var tours = _tourCrudRepository.GetAll(t => true, include: "KeyPoints,Reviews");
 
             var filtered = tours;
             filtered = searchByName(filtered, tourSearchFilterDto.Name);
@@ -79,6 +79,9 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
             filtered = searchByAverageRating(filtered, tourSearchFilterDto.MinAverageRating);
             filtered = searchByAuthorId(filtered, tourSearchFilterDto.AuthorId);
             filtered = searchPublishedTours(filtered, tourSearchFilterDto.TourStatus);
+            filtered = searchByLocation(filtered, tourSearchFilterDto.Longitude, tourSearchFilterDto.Latitude, tourSearchFilterDto.MaxDistance);
+            filtered = searchByLength(filtered, tourSearchFilterDto.MinLength, tourSearchFilterDto.MaxLength);
+            filtered = pageResults(filtered, tourSearchFilterDto.Page, tourSearchFilterDto.PageSize);
 
             var mappedResult = MapToResponseDto(filtered);
 
@@ -90,12 +93,80 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         }
     }
 
+    private List<Tour> pageResults(List<Tour> tours, int? page, int? pageSize)
+    {
+        if (page != null && pageSize != null)
+        {
+            int startIndex = (page.Value - 1) * pageSize.Value;
+
+            if (startIndex >= tours.Count)
+            {
+                return new List<Tour>();
+            }
+
+            int endIndex = startIndex + pageSize.Value;
+
+            if (endIndex > tours.Count)
+            {
+                endIndex = tours.Count;
+            }
+
+            var results = tours.GetRange(startIndex, endIndex - startIndex);
+
+            return results;
+        }
+
+        return tours;
+    }
+
+    private List<Tour> searchByLocation(List<Tour> tours, double? longitude, double? latitude, double? maxDistance)
+    {
+        if (longitude != null && latitude != null && maxDistance != null)
+        {
+            if (maxDistance < 0)
+            {
+                throw new ArgumentException("Max distance must be greater than 0.");
+            }
+
+            var nearbyTours = new List<Tour>();
+
+
+            foreach (var tour in tours)
+            {
+                var keyPoints = _keyPointRepository.GetByTourId(tour.Id);
+                var nearbyKeypoints = keyPoints.Where(k => k.CalculateDistance(longitude.Value, latitude.Value) <= maxDistance);
+                if (nearbyKeypoints.Any())
+                {
+                    nearbyTours.Add(tour);
+                }
+            }
+
+            return nearbyTours;
+        }
+
+        return tours;
+    }
+
     private List<Tour> searchByName(List<Tour> tours, string? name)
     {
         var filtered = tours;
         if (name != null)
         {
             filtered = tours.FindAll(t => t.Name.ToLower().Contains(name.ToLower()));
+        }
+        return filtered;
+    }
+
+    private List<Tour> searchByLength(List<Tour> tours, double? minLength, double? maxLength)
+    {
+        var filtered = tours;
+        if (minLength != null)
+        {
+            filtered = tours.FindAll(t => t.CalculateLength() >= minLength);
+        }
+        if (maxLength != null)
+        {
+            filtered = tours.FindAll(t => t.CalculateLength() <= maxLength);
         }
         return filtered;
     }
