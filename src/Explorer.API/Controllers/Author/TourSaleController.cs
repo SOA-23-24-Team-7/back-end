@@ -1,4 +1,5 @@
-﻿using Explorer.Payments.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,5 +22,11 @@ public class TourSaleController : BaseApiController
     {
         var result = _saleService.Create(request);
         return CreateResponse(result);
+    }
+
+    [HttpGet]
+    public ActionResult<PagedResult<TourSaleResponseDto>> GetPagedByAuthor([FromQuery] int page, [FromQuery] int pageSize)
+    {
+        throw new NotImplementedException();
     }
 }

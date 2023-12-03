@@ -10,6 +10,7 @@ using System.Collections;
 
 namespace Explorer.Payments.Tests.Integration;
 
+[Collection("Sequential")]
 public class TourSaleCommandTests : BasePaymentsIntegrationTest
 {
     public TourSaleCommandTests(PaymentsTestFactory factory) : base(factory) { }
