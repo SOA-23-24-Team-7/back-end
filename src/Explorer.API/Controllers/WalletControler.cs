@@ -55,5 +55,17 @@ namespace Explorer.API.Controllers.Tourist
             _transactionRecordService.Create(new TransactionRecordCreateDto(recieverId, adminId, walletUpdateDto.AdventureCoin));
             return CreateResponse(result);
         }
+
+        [Authorize(Policy = "administratorPolicy")]
+        [HttpGet("getTourists")]
+        public ActionResult<WalletResponseDto> GetTouristsWalletById([FromQuery] long touristId)
+        {
+            var result = _walletService.GetForTourist(touristId);
+            if (!result.IsSuccess || result.IsFailed)
+            {
+                return NotFound();
+            }
+            return CreateResponse(result);
+        }
     }
 }
