@@ -14,26 +14,28 @@ namespace Explorer.Tours.Core.UseCases
         private readonly ITourRepository _tourRepository;
         private readonly ITourExecutionSessionRepository _tourExecutionRepository;
         private readonly IKeyPointRepository _keyPointRepository;
+        private readonly ICampaignRepository _campaignRepository;
         private readonly IMapper _mapper;
-        public TourExecutionSessionService(IMapper mapper, ITourExecutionSessionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository, ITourRepository tourRepository) : base(mapper)
+        public TourExecutionSessionService(IMapper mapper, ITourExecutionSessionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository, ITourRepository tourRepository, ICampaignRepository campaignRepository) : base(mapper)
         {
             _tourExecutionRepository = tourExecutionRepository;
             _keyPointRepository = keyPointRepository;
             _tourRepository = tourRepository;
             _mapper = mapper;
+            _campaignRepository = campaignRepository;
         }
 
-        public Result<TourExecutionSessionResponseDto> StartTour(long tourId, long touristId)
+        public Result<TourExecutionSessionResponseDto> StartTour(long tourId, bool isCampaign, long touristId)
         {
             long keyPointId = _keyPointRepository.GetByTourId(tourId)[0].Id;
-            TourExecutionSession tourExecution = new TourExecutionSession(tourId, touristId, keyPointId);
+            TourExecutionSession tourExecution = new TourExecutionSession(tourId, touristId, keyPointId, isCampaign);
             _tourExecutionRepository.Add(tourExecution);
             return MapToDto<TourExecutionSessionResponseDto>(tourExecution);
         }
 
-        public Result<TourExecutionSessionResponseDto> AbandonTour(long tourId, long touristId)
+        public Result<TourExecutionSessionResponseDto> AbandonTour(long tourId, bool isCampaign, long touristId)
         {
-            TourExecutionSession execution = _tourExecutionRepository.GetStarted(tourId, touristId);
+            TourExecutionSession execution = _tourExecutionRepository.GetStarted(tourId, isCampaign, touristId);
             if (execution == null)
             {
                 return null;
@@ -42,18 +44,29 @@ namespace Explorer.Tours.Core.UseCases
             return MapToDto<TourExecutionSessionResponseDto>(execution);
         }
 
-        public Result<TourExecutionSessionResponseDto> CheckKeyPointCompletion(long tourId, long touristId, double longitude, double latitude)
+        public Result<TourExecutionSessionResponseDto> CheckKeyPointCompletion(long tourId, long touristId, double longitude, double latitude, bool isCampaign)
         {
-            TourExecutionSession tourExecution = _tourExecutionRepository.GetStarted(tourId, touristId);
+            TourExecutionSession tourExecution = _tourExecutionRepository.GetStarted(tourId, isCampaign, touristId);
             if(tourExecution == null)
             {
                 return null;
             }
-            List<KeyPoint> keyPoints = _keyPointRepository.GetByTourId(tourId);
-            TrackProgress(tourExecution, longitude, latitude);
+            if (isCampaign)
+                return CheckCampaignKeyPointCompletion(tourExecution, longitude, latitude);
+            else
+                return CheckTourKeyPointCompletion(tourExecution, longitude, latitude);
+        }
+
+        private Result<TourExecutionSessionResponseDto> CheckCampaignKeyPointCompletion(TourExecutionSession execution, double longitude, double latitude)
+        {
+            List<KeyPoint> keyPoints = new List<KeyPoint>();
+            Campaign campaign = _campaignRepository.GetById(execution.TourId);
+            foreach(var keyPointId in campaign.KeyPointIds)
+                keyPoints.Add(_keyPointRepository.Get(keyPointId));
+
             for (int i = 0; i < keyPoints.Count; i++)
             {
-                if (keyPoints[i].Id == tourExecution.NextKeyPointId)
+                if (keyPoints[i].Id == execution.NextKeyPointId)
                 {
 
                     if (keyPoints[i].CalculateDistance(longitude, latitude) > 200) break;
@@ -61,17 +74,44 @@ namespace Explorer.Tours.Core.UseCases
                     //ako je kompletirao poslednju kljucnu tacku -> kompletiraj turu
                     if (i + 1 >= keyPoints.Count)
                     {
-                        tourExecution = _tourExecutionRepository.CompleteTourExecution(tourExecution.Id);
+                        execution = _tourExecutionRepository.CompleteTourExecution(execution.Id);
                     }
                     else
                     {
-                        tourExecution = _tourExecutionRepository.UpdateNextKeyPoint(tourExecution.Id, keyPoints[i + 1].Id);
+                        execution = _tourExecutionRepository.UpdateNextKeyPoint(execution.Id, keyPoints[i + 1].Id);
                     }
 
                     break;
                 }
             }
-            return MapToDto<TourExecutionSessionResponseDto>(tourExecution);
+            return MapToDto<TourExecutionSessionResponseDto>(execution);
+        }
+
+        private Result<TourExecutionSessionResponseDto> CheckTourKeyPointCompletion(TourExecutionSession execution, double longitude, double latitude)
+        {
+            List<KeyPoint> keyPoints = _keyPointRepository.GetByTourId(execution.TourId);
+            TrackProgress(execution, longitude, latitude);
+            for (int i = 0; i < keyPoints.Count; i++)
+            {
+                if (keyPoints[i].Id == execution.NextKeyPointId)
+                {
+
+                    if (keyPoints[i].CalculateDistance(longitude, latitude) > 200) break;
+
+                    //ako je kompletirao poslednju kljucnu tacku -> kompletiraj turu
+                    if (i + 1 >= keyPoints.Count)
+                    {
+                        execution = _tourExecutionRepository.CompleteTourExecution(execution.Id);
+                    }
+                    else
+                    {
+                        execution = _tourExecutionRepository.UpdateNextKeyPoint(execution.Id, keyPoints[i + 1].Id);
+                    }
+
+                    break;
+                }
+            }
+            return MapToDto<TourExecutionSessionResponseDto>(execution);
         }
 
         private void TrackProgress(TourExecutionSession tourExecutionSession, double longitude, double latitude)

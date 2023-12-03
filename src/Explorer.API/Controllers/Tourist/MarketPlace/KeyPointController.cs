@@ -1,5 +1,6 @@
 ﻿using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.TourAuthoring;
+using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,13 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         public ActionResult<KeyPointResponseDto> GetKeyPoints(long tourId)
         {
             var result = _keyPointService.GetByTourId(tourId);
+            return CreateResponse(result);
+        }
+        [Authorize(Roles = "tourist")]
+        [HttpGet("{campaignId:long}/key-points")]
+        public ActionResult<KeyPointResponseDto> GetCampaignKeyPoints(long campaignId)
+        {
+            var result = _keyPointService.GetByCampaignId(campaignId);
             return CreateResponse(result);
         }
 

@@ -15,8 +15,8 @@ namespace Explorer.Tours.Core.Domain
         public long NextKeyPointId { get; private set; }
         public double Progress { get; private set; }
         public DateTime LastActivity { get; private set; }
-        public bool IsCampaign { get; private set; } = false;
-        public TourExecutionSession(long tourId, long touristId, long nextKeyPointId) 
+        public bool IsCampaign { get; private set; }
+        public TourExecutionSession(long tourId, long touristId, long nextKeyPointId, bool isCampaign) 
         {
             Status = TourExecutionSessionStatus.Started;
             LastActivity = DateTime.UtcNow;
@@ -24,6 +24,7 @@ namespace Explorer.Tours.Core.Domain
             TouristId = touristId;
             NextKeyPointId = nextKeyPointId;
             Progress = 0;
+            IsCampaign = isCampaign;
         }
         public void Abandon()
         {
