@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Internal;
 using Explorer.Tours.API.Dtos;
@@ -250,6 +250,15 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         return tourResponseDtos;
     }
 
+    public Result<TourResponseDto> Get(long id)
+    {
+        var entity = _tourRepository.GetById(id);
+        var dto = MapToDto<TourResponseDto>(entity);
+        return dto;
+    }
+
+
+
 
     public Result MarkAsReady(long id, long touristId)
     {
@@ -313,3 +322,4 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
 
 
 }
+
