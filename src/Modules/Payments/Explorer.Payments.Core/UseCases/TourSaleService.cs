@@ -3,22 +3,25 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain;
+using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 
 namespace Explorer.Payments.Core.UseCases;
 
 public class TourSaleService : BaseService<TourSale>, ITourSaleService
 {
-    protected readonly ICrudRepository<TourSale> CrudRepository;
+    private readonly ICrudRepository<TourSale> _crudRepository;
+    private readonly ITourSaleRepository _saleRepository;
 
     private Action<TourSale> CheckIfTourIsAlreadyOnSale(TourSale sale)
     {
         return s => { if (sale.EndDate >= s.StartDate && sale.StartDate <= s.EndDate && sale.TourIds.Any(t => s.TourIds.Contains(t))) throw new InvalidOperationException("At least one of the tours is already on sale."); };
     }
 
-    public TourSaleService(ICrudRepository<TourSale> crudRepository, IMapper mapper) : base(mapper)
+    public TourSaleService(ICrudRepository<TourSale> crudRepository, IMapper mapper, ITourSaleRepository saleRepository) : base(mapper)
     {
-        CrudRepository = crudRepository;
+        _crudRepository = crudRepository;
+        _saleRepository = saleRepository;
     }
 
     public Result<TourSaleResponseDto> Create(TourSaleCreateDto sale)
@@ -26,9 +29,9 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
         try
         {
             var saleDomain = MapToDomain(sale);
-            List<TourSale> tourSales = CrudRepository.GetAll();
+            List<TourSale> tourSales = _crudRepository.GetAll();
             tourSales.ForEach(CheckIfTourIsAlreadyOnSale(saleDomain));
-            var result = CrudRepository.Create(saleDomain);
+            var result = _crudRepository.Create(saleDomain);
             return MapToDto<TourSaleResponseDto>(result);
         }
         catch (ArgumentException e)
@@ -39,5 +42,11 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
         {
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
+    }
+
+    public Result<List<TourSaleResponseDto>> GetByAuthorId(long authorId)
+    {
+        var result = _saleRepository.GetByAuthorId(authorId);
+        return MapToDto<TourSaleResponseDto>(result);
     }
 }

@@ -26,7 +26,7 @@ public class TourSaleCommandTests : BasePaymentsIntegrationTest
             yield return new object[] { -1, "Autumn sale", 1, 1, -0.33, new long[] { -4 } };
             yield return new object[] { -1, "Autumn sale", 1, 1, 0.33, new long[] { } };
             yield return new object[] { -1, "Autumn sale", 1, 1, 0.33, new long[] { 0 } };
-            yield return new object[] { -1, "Autumn sale", 1, 1, 0.33, new long[] { -1, -2, -3 } };
+            yield return new object[] { -1, "Autumn sale", 10, 11, 0.33, new long[] { -1, -2, -3 } };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

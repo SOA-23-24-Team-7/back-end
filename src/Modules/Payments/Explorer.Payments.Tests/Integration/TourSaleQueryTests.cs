@@ -17,6 +17,7 @@ public class TourSaleQueryTests : BasePaymentsIntegrationTest
 {
     public TourSaleQueryTests(PaymentsTestFactory factory) : base(factory) { }
 
+    [Fact]
     public void Retrieves_all_by_author()
     {
         // Arrange
@@ -35,11 +36,11 @@ public class TourSaleQueryTests : BasePaymentsIntegrationTest
             HttpContext = context
         };
 
-        var result = ((ObjectResult)controller.GetPagedByAuthor(0, 0).Result)?.Value as PagedResult<TourSaleResponseDto>;
+        var result = ((ObjectResult)controller.GetByAuthor().Result)?.Value as List<TourSaleResponseDto>;
 
         // Assert
         result.ShouldNotBeNull();
-        result.TotalCount.ShouldBe(1);
+        result.Count.ShouldBe(1);
     }
 
     private static TourSaleController CreateController(IServiceScope scope)

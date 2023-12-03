@@ -25,8 +25,10 @@ public class TourSaleController : BaseApiController
     }
 
     [HttpGet]
-    public ActionResult<PagedResult<TourSaleResponseDto>> GetPagedByAuthor([FromQuery] int page, [FromQuery] int pageSize)
+    public ActionResult<List<TourSaleResponseDto>> GetByAuthor()
     {
-        throw new NotImplementedException();
+        var authorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+        var result = _saleService.GetByAuthorId(authorId);
+        return CreateResponse(result);
     }
 }
