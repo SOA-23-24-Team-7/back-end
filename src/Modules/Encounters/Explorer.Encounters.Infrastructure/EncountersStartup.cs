@@ -1,6 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Encounters.API.Public;
+using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.Encounter;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
 using Explorer.Encounters.Core.Mappers;
@@ -29,8 +30,10 @@ public static class EncountersStartup
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Encounter>), typeof(CrudDatabaseRepository<Encounter, EncountersContext>));
+        services.AddScoped(typeof(ICrudRepository<TouristProgress>), typeof(CrudDatabaseRepository<TouristProgress, EncountersContext>));
         services.AddScoped(typeof(ICrudRepository<SocialEncounter>), typeof(CrudDatabaseRepository<SocialEncounter, EncountersContext>));
         services.AddScoped<IEncounterRepository, EncounterDatabaseRepository>();
+        services.AddScoped<ITouristProgressRepository, TouristProgressDatabaseRepository>();
         services.AddDbContext<EncountersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("encounters"),
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", "encounters")));

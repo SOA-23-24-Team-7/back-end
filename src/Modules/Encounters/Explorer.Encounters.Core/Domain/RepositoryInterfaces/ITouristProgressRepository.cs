@@ -8,5 +8,6 @@ namespace Explorer.Encounters.Core.Domain.RepositoryInterfaces
 {
     public interface ITouristProgressRepository
     {
+        TouristProgress GetByUserId(long id);
     }
 }
