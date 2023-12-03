@@ -13,6 +13,7 @@ namespace Explorer.Payments.API.Public
         public Result<WalletResponseDto> Create(WalletCreateDto walletCreateDto);
         public Result<WalletResponseDto> Update(WalletUpdateDto walletUpdateDto);
         public Result Delete(long id);
+        public Result<WalletResponseDto> Get(long id);
         public Result<WalletResponseDto> GetForTourist(long touristId);
         public Result DeleteForTourist(long touristId);
     }

@@ -69,7 +69,8 @@ namespace Explorer.Payments.Tests.Integration
 
         private static WalletController CreateController(IServiceScope scope)
         {
-            return new WalletController(scope.ServiceProvider.GetRequiredService<IWalletService>())
+            return new WalletController(scope.ServiceProvider.GetRequiredService<IWalletService>(),
+                                        scope.ServiceProvider.GetRequiredService<ITransactionRecordService>())
             {
                 ControllerContext = BuildContext("-1")
             };
