@@ -18,10 +18,12 @@ namespace Explorer.Tours.Core.UseCases
     {
         private readonly ICampaignRepository _campaignRepository;
         private readonly ITourRepository _tourRepository;
-        public CampaignService(IMapper mapper, ICampaignRepository campaignRepository, ITourRepository tourRepository) : base(mapper)
+        private readonly IKeyPointRepository _keyPointRepository;
+        public CampaignService(IMapper mapper, ICampaignRepository campaignRepository, ITourRepository tourRepository, IKeyPointRepository keyPointRepository) : base(mapper)
         {
             _campaignRepository = campaignRepository;
             _tourRepository = tourRepository;
+            _keyPointRepository = keyPointRepository;
         }
         public Result<CampaignResponseDto> CreateCampaign(CampaignCreateDto createDto)
         {
@@ -41,6 +43,14 @@ namespace Explorer.Tours.Core.UseCases
         public Result<List<CampaignResponseDto>> GetTouristCampaigns(long touristId)
         {
             List<Campaign> campaigns = _campaignRepository.GetByTouristId(touristId);
+            foreach (Campaign campaign in campaigns)
+            {
+                campaign.KeyPoints.Clear();
+                foreach(long keyPointId in campaign.KeyPointIds)
+                {
+                    campaign.KeyPoints.Add(_keyPointRepository.Get(keyPointId));
+                }
+            }
             return MapToDto<CampaignResponseDto>(campaigns);
         }
         public Result<TourCampaignResponseDto> GetById(long Id)

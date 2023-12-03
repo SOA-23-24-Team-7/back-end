@@ -28,7 +28,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public List<Campaign> GetByTouristId(long touristId)
         {
-            return _dbContext.Campaigns.Include(c => c.KeyPoints).Include(c => c.Equipments)
+            return _dbContext.Campaigns.Include(c => c.Equipments)
                 .Where(c => c.TouristId == touristId).ToList();
         }
 

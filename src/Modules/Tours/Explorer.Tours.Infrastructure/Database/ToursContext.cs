@@ -48,6 +48,8 @@ public class ToursContext : DbContext
             .WithOne(k => k.Tour)
             .HasForeignKey(k => k.TourId)
             .IsRequired();
+
+        
     }
 
 
