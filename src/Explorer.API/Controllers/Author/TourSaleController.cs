@@ -1,8 +1,7 @@
 ﻿using Explorer.Payments.API.Dtos;
-using Explorer.Tours.API.Dtos;
+using Explorer.Payments.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Author;
 
@@ -10,9 +9,17 @@ namespace Explorer.API.Controllers.Author;
 [Route("api/tour-sales")]
 public class TourSaleController : BaseApiController
 {
+    private readonly ITourSaleService _saleService;
+
+    public TourSaleController(ITourSaleService saleService)
+    {
+        _saleService = saleService;
+    }
+
     [HttpPost]
     public ActionResult<TourSaleResponseDto> Create([FromBody] TourSaleCreateDto request)
     {
-        throw new NotImplementedException();
+        var result = _saleService.Create(request);
+        return CreateResponse(result);
     }
 }

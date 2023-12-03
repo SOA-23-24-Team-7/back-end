@@ -10,15 +10,16 @@ public class TourSale : Entity
     public DateOnly StartDate { get; init; }
     public DateOnly EndDate { get; init; }
     public double DiscountPercentage { get; init; }
-    public ICollection<long> TourIds { get; } = new List<long>();
+    public ICollection<long> TourIds { get; init; }
 
-    public TourSale(long authorId, string name, DateOnly startDate, DateOnly endDate, double discountPercentage)
+    public TourSale(long authorId, string name, DateOnly startDate, DateOnly endDate, double discountPercentage, ICollection<long> tourIds)
     {
         AuthorId = authorId;
         Name = name;
-        StartDate = StartDate;
+        StartDate = startDate;
         EndDate = endDate;
         DiscountPercentage = discountPercentage;
+        TourIds = tourIds ?? new List<long>();
         Validate();
     }
 

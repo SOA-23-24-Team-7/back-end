@@ -6,12 +6,30 @@ using Explorer.Payments.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System.Collections;
 
 namespace Explorer.Payments.Tests.Integration;
 
 public class TourSaleCommandTests : BasePaymentsIntegrationTest
 {
     public TourSaleCommandTests(PaymentsTestFactory factory) : base(factory) { }
+
+    public class TourSaleTestData : IEnumerable<object[]>
+    {
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            yield return new object[] { 0, "Autumn sale", 1, 1, 0.33, new long[] { -4 } };
+            yield return new object[] { -1, "", 1, 1, 0.33, new long[] { -4 } };
+            yield return new object[] { -1, "Autumn sale", 2, 1, 0.33, new long[] { -4 } };
+            yield return new object[] { -1, "Autumn sale", 1, 1, 1.5, new long[] { -4 } };
+            yield return new object[] { -1, "Autumn sale", 1, 1, -0.33, new long[] { -4 } };
+            yield return new object[] { -1, "Autumn sale", 1, 1, 0.33, new long[] { } };
+            yield return new object[] { -1, "Autumn sale", 1, 1, 0.33, new long[] { 0 } };
+            yield return new object[] { -1, "Autumn sale", 1, 1, 0.33, new long[] { -1, -2, -3 } };
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
 
     [Fact]
     public void Creates()
@@ -43,14 +61,8 @@ public class TourSaleCommandTests : BasePaymentsIntegrationTest
     }
 
     [Theory]
-    [InlineData(0, "Autumn sale", 1, 1, 0.33, -1, -2, -3)]
-    [InlineData(-1, "", 1, 1, 0.33, -1, -2, -3)]
-    [InlineData(-1, "Autumn sale", 2, 1, 0.33, -1, -2, -3)]
-    [InlineData(-1, "Autumn sale", 1, 1, 1.5, -1, -2, -3)]
-    [InlineData(-1, "Autumn sale", 1, 1, -0.33, -1, -2, -3)]
-    [InlineData(-1, "Autumn sale", 1, 1, 0.33)]
-    [InlineData(-1, "Autumn sale", 1, 1, 0.33, -1, 0, -3)]
-    public void Create_fails_invalid_data(long authorId, string name, int startDay, int endDay, double discountPercentage, params long[] tourIds)
+    [ClassData(typeof(TourSaleTestData))]
+    public void Create_fails_invalid_data(long authorId, string name, int startDay, int endDay, double discountPercentage, long[] tourIds)
     {
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
@@ -74,7 +86,7 @@ public class TourSaleCommandTests : BasePaymentsIntegrationTest
 
     private static TourSaleController CreateController(IServiceScope scope)
     {
-        return new TourSaleController()
+        return new TourSaleController(scope.ServiceProvider.GetRequiredService<ITourSaleService>())
         {
             ControllerContext = BuildContext("-1")
         };

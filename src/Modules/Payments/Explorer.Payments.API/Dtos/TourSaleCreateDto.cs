@@ -7,5 +7,5 @@ public class TourSaleCreateDto
     public DateOnly StartDate { get; set; }
     public DateOnly EndDate { get; set; }
     public double DiscountPercentage { get; set; }
-    public ICollection<long> TourIds { get; set; }
+    public ICollection<long> TourIds { get; set; } = new List<long>();
 }
