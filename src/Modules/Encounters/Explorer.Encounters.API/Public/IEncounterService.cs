@@ -12,7 +12,8 @@ namespace Explorer.Encounters.API.Public
         Result<PagedResult<EncounterResponseDto>> GetActive(int page, int pageSize);
         Result<EncounterResponseDto> Get(long id);
         Result Delete(long id);
-        Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitute, double latitude);
+        Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitude, double latitude);
         Result<TouristProgressResponseDto> CompleteEncounter(long userId, long encounterId);
+        Result CreateKeyPointEncounter(KeyPointEncounterCreateDto keyPointEncounter, long userId);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public.TourAuthoring;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
@@ -8,7 +9,7 @@ using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases.TourAuthoring;
 
-public class KeyPointService : BaseService<KeyPoint>, IKeyPointService
+public class KeyPointService : BaseService<KeyPoint>, IKeyPointService, IInternalKeyPointService
 {
     private readonly IKeyPointRepository _keyPointRepository;
 
@@ -88,8 +89,38 @@ public class KeyPointService : BaseService<KeyPoint>, IKeyPointService
 
     public Result<PagedResult<KeyPointResponseDto>> GetPaged(int page, int pageSize)
     {
-        var allKeyPoints = _keyPointRepository.GetPaged(page, pageSize);  
+        var allKeyPoints = _keyPointRepository.GetPaged(page, pageSize);
         var pagedResult = new PagedResult<KeyPoint>(allKeyPoints.Results, allKeyPoints.Results.Count);
         return MapToDto<KeyPointResponseDto>(pagedResult);
+    }
+
+    public bool IsToursAuthor(long userId, long id)
+    {
+        return _keyPointRepository.IsToursAuthor(userId, id);
+    }
+
+    public double GetKeyPointLongitude(long keyPointId)
+    {
+        return _keyPointRepository.GetKeyPointLongitude(keyPointId);
+    }
+
+    public double GetKeyPointLatitude(long keyPointId)
+    {
+        return _keyPointRepository.GetKeyPointLatitude(keyPointId);
+    }
+
+    public void AddEncounter(long keyPointId, bool isRequired)
+    {
+        var keyPoint = _keyPointRepository.Get(keyPointId);
+
+        keyPoint.AddEncounter();
+        if (isRequired) keyPoint.RequireEncounter();
+
+        _keyPointRepository.Update(keyPoint);
+    }
+
+    public bool CheckEncounterExists(long keyPointId)
+    {
+        return _keyPointRepository.CheckEncounterExists(keyPointId);
     }
 }

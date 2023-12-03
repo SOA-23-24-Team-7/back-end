@@ -15,6 +15,8 @@ public class KeyPoint : Entity
     public long Order { get; set; }
     public bool HaveSecret { get; init; }
     public KeyPointSecret? Secret { get; private set; }
+    public bool IsEncounterRequired { get; private set; }
+    public bool HasEncounter { get; private set; }
 
     public KeyPoint() { }
 
@@ -33,7 +35,7 @@ public class KeyPoint : Entity
         Validate();
     }
 
-    public KeyPoint(long tourId, PublicKeyPoint publicKeyPoint) 
+    public KeyPoint(long tourId, PublicKeyPoint publicKeyPoint)
     {
         TourId = tourId;
         Name = publicKeyPoint.Name;
@@ -41,7 +43,7 @@ public class KeyPoint : Entity
         Longitude = publicKeyPoint.Longitude;
         Latitude = publicKeyPoint.Latitude;
         ImagePath = publicKeyPoint.ImagePath;
-        Order= publicKeyPoint.Order;
+        Order = publicKeyPoint.Order;
         LocationAddress = publicKeyPoint.LocationAddress;
         Validate();
     }
@@ -55,6 +57,16 @@ public class KeyPoint : Entity
         if (Latitude < -90 || Latitude > 90) throw new ArgumentException("Invalid Latitude");
         if (string.IsNullOrWhiteSpace(LocationAddress)) throw new ArgumentException("Invalid Location Address");
         if (string.IsNullOrWhiteSpace(ImagePath)) throw new ArgumentException("Invalid ImagePath");
+    }
+
+    public void RequireEncounter()
+    {
+        IsEncounterRequired = true;
+    }
+
+    public void AddEncounter()
+    {
+        HasEncounter = true;
     }
 
     public double CalculateDistance(KeyPoint kp)

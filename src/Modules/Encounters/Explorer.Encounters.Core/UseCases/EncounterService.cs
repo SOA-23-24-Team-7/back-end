@@ -5,9 +5,10 @@ using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.Encounter;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
-using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Internal;
+using Explorer.Tours.API.Internal;
 using FluentResults;
+using EncounterStatus = Explorer.Encounters.Core.Domain.Encounter.EncounterStatus;
 
 namespace Explorer.Encounters.Core.UseCases
 {
@@ -17,14 +18,16 @@ namespace Explorer.Encounters.Core.UseCases
         private readonly ITouristProgressRepository _touristProgressRepository;
         private readonly ICrudRepository<TouristProgress> _touristProgressCrudRepository;
         private readonly IInternalUserService _internalUserService;
+        private readonly IInternalKeyPointService _keypointService;
         private readonly IMapper _mapper;
-        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper) : base(repository, mapper)
+        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper, IInternalKeyPointService keypointService) : base(repository, mapper)
         {
             _encounterRepository = encounterRepository;
             _touristProgressRepository = touristProgressRepository;
             _touristProgressCrudRepository = touristProgressCrudRepository;
             _internalUserService = userService;
             _mapper = mapper;
+            _keypointService = keypointService;
         }
 
         public Result<PagedResult<EncounterResponseDto>> GetActive(int page, int pageSize)
@@ -33,7 +36,7 @@ namespace Explorer.Encounters.Core.UseCases
             return MapToDto<EncounterResponseDto>(entities);
         }
 
-        public Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitute, double latitude)
+        public Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitude, double latitude)
         {
             try
             {
@@ -47,7 +50,7 @@ namespace Explorer.Encounters.Core.UseCases
             try
             {
                 var encounter = _encounterRepository.GetById(encounterId);
-                encounter.ActivateEncounter(userId, longitute, latitude);
+                encounter.ActivateEncounter(userId, longitude, latitude);
                 CrudRepository.Update(encounter);
                 return MapToDto<EncounterResponseDto>(encounter);
             }
@@ -79,5 +82,26 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
+        public Result CreateKeyPointEncounter(KeyPointEncounterCreateDto keyPointEncounter, long userId)
+        {
+            try
+            {
+                if (!_keypointService.IsToursAuthor(userId, keyPointEncounter.KeyPointId)) return Result.Fail(FailureCode.Forbidden).WithError("Unauthorized");
+                if (_keypointService.CheckEncounterExists(keyPointEncounter.KeyPointId)) return Result.Fail(FailureCode.Forbidden).WithError("Encounter already exists on this key point");
+
+                var longitude = _keypointService.GetKeyPointLongitude(keyPointEncounter.KeyPointId);
+                var latitude = _keypointService.GetKeyPointLatitude(keyPointEncounter.KeyPointId);
+
+                CrudRepository.Create(new KeyPointEncounter(keyPointEncounter.Title, keyPointEncounter.Description, longitude, latitude, keyPointEncounter.XpReward, EncounterStatus.Active, keyPointEncounter.KeyPointId));
+
+                _keypointService.AddEncounter(keyPointEncounter.KeyPointId, keyPointEncounter.IsRequired);
+
+                return Result.Ok();
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.Forbidden).WithError(e.Message);
+            }
+        }
     }
 }
