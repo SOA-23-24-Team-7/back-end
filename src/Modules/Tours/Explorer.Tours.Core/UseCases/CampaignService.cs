@@ -58,6 +58,11 @@ namespace Explorer.Tours.Core.UseCases
             Campaign campaign = _campaignRepository.GetById(Id);
             if (campaign == null)
                 return null;
+            campaign.KeyPoints.Clear();
+            foreach (long keyPointId in campaign.KeyPointIds)
+            {
+                campaign.KeyPoints.Add(_keyPointRepository.Get(keyPointId));
+            }
             return MapToDto<TourCampaignResponseDto>(campaign);
         }
     }
