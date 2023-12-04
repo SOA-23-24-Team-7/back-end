@@ -27,7 +27,7 @@ public class TourSale : Entity
     {
         if (AuthorId == 0) throw new ArgumentException("Invalid author id.");
         if (string.IsNullOrEmpty(Name)) throw new ArgumentException("Invalid name.");
-        if (StartDate > EndDate) throw new ArgumentException("Invalid date range.");
+        if (StartDate > EndDate || StartDate.AddDays(14) < EndDate) throw new ArgumentException("Invalid date range.");
         if (DiscountPercentage <= 0.0 || DiscountPercentage > 1.0) throw new ArgumentException("Invalid discount percentage.");
         if (TourIds.Count == 0 || TourIds.Contains(0)) throw new ArgumentException("Invalid tour ids.");
     }
