@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Encounters.API.Dtos;
+using Explorer.Encounters.API.Internal;
 using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.Encounter;
@@ -12,15 +13,16 @@ using EncounterStatus = Explorer.Encounters.Core.Domain.Encounter.EncounterStatu
 
 namespace Explorer.Encounters.Core.UseCases
 {
-    public class EncounterService : CrudService<EncounterResponseDto, Encounter>, IEncounterService
+    public class EncounterService : CrudService<EncounterResponseDto, Encounter>, IEncounterService, IInternalEncounterService
     {
         private readonly IEncounterRepository _encounterRepository;
         private readonly ITouristProgressRepository _touristProgressRepository;
         private readonly ICrudRepository<TouristProgress> _touristProgressCrudRepository;
         private readonly IInternalUserService _internalUserService;
         private readonly IInternalKeyPointService _keypointService;
+        private readonly IKeyPointEncounterRepository _keypointEncounterRepository;
         private readonly IMapper _mapper;
-        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper, IInternalKeyPointService keypointService) : base(repository, mapper)
+        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper, IInternalKeyPointService keypointService, IKeyPointEncounterRepository keypointEncounterRepository) : base(repository, mapper)
         {
             _encounterRepository = encounterRepository;
             _touristProgressRepository = touristProgressRepository;
@@ -28,6 +30,7 @@ namespace Explorer.Encounters.Core.UseCases
             _internalUserService = userService;
             _mapper = mapper;
             _keypointService = keypointService;
+            _keypointEncounterRepository = keypointEncounterRepository;
         }
 
         public Result<PagedResult<EncounterResponseDto>> GetActive(int page, int pageSize)
@@ -102,6 +105,11 @@ namespace Explorer.Encounters.Core.UseCases
             {
                 return Result.Fail(FailureCode.Forbidden).WithError(e.Message);
             }
+        }
+
+        public bool IsEncounterInstanceCompleted(long userId, long keyPointId)
+        {
+            return _keypointEncounterRepository.IsEncounterInstanceCompleted(userId, keyPointId);
         }
     }
 }
