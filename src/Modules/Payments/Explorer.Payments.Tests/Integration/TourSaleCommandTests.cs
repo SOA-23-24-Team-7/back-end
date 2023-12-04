@@ -3,6 +3,7 @@ using Explorer.API.Controllers.Tourist;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Infrastructure.Database;
+using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -83,6 +84,36 @@ public class TourSaleCommandTests : BasePaymentsIntegrationTest
         // Assert
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(400);
+    }
+
+    [Fact]
+    public void Deletes()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+
+        // Act
+        var result = (OkResult)controller.Delete(-2);
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(200);
+    }
+
+    [Fact]
+    public void Delete_fails_invalid_id()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+
+        // Act
+        var result = (ObjectResult)controller.Delete(-1000);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(404);
     }
 
     private static TourSaleController CreateController(IServiceScope scope)

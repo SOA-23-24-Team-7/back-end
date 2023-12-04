@@ -3,6 +3,7 @@ using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Explorer.API.Controllers.Author;
 
@@ -30,5 +31,11 @@ public class TourSaleController : BaseApiController
         var authorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
         var result = _saleService.GetByAuthorId(authorId);
         return CreateResponse(result);
+    }
+
+    [HttpDelete("{id:int}")]
+    public ActionResult Delete(int id)
+    {
+        throw new NotImplementedException();
     }
 }
