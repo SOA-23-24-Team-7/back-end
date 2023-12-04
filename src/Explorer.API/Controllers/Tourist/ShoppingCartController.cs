@@ -84,6 +84,11 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
 
         }
- 
+
+        [HttpPost]
+        public ActionResult<ShoppingCartResponseDto> ApplyCouponDiscount([FromBody] ApplyCouponRequestDto couponRequestDto) 
+        {
+            throw new NotImplementedException();
+        }
     }
 }
