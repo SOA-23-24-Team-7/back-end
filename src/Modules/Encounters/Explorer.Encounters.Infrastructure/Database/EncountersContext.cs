@@ -23,5 +23,6 @@ public class EncountersContext : DbContext
     private static void ConfigureEncounters(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Encounter>().Property(item => item.Instances).HasColumnType("jsonb");
+        modelBuilder.Entity<Encounter>().ToTable("Encounters").UseTptMappingStrategy();
     }
 }

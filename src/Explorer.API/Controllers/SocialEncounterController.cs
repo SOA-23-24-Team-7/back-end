@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers;
 
-[Authorize(Policy = "touristPolicy")]
 [Route("api/tourist/social-encounter")]
 public class SocialEncounterController : BaseApiController
 {
@@ -15,9 +14,19 @@ public class SocialEncounterController : BaseApiController
         _encounterService = encounterService;
     }
 
-    [HttpPost]
-    public ActionResult<SocialEncounterResponseDto> Activate([FromBody] SocialEncounterActivationDto encounter)
+    [Authorize(Policy = "touristPolicy")]
+    [HttpPost("complete")]
+    public ActionResult<SocialEncounterCreateDto> Complete([FromBody] SocialEncounterCompleteDto encounterCompleteDto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _encounterService.CompleteSocialEncounter(userId, encounterCompleteDto.EncounterId);
+            return CreateResponse(result);
+        }
+        catch (Exception e) 
+        {
+            throw e;
+        }
     }
 }

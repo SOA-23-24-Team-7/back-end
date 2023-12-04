@@ -48,7 +48,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
                 throw new ArgumentException("Encounter is not yet published.");
             if (hasUserActivatedEncounter(userId))
                 throw new ArgumentException("User has already activated/completed this encounter.");
-            if (isUserInRange(userLongitude, userLatitude))
+            if (!isUserInRange(userLongitude, userLatitude))
                 throw new ArgumentException("User is not close enough to the encounter.");
 
             Instances.Add(new EncounterInstance(userId));
@@ -104,7 +104,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             double distance = earthRadius * c;
 
-            return distance < Radius;
+            return (distance < Radius);
         }
     }
     public enum EncounterStatus { Active, Draft, Archived };

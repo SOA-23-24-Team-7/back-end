@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Encounters.API.Dtos;
 
-public class SocialEncounterActivationDto
+public class SocialEncounterCreateDto
 {
-    public double Longitude { get; set; }
-    public double Latitude { get; set; }
+    public long PeopleNumber { get; set; }
 }
