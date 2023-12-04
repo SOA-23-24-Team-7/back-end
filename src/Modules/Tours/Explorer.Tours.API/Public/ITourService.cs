@@ -24,4 +24,6 @@ public interface ITourService
     Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize);
     Result<PagedResult<LimitedTourViewResponseDto>> GetLimitedInfoTours(int page, int pageSize, List<long> ids);
     Result<List<TourResponseDto>> GetTours(List<long> toursIds);
+    Result MarkAsReady(long id, long touristId);
+    Result<PagedResult<TourResponseDto>> GetToursBasedOnSelectedKeyPoints(int page, int pageSize, List<long> publicKeyPointIds, long authorId);
 }

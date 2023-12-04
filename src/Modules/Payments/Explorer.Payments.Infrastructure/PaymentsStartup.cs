@@ -37,6 +37,7 @@ public static class PaymentsStartup
         services.AddScoped<IWalletService, WalletService>();
 
         services.AddScoped<IRecordService, RecordService>();
+        services.AddScoped<ITransactionRecordService, TransactionRecordService>();
 
         services.AddScoped<IShoppingNotificationService, ShoppingNotificationService>();
 
@@ -54,11 +55,13 @@ public static class PaymentsStartup
         services.AddScoped(typeof(ICrudRepository<Wallet>), typeof(CrudDatabaseRepository<Wallet, PaymentsContext>));
 
         services.AddScoped(typeof(ICrudRepository<Record>), typeof(CrudDatabaseRepository<Record, PaymentsContext>));
+        services.AddScoped(typeof(ICrudRepository<TransactionRecord>), typeof(CrudDatabaseRepository<TransactionRecord, PaymentsContext>));
 
         services.AddScoped(typeof(ICrudRepository<ShoppingNotification>), typeof(CrudDatabaseRepository<ShoppingNotification, PaymentsContext>));
 
         services.AddScoped(typeof(IShoppingNotificationRepository), typeof(ShoppingNotificationDatabaseRepository));
         services.AddScoped(typeof(IRecordRepository), typeof(RecordDatabaseRepository));
+        services.AddScoped(typeof(ITransactionRecordRepository), typeof(TransactionRecordDatabaseRepository));
 
         services.AddScoped(typeof(ICouponRepository), typeof(CouponDatabaseRepository));
         services.AddScoped(typeof(ICrudRepository<Coupon>), typeof(CrudDatabaseRepository<Coupon, PaymentsContext>));

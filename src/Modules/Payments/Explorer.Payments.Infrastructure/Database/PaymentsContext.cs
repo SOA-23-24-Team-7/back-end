@@ -16,6 +16,7 @@ public class PaymentsContext : DbContext
     public DbSet<Wallet> Wallets { get; set; }
 
     public DbSet<Record> Records { get; set; }
+    public DbSet<TransactionRecord> TransactionRecords { get; set; }
 
     public DbSet<ShoppingNotification> ShoppingNotifications { get; set; }
     public DbSet<Coupon> Coupons { get; set; }

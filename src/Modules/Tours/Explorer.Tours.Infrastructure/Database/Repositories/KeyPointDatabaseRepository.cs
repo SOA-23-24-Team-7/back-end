@@ -93,5 +93,10 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             task.Wait();
             return task.Result;
         }
+
+        public List<KeyPoint> GetAll()
+        {
+            return _dbContext.KeyPoints.ToList();
+        }
     }
 }
