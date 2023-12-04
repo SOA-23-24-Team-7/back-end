@@ -8,7 +8,7 @@ namespace Explorer.Payments.API.Dtos
 {
     public class ApplyCouponRequestDto
     {
-        public string? CouponCode { get; set; }
+        public string CouponCode { get; set; }
         public long ShoppingCartId { get; set; }
     }
 }

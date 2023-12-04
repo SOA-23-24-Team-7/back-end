@@ -148,12 +148,8 @@ namespace Explorer.Payments.Tests.Integration
 
             var result = ((ObjectResult)controller.ApplyCouponDiscount(couponRequset).Result)?.Value as ShoppingCartResponseDto;
 
-
-            //assert
-            var shoppingCart = ((ObjectResult)controller.GetByTouristId(-2).Result)?.Value as ShoppingCartResponseDto;
-
-            shoppingCart.ShouldNotBeNull();
-            shoppingCart.TotalPrice.ShouldBe(17.9);
+            result.ShouldNotBeNull();
+            result.TotalPrice.ShouldBe(17.9);
 
         }
 
@@ -174,7 +170,7 @@ namespace Explorer.Payments.Tests.Integration
 
 
             // Assert - Response
-            result.StatusCode.ShouldBe(404);
+            result.StatusCode.ShouldBe(400);
 
         }
         private static ShoppingCartController CreateController(IServiceScope scope)

@@ -85,10 +85,11 @@ namespace Explorer.API.Controllers.Tourist
 
         }
 
-        [HttpPost]
+        [HttpPost("apply-coupon")]
         public ActionResult<ShoppingCartResponseDto> ApplyCouponDiscount([FromBody] ApplyCouponRequestDto couponRequestDto) 
         {
-            throw new NotImplementedException();
+           var result = _cartService.ApplyCoupon(couponRequestDto);
+            return CreateResponse(result);
         }
     }
 }
