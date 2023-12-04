@@ -5,7 +5,6 @@ using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.Encounter;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
-using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Internal;
 using FluentResults;
 
@@ -25,6 +24,13 @@ namespace Explorer.Encounters.Core.UseCases
             _touristProgressCrudRepository = touristProgressCrudRepository;
             _internalUserService = userService;
             _mapper = mapper;
+        }
+
+        public Result<HiddenLocationEncounterResponseDto> CreateHiddenLocationEncounter(HiddenLocationEncounterCreateDto encounter)
+        {
+            // problem sa konverzijom iz jednog enuma u drugi (iako su isti lol) ovo 0 na kraju
+            var entity = CrudRepository.Create(new HiddenLocationEncounter(encounter.Picture, encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.XpReward, 0));
+            return MapToDto<HiddenLocationEncounterResponseDto>(entity);
         }
 
         public Result<PagedResult<EncounterResponseDto>> GetActive(int page, int pageSize)

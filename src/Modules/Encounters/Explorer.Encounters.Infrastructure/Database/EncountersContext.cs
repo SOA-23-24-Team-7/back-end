@@ -7,6 +7,7 @@ public class EncountersContext : DbContext
 {
     public DbSet<Encounter> Encounters { get; set; }
     public DbSet<TouristProgress> TouristProgress { get; set; }
+    public DbSet<HiddenLocationEncounter> HiddenLocationEncounters { get; set; }
 
     public EncountersContext(DbContextOptions<EncountersContext> options) : base(options)
     {
@@ -22,5 +23,6 @@ public class EncountersContext : DbContext
     private static void ConfigureEncounters(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Encounter>().Property(item => item.Instances).HasColumnType("jsonb");
+        modelBuilder.Entity<Encounter>().ToTable("Encounters").UseTptMappingStrategy();
     }
 }
