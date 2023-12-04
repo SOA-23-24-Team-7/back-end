@@ -25,16 +25,16 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("search")]
-        public ActionResult<PagedResult<TourResponseDto>> Search([FromQuery] TourTouristSearchFilterDto tourSearchFilterDto)
+        public ActionResult<PagedResult<TourResponseDto>> Search([FromQuery] TourSearchFilterDto tourSearchFilterDto)
         {
-            var result = _tourSearchService.Search(tourSearchFilterDto);
+            var result = _tourSearchService.Search(tourSearchFilterDto, true);
             return CreateResponse(result);
         }
 
         [HttpGet("author-search")]
-        public ActionResult<PagedResult<TourResponseDto>> Search([FromQuery] TourAuthorSearchFilterDto tourSearchFilterDto)
+        public ActionResult<PagedResult<TourResponseDto>> AuthorSearch([FromQuery] TourSearchFilterDto tourSearchFilterDto)
         {
-            var result = _tourSearchService.Search(tourSearchFilterDto);
+            var result = _tourSearchService.Search(tourSearchFilterDto, false);
             return CreateResponse(result);
         }
     }

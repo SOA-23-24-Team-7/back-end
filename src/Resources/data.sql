@@ -59,3 +59,19 @@ INSERT INTO blog."Comments" ("Id", "AuthorId", "BlogId", "CreatedAt", "UpdatedAt
 (-5, -171, -14, '2023-11-14 13:58:16.459035+01', NULL, 'mene na pivo ne zovete, a?'),
 (-6, -172, -14, '2023-11-14 13:49:10.108651+01', NULL, 'ni ja nisam pozvan 😔'),
 (-3, -169, -14, '2023-11-14 13:58:16.459035+01', NULL, 'drugi put');
+
+
+-- **************************** TOURS ************************************
+INSERT INTO tours."Tours"(
+	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations")
+	VALUES
+		(-1, -2, 'Novo naselje', 'Tura po Novom naselju', 2, '{tag1,tag2}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 0, "TransportType": 1}]'),
+		(-2, -2, 'Novo naselje 2', 'Tura po Novom naselju', 2, '{tag1,tag2}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 0, "TransportType": 1}]'),
+		(-3, -2, 'Novo naselje 3', 'Tura po Novom naselju', 2, '{tag1,tag2}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 0, "TransportType": 1}]'),
+		(-4, -2, 'Novo naselje 4', 'Tura po Novom naselju', 2, '{tag1,tag2}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 0, "TransportType": 1}]'),
+		(-5, -2, 'Novo naselje 5', 'Tura po Novom naselju', 2, '{tag1,tag2}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 0, "TransportType": 1}]'),
+		(-6, -2, 'Novo naselje 6', 'Tura po Novom naselju', 2, '{tag1,tag2}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 0, "TransportType": 1}]'),
+		(-7, -2, 'Novo naselje 7', 'Tura po Novom naselju', 2, '{tag1,tag2}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 0, "TransportType": 1}]'),
+		(-8, -2, 'Novo naselje 8', 'Tura po Novom naselju', 2, '{tag1,tag2}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 0, "TransportType": 1}]'),
+		(-9, -2, 'Novo naselje 9', 'Tura po Novom naselju', 2, '{tag1,tag2}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 0, "TransportType": 1}]'),
+		(-10, -2, 'Novo naselje 10', 'Tura po Novom naselju', 2, '{tag1,tag2}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 0, "TransportType": 1}]');

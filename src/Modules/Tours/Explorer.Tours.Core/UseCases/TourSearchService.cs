@@ -60,17 +60,13 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         }
     }
 
-    public Result<PagedResult<TourResponseDto>> Search(TourTouristSearchFilterDto tourSearchFilterDto)
-    {
-        var filter = new TourAuthorSearchFilterDto(tourSearchFilterDto);
-        return Search(filter);
-    }
-
-    public Result<PagedResult<TourResponseDto>> Search(TourAuthorSearchFilterDto tourSearchFilterDto)
+    public Result<PagedResult<TourResponseDto>> Search(TourSearchFilterDto tourSearchFilterDto, bool publishedOnly)
     {
         try
         {
             var tours = _tourCrudRepository.GetAll(t => true, include: "KeyPoints,Reviews");
+
+            if (publishedOnly) tours = tours.FindAll(t => t.Status == Domain.Tours.TourStatus.Published);
 
             var filtered = tours;
             filtered = searchByName(filtered, tourSearchFilterDto.Name);
@@ -78,14 +74,16 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
             filtered = searchByDifficulty(filtered, tourSearchFilterDto.MinDifficulty, tourSearchFilterDto.MaxDifficulty);
             filtered = searchByAverageRating(filtered, tourSearchFilterDto.MinAverageRating);
             filtered = searchByAuthorId(filtered, tourSearchFilterDto.AuthorId);
-            filtered = searchPublishedTours(filtered, tourSearchFilterDto.TourStatus);
             filtered = searchByLocation(filtered, tourSearchFilterDto.Longitude, tourSearchFilterDto.Latitude, tourSearchFilterDto.MaxDistance);
             filtered = searchByLength(filtered, tourSearchFilterDto.MinLength, tourSearchFilterDto.MaxLength);
+
+            var count = filtered.Count();
+
             filtered = pageResults(filtered, tourSearchFilterDto.Page, tourSearchFilterDto.PageSize);
 
             var mappedResult = MapToResponseDto(filtered);
 
-            return new PagedResult<TourResponseDto>(mappedResult, mappedResult.Count);
+            return new PagedResult<TourResponseDto>(mappedResult, count);
         }
         catch (ArgumentException e)
         {
@@ -97,6 +95,11 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
     {
         if (page != null && pageSize != null)
         {
+            if (page == 0 && pageSize == 0)
+            {
+                return tours;
+            }
+
             int startIndex = (page.Value - 1) * pageSize.Value;
 
             if (startIndex >= tours.Count)
@@ -152,7 +155,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         var filtered = tours;
         if (name != null)
         {
-            filtered = tours.FindAll(t => t.Name.ToLower().Contains(name.ToLower()));
+            filtered = filtered.FindAll(t => t.Name.ToLower().Contains(name.ToLower()));
         }
         return filtered;
     }
@@ -162,11 +165,11 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         var filtered = tours;
         if (minLength != null)
         {
-            filtered = tours.FindAll(t => t.CalculateLength() >= minLength);
+            filtered = filtered.FindAll(t => t.CalculateLength() >= minLength * 1000);
         }
         if (maxLength != null)
         {
-            filtered = tours.FindAll(t => t.CalculateLength() <= maxLength);
+            filtered = filtered.FindAll(t => t.CalculateLength() <= maxLength * 1000);
         }
         return filtered;
     }
@@ -176,11 +179,11 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         var filtered = tours;
         if (minPrice != null)
         {
-            filtered = tours.FindAll(t => t.Difficulty >= minPrice);
+            filtered = filtered.FindAll(t => t.Difficulty >= minPrice);
         }
         if (maxPrice != null)
         {
-            filtered = tours.FindAll(t => t.Difficulty <= maxPrice);
+            filtered = filtered.FindAll(t => t.Difficulty <= maxPrice);
         }
         return filtered;
     }
@@ -190,11 +193,11 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         var filtered = tours;
         if (minDifficulty != null)
         {
-            filtered = tours.FindAll(t => t.Difficulty >= minDifficulty);
+            filtered = filtered.FindAll(t => t.Difficulty >= minDifficulty);
         }
         if (minDifficulty != null)
         {
-            filtered = tours.FindAll(t => t.Difficulty <= maxDifficulty);
+            filtered = filtered.FindAll(t => t.Difficulty <= maxDifficulty);
         }
         return filtered;
     }
@@ -204,7 +207,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         var filtered = tours;
         if (minAverageRating != null)
         {
-            filtered = tours.FindAll(t => t.GetAverageRating() >= minAverageRating);
+            filtered = filtered.FindAll(t => t.GetAverageRating() >= minAverageRating);
         }
         return filtered;
     }
@@ -214,18 +217,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         var filtered = tours;
         if (authorId != null)
         {
-            filtered = tours.FindAll(t => t.AuthorId == authorId);
-        }
-        return filtered;
-    }
-
-    private List<Tour> searchPublishedTours(List<Tour> tours, string? isPublished)
-    {
-        var filtered = tours;
-        if (isPublished != null)
-        {
-            Enum.TryParse(isPublished, out Domain.Tours.TourStatus myStatus);
-            filtered = filtered.FindAll(t => t.Status == myStatus);
+            filtered = filtered.FindAll(t => t.AuthorId == authorId);
         }
         return filtered;
     }
