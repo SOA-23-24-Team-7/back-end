@@ -30,7 +30,7 @@ namespace Explorer.Payments.Core.UseCases
             _shoppingNotificationRepository= shoppingNotificationRepository;
         }
 
-        public Result<TourTokenResponseDto> AddToken(TourTokenCreateDto token)
+        public Result<TourTokenResponseDto> AddToken(TourTokenCreateDto token, long totalPrice)
         {
             //check if tour is archived
             try
@@ -38,7 +38,7 @@ namespace Explorer.Payments.Core.UseCases
                 var wallet = _walletService.GetForTourist(token.TouristId);
                 var shoppingCart = _shoppingCartRepository.GetByTouristId(token.TouristId);
                 var tour = _tourService.Get(token.TourId)?.Value;
-                if (wallet.Value.AdventureCoin >= shoppingCart.TotalPrice)
+                if (wallet.Value.AdventureCoin >= totalPrice)
                 {
                     if (tour == null || (TourStatus)tour.Status == TourStatus.Archived) //OVDE JE PRE PISALO TOURS.DOMAIN
                     {
@@ -52,6 +52,8 @@ namespace Explorer.Payments.Core.UseCases
                     var newToken = _repository.Create(MapToDomain<TourTokenCreateDto>(token));
                     var newRecord = CreateRecord(token.TouristId, token.TourId, tour.Price);
                     CreateNotfication(token.TouristId, token.TourId);
+                    wallet.Value.AdventureCoin -= (long)tour.Price;
+                    _walletService.Update(new WalletUpdateDto(wallet.Value.Id,wallet.Value.AdventureCoin));
                     if (newRecord == null)
                     {
                         return Result.Fail(FailureCode.InvalidArgument).WithError("Error in creating record");
