@@ -47,21 +47,20 @@ namespace Explorer.Tours.Core.UseCases
         public Result<TourExecutionSessionResponseDto> CheckKeyPointCompletion(long tourId, long touristId, double longitude, double latitude, bool isCampaign)
         {
             TourExecutionSession tourExecution = _tourExecutionRepository.GetStarted(tourId, isCampaign, touristId);
-            if(tourExecution == null)
+            if (tourExecution == null)
             {
                 return null;
             }
-            if (isCampaign)
-                return CheckCampaignKeyPointCompletion(tourExecution, longitude, latitude);
-            else
-                return CheckTourKeyPointCompletion(tourExecution, longitude, latitude);
+            if (isCampaign) return CheckCampaignKeyPointCompletion(tourExecution, longitude, latitude);
+
+            return CheckTourKeyPointCompletion(tourExecution, longitude, latitude);
         }
 
         private Result<TourExecutionSessionResponseDto> CheckCampaignKeyPointCompletion(TourExecutionSession execution, double longitude, double latitude)
         {
             List<KeyPoint> keyPoints = new List<KeyPoint>();
             Campaign campaign = _campaignRepository.GetById(execution.TourId);
-            foreach(var keyPointId in campaign.KeyPointIds)
+            foreach (var keyPointId in campaign.KeyPointIds)
                 keyPoints.Add(_keyPointRepository.Get(keyPointId));
 
             for (int i = 0; i < keyPoints.Count; i++)
@@ -144,7 +143,7 @@ namespace Explorer.Tours.Core.UseCases
             tourExecutionSession.UpdateProgress(percentage);
             _tourExecutionRepository.Update(tourExecutionSession);
         }
-        
+
         public Result<List<TourExecutionInfoDto>> GetAllFor(long touristId)
         {
             var tourExecutions = _tourExecutionRepository.GetForTourist(touristId);

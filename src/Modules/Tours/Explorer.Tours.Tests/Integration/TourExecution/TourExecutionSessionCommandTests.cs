@@ -3,6 +3,7 @@ using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristPosition;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,8 +38,14 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
                 HttpContext = context
             };
 
+            var tourExecution = new TourExecutionDto
+            {
+                TourId = -8,
+                IsCampaign = false
+            };
+
             // Act
-            var result = ((ObjectResult)controller.StartTour(tourId).Result)?.Value as TourExecutionSessionResponseDto;
+            var result = ((ObjectResult)controller.StartTour(tourExecution).Result)?.Value as TourExecutionSessionResponseDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
@@ -99,7 +106,6 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-            long tourId = -8;
 
             var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-12") }, "test");
 
@@ -113,16 +119,22 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
                 HttpContext = context
             };
 
+            var tourExecution = new TourExecutionDto
+            {
+                TourId = -8,
+                IsCampaign = false
+            };
+
             // Act
-            var result = ((ObjectResult)controller.AbandonTour(tourId).Result)?.Value as TourExecutionSessionResponseDto;
+            var result = ((ObjectResult)controller.AbandonTour(tourExecution).Result)?.Value as TourExecutionSessionResponseDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);
-            result.TourId.ShouldBe(tourId);
+            result.TourId.ShouldBe(tourExecution.TourId);
 
             // Assert - Database
-            var storedEntity = dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId);
+            var storedEntity = dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourExecution.TourId);
             storedEntity.ShouldNotBeNull();
             storedEntity.Status.ToString().ShouldBe(TourExecutionSessionStatus.Abandoned.ToString());
         }
