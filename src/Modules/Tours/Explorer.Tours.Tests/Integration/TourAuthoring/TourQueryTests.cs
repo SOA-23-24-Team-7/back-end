@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 
-namespace Explorer.Tours.Tests.Integration;
+namespace Explorer.Tours.Tests.Integration.TourAuthoring;
 
 [Collection("Sequential")]
 public class TourQueryTests : BaseToursIntegrationTest
@@ -25,8 +25,8 @@ public class TourQueryTests : BaseToursIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(8);
-        result.TotalCount.ShouldBe(8);
+        result.Results.Count.ShouldBe(10);
+        result.TotalCount.ShouldBe(10);
     }
 
     [Fact]

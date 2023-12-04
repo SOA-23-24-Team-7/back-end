@@ -17,4 +17,6 @@ public interface IKeyPointRepository
     double GetKeyPointLongitude(long id);
     double GetKeyPointLatitude(long id);
     bool CheckEncounterExists(long keyPointId);
+    List<KeyPoint> GetAll();
+
 }

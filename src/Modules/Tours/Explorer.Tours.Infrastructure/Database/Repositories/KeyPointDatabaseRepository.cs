@@ -113,5 +113,11 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         {
             return _dbSet.FirstOrDefault(x => x.Id == keyPointId)!.HasEncounter;
         }
+
+        public List<KeyPoint> GetAll()
+        {
+            return _dbContext.KeyPoints.ToList();
+
+        }
     }
 }

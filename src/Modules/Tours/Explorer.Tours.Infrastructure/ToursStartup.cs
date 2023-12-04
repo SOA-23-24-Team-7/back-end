@@ -1,5 +1,7 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Payments.API.Public;
+using Explorer.Payments.Core.UseCases;
 using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
@@ -65,7 +67,17 @@ public static class ToursStartup
         services.AddScoped<IPublicFacilityRequestService, PublicFacilityRequestService>();
 
         services.AddScoped<INotificationService, NotificationService>();
+
         services.AddScoped<IPublicKeyPointService, PublicKeyPointService>();
+
+        services.AddScoped<IShoppingCartService, ShoppingCartService>();
+
+        services.AddScoped<IOrderItemService, OrderItemService>();
+
+        services.AddScoped<ITourTokenService, TourTokenService>();
+
+        services.AddScoped<IInternalNotificationService, NotificationService>();
+
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
