@@ -8,4 +8,5 @@ public interface ITourSaleService
 {
     Result<TourSaleResponseDto> Create(TourSaleCreateDto sale);
     Result<List<TourSaleResponseDto>> GetByAuthorId(long authorId);
+    Result Delete(long id);
 }

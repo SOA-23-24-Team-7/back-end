@@ -49,4 +49,17 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
         var result = _saleRepository.GetByAuthorId(authorId);
         return MapToDto<TourSaleResponseDto>(result);
     }
+
+    public Result Delete(long id)
+    {
+        try
+        {
+            _crudRepository.Delete(id);
+            return Result.Ok();
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+    }
 }

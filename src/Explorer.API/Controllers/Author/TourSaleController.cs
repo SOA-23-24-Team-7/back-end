@@ -36,6 +36,7 @@ public class TourSaleController : BaseApiController
     [HttpDelete("{id:int}")]
     public ActionResult Delete(int id)
     {
-        throw new NotImplementedException();
+        var result = _saleService.Delete(id);
+        return CreateResponse(result);
     }
 }
