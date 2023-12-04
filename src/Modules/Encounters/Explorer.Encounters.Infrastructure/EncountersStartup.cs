@@ -25,6 +25,7 @@ public static class EncountersStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IEncounterService, EncounterService>();
+        services.AddScoped<ISocialEncounterService, SocialEncounterService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)

@@ -13,7 +13,6 @@ namespace Explorer.Encounters.Core.UseCases
     public class EncounterService : CrudService<EncounterResponseDto, Encounter>, IEncounterService
     {
         private readonly IEncounterRepository _encounterRepository;
-        private readonly ISocialEncounterRepository _socialEncounterRepository;
         private readonly ITouristProgressRepository _touristProgressRepository;
         private readonly ICrudRepository<TouristProgress> _touristProgressCrudRepository;
         private readonly IInternalUserService _internalUserService;
@@ -21,7 +20,6 @@ namespace Explorer.Encounters.Core.UseCases
         public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, ISocialEncounterRepository socialEncounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper) : base(repository, mapper)
         {
             _encounterRepository = encounterRepository;
-            _socialEncounterRepository = socialEncounterRepository;
             _touristProgressRepository = touristProgressRepository;
             _touristProgressCrudRepository = touristProgressCrudRepository;
             _internalUserService = userService;
@@ -77,28 +75,6 @@ namespace Explorer.Encounters.Core.UseCases
             catch (Exception)
             {
                 return Result.Fail(FailureCode.InvalidArgument);
-            }
-        }
-
-        public Result<TouristProgressResponseDto> CompleteSocialEncounter(long userId, long encounterId)
-        {
-            try
-            {
-                var encounter = _socialEncounterRepository.GetById(encounterId);
-                encounter.CompleteEncounter(userId);
-                var touristProgress = _touristProgressRepository.GetByUserId(userId);
-                touristProgress.AddXp(encounter.XpReward);
-                var responseDto = _mapper.Map<TouristProgressResponseDto>(touristProgress);
-                responseDto.User = _internalUserService.Get(userId).Value;
-
-                CrudRepository.Update(encounter);
-                _touristProgressCrudRepository.Update(touristProgress);
-
-                return responseDto;
-            }
-            catch (Exception e)
-            {
-                return Result.Fail(e.Message);
             }
         }
     }

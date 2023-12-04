@@ -33,14 +33,14 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
     {
         return new SocialEncounterCompleteDto
         {
-            Longitude = 19.838498117984688,
-            Latitude = 45.236348238816554   //lokacija ispred studentskog doma Car Lazar na Limanu
+            UserId = 0,
+            EncounterId = 0   //lokacija ispred studentskog doma Car Lazar na Limanu
         };
     }
 
     private static SocialEncounterController CreateSocialEncounterController(IServiceScope scope)
     {
-        return new SocialEncounterController(scope.ServiceProvider.GetRequiredService<IEncounterService>())
+        return new SocialEncounterController(scope.ServiceProvider.GetRequiredService<ISocialEncounterService>())
         {
             ControllerContext = BuildContext("-1")
         };
