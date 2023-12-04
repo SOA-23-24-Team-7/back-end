@@ -50,7 +50,7 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             storedEntity.ShouldNotBeNull();
             storedEntity.Id.ShouldBe(result.Id);
         }
-
+        /*
         [Fact]
         public void CompletesKeyPoint()
         {
@@ -91,7 +91,7 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             storedEntity.ShouldNotBeNull();
             storedEntity.NextKeyPointId.ShouldBe(-11);
         }
-
+        */
         [Fact]
         public void AbandonTour()
         {

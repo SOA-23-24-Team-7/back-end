@@ -16,7 +16,7 @@ public class Tour : Entity
     public double Distance { get; init; }
     public DateTime? PublishDate { get; private set; }
     public DateTime? ArchiveDate { get; private set; }
-    public ICollection<Equipment> EquipmentList { get; init; }
+    public ICollection<Equipment> EquipmentList { get; init; } = new List<Equipment>();
 
     [InverseProperty("Tour")]
     public ICollection<KeyPoint> KeyPoints { get; } = new List<KeyPoint>();
