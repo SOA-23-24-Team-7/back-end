@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers.Author
 {
     [Authorize(Policy = "authorPolicy")]
-    [Route("api/author/encounter")]
     public class EncounterController : BaseApiController
     {
         private readonly IEncounterService _encounterService;
@@ -16,6 +15,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPost]
+        [Route("api/author/social-encounter/create")]
         public ActionResult<EncounterResponseDto> Create([FromBody] SocialEncounterCreateDto encounter)
         {
             var result = _encounterService.CreateSocialEncounter(encounter);
