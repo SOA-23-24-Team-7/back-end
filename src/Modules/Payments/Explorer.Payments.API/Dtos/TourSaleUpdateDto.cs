@@ -2,7 +2,8 @@
 {
     public class TourSaleUpdateDto
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
+        public long AuthorId { get; set; }
         public string Name { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }

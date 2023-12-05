@@ -22,5 +22,6 @@ public class PaymentsProfile : Profile
 
         CreateMap<TourSale, TourSaleResponseDto>();
         CreateMap<TourSaleCreateDto, TourSale>();
+        CreateMap<TourSaleUpdateDto, TourSale>();
     }
 }

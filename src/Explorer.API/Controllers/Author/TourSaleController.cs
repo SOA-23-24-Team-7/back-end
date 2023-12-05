@@ -43,7 +43,8 @@ public class TourSaleController : BaseApiController
     [HttpPut]
     public ActionResult<TourSaleResponseDto> Update([FromBody] TourSaleUpdateDto request)
     {
-        throw new NotImplementedException();
+        var result = _saleService.Update(request, 0);
+        return CreateResponse(result);
     }
 
     [HttpDelete("{id:long}")]

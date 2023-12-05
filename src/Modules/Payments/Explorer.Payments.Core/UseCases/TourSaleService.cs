@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
@@ -15,7 +16,7 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
 
     private Action<TourSale> CheckIfTourIsAlreadyOnSale(TourSale sale)
     {
-        return s => { if (sale.EndDate >= s.StartDate && sale.StartDate <= s.EndDate && sale.TourIds.Any(t => s.TourIds.Contains(t))) throw new InvalidOperationException("At least one of the tours is already on sale."); };
+        return s => { if (s.Id != sale.Id && sale.EndDate >= s.StartDate && sale.StartDate <= s.EndDate && sale.TourIds.Any(t => s.TourIds.Contains(t))) throw new InvalidOperationException("At least one of the tours is already on sale."); };
     }
 
     public TourSaleService(ICrudRepository<TourSale> crudRepository, IMapper mapper, ITourSaleRepository saleRepository) : base(mapper)
@@ -60,6 +61,39 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
         catch (KeyNotFoundException e)
         {
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+    }
+
+    public Result<TourSaleResponseDto> Update(TourSaleUpdateDto sale, long authorId)
+    {
+        try
+        {
+            TourSale foundSale = _crudRepository.Get(sale.Id);
+
+            if (foundSale.AuthorId != sale.AuthorId)
+            {
+                throw new InvalidOperationException("An author can only update their own sale.");
+            }
+
+            var saleDomain = MapToDomain(sale);
+
+            List<TourSale> tourSales = _crudRepository.GetAll();
+            tourSales.ForEach(CheckIfTourIsAlreadyOnSale(saleDomain));
+
+            var result = _crudRepository.Update(saleDomain);
+            return MapToDto<TourSaleResponseDto>(result);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+        catch (ArgumentException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
     }
 

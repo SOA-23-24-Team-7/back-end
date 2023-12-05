@@ -136,6 +136,19 @@ public class TourSaleCommandTests : BasePaymentsIntegrationTest
     {
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
+
+        var userContext = new ClaimsIdentity(new Claim[] { new Claim("id", "-2") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(userContext)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+
         var updatedEntity = new TourSaleUpdateDto
         {
             Id = -1000

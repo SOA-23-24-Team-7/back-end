@@ -9,5 +9,6 @@ public interface ITourSaleService
     Result<TourSaleResponseDto> Create(TourSaleCreateDto sale);
     Result<List<TourSaleResponseDto>> GetByAuthorId(long authorId);
     Result<TourSaleResponseDto> GetById(long id);
+    Result<TourSaleResponseDto> Update(TourSaleUpdateDto sale, long authorId);
     Result Delete(long id);
 }
