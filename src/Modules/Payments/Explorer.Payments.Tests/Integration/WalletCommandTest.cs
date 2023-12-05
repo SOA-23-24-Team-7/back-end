@@ -24,6 +24,16 @@ namespace Explorer.Payments.Tests.Integration
 
             var newEntity = new WalletUpdateDto(-67, 15);
 
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-1234") }, "test");
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
             var result = ((ObjectResult)controller.UpdateWallet(newEntity).Result)?.Value as WalletResponseDto;
 
             // Assert - Response

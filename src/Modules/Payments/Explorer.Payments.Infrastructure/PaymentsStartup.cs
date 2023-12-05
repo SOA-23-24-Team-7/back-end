@@ -34,6 +34,8 @@ public static class PaymentsStartup
 
         services.AddScoped<ITourTokenService, TourTokenService>();
 
+        services.AddScoped<ITourSaleService, TourSaleService>();
+
         services.AddScoped<IWalletService, WalletService>();
 
         services.AddScoped<IRecordService, RecordService>();
@@ -52,6 +54,8 @@ public static class PaymentsStartup
 
         services.AddScoped(typeof(ICrudRepository<TourToken>), typeof(CrudDatabaseRepository<TourToken, PaymentsContext>));
 
+        services.AddScoped(typeof(ITourSaleRepository), typeof(TourSaleDatabaseRepository));
+
         services.AddScoped(typeof(ICrudRepository<Wallet>), typeof(CrudDatabaseRepository<Wallet, PaymentsContext>));
 
         services.AddScoped(typeof(ICrudRepository<Record>), typeof(CrudDatabaseRepository<Record, PaymentsContext>));
@@ -65,7 +69,6 @@ public static class PaymentsStartup
 
         services.AddScoped(typeof(ICouponRepository), typeof(CouponDatabaseRepository));
         services.AddScoped(typeof(ICrudRepository<Coupon>), typeof(CrudDatabaseRepository<Coupon, PaymentsContext>));
-
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),
