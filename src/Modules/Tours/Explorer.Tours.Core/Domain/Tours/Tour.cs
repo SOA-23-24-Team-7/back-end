@@ -1,5 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Explorer.Tours.Core.Domain.Tours;
@@ -19,11 +18,11 @@ public class Tour : Entity
     public ICollection<Equipment> EquipmentList { get; init; }
 
     [InverseProperty("Tour")]
-    public ICollection<KeyPoint> KeyPoints { get; } = new List<KeyPoint>();
-    public ICollection<TourDuration> Durations { get; } = new List<TourDuration>();
-    public ICollection<Review> Reviews { get; init; }
+    public ICollection<KeyPoint>? KeyPoints { get; } = new List<KeyPoint>();
+    public ICollection<TourDuration>? Durations { get; } = new List<TourDuration>();
+    public ICollection<Review>? Reviews { get; init; }
 
-    public Tour(long authorId, string name, string description, int difficulty, List<string> tags,DateTime? archiveDate = null ,DateTime? publishDate = null, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
+    public Tour(long authorId, string name, string description, List<string> tags, int difficulty = 1, DateTime? archiveDate = null, DateTime? publishDate = null, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
     {
         AuthorId = authorId;
         Name = name;
@@ -44,7 +43,7 @@ public class Tour : Entity
         if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name");
         if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description");
         if (Difficulty < 1 || Difficulty > 5) throw new ArgumentException("Invalid Difficulty");
-        if (Tags.Count == 0) throw new ArgumentNullException("Tags cannot be empty");
+        //if (Tags.Count == 0) throw new ArgumentNullException("Tags cannot be empty");
         if (Price < 0) throw new ArgumentException("Price cannot be negative");
     }
 
@@ -129,11 +128,25 @@ public class Tour : Entity
 
         return previous;
     }
+
+    // Dodala najlepsa devojka na svetu
+    public bool MarkAsReady(long authorId)
+    {
+        if (Status == TourStatus.Draft && AuthorId == authorId && KeyPoints.Count >= 2)
+        {
+            Status = TourStatus.Ready;
+
+            return true;
+        }
+
+        return false;
+    }
 }
 
 public enum TourStatus
 {
     Draft,
     Published,
-    Archived
+    Archived,
+    Ready
 }

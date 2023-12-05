@@ -18,17 +18,14 @@ namespace Explorer.API.Controllers.Tourist
             _tokenService = tokenService;
         }
 
-        [HttpPost("{tourId:int}")]
-        public ActionResult<TourTokenResponseDto> AddToken(int tourId)
+        [HttpPost("{tourId:long}/{touristId:long}/{totalPrice:long}/{orderItemPrice:long}")]
+        public ActionResult<TourTokenResponseDto> AddToken(long tourId, long touristId,long totalPrice, long orderItemPrice)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             TourTokenCreateDto dto = new TourTokenCreateDto();
             dto.TourId = tourId;
-            if (identity != null && identity.IsAuthenticated)
-            {
-                dto.TouristId = long.Parse(identity.FindFirst("id").Value);
-            }
-            var result = _tokenService.AddToken(dto);
+            dto.TouristId = touristId; 
+            var result = _tokenService.AddToken(dto, totalPrice, orderItemPrice);
             return CreateResponse(result);
         }
 
