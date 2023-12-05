@@ -70,7 +70,13 @@ namespace Explorer.Encounters.Core.UseCases
             var encounter = _hiddenLocationEncounterRepository.GetById(encounterId);
             if (encounter.isUserInCompletionRange(longitute, latitude))
                 return CompleteEncounter(userId, encounterId);
-            return Result.Fail("user not in 5m range");
+            return Result.Fail("User is not in 5m range");
+        }
+
+        public Result<PagedResult<EncounterResponseDto>> GetAllInRangeOf(double range, double longitude, double latitude, int page, int pageSize)
+        {
+            var entities = _encounterRepository.GetAllInRangeOf(range, longitude, latitude, page, pageSize);
+            return MapToDto<EncounterResponseDto>(entities);
         }
 
         public Result<TouristProgressResponseDto> CompleteEncounter(long userId, long encounterId)

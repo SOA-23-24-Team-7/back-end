@@ -16,5 +16,6 @@ namespace Explorer.Encounters.API.Public
         Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitute, double latitude);
         Result<TouristProgressResponseDto> CompleteEncounter(long userId, long encounterId);
         Result<TouristProgressResponseDto> CompleteHiddenLocationEncounter(long userId, long encounterId, double longitute, double latitude);
+        Result<PagedResult<EncounterResponseDto>> GetAllInRangeOf(double range, double longitude, double latitude, int page, int pageSize);
     }
 }
