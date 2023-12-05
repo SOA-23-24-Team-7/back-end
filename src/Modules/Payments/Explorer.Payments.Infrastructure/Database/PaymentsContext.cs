@@ -30,6 +30,8 @@ public class PaymentsContext : DbContext
 
         ConfigurePayments(modelBuilder);
         ConfigureBundles(modelBuilder);
+        ConfigureBundles(modelBuilder);
+        ConfigureShoppingCarts(modelBuilder);
     }
 
     private static void ConfigurePayments(ModelBuilder modelBuilder)
@@ -43,5 +45,14 @@ public class PaymentsContext : DbContext
              .WithOne()
              .HasForeignKey(bi => bi.BundleId)
              .IsRequired();
+    }
+
+    private static void ConfigureShoppingCarts(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ShoppingCart>()
+            .HasMany(sc => sc.BundleOrderItems)
+            .WithOne()
+            .HasForeignKey(boi => boi.ShoppingCartId)
+            .IsRequired();
     }
 }
