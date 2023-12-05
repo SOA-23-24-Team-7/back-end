@@ -4,9 +4,9 @@ using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Explorer.API.Controllers.Tourist
+namespace Explorer.API.Controllers
 {
-    [Authorize(Policy = "touristPolicy")]
+    [Authorize(Policy = "nonAdministratorPolicy")]
     [Route("api/tourist/tour")]
     public class TourSearchController : BaseApiController
     {
@@ -20,7 +20,21 @@ namespace Explorer.API.Controllers.Tourist
         [HttpGet]
         public ActionResult<PagedResult<TourResponseDto>> SearchByGeoLocation([FromQuery] double longitude, [FromQuery] double latitude, [FromQuery] double maxDistance, [FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _tourSearchService.Search(longitude, latitude, maxDistance, page, pageSize);
+            var result = _tourSearchService.SearchByLocation(longitude, latitude, maxDistance, page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("search")]
+        public ActionResult<PagedResult<TourResponseDto>> Search([FromQuery] TourSearchFilterDto tourSearchFilterDto)
+        {
+            var result = _tourSearchService.Search(tourSearchFilterDto, true);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("author-search")]
+        public ActionResult<PagedResult<TourResponseDto>> AuthorSearch([FromQuery] TourSearchFilterDto tourSearchFilterDto)
+        {
+            var result = _tourSearchService.Search(tourSearchFilterDto, false);
             return CreateResponse(result);
         }
     }

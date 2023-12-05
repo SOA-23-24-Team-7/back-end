@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Internal;
 using Explorer.Tours.API.Dtos;
@@ -19,8 +19,10 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly ITourExecutionSessionRepository _tourExecutionSessionRepository;
     private readonly IInternalProblemService _problemService;
     private readonly IReviewRepository _reviewRepository;
+    private readonly IKeyPointRepository _keyPointRepository;
+    private readonly ICrudRepository<PublicKeyPoint> _publicKeyPointRepository;
 
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository, IReviewRepository reviewRepository, IInternalProblemService problemService) : base(repository, mapper)
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository, IReviewRepository reviewRepository, IInternalProblemService problemService, IKeyPointRepository keyPointRepository, ICrudRepository<PublicKeyPoint> publicKeyPointRepository) : base(repository, mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -28,6 +30,8 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         _problemService = problemService;
         _reviewRepository = reviewRepository;
         _tourExecutionSessionRepository = tourExecutionSessionRepository;
+        _keyPointRepository = keyPointRepository;
+        _publicKeyPointRepository = publicKeyPointRepository;
     }
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
@@ -38,7 +42,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         var pagedResult = new PagedResult<Tour>(toursByAuthor, toursByAuthor.Count);
         return MapToDto<TourResponseDto>(pagedResult);
     }
-
+    
     public Result<PagedResult<EquipmentResponseDto>> GetEquipment(long tourId)
     {
         var equipment = _tourRepository.GetEquipment(tourId);
@@ -245,4 +249,77 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
         return tourResponseDtos;
     }
+
+    public Result<TourResponseDto> Get(long id)
+    {
+        var entity = _tourRepository.GetById(id);
+        var dto = MapToDto<TourResponseDto>(entity);
+        return dto;
+    }
+
+
+
+
+    public Result MarkAsReady(long id, long touristId)
+    {
+        try
+        {
+            var entity = _tourRepository.GetById(id);
+            if (entity.MarkAsReady(touristId))
+            {
+                _repository.Update(entity);
+                return Result.Ok();
+            }
+
+            return Result.Fail(FailureCode.InvalidArgument).WithError("Invalid argument provided.");
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+    }
+
+    //Dobavlja ture koje imaju sve kljucne tacke koje je korisnik uzeo
+    public Result<PagedResult<TourResponseDto>> GetToursBasedOnSelectedKeyPoints(int page, int pageSize, List<long> publicKeyPointIds, long authorId)
+    {
+        List<TourResponseDto> tourResponseDtos = new List<TourResponseDto>();
+        var allTours = _tourRepository.GetAll(page, pageSize).Results.ToList();
+        var publicKeyPoints = _publicKeyPointRepository.GetAll();
+        int publicKeyPointNumber = publicKeyPointIds.Count;
+        var wantedList = new List<KeyPoint>();
+
+        foreach(long id in publicKeyPointIds)
+        {
+            wantedList.Add(_keyPointRepository.Get(id));
+        }
+
+
+        foreach (var tour in allTours)
+        {
+            if(tour.AuthorId != authorId && tour.GetStatusName() == "published")
+            {
+                int counter = 0;
+                foreach (var publicKeyPoint in wantedList)
+                {
+                    foreach (var keyPoint in tour.KeyPoints)
+                    {
+                        if (publicKeyPoint.Name == keyPoint.Name && publicKeyPoint.Description == keyPoint.Description && publicKeyPoint.Longitude == keyPoint.Longitude && publicKeyPoint.Latitude == keyPoint.Latitude && publicKeyPoint.LocationAddress == keyPoint.LocationAddress && publicKeyPoint.ImagePath == keyPoint.ImagePath)
+                        {
+                            counter++;
+                        }
+                    }
+                }
+                if (counter == publicKeyPointNumber)
+                {
+                    TourResponseDto tourResponse = MapToDto<TourResponseDto>(tour);
+                    tourResponseDtos.Add(tourResponse);
+                }
+            }
+            
+        }
+        return new PagedResult<TourResponseDto>(tourResponseDtos, tourResponseDtos.Count);
+    }
+
+
 }
+

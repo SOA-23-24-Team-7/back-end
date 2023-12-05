@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist
 {
-    [Authorize(Policy = "touristPolicy")]
+    
     [Route("api/review")]
     public class ReviewController : BaseApiController
     {
@@ -19,13 +19,14 @@ namespace Explorer.API.Controllers.Tourist
             _reviewService = reviewService;
         }
 
+        [Authorize(Policy = "nonAdministratorPolicy")]
         [HttpGet("{tourId:int}")]
         public ActionResult<PagedResult<ReviewResponseDto>> GetAllByTourId([FromQuery] int page, [FromQuery] int pageSize, long tourId)
         {
             var result = _reviewService.GetPagedByTourId(page, pageSize, tourId);
             return CreateResponse(result);
         }
-
+        [Authorize(Policy = "nonAdministratorPolicy")]
         [HttpGet("{touristId:long}/{tourId:long}")]
         public ActionResult<Boolean> ReviewExists(long touristId, long tourId)
         {
@@ -33,6 +34,7 @@ namespace Explorer.API.Controllers.Tourist
             return result.Value;
         }
 
+        [Authorize(Policy = "touristPolicy")]
         [HttpPost]
         public ActionResult<ReviewResponseDto> Create([FromBody] ReviewCreateDto review)
         {
@@ -46,6 +48,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [Authorize(Policy = "touristPolicy")]
         [HttpPut("{id:int}")]
         public ActionResult<ReviewResponseDto> Update([FromBody] ReviewUpdateDto review)
         {
@@ -59,6 +62,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [Authorize(Policy = "touristPolicy")]
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
