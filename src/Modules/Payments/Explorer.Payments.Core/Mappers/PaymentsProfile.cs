@@ -38,6 +38,6 @@ public class PaymentsProfile : Profile
         CreateMap<CouponCreateDto, Coupon>().ReverseMap();
         CreateMap<CouponUpdateDto, Coupon>().ReverseMap();
 
-        CreateMap<BundleResponseDto, Bundle>().ReverseMap();
+        CreateMap<Bundle, BundleResponseDto>().ReverseMap();
     }
 }

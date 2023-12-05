@@ -1,32 +1,11 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Payments.Core.Domain.Bundles;
 
 public class Bundle : Entity
 {
-    public string Name
-    {
-        get {  return Name; }
-        set
-        {
-            if (value == "" && value == null) throw new ArgumentException("Invalid name.");
-            Name = value;
-        }
-    }
-    public long Price
-    {
-        get { return Price; }
-        set
-        {
-            if (value < 0) throw new ArgumentException("Invalid price.");
-            Price = value;
-        }
-    }
+    public string Name { get; private set; }
+    public long Price { get; private set; }
     public long AuthorId { get; init; }
     public BundleStatus Status { get; private set; }
     public List<BundleItem> BundleItems { get; init; }
@@ -38,8 +17,8 @@ public class Bundle : Entity
 
     public Bundle(string name, long price, long authorId, BundleStatus status) : this()
     {
-        Name = name;
-        Price = price;
+        Rename(name);
+        ChangePrice(price);
         AuthorId = authorId;
         Status = status;
     }
@@ -63,6 +42,18 @@ public class Bundle : Entity
     public void Archive()
     {
         if (Status == BundleStatus.Published) Status = BundleStatus.Archived;
+    }
+
+    public void Rename(string name)
+    {
+        if (name == "" || name == null) throw new ArgumentException("Invalid name.");
+        Name = name;
+    }
+
+    public void ChangePrice(long price)
+    {
+        if (price < 0) throw new ArgumentException("Invalid price.");
+        Price = price;
     }
 }
 

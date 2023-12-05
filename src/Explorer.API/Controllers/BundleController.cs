@@ -1,6 +1,7 @@
 ﻿using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Explorer.API.Controllers
 {
@@ -17,7 +18,13 @@ namespace Explorer.API.Controllers
         [HttpPost]
         public ActionResult<BundleResponseDto> Create([FromBody] BundleCreationDto dto)
         {
-            var result = _bundleService.Create(dto);
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _bundleService.Create(dto, userId);
             return CreateResponse(result);
         }
 

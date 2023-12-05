@@ -29,11 +29,11 @@ namespace Explorer.Payments.Core.UseCases
             _bundleRepository = bundleRepository;
         }
 
-        public Result<BundleResponseDto> Create(BundleCreationDto bundleDto)
+        public Result<BundleResponseDto> Create(BundleCreationDto bundleDto, long authorId)
         {
             try
             {
-                Bundle bundle = new Bundle(bundleDto.Name, bundleDto.Price, BundleStatus.Draft);
+                var bundle = new Bundle(bundleDto.Name, bundleDto.Price, authorId, BundleStatus.Draft);
 
                 List<BundleItem> bundleItems = new List<BundleItem>();
                 foreach (int tourId in bundleDto.TourIds)
