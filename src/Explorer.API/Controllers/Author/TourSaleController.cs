@@ -40,6 +40,12 @@ public class TourSaleController : BaseApiController
         return CreateResponse(result);
     }
 
+    [HttpPut]
+    public ActionResult<TourSaleResponseDto> Update([FromBody] TourSaleUpdateDto request)
+    {
+        throw new NotImplementedException();
+    }
+
     [HttpDelete("{id:long}")]
     public ActionResult Delete(long id)
     {

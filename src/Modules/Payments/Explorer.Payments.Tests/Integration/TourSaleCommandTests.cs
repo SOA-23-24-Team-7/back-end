@@ -3,11 +3,14 @@ using Explorer.API.Controllers.Tourist;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Infrastructure.Database;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.Infrastructure.Database;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System.Collections;
+using System.Security.Claims;
 
 namespace Explorer.Payments.Tests.Integration;
 
@@ -84,6 +87,66 @@ public class TourSaleCommandTests : BasePaymentsIntegrationTest
         // Assert
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(400);
+    }
+
+    public void Updates()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+
+        var userContext = new ClaimsIdentity(new Claim[] { new Claim("id", "-2") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(userContext)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+
+        var updatedEntity = new TourSaleUpdateDto
+        {
+            Id = -2,
+            Name = "Autumn sale",
+            StartDate = new DateOnly(2023, 12, 1),
+            EndDate = new DateOnly(2023, 12, 1),
+            DiscountPercentage = 0.33,
+            TourIds = new List<long> { -11, -12, -13 }
+        };
+
+        // Act
+        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TourSaleResponseDto;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.Id.ShouldNotBe(updatedEntity.Id);
+        result.AuthorId.ShouldBe(-2);
+        result.Name.ShouldBe(updatedEntity.Name);
+        result.StartDate.ShouldBe(updatedEntity.StartDate);
+        result.EndDate.ShouldBe(updatedEntity.EndDate);
+        result.DiscountPercentage.ShouldBe(updatedEntity.DiscountPercentage);
+        result.TourIds.ShouldBe(updatedEntity.TourIds);
+    }
+
+    [Fact]
+    public void Update_fails_invalid_id()
+    {
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var updatedEntity = new TourSaleUpdateDto
+        {
+            Id = -1000
+        };
+
+        // Act
+        var result = (ObjectResult)controller.Update(updatedEntity).Result;
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(404);
     }
 
     [Fact]
