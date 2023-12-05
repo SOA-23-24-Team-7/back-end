@@ -8,5 +8,6 @@ namespace Explorer.Payments.Core.Domain.RepositoryInterfaces
 {
     public interface ICouponRepository
     {
+        public Coupon FindByCode(string code);
     }
 }

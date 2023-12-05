@@ -4,6 +4,7 @@ using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
+using Explorer.Payments.Core.Domain.ShoppingCarts;
 using Explorer.Tours.API.Internal;
 using Explorer.Tours.Core.Domain.Tours; //GREH , kliknula sam -  add reference 
 using FluentResults;
@@ -30,7 +31,7 @@ namespace Explorer.Payments.Core.UseCases
             _shoppingNotificationRepository= shoppingNotificationRepository;
         }
 
-        public Result<TourTokenResponseDto> AddToken(TourTokenCreateDto token)
+        public Result<TourTokenResponseDto> AddToken(TourTokenCreateDto token, long totalPrice, long orderItemPrice)
         {
             //check if tour is archived
             try
@@ -38,7 +39,8 @@ namespace Explorer.Payments.Core.UseCases
                 var wallet = _walletService.GetForTourist(token.TouristId);
                 var shoppingCart = _shoppingCartRepository.GetByTouristId(token.TouristId);
                 var tour = _tourService.Get(token.TourId)?.Value;
-                if (wallet.Value.AdventureCoin >= shoppingCart.TotalPrice)
+                
+                if (wallet.Value.AdventureCoin >= totalPrice)
                 {
                     if (tour == null || (TourStatus)tour.Status == TourStatus.Archived) //OVDE JE PRE PISALO TOURS.DOMAIN
                     {
@@ -50,8 +52,10 @@ namespace Explorer.Payments.Core.UseCases
                         return Result.Fail(FailureCode.InvalidArgument).WithError("Tour already bought");
                     }
                     var newToken = _repository.Create(MapToDomain<TourTokenCreateDto>(token));
-                    var newRecord = CreateRecord(token.TouristId, token.TourId, tour.Price);
+                    var newRecord = CreateRecord(token.TouristId, token.TourId, orderItemPrice);
                     CreateNotfication(token.TouristId, token.TourId);
+                    wallet.Value.AdventureCoin -= orderItemPrice;    //tu je snizena cijena!
+                    _walletService.Update(new WalletUpdateDto(wallet.Value.Id,wallet.Value.AdventureCoin));
                     if (newRecord == null)
                     {
                         return Result.Fail(FailureCode.InvalidArgument).WithError("Error in creating record");

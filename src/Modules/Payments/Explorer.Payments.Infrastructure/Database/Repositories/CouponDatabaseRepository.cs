@@ -18,5 +18,11 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<Coupon>();
         }
+
+        public Coupon FindByCode(string code)
+        {
+           return _dbSet.Where(x => x.Code == code).FirstOrDefault();
+            
+        }
     }
 }

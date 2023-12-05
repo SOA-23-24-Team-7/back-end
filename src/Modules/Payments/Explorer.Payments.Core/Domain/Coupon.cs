@@ -42,5 +42,15 @@ namespace Explorer.Payments.Core.Domain
             return code.ToString();
 
         }
+
+        public bool IsValid()
+        {
+            return ExpirationDate >= DateTime.Now;
+        }
+
+        public bool IsForAllTours()
+        {
+            return AllFromAuthor;
+        }
     }
 }
