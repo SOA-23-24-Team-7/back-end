@@ -12,8 +12,8 @@ namespace Explorer.Payments.API.Public
     {
         Result<BundleResponseDto> Create(BundleCreationDto bundleDto, long authorId);
         Result<BundleResponseDto> Edit(long id, BundleEditDto bundleDto, long authorId);
-        Result<int> Publish(long id);
-        Result<int> Archive(long id);
-        Result<int> Delete(long id);
+        Result<BundleResponseDto> Publish(long id, long authorId);
+        Result<BundleResponseDto> Archive(long id, long authorId);
+        Result<BundleResponseDto> Delete(long id, long authorId);
     }
 }

@@ -62,7 +62,7 @@ namespace Explorer.Payments.Core.UseCases
             }
         }
 
-        public Result<int> Edit(long id, BundleEditDto bundleDto, long authorId)
+        public Result<BundleResponseDto> Edit(long id, BundleEditDto bundleDto, long authorId)
         {
             try
             {
@@ -99,19 +99,70 @@ namespace Explorer.Payments.Core.UseCases
             };
         }
 
-        public Result<int> Publish(long id)
+        public Result<BundleResponseDto> Publish(long id, long authorId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Expression<Func<Bundle, bool>> filter = b => b.Id == id && b.AuthorId == authorId &&
+                                                        (b.Status == BundleStatus.Draft || b.Status == BundleStatus.Archived);
+                Bundle bundle = _bundleRepository.Get(filter, include: "BundleItems");
+
+                bundle.Publish();
+
+                var publishedBundle = _bundleRepository.Update(bundle);
+
+                var responseDto = _mapper.Map<BundleResponseDto>(publishedBundle);
+
+                return responseDto;
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            };
         }
 
-        public Result<int> Archive(long id)
+        public Result<BundleResponseDto> Archive(long id, long authorId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Expression<Func<Bundle, bool>> filter = b => b.Id == id && b.AuthorId == authorId &&
+                                                        b.Status == BundleStatus.Published;
+                Bundle bundle = _bundleRepository.Get(filter, include: "BundleItems");
+
+                bundle.Archive();
+
+                var archivedBundle = _bundleRepository.Update(bundle);
+
+                var responseDto = _mapper.Map<BundleResponseDto>(archivedBundle);
+
+                return responseDto;
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            };
         }
-        
-        public Result<int> Delete(long id)
+
+        public Result<BundleResponseDto> Delete(long id, long authorId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Expression<Func<Bundle, bool>> filter = b => b.Id == id && b.AuthorId == authorId &&
+                                                        (b.Status == BundleStatus.Draft || b.Status == BundleStatus.Archived);
+                Bundle bundle = _bundleRepository.Get(filter, include: "BundleItems");
+
+                bundle.Delete();
+
+                var deletedBundle = _bundleRepository.Update(bundle);
+
+                var responseDto = _mapper.Map<BundleResponseDto>(deletedBundle);
+
+                return responseDto;
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            };
         }
     }
 }

@@ -42,33 +42,42 @@ namespace Explorer.API.Controllers
         }
 
         [HttpPatch("publish/{id:long}")]
-        public ActionResult<string> Publish(long id)
+        public ActionResult<BundleResponseDto> Publish(long id)
         {
-            return null;
-        }
-
-        [HttpPatch("delete/{id:long}")]
-        public ActionResult<string> Delete(long id)
-        {
-            return null;
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _bundleService.Publish(id, userId);
+            return CreateResponse(result);
         }
 
         [HttpPatch("archive/{id:long}")]
-        public ActionResult<string> Archive(long id)
+        public ActionResult<BundleResponseDto> Archive(long id)
         {
-            return null;
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _bundleService.Archive(id, userId);
+            return CreateResponse(result);
         }
 
-        [HttpPatch("add-items/{id:long}")]
-        public ActionResult<string> AddItems(long id, [FromBody] string tourIds)
+        [HttpDelete("{id:long}")]
+        public ActionResult<BundleResponseDto> Delete(long id)
         {
-            return null;
-        }
-
-        [HttpPatch("remove-items/{id:long}")]
-        public ActionResult<string> RemoveItems(long id, [FromBody] string tourIds)
-        {
-            return null;
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _bundleService.Delete(id, userId);
+            return CreateResponse(result);
         }
     }
 }
