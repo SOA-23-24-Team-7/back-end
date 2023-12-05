@@ -27,7 +27,11 @@ namespace Explorer.Tours.Core.UseCases
 
         public Result<TourExecutionSessionResponseDto> StartTour(long tourId, bool isCampaign, long touristId)
         {
-            long keyPointId = _keyPointRepository.GetByTourId(tourId)[0].Id;
+            long keyPointId;
+            if (isCampaign)
+                keyPointId = _campaignRepository.GetById(tourId).KeyPointIds[0];
+            else
+                keyPointId = _keyPointRepository.GetByTourId(tourId)[0].Id;
             TourExecutionSession tourExecution = new TourExecutionSession(tourId, touristId, keyPointId, isCampaign);
             _tourExecutionRepository.Add(tourExecution);
             return MapToDto<TourExecutionSessionResponseDto>(tourExecution);
