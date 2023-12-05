@@ -13,4 +13,6 @@ public interface IKeyPointRepository
     KeyPoint Get(long id);
     KeyPoint GetFirstByTourId(long tourId);
     PagedResult<KeyPoint> GetPaged(int page, int pageSize);
+
+    List<KeyPoint> GetAll();
 }

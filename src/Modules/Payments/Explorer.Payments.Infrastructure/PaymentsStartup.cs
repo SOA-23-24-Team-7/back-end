@@ -8,6 +8,8 @@ using Explorer.Payments.Core.Mappers;
 using Explorer.Payments.Core.UseCases;
 using Explorer.Payments.Infrastructure.Database;
 using Explorer.Payments.Infrastructure.Database.Repositories;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.UseCases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,6 +35,15 @@ public static class PaymentsStartup
         services.AddScoped<ITourTokenService, TourTokenService>();
 
         services.AddScoped<ITourSaleService, TourSaleService>();
+
+        services.AddScoped<IWalletService, WalletService>();
+
+        services.AddScoped<IRecordService, RecordService>();
+        services.AddScoped<ITransactionRecordService, TransactionRecordService>();
+
+        services.AddScoped<IShoppingNotificationService, ShoppingNotificationService>();
+
+        services.AddScoped<ICouponService, CouponService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -45,6 +56,20 @@ public static class PaymentsStartup
 
         services.AddScoped(typeof(ICrudRepository<TourSale>), typeof(CrudDatabaseRepository<TourSale, PaymentsContext>));
         services.AddScoped(typeof(ITourSaleRepository), typeof(TourSaleDatabaseRepository));
+
+        services.AddScoped(typeof(ICrudRepository<Wallet>), typeof(CrudDatabaseRepository<Wallet, PaymentsContext>));
+
+        services.AddScoped(typeof(ICrudRepository<Record>), typeof(CrudDatabaseRepository<Record, PaymentsContext>));
+        services.AddScoped(typeof(ICrudRepository<TransactionRecord>), typeof(CrudDatabaseRepository<TransactionRecord, PaymentsContext>));
+
+        services.AddScoped(typeof(ICrudRepository<ShoppingNotification>), typeof(CrudDatabaseRepository<ShoppingNotification, PaymentsContext>));
+
+        services.AddScoped(typeof(IShoppingNotificationRepository), typeof(ShoppingNotificationDatabaseRepository));
+        services.AddScoped(typeof(IRecordRepository), typeof(RecordDatabaseRepository));
+        services.AddScoped(typeof(ITransactionRecordRepository), typeof(TransactionRecordDatabaseRepository));
+
+        services.AddScoped(typeof(ICouponRepository), typeof(CouponDatabaseRepository));
+        services.AddScoped(typeof(ICrudRepository<Coupon>), typeof(CrudDatabaseRepository<Coupon, PaymentsContext>));
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),
