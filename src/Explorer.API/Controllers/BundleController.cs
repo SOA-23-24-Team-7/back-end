@@ -1,10 +1,12 @@
 ﻿using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Explorer.API.Controllers
 {
+    [Authorize(Policy = "authorPolicy")]
     [Route("api/bundles")]
     public class BundleController : BaseApiController
     {
