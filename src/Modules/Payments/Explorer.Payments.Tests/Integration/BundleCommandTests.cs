@@ -123,6 +123,50 @@ namespace Explorer.Payments.Tests.Integration
             storedEntity.Status.ToString().ShouldBe(result.Status);
         }
 
+        [Fact]
+        public void Edit_fails_invalid_data()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var addedEntity = new BundleEditDto
+            {
+                Name = "test bundle 2",
+                Price = 450,
+                TourIds = new List<long>() { 8, 9 }
+            };
+            var bundleId = -10;
+
+            // Act
+            var result = (ObjectResult)controller.Edit(bundleId, addedEntity).Result;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(404);
+        }
+
+        [Fact]
+        public void Edit_fails_invalid_id()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var addedEntity = new BundleEditDto
+            {
+                Name = "test bundle 2",
+                Price = 450,
+                TourIds = new List<long>() { 8, 9 }
+            };
+            var bundleId = -569;
+
+            // Act
+            var result = (ObjectResult)controller.Edit(bundleId, addedEntity).Result;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(404);
+        }
+
         [Theory]
         [InlineData(-11, -12)]
         public void Publishes(long bundleId, long authorId)
