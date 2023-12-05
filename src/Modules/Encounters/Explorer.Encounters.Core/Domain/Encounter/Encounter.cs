@@ -1,6 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 
-namespace Explorer.Encounter.Core.Domain
+namespace Explorer.Encounters.Core.Domain.Encounter
 {
     public class Encounter : Entity
     {

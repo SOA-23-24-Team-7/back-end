@@ -11,6 +11,7 @@ namespace Explorer.Encounters.API.Public
         Result<PagedResult<EncounterResponseDto>> GetPaged(int page, int pageSize);
         Result<PagedResult<EncounterResponseDto>> GetActive(int page, int pageSize);
         Result<EncounterResponseDto> Get(long id);
+        Result<MiscEncounterResponseDto> CreateMiscEncounter(MiscEncounterCreateDto encounter);
         Result Delete(long id);
     }
 }

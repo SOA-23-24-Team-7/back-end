@@ -64,5 +64,13 @@ namespace Explorer.API.Controllers.Administrator
             var result = _encounterService.Delete(id);
             return CreateResponse(result);
         }
+
+        [HttpPost("createMisc")]
+        public ActionResult<MiscEncounterResponseDto> Create([FromBody] MiscEncounterCreateDto encounter)
+        {
+            var result = _encounterService.CreateMiscEncounter(encounter);
+            return CreateResponse(result);
+        }
+
     }
 }

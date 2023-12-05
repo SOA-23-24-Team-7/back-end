@@ -1,6 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Encounters.API.Public;
+using Explorer.Encounters.Core.Domain.Encounter;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
 using Explorer.Encounters.Core.Mappers;
 using Explorer.Encounters.Core.UseCases;
@@ -27,7 +28,7 @@ public static class EncountersStartup
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
-        services.AddScoped(typeof(ICrudRepository<Encounter.Core.Domain.Encounter>), typeof(CrudDatabaseRepository<Encounter.Core.Domain.Encounter, EncountersContext>));
+        services.AddScoped(typeof(ICrudRepository<Encounter>), typeof(CrudDatabaseRepository<Encounter, EncountersContext>));
         services.AddScoped<IEncounterRepository, EncounterDatabaseRepository>();
         services.AddDbContext<EncountersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("encounters"),
