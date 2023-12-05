@@ -7,6 +7,7 @@ using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.API.Internal;
 using Explorer.Tours.Core.Domain.Tours; //GREH , kliknula sam -  add reference 
 using FluentResults;
+using System.Diagnostics;
 
 namespace Explorer.Payments.Core.UseCases
 {
@@ -18,8 +19,10 @@ namespace Explorer.Payments.Core.UseCases
         private readonly IWalletService _walletService;
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private IInternalTourService _tourService;
+        private readonly IBundleRepository _bundleRepository;
+        private readonly IBundleRecordRepository _bundleRecordRepository;
         IMapper _mapper;
-        public TourTokenService(ICrudRepository<TourToken> repository, IMapper mapper, ICrudRepository<Record> recordRepository, IWalletService walletService,IShoppingCartRepository shoppingCartRepository, IInternalTourService tourService, ICrudRepository<ShoppingNotification> shoppingNotificationRepository) : base(repository, mapper)
+        public TourTokenService(ICrudRepository<TourToken> repository, IMapper mapper, ICrudRepository<Record> recordRepository, IWalletService walletService,IShoppingCartRepository shoppingCartRepository, IInternalTourService tourService, ICrudRepository<ShoppingNotification> shoppingNotificationRepository, IBundleRepository bundleRepository, IBundleRecordRepository bundleRecordRepository) : base(repository, mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -27,7 +30,9 @@ namespace Explorer.Payments.Core.UseCases
             _walletService = walletService;
             _shoppingCartRepository = shoppingCartRepository;
             _tourService = tourService;
-            _shoppingNotificationRepository= shoppingNotificationRepository;
+            _shoppingNotificationRepository = shoppingNotificationRepository;
+            _bundleRepository = bundleRepository;
+            _bundleRecordRepository = bundleRecordRepository;
         }
 
         public Result<TourTokenResponseDto> AddToken(TourTokenCreateDto token)
@@ -94,6 +99,43 @@ namespace Explorer.Payments.Core.UseCases
             if(tour!=null)
                 description = "Tour " + tour.Name + " is successfully added to your tours collection.";
             _shoppingNotificationRepository.Create(new ShoppingNotification(description,touristId, tourId));
+        }
+
+        public Result AddTokensByBundle(long touristId, long bundleId)
+        {
+            try
+            {
+                var wallet = _walletService.GetForTourist(touristId);
+                var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
+                var bundle = _bundleRepository.Get(b => b.Id == bundleId, include: "BundleItems");
+                if (wallet.Value.AdventureCoin >= shoppingCart.TotalPrice)
+                {
+                    foreach(var bundleItem in bundle.BundleItems)
+                    {
+                        var tour = _tourService.Get(bundleItem.TourId)?.Value;
+                        if (tour == null || (TourStatus)tour.Status == TourStatus.Archived)
+                        {
+                            return Result.Fail(FailureCode.InvalidArgument);
+                        }
+
+                        var token = _repository.Create(MapToDomain<TourTokenCreateDto>(new TourTokenCreateDto { TourId = tour.Id, TouristId = touristId }));
+                        CreateNotfication(token.TouristId, token.TourId);
+                    }
+
+                    _bundleRecordRepository.Create(new BundleRecord(touristId, bundle.Id, bundle.Price));
+                    return Result.Ok();
+                }
+                else
+                {
+                    return Result.Fail(FailureCode.InvalidArgument).WithError("You don't have enough coins.");
+                }
+
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+
         }
     }
 }

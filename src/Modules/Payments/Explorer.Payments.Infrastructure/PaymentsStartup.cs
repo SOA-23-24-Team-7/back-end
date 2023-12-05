@@ -69,6 +69,7 @@ public static class PaymentsStartup
         services.AddScoped(typeof(ICrudRepository<Coupon>), typeof(CrudDatabaseRepository<Coupon, PaymentsContext>));
 
         services.AddScoped(typeof(IBundleRepository), typeof(BundleDatabaseRepository));
+        services.AddScoped(typeof(IBundleRecordRepository), typeof(BundleRecordDatabaseRepository));
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),
