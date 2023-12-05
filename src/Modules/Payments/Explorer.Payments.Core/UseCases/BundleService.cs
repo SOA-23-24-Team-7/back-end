@@ -29,7 +29,7 @@ namespace Explorer.Payments.Core.UseCases
             _bundleRepository = bundleRepository;
         }
 
-        public Result<int> Create(BundleCreationDto bundleDto)
+        public Result<BundleResponseDto> Create(BundleCreationDto bundleDto)
         {
             try
             {
@@ -44,8 +44,11 @@ namespace Explorer.Payments.Core.UseCases
                     bundle.AddBundleItem(tourId);
                 }
 
-                _bundleRepository.Create(bundle);
-                return 1;
+                var createdBundle = _bundleRepository.Create(bundle);
+
+                var responseDto = _mapper.Map<BundleResponseDto>(createdBundle);
+
+                return responseDto;
             }
             catch (ArgumentException e)
             {

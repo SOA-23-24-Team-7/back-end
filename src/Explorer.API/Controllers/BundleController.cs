@@ -1,4 +1,5 @@
 ﻿using Explorer.Payments.API.Dtos;
+using Explorer.Payments.API.Public;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers
@@ -6,15 +7,18 @@ namespace Explorer.API.Controllers
     [Route("api/bundles")]
     public class BundleController : BaseApiController
     {
-        public BundleController()
+        private readonly IBundleService _bundleService;
+
+        public BundleController(IBundleService bundleService)
         {
-            
+            _bundleService = bundleService;
         }
 
         [HttpPost]
-        public ActionResult<string> Create([FromBody] BundleCreationDto dto)
+        public ActionResult<BundleResponseDto> Create([FromBody] BundleCreationDto dto)
         {
-            return null;
+            var result = _bundleService.Create(dto);
+            return CreateResponse(result);
         }
 
         [HttpPatch("publish/{id:long}")]

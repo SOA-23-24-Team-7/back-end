@@ -10,7 +10,7 @@ namespace Explorer.Payments.API.Public
 {
     public interface IBundleService
     {
-        Result<int> Create(BundleCreationDto bundleDto);
+        Result<BundleResponseDto> Create(BundleCreationDto bundleDto);
         Result<int> Edit(BundleCreationDto bundleDto);
         Result<int> Publish(long id);
         Result<int> Archive(long id);
