@@ -95,21 +95,10 @@ public class TourSaleCommandTests : BasePaymentsIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
 
-        var userContext = new ClaimsIdentity(new Claim[] { new Claim("id", "-2") }, "test");
-
-        var context = new DefaultHttpContext()
-        {
-            User = new ClaimsPrincipal(userContext)
-        };
-
-        controller.ControllerContext = new ControllerContext
-        {
-            HttpContext = context
-        };
-
         var updatedEntity = new TourSaleUpdateDto
         {
             Id = -2,
+            AuthorId = -2,
             Name = "Autumn sale",
             StartDate = new DateOnly(2023, 12, 1),
             EndDate = new DateOnly(2023, 12, 1),
@@ -137,21 +126,15 @@ public class TourSaleCommandTests : BasePaymentsIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
 
-        var userContext = new ClaimsIdentity(new Claim[] { new Claim("id", "-2") }, "test");
-
-        var context = new DefaultHttpContext()
-        {
-            User = new ClaimsPrincipal(userContext)
-        };
-
-        controller.ControllerContext = new ControllerContext
-        {
-            HttpContext = context
-        };
-
         var updatedEntity = new TourSaleUpdateDto
         {
-            Id = -1000
+            Id = -1000,
+            AuthorId = -1,
+            Name = "Autumn sale",
+            StartDate = new DateOnly(2023, 12, 1),
+            EndDate = new DateOnly(2023, 12, 1),
+            DiscountPercentage = 0.33,
+            TourIds = new List<long> { -11, -12, -13 }
         };
 
         // Act

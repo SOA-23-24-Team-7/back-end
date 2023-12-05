@@ -43,7 +43,7 @@ public class TourSaleController : BaseApiController
     [HttpPut]
     public ActionResult<TourSaleResponseDto> Update([FromBody] TourSaleUpdateDto request)
     {
-        var result = _saleService.Update(request, 0);
+        var result = _saleService.Update(request);
         return CreateResponse(result);
     }
 
