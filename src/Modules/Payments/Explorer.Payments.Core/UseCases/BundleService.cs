@@ -62,7 +62,7 @@ namespace Explorer.Payments.Core.UseCases
             }
         }
 
-        public Result<int> Edit(long id, BundleEditDto bundleDto, long authorId)
+        public Result<BundleResponseDto> Edit(long id, BundleEditDto bundleDto, long authorId)
         {
             try
             {
