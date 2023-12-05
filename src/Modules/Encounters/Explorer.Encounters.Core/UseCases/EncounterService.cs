@@ -17,7 +17,7 @@ namespace Explorer.Encounters.Core.UseCases
         private readonly ICrudRepository<TouristProgress> _touristProgressCrudRepository;
         private readonly IInternalUserService _internalUserService;
         private readonly IMapper _mapper;
-        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, ISocialEncounterRepository socialEncounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper) : base(repository, mapper)
+        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper) : base(repository, mapper)
         {
             _encounterRepository = encounterRepository;
             _touristProgressRepository = touristProgressRepository;
@@ -50,9 +50,9 @@ namespace Explorer.Encounters.Core.UseCases
                 CrudRepository.Update(encounter);
                 return MapToDto<EncounterResponseDto>(encounter);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Result.Fail(FailureCode.InvalidArgument);
+                return Result.Fail(e.Message);
             }
         }
 
@@ -75,6 +75,20 @@ namespace Explorer.Encounters.Core.UseCases
             catch (Exception)
             {
                 return Result.Fail(FailureCode.InvalidArgument);
+            }
+        }
+
+        public Result<SocialEncounterResponseDto> CreateSocialEncounter(SocialEncounterCreateDto encounterDto)
+        {
+            try
+            {
+                var encounter = new SocialEncounter(encounterDto.Title, encounterDto.Description, encounterDto.Longitude, encounterDto.Latitude, encounterDto.Radius, encounterDto.XpReward, (Domain.Encounter.EncounterStatus)encounterDto.Status, encounterDto.PeopleNumber);
+                CrudRepository.Create(encounter);
+                return MapToDto<SocialEncounterResponseDto>(encounter);
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(e.Message);
             }
         }
     }

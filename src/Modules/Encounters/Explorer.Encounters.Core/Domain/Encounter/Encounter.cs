@@ -13,12 +13,13 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public EncounterStatus Status { get; private set; }
         public List<EncounterInstance> Instances { get; } = new List<EncounterInstance>();
         public Encounter() { }
-        public Encounter(string title, string description, double longitude, double latitude, int xpReward, EncounterStatus status)
+        public Encounter(string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status)
         {
             Title = title;
             Description = description;
             Longitude = longitude;
             Latitude = latitude;
+            Radius = radius;
             XpReward = xpReward;
             Status = status;
             Validate();
