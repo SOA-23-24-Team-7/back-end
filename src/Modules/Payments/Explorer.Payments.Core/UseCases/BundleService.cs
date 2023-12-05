@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Payments.Core.Domain.Bundles;
+using Explorer.BuildingBlocks.Core.Domain;
+using System.Linq.Expressions;
 
 namespace Explorer.Payments.Core.UseCases
 {
@@ -60,9 +62,41 @@ namespace Explorer.Payments.Core.UseCases
             }
         }
 
-        public Result<int> Edit(BundleCreationDto bundleDto)
+        public Result<int> Edit(long id, BundleEditDto bundleDto, long authorId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Expression<Func<Bundle, bool>> filter = b => b.Id == id && b.AuthorId == authorId &&
+                                                        (b.Status == BundleStatus.Draft || b.Status == BundleStatus.Archived);
+                Bundle bundle = _bundleRepository.Get(filter, include: "BundleItems");
+
+                bundle.Rename(bundleDto.Name);
+                bundle.ChangePrice(bundleDto.Price);
+
+                bundle.BundleItems.Clear();
+                List<BundleItem> bundleItems = new List<BundleItem>();
+                foreach (int tourId in bundleDto.TourIds)
+                {
+                    var tour = _tourService.Get(tourId).Value;
+                    if (tour.Status != Tours.API.Dtos.TourStatus.Published)
+                        throw new KeyNotFoundException();
+                    bundle.AddBundleItem(tourId);
+                }
+
+                var editedBundle = _bundleRepository.Update(bundle);
+
+                var responseDto = _mapper.Map<BundleResponseDto>(editedBundle);
+
+                return responseDto;
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            };
         }
 
         public Result<int> Publish(long id)

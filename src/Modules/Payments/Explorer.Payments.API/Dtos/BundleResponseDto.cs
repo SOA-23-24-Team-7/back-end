@@ -2,7 +2,7 @@
 
 public class BundleResponseDto
 {
-    public long Id;
+    public long Id { get; set; }
     public string Name { get; set; }
     public long AuthorId { get; set; }
     public string Status { get; set; }

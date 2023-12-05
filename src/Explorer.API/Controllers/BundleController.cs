@@ -28,6 +28,19 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
+        [HttpPut("{id:long}")]
+        public ActionResult<BundleResponseDto> Edit(long id, [FromBody] BundleEditDto dto)
+        {
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _bundleService.Edit(id, dto, userId);
+            return CreateResponse(result);
+        }
+
         [HttpPatch("publish/{id:long}")]
         public ActionResult<string> Publish(long id)
         {
