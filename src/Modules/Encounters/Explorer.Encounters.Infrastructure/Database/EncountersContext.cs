@@ -1,11 +1,14 @@
-﻿using Explorer.Encounters.Core.Domain.Encounter;
+﻿using Explorer.Encounters.Core.Domain;
+using Explorer.Encounters.Core.Domain.Encounter;
 using Microsoft.EntityFrameworkCore;
 namespace Explorer.Encounters.Infrastructure.Database;
 
 public class EncountersContext : DbContext
 {
     public DbSet<Encounter> Encounters { get; set; }
+    public DbSet<TouristProgress> TouristProgress { get; set; }
     public DbSet<MiscEncounter> MiscEncounters { get; set; }
+
 
     public EncountersContext(DbContextOptions<EncountersContext> options) : base(options)
     {
@@ -20,8 +23,7 @@ public class EncountersContext : DbContext
 
     private static void ConfigureEncounters(ModelBuilder modelBuilder)
     {
-
+        modelBuilder.Entity<Encounter>().Property(item => item.Instances).HasColumnType("jsonb");
         modelBuilder.Entity<Encounter>().ToTable("Encounters").UseTptMappingStrategy();
-
     }
 }

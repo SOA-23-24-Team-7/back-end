@@ -5,15 +5,16 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Encounters.API.Dtos;
 using Explorer.Encounters.API.Public;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Dtos.TouristPosition;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Explorer.API.Controllers.Administrator
+namespace Explorer.API.Controllers.Tourist
 {
-    [Authorize(Policy = "administratorPolicy")]
-    [Route("api/administrator/encounter")]
+    [Authorize(Policy = "touristPolicy")]
+    [Route("api/tourist/encounter")]
     public class EncounterController : BaseApiController
     {
         private readonly IEncounterService _encounterService;
@@ -22,18 +23,27 @@ namespace Explorer.API.Controllers.Administrator
             _encounterService = encounterService;
         }
 
-        [HttpPost]
-        public ActionResult<EncounterResponseDto> Create([FromBody] EncounterCreateDto encounter)
+        [HttpPost("{id:long}/activate")]
+        public ActionResult<EncounterResponseDto> Activate([FromBody] TouristPositionCreateDto position, long id)
         {
-            var result = _encounterService.Create(encounter);
+            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _encounterService.ActivateEncounter(userId, id, position.Longitude, position.Latitude);
             return CreateResponse(result);
         }
 
-        [HttpPut("{id:long}")]
-        public ActionResult<EncounterResponseDto> Update([FromBody] EncounterUpdateDto encounter, long id)
+        [HttpPost("{id:long}/complete")]
+        public ActionResult<EncounterResponseDto> Activate(long id)
         {
-            encounter.Id = id;
-            var result = _encounterService.Update(encounter);
+            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _encounterService.CompleteEncounter(userId, id);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("{id:long}/cancel")]
+        public ActionResult<EncounterResponseDto> Cancel(long id)
+        {
+            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _encounterService.CancelEncounter(userId, id);
             return CreateResponse(result);
         }
 
@@ -58,14 +68,6 @@ namespace Explorer.API.Controllers.Administrator
             return CreateResponse(result);
         }
 
-        [HttpDelete("{id:long}")]
-        public ActionResult Delete(long id)
-        {
-            var result = _encounterService.Delete(id);
-            return CreateResponse(result);
-        }
-
         
-
     }
 }

@@ -9,11 +9,11 @@ public class EncountersProfile : Profile
 {
     public EncountersProfile()
     {
-        CreateMap<EncounterCreateDto,Encounter>().ReverseMap();
-        CreateMap<EncounterUpdateDto,Encounter>().ReverseMap();
-        CreateMap<EncounterResponseDto,Encounter>().ReverseMap();
-        CreateMap<EncounterCreateDto, EncounterResponseDto>().ReverseMap();
-        CreateMap<EncounterUpdateDto, EncounterResponseDto>().ReverseMap();
+        CreateMap<EncounterCreateDto, Encounter>().ReverseMap();
+        CreateMap<EncounterUpdateDto, Encounter>().ReverseMap();
+        CreateMap<EncounterResponseDto, Encounter>().ReverseMap();
+        CreateMap<EncounterInstanceResponseDto, EncounterInstance>().ReverseMap();
+        CreateMap<TouristProgressResponseDto, TouristProgress>().ReverseMap();
         CreateMap<MiscEncounterResponseDto, MiscEncounter>().ReverseMap();
     }
 }
