@@ -123,6 +123,41 @@ namespace Explorer.Payments.Tests.Integration
             storedEntity.Status.ToString().ShouldBe(result.Status);
         }
 
+        [Theory]
+        [InlineData(-10, -11)]
+        public void Publishes(long bundleId, long authorId)
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
+            var claims = new[] { new Claim("id", authorId.ToString()) };
+            var identity = new ClaimsIdentity(claims, "autor1");
+            var user = new ClaimsPrincipal(identity);
+            var context = new DefaultHttpContext { User = user };
+            controller.ControllerContext = new ControllerContext { HttpContext = context };
+
+            // Act
+            var result = ((ObjectResult)controller.Publish(bundleId).Result)?.Value as BundleResponseDto;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBe(0);
+            result.Name.ShouldBe("Bundle1");
+            result.Price.ShouldBe(25);
+            result.AuthorId.ShouldBe(authorId);
+            result.Status.ShouldBe("Published");
+
+            // Assert - Database
+            var storedEntity = dbContext.Bundles.FirstOrDefault(b => b.Id == result.Id);
+            storedEntity.ShouldNotBeNull();
+            storedEntity.Id.ShouldBe(result.Id);
+            storedEntity.Price.ShouldBe(result.Price);
+            storedEntity.Name.ShouldBe(result.Name);
+            storedEntity.AuthorId.ShouldBe(result.AuthorId);
+            storedEntity.Status.ToString().ShouldBe(result.Status);
+        }
+
         private static BundleController CreateController(IServiceScope scope)
         {
             return new BundleController(scope.ServiceProvider.GetRequiredService<IBundleService>())
