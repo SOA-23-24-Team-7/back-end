@@ -19,7 +19,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         }
         public Campaign GetById(long Id)
         {
-            return _dbContext.Campaigns.Include(c => c.KeyPoints).Include(c => c.Equipments).FirstOrDefault(c => c.Id == Id);
+            return _dbContext.Campaigns.FirstOrDefault(c => c.Id == Id);
         }
         public void Delete(long id)
         {
@@ -28,14 +28,17 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public List<Campaign> GetByTouristId(long touristId)
         {
-            return _dbContext.Campaigns.Include(c => c.Equipments)
-                .Where(c => c.TouristId == touristId).ToList();
+            return _dbContext.Campaigns.Where(c => c.TouristId == touristId).ToList();
         }
-
         public void Save(Campaign campaign)
         {
             _dbContext.Campaigns.Add(campaign);
             _dbContext.SaveChanges();
+        }
+
+        public Equipment GetEquipment(long id)
+        {
+            return _dbContext.Equipment.FirstOrDefault(e => e.Id == id);
         }
     }
 }

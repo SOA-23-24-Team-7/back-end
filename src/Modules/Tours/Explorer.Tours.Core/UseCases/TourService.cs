@@ -180,7 +180,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     {
         var tourExecutions = _tourExecutionSessionRepository.GetAll(te => te.TourId == tourId &&
                                                                    (te.Status == Domain.TourExecutionSessionStatus.Completed || te.Status == Domain.TourExecutionSessionStatus.Abandoned) &&
-                                                                    te.TouristId == userId && te.Progress >= 35 && (te.LastActivity > DateTime.UtcNow.AddDays(-7)));
+                                                                    te.TouristId == userId && te.Progress >= 35 && (te.LastActivity > DateTime.UtcNow.AddDays(-7)) && !te.IsCampaign);
         return tourExecutions.Any();
     }
     public Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize)

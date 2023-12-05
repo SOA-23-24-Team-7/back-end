@@ -17,9 +17,11 @@ namespace Explorer.Tours.Core.Domain
         public double Distance { get; private set; }
         public double AverageDifficulty { get; private set; }
         public List<long> TourIds { get; init; } = new List<long>();
-        public List<long> EquipmentIds { get; init; } = new List<long>();
+        public List<long> EquipmentIds { get; private set; } = new List<long>();
         public List<long> KeyPointIds { get; init; } = new List<long>();
-        public ICollection<Equipment> Equipments { get; init; } = new List<Equipment>();
+        [NotMapped]
+        public ICollection<Equipment> Equipments { get; private set; } = new List<Equipment>();
+        [NotMapped]
         public ICollection<KeyPoint> KeyPoints { get; init; } = new List<KeyPoint>();
 
         public Campaign() { }
@@ -56,6 +58,8 @@ namespace Explorer.Tours.Core.Domain
                     EquipmentIds.Add(equipment.Id);
                     Equipments.Add(equipment);
                 }
+            EquipmentIds = EquipmentIds.Distinct().ToList();
+            Equipments = Equipments.Distinct().ToList();
         }
     }
 }

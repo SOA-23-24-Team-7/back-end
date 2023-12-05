@@ -50,6 +50,10 @@ namespace Explorer.Tours.Core.UseCases
                 {
                     campaign.KeyPoints.Add(_keyPointRepository.Get(keyPointId));
                 }
+                foreach (long equipmentId in campaign.EquipmentIds)
+                {
+                    campaign.Equipments.Add(_campaignRepository.GetEquipment(equipmentId));
+                }
             }
             return MapToDto<CampaignResponseDto>(campaigns);
         }
