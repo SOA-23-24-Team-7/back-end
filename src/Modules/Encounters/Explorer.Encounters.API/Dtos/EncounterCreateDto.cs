@@ -9,6 +9,9 @@
         public double Radius { get; set; }
         public int XpReward { get; set; }
         public EncounterStatus Status { get; set; }
+        public EncounterType Type { get; set; }
     }
     public enum EncounterStatus { Active, Draft, Archived };
+    public enum EncounterType { Social, Hidden, Misc, KeyPoint };
+
 }

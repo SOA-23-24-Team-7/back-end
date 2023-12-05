@@ -32,6 +32,17 @@ namespace Explorer.Encounters.Infrastructure.Database.Repositories
             return task.Result;
         }
 
+        public PagedResult<Encounter> GetAllInRangeOf(double range, double longitude, double latitude, int page, int pageSize)
+        {
+            var allEncounters = _dbSet.ToList();
+            var filteredEncounters = allEncounters.Where(x => x.IsInRangeOf(range, longitude, latitude)).ToList();
+            var filteredIds = filteredEncounters.Select(e => e.Id).ToList();
+            var task = _dbSet.Where(e => filteredIds.Contains(e.Id)).GetPaged(page, pageSize);
+            task.Wait();
+
+            return task.Result;
+        }
+
         public Encounter GetById(long id)
         {
             var entity = _dbSet.First(x => x.Id == id);

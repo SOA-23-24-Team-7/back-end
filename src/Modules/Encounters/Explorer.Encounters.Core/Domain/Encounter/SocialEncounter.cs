@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Explorer.Encounters.Core.Domain.Encounter;
+﻿namespace Explorer.Encounters.Core.Domain.Encounter;
 
 public class SocialEncounter : Encounter
 {
     public int PeopleNumber { get; init; }
     public SocialEncounter() { }
-    public SocialEncounter(string title, string description, double longitude, double latitude, double radius, int xp, EncounterStatus status, int peopleNumber) : base(title, description, longitude, latitude, radius, xp, status)
+    public SocialEncounter(string title, string description, double longitude, double latitude, double radius, int xp, EncounterStatus status, int peopleNumber, EncounterType encounterType) : base(title, description, longitude, latitude, radius, xp, status, encounterType)
     {
         PeopleNumber = peopleNumber;
         Validate();

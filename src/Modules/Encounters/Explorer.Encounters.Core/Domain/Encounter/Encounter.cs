@@ -11,9 +11,10 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public double Radius { get; init; }
         public int XpReward { get; init; }
         public EncounterStatus Status { get; private set; }
+        public EncounterType Type { get; init; }
         public List<EncounterInstance> Instances { get; } = new List<EncounterInstance>();
         public Encounter() { }
-        public Encounter(string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status)
+        public Encounter(string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, EncounterType type)
         {
             Title = title;
             Description = description;
@@ -21,7 +22,9 @@ namespace Explorer.Encounters.Core.Domain.Encounter
             Latitude = latitude;
             Radius = radius;
             XpReward = xpReward;
+            Radius = radius;
             Status = status;
+            Type = type;
             Validate();
         }
         private void Validate()
@@ -41,6 +44,17 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public void Publish()
         {
             Status = EncounterStatus.Active;
+        }
+
+        public void CancelEncounter(long userId)
+        {
+            if (hasUserActivatedEncounter(userId))
+            {
+                var instance = Instances.Find(x => x.UserId == userId);
+                if (instance!.Status == EncounterInstanceStatus.Completed) throw new ArgumentException("User has already completed this encounter.");
+                Instances.Remove(instance);
+            }
+            throw new ArgumentException("User has not activated this encounter.");
         }
 
         public void ActivateEncounter(long userId, double userLongitude, double userLatitude)
@@ -107,7 +121,31 @@ namespace Explorer.Encounters.Core.Domain.Encounter
 
             return (distance < Radius);
         }
+        public bool IsInRangeOf(double range, double userLongitute, double userLatitude)
+        {
+            if (userLongitute < -180 || userLongitute > 180) throw new ArgumentException("Invalid Longitude");
+            if (userLatitude < -90 || userLatitude > 90) throw new ArgumentException("Invalid Latitude");
+
+            const double earthRadius = 6371000;
+            double latitude1 = Latitude * Math.PI / 180;
+            double longitude1 = Longitude * Math.PI / 180;
+            double latitude2 = userLatitude * Math.PI / 180;
+            double longitude2 = userLongitute * Math.PI / 180;
+
+            double latitudeDistance = latitude2 - latitude1;
+            double longitudeDistance = longitude2 - longitude1;
+
+            double a = Math.Sin(latitudeDistance / 2) * Math.Sin(latitudeDistance / 2) +
+                       Math.Cos(latitude1) * Math.Cos(latitude2) *
+                       Math.Sin(longitudeDistance / 2) * Math.Sin(longitudeDistance / 2);
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            double distance = earthRadius * c;
+
+            return distance < range;
+        }
+
     }
     public enum EncounterStatus { Active, Draft, Archived };
+    public enum EncounterType { Social, Hidden, Misc, KeyPoint };
 
 }

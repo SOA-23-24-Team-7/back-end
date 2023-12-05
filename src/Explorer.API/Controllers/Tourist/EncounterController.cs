@@ -1,15 +1,9 @@
-﻿using Explorer.Blog.API.Dtos;
-using Explorer.Blog.API.Public;
-using Explorer.Blog.Core.UseCases;
-using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Encounters.API.Dtos;
 using Explorer.Encounters.API.Public;
-using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristPosition;
-using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -39,6 +33,14 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("{id:long}/cancel")]
+        public ActionResult<EncounterResponseDto> Cancel(long id)
+        {
+            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _encounterService.CancelEncounter(userId, id);
+            return CreateResponse(result);
+        }
+
         [HttpGet("{id:long}")]
         public ActionResult<EncounterResponseDto> Get(long id)
         {
@@ -50,6 +52,13 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<PagedResult<EncounterResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _encounterService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpPost("in-range-of")]
+        public ActionResult<PagedResult<EncounterResponseDto>> GetAllInRangeOf([FromBody] UserPositionWithRangeDto position, [FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _encounterService.GetAllInRangeOf(position.Range, position.Longitude, position.Latitude, page, pageSize);
             return CreateResponse(result);
         }
 
