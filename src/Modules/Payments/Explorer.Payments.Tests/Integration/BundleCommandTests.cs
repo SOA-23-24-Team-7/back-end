@@ -282,7 +282,7 @@ namespace Explorer.Payments.Tests.Integration
         }
 
         [Theory]
-        [InlineData(-16, -11)]
+        [InlineData(-18, -11)]
         public void Deletes(long bundleId, long authorId)
         {
             // Arrange
@@ -301,7 +301,7 @@ namespace Explorer.Payments.Tests.Integration
             // Assert - Response
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);
-            result.Name.ShouldBe("Bundle7");
+            result.Name.ShouldBe("Bundle9");
             result.Price.ShouldBe(25);
             result.AuthorId.ShouldBe(authorId);
             result.Status.ShouldBe("Deleted");
@@ -317,7 +317,7 @@ namespace Explorer.Payments.Tests.Integration
         }
 
         [Theory]
-        [InlineData(-11, -12)]
+        [InlineData(-19, -12)]
         public void Deletes_invalid_data(long bundleId, long authorId)
         {
             // Arrange
