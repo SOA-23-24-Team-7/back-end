@@ -16,7 +16,7 @@ public class EncounterController : BaseApiController
     }
 
     [HttpPost]
-    public ActionResult Create(KeyPointEncounterCreateDto keyPointEncounter)
+    public ActionResult CreateKeyPointEncounter(KeyPointEncounterCreateDto keyPointEncounter)
     {
         long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
         var result = _encounterService.CreateKeyPointEncounter(keyPointEncounter, userId);

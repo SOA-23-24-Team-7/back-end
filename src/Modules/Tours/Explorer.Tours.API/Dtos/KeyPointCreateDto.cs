@@ -11,5 +11,7 @@
         public string ImagePath { get; set; }
         public long Order { get; set; }
         public KeyPointSecretDto? Secret { get; set; }
+        public bool IsEncounterRequired { get; set; }
+        public bool HasEncounter { get; set; }
     }
 }

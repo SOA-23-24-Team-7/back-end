@@ -95,7 +95,7 @@ namespace Explorer.Encounters.Core.UseCases
                 var longitude = _keypointService.GetKeyPointLongitude(keyPointEncounter.KeyPointId);
                 var latitude = _keypointService.GetKeyPointLatitude(keyPointEncounter.KeyPointId);
 
-                CrudRepository.Create(new KeyPointEncounter(keyPointEncounter.Title, keyPointEncounter.Description, longitude, latitude, keyPointEncounter.XpReward, EncounterStatus.Active, keyPointEncounter.KeyPointId));
+                CrudRepository.Create(new KeyPointEncounter(keyPointEncounter.Title, keyPointEncounter.Description, longitude, latitude, keyPointEncounter.Radius, keyPointEncounter.XpReward, EncounterStatus.Active, keyPointEncounter.KeyPointId));
 
                 _keypointService.AddEncounter(keyPointEncounter.KeyPointId, keyPointEncounter.IsRequired);
 
