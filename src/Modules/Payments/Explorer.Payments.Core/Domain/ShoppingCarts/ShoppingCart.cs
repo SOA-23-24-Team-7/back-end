@@ -9,6 +9,7 @@ public class ShoppingCart : Entity
     public bool IsPurchased { get; init; }
 
     public ICollection<OrderItem> OrderItems { get; } = new List<OrderItem>();
+    public ICollection<BundleOrderItem> BundleOrderItems { get; } = new List<BundleOrderItem>();
 
 
     public ShoppingCart(long touristId, bool isPurchased)
