@@ -13,13 +13,14 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public EncounterStatus Status { get; private set; }
         public EncounterType Type { get; init; }
         public List<EncounterInstance> Instances { get; } = new List<EncounterInstance>();
-
+        public Encounter() { }
         public Encounter(string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, EncounterType type)
         {
             Title = title;
             Description = description;
             Longitude = longitude;
             Latitude = latitude;
+            Radius = radius;
             XpReward = xpReward;
             Radius = radius;
             Status = status;
@@ -118,7 +119,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             double distance = earthRadius * c;
 
-            return distance < Radius;
+            return (distance < Radius);
         }
         public bool IsInRangeOf(double range, double userLongitute, double userLatitude)
         {

@@ -32,6 +32,7 @@ public static class EncountersStartup
     {
         services.AddScoped(typeof(ICrudRepository<Encounter>), typeof(CrudDatabaseRepository<Encounter, EncountersContext>));
         services.AddScoped(typeof(ICrudRepository<TouristProgress>), typeof(CrudDatabaseRepository<TouristProgress, EncountersContext>));
+        services.AddScoped(typeof(ICrudRepository<SocialEncounter>), typeof(CrudDatabaseRepository<SocialEncounter, EncountersContext>));
         services.AddScoped<IEncounterRepository, EncounterDatabaseRepository>();
         services.AddScoped<IHiddenLocationEncounterRepository, HiddenLocationEncounterDatabaseRepository>();
         services.AddScoped<ITouristProgressRepository, TouristProgressDatabaseRepository>();

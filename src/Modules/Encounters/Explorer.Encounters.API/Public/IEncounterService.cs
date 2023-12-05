@@ -7,6 +7,7 @@ namespace Explorer.Encounters.API.Public
     public interface IEncounterService
     {
         Result<EncounterResponseDto> Create<EncounterCreateDto>(EncounterCreateDto encounter);
+        Result<SocialEncounterResponseDto> CreateSocialEncounter(SocialEncounterCreateDto encounter);
         Result<HiddenLocationEncounterResponseDto> CreateHiddenLocationEncounter(HiddenLocationEncounterCreateDto encounter);
         Result<EncounterResponseDto> Update<EncounterUpdateDto>(EncounterUpdateDto encounter);
         Result<PagedResult<EncounterResponseDto>> GetPaged(int page, int pageSize);
