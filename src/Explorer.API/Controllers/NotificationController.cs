@@ -1,4 +1,5 @@
-﻿using Explorer.Stakeholders.API.Public;
+﻿using Explorer.Payments.API.Public;
+using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,12 @@ namespace Explorer.API.Controllers;
 public class NotificationController : BaseApiController
 {
     private readonly IProblemResolvingNotificationService notificationService;
+    private readonly IShoppingNotificationService shoppingNotificationService;
 
-    public NotificationController(IProblemResolvingNotificationService notificationService)
+    public NotificationController(IProblemResolvingNotificationService notificationService, IShoppingNotificationService shoppingNotificationService)
     {
         this.notificationService = notificationService;
+        this.shoppingNotificationService = shoppingNotificationService;
     }
 
     [HttpGet("count")]

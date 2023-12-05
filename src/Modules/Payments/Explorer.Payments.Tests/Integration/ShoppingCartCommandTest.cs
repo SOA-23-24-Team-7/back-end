@@ -132,6 +132,47 @@ namespace Explorer.Payments.Tests.Integration
             shoppingCart.ShouldNotBeNull();
             shoppingCart.TotalPrice.ShouldBe(0);
         }
+
+
+        [Fact]
+        public void ApplyCoupon()
+        {
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
+            var couponRequset = new ApplyCouponRequestDto
+            {
+               CouponCode = "hohohoho",
+                ShoppingCartId = -3,
+            };
+
+            var result = ((ObjectResult)controller.ApplyCouponDiscount(couponRequset).Result)?.Value as ShoppingCartResponseDto;
+
+            result.ShouldNotBeNull();
+            result.TotalPrice.ShouldBe(17.9);
+
+        }
+
+        [Fact]
+        public void ApplyCoupon_Fails_Invalid_Coupon_Code()
+        {
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
+            var couponRequset = new ApplyCouponRequestDto
+            {
+                CouponCode = "htuttyhb",
+                ShoppingCartId = -3,
+            };
+
+            var result = ((ObjectResult)controller.ApplyCouponDiscount(couponRequset).Result);
+
+
+
+            // Assert - Response
+            result.StatusCode.ShouldBe(400);
+
+        }
         private static ShoppingCartController CreateController(IServiceScope scope)
         {
             return new ShoppingCartController(scope.ServiceProvider.GetRequiredService<IShoppingCartService>())

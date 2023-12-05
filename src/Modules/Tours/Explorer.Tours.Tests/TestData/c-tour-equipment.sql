@@ -12,4 +12,4 @@
 	VALUES (-1, -2);
 	INSERT INTO tours."TourEquipment"(
 	"EquipmentListId", "ToursId")
-	VALUES (-1, -3);
+	VALUES (-1, -10);

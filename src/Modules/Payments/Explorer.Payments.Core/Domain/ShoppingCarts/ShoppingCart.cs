@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Tours.API.Dtos;
 
 namespace Explorer.Payments.Core.Domain.ShoppingCarts;
 
@@ -48,5 +49,17 @@ public class ShoppingCart : Entity
             }
         }
     }
+
+    public OrderItem ApplyCouponDiscount(double couponDiscount, long tourId, double originalPrice)
+    {
+        //
+        OrderItem or = OrderItems.Where(x => x.TourId == tourId).FirstOrDefault();
+        if(or == null || or.Price <= (originalPrice - originalPrice*couponDiscount/100.0)) { return null; }
+        or.ApplyDiscount(couponDiscount);
+        SetTotalPrice();
+        return or;
+    }
+
+  
 
 }

@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Tests;
 using Explorer.Payments.Infrastructure.Database;
+using Explorer.Tours.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -21,6 +22,10 @@ public class PaymentsTestFactory : BaseTestFactory<PaymentsContext>
         descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<PaymentsContext>));
         services.Remove(descriptor!);
         services.AddDbContext<PaymentsContext>(SetupTestContext());
+
+        var descriptorTours = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ToursContext>));
+        services.Remove(descriptorTours!);
+        services.AddDbContext<ToursContext>(SetupTestContext());
 
         return services;
     }
