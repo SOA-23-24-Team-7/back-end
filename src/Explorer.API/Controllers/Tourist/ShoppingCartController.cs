@@ -84,6 +84,12 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
 
         }
- 
+
+        [HttpPost("apply-coupon")]
+        public ActionResult<ShoppingCartResponseDto> ApplyCouponDiscount([FromBody] ApplyCouponRequestDto couponRequestDto) 
+        {
+           var result = _cartService.ApplyCoupon(couponRequestDto);
+            return CreateResponse(result);
+        }
     }
 }
