@@ -37,7 +37,7 @@ INSERT INTO stakeholders."People" ("Id", "UserId", "Name", "Surname", "Email", "
 INSERT INTO payments."Wallets"(
 	"Id", "TouristId", "AdventureCoin")
 	VALUES
-		(-1, -3, 100),
+		(-1, -3, 10000),
 		(-2, -168, 200),
 		(-3, -169, 500),
 		(-4, -170, 400),
