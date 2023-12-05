@@ -1,27 +1,12 @@
 ﻿INSERT INTO payments."BundleItems"(
 	"Id", "BundleId", "TourId")
-	VALUES (-10, -12, -8);
-INSERT INTO payments."BundleItems"(
-	"Id", "BundleId", "TourId")
-	VALUES (-10, 12, -7);
-INSERT INTO payments."BundleItems"(
-	"Id", "BundleId", "TourId")
-	VALUES (-11, -13, -8);
-INSERT INTO payments."BundleItems"(
-	"Id", "BundleId", "TourId")
-	VALUES (-11, -13, -7);
-INSERT INTO payments."BundleItems"(
-	"Id", "BundleId", "TourId")
-	VALUES (-12, -14, -8);
-INSERT INTO payments."BundleItems"(
-	"Id", "BundleId", "TourId")
-	VALUES (-12, -14, -7);
-INSERT INTO payments."BundleItems"(
-	"Id", "BundleId", "TourId")
-	VALUES (-13, -15, -8);
-INSERT INTO payments."BundleItems"(
-	"Id", "BundleId", "TourId")
-	VALUES (-13, -15, -7);
-INSERT INTO payments."BundleItems"(
-	"Id", "BundleId", "TourId")
-	VALUES (-14, -16, -8);
+	VALUES
+		(-10, -12, -8),
+		(-11, -12, -7),
+		(-12, -13, -8),
+		(-13, -13, -7),
+		(-14, -14, -8),
+		(-15, -14, -7),
+		(-16, -15, -8),
+		(-17, -15, -7),
+		(-18, -16, -8);
