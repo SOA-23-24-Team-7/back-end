@@ -14,9 +14,12 @@ public class Bundle : Entity
     public BundleStatus Status { get; private set; }
     public List<BundleItem> BundleItems { get; init; }
 
-    public Bundle() { }
+    public Bundle()
+    {
+        BundleItems = new List<BundleItem>();
+    }
 
-    public Bundle(string name, int price, BundleStatus status, List<BundleItem> bundleItems)
+    public Bundle(string name, int price, BundleStatus status) : this()
     {
         if (price < 0) throw new ArgumentException("Invalid price.");
         if (name  == null || name == "") throw new ArgumentException("Invalid name.");
@@ -24,7 +27,12 @@ public class Bundle : Entity
         Name = name;
         Price = price;
         Status = status;
-        BundleItems = bundleItems;
+    }
+
+    public void AddBundleItem(int tourId)
+    {
+        var bundleItem = new BundleItem(Id, tourId);
+        BundleItems.Add(bundleItem);
     }
 
     public void Publish()
