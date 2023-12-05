@@ -10,7 +10,7 @@ namespace Explorer.Payments.Core.Domain.Bundles;
 public class Bundle : Entity
 {
     public string Name { get; init; }
-    public int Price { get; init; }
+    public long Price { get; init; }
     public BundleStatus Status { get; private set; }
     public List<BundleItem> BundleItems { get; init; }
 
@@ -19,7 +19,7 @@ public class Bundle : Entity
         BundleItems = new List<BundleItem>();
     }
 
-    public Bundle(string name, int price, BundleStatus status) : this()
+    public Bundle(string name, long price, BundleStatus status) : this()
     {
         if (price < 0) throw new ArgumentException("Invalid price.");
         if (name  == null || name == "") throw new ArgumentException("Invalid name.");

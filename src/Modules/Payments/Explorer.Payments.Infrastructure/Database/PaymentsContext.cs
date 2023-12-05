@@ -1,7 +1,6 @@
 ﻿using Explorer.Payments.Core.Domain;
+using Explorer.Payments.Core.Domain.Bundles;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
-using Explorer.Tours.Core.Domain;
-using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Payments.Infrastructure.Database;
@@ -20,6 +19,8 @@ public class PaymentsContext : DbContext
 
     public DbSet<ShoppingNotification> ShoppingNotifications { get; set; }
     public DbSet<Coupon> Coupons { get; set; }
+    public DbSet<Bundle> Bundles { get; set; }
+    public DbSet<BundleItem> BundleItems { get; set; }
 
     public PaymentsContext(DbContextOptions<PaymentsContext> options) : base(options) { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,12 +28,19 @@ public class PaymentsContext : DbContext
         modelBuilder.HasDefaultSchema("payments");
 
         ConfigurePayments(modelBuilder);
+        ConfigureBundles(modelBuilder);
     }
 
     private static void ConfigurePayments(ModelBuilder modelBuilder)
     {
-       
     }
 
-    
+    private static void ConfigureBundles(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Bundle>()
+             .HasMany(b => b.BundleItems)
+             .WithOne()
+             .HasForeignKey(bi => bi.BundleId)
+             .IsRequired();
+    }
 }

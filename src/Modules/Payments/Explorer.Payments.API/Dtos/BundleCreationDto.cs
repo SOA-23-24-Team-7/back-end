@@ -9,7 +9,7 @@ namespace Explorer.Payments.API.Dtos
     public class BundleCreationDto
     {
         public string Name { get; set; }
-        public double Price { get; set; }
+        public long Price { get; set; }
         public List<long> TourIds { get; set; }
     }
 }
