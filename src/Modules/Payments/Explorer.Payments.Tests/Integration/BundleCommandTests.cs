@@ -124,7 +124,7 @@ namespace Explorer.Payments.Tests.Integration
         }
 
         [Theory]
-        [InlineData(-10, -11)]
+        [InlineData(-11, -12)]
         public void Publishes(long bundleId, long authorId)
         {
             // Arrange
@@ -143,7 +143,7 @@ namespace Explorer.Payments.Tests.Integration
             // Assert - Response
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);
-            result.Name.ShouldBe("Bundle1");
+            result.Name.ShouldBe("Bundle2");
             result.Price.ShouldBe(25);
             result.AuthorId.ShouldBe(authorId);
             result.Status.ShouldBe("Published");
