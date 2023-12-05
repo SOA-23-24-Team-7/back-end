@@ -33,6 +33,14 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("{id:long}/cancel")]
+        public ActionResult<EncounterResponseDto> Cancel(long id)
+        {
+            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _encounterService.CancelEncounter(userId, id);
+            return CreateResponse(result);
+        }
+
         [HttpGet("{id:long}")]
         public ActionResult<EncounterResponseDto> Get(long id)
         {
