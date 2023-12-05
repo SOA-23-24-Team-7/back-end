@@ -36,7 +36,8 @@ public class TourSaleController : BaseApiController
     [HttpGet("{id:long}")]
     public ActionResult<TourSaleResponseDto> GetById(long id)
     {
-        throw new NotImplementedException();
+        var result = _saleService.GetById(id);
+        return CreateResponse(result);
     }
 
     [HttpDelete("{id:long}")]

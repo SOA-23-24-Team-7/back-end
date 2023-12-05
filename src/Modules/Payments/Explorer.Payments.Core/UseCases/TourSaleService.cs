@@ -50,6 +50,19 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
         return MapToDto<TourSaleResponseDto>(result);
     }
 
+    public Result<TourSaleResponseDto> GetById(long id)
+    {
+        try
+        {
+            var result = _crudRepository.Get(id);
+            return MapToDto<TourSaleResponseDto>(result);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+    }
+
     public Result Delete(long id)
     {
         try
