@@ -10,5 +10,10 @@ namespace Explorer.Payments.API.Dtos
     {
         public long Id { get; set; }
         public long AdventureCoin { get; set; }
+
+        public WalletUpdateDto(long id,long adventureCoin) {
+            Id = id;
+            AdventureCoin = adventureCoin;
+        }
     }
 }

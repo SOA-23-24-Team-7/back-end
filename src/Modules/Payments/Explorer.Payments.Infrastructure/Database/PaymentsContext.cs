@@ -12,6 +12,7 @@ public class PaymentsContext : DbContext
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<BundleOrderItem> BundleOrderItems { get; set; }
+    public DbSet<TourSale> TourSales { get; set; }
 
     public DbSet<Wallet> Wallets { get; set; }
 
@@ -28,6 +29,10 @@ public class PaymentsContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("payments");
+
+        modelBuilder.Entity<TourSale>()
+            .Property(s => s.TourIds)
+            .HasColumnType("jsonb");
 
         ConfigurePayments(modelBuilder);
         ConfigureBundles(modelBuilder);

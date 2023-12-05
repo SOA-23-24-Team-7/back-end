@@ -21,6 +21,10 @@ public class PaymentsProfile : Profile
         CreateMap<TourTokenResponseDto, TourToken>().ReverseMap();
         CreateMap<TourTokenCreateDto, TourToken>().ReverseMap();
 
+        CreateMap<TourSale, TourSaleResponseDto>();
+        CreateMap<TourSaleCreateDto, TourSale>();
+        CreateMap<TourSaleUpdateDto, TourSale>();
+
         CreateMap<WalletResponseDto, Wallet>().ReverseMap();
         CreateMap<WalletUpdateDto, Wallet>().ReverseMap();
         CreateMap<WalletCreateDto, Wallet>().ReverseMap();

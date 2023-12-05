@@ -15,4 +15,5 @@ public interface IShoppingCartService
     Result RemoveOrderItem(long id, long shoppingCartId);
     Result RemoveBundleOrderItem(long id, long userId);
     Result<OrderItemResponseDto> GetItemByTourId(long tourId, long touristId);
+    public Result<ShoppingCartResponseDto> ApplyCoupon(ApplyCouponRequestDto applyCouponRequestDto);
 }
