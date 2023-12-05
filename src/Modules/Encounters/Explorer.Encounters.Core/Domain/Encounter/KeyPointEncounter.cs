@@ -8,4 +8,9 @@ public class KeyPointEncounter : Encounter
     {
         KeyPointId = keyPointId;
     }
+
+    public override void CompleteEncounter(long userId)
+    {
+        base.CompleteEncounter(userId);
+    }
 }
