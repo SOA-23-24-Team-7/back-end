@@ -54,7 +54,6 @@ public static class PaymentsStartup
 
         services.AddScoped(typeof(ICrudRepository<TourToken>), typeof(CrudDatabaseRepository<TourToken, PaymentsContext>));
 
-        services.AddScoped(typeof(ICrudRepository<TourSale>), typeof(CrudDatabaseRepository<TourSale, PaymentsContext>));
         services.AddScoped(typeof(ITourSaleRepository), typeof(TourSaleDatabaseRepository));
 
         services.AddScoped(typeof(ICrudRepository<Wallet>), typeof(CrudDatabaseRepository<Wallet, PaymentsContext>));

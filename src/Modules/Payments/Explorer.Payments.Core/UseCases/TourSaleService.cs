@@ -11,7 +11,6 @@ namespace Explorer.Payments.Core.UseCases;
 
 public class TourSaleService : BaseService<TourSale>, ITourSaleService
 {
-    private readonly ICrudRepository<TourSale> _crudRepository;
     private readonly ITourSaleRepository _saleRepository;
 
     private Action<TourSale> CheckIfTourIsAlreadyOnSale(TourSale sale)
@@ -19,9 +18,8 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
         return s => { if (s.Id != sale.Id && sale.EndDate >= s.StartDate && sale.StartDate <= s.EndDate && sale.TourIds.Any(t => s.TourIds.Contains(t))) throw new InvalidOperationException("At least one of the tours is already on sale."); };
     }
 
-    public TourSaleService(ICrudRepository<TourSale> crudRepository, IMapper mapper, ITourSaleRepository saleRepository) : base(mapper)
+    public TourSaleService(IMapper mapper, ITourSaleRepository saleRepository) : base(mapper)
     {
-        _crudRepository = crudRepository;
         _saleRepository = saleRepository;
     }
 
@@ -30,9 +28,9 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
         try
         {
             var saleDomain = MapToDomain(sale);
-            List<TourSale> tourSales = _crudRepository.GetAll();
+            List<TourSale> tourSales = _saleRepository.GetAll();
             tourSales.ForEach(CheckIfTourIsAlreadyOnSale(saleDomain));
-            var result = _crudRepository.Create(saleDomain);
+            var result = _saleRepository.Create(saleDomain);
             return MapToDto<TourSaleResponseDto>(result);
         }
         catch (ArgumentException e)
@@ -55,7 +53,7 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
     {
         try
         {
-            var result = _crudRepository.Get(id);
+            var result = _saleRepository.Get(id);
             return MapToDto<TourSaleResponseDto>(result);
         }
         catch (KeyNotFoundException e)
@@ -64,24 +62,23 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
         }
     }
 
-    public Result<TourSaleResponseDto> Update(TourSaleUpdateDto sale, long authorId)
+    public Result<TourSaleResponseDto> Update(TourSaleUpdateDto sale)
     {
         try
         {
-            TourSale foundSale = _crudRepository.Get(sale.Id);
-
-            if (foundSale.AuthorId != sale.AuthorId)
-            {
-                throw new InvalidOperationException("An author can only update their own sale.");
-            }
-
             var saleDomain = MapToDomain(sale);
 
-            List<TourSale> tourSales = _crudRepository.GetAll();
+            List<TourSale> tourSales = _saleRepository.GetAll();
             tourSales.ForEach(CheckIfTourIsAlreadyOnSale(saleDomain));
 
-            var result = _crudRepository.Update(saleDomain);
-            return MapToDto<TourSaleResponseDto>(result);
+            var oldSale = tourSales.Find(s => s.Id == sale.Id);
+
+            if (oldSale == null)
+            {
+                throw new KeyNotFoundException("Tour sale with this id does not exist.");
+            }
+            _saleRepository.Update(oldSale, saleDomain);
+            return MapToDto<TourSaleResponseDto>(saleDomain);
         }
         catch (KeyNotFoundException e)
         {
@@ -101,7 +98,7 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
     {
         try
         {
-            _crudRepository.Delete(id);
+            _saleRepository.Delete(id);
             return Result.Ok();
         }
         catch (KeyNotFoundException e)
