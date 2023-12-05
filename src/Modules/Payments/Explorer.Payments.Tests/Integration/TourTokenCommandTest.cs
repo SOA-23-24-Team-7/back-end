@@ -36,7 +36,7 @@ namespace Explorer.Payments.Tests.Integration
             };
 
             // Act
-            var helperResult = ((ObjectResult)controller.AddToken(newEntity.TourId, newEntity.TouristId,0).Result);
+            var helperResult = ((ObjectResult)controller.AddToken(newEntity.TourId, newEntity.TouristId,0,0).Result);
             var result = helperResult?.Value as TourTokenResponseDto;
             
 

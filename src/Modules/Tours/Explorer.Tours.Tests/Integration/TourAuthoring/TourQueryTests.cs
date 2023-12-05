@@ -25,8 +25,8 @@ public class TourQueryTests : BaseToursIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(12);
-        result.TotalCount.ShouldBe(12);
+        result.Results.Count.ShouldBe(14);
+        result.TotalCount.ShouldBe(14);
     }
 
     [Fact]
