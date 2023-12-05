@@ -4,4 +4,5 @@ DELETE FROM payments."tourTokens";
 DELETE FROM payments."TourSales";
 DELETE FROM payments."Wallets";
 DELETE FROM payments."Coupons";
+DELETE FROM payments."BundleItems";
 DELETE FROM payments."Bundles";

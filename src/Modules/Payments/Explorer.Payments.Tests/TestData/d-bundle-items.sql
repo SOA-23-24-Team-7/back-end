@@ -1,27 +1,27 @@
-﻿INSERT INTO payments.BundleItems(
+﻿INSERT INTO payments."BundleItems"(
 	"Id", "BundleId", "TourId")
 	VALUES (-10, -12, -8);
-INSERT INTO payments.BundleItems(
+INSERT INTO payments."BundleItems"(
 	"Id", "BundleId", "TourId")
 	VALUES (-10, 12, -7);
-INSERT INTO payments.BundleItems(
+INSERT INTO payments."BundleItems"(
 	"Id", "BundleId", "TourId")
-	VALUES (-10, -13, -8);
-INSERT INTO payments.BundleItems(
+	VALUES (-11, -13, -8);
+INSERT INTO payments."BundleItems"(
 	"Id", "BundleId", "TourId")
-	VALUES (-10, -13, -7);
-INSERT INTO payments.BundleItems(
+	VALUES (-11, -13, -7);
+INSERT INTO payments."BundleItems"(
 	"Id", "BundleId", "TourId")
-	VALUES (-10, -14, -8);
-INSERT INTO payments.BundleItems(
+	VALUES (-12, -14, -8);
+INSERT INTO payments."BundleItems"(
 	"Id", "BundleId", "TourId")
-	VALUES (-10, -14, -7);
-INSERT INTO payments.BundleItems(
+	VALUES (-12, -14, -7);
+INSERT INTO payments."BundleItems"(
 	"Id", "BundleId", "TourId")
-	VALUES (-10, -15, -8);
-INSERT INTO payments.BundleItems(
+	VALUES (-13, -15, -8);
+INSERT INTO payments."BundleItems"(
 	"Id", "BundleId", "TourId")
-	VALUES (-10, -15, -7);
-INSERT INTO payments.BundleItems(
+	VALUES (-13, -15, -7);
+INSERT INTO payments."BundleItems"(
 	"Id", "BundleId", "TourId")
-	VALUES (-10, -16, -8);
+	VALUES (-14, -16, -8);
