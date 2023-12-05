@@ -1,6 +1,6 @@
 ﻿namespace Explorer.Tours.API.Dtos;
 
-public class TourTouristSearchFilterDto
+public class TourSearchFilterDto
 {
     public string? Name { get; set; }
     public double? MinPrice { get; set; }
