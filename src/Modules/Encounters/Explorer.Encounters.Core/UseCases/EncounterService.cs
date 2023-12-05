@@ -79,5 +79,21 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
+        public Result<EncounterResponseDto> CancelEncounter(long userId, long encounterId)
+        {
+            try
+            {
+                var encounter = _encounterRepository.GetById(encounterId);
+                encounter.CancelEncounter(userId);
+                CrudRepository.Update(encounter);
+                return MapToDto<EncounterResponseDto>(encounter);
+            }
+            catch (Exception)
+            {
+
+                return Result.Fail(FailureCode.InvalidArgument);
+            }
+        }
+
     }
 }

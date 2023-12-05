@@ -11,6 +11,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public double Radius { get; init; }
         public int XpReward { get; init; }
         public EncounterStatus Status { get; private set; }
+        public EncounterType Type { get; init; }
         public List<EncounterInstance> Instances { get; } = new List<EncounterInstance>();
 
         public Encounter(string title, string description, double longitude, double latitude, int xpReward, EncounterStatus status)
@@ -40,6 +41,17 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public void Publish()
         {
             Status = EncounterStatus.Active;
+        }
+
+        public void CancelEncounter(long userId)
+        {
+            if (hasUserActivatedEncounter(userId))
+            {
+                var instance = Instances.Find(x => x.UserId == userId);
+                if (instance!.Status == EncounterInstanceStatus.Completed) throw new ArgumentException("User has already completed this encounter.");
+                Instances.Remove(instance);
+            }
+            throw new ArgumentException("User has not activated this encounter.");
         }
 
         public void ActivateEncounter(long userId, double userLongitude, double userLatitude)
@@ -108,5 +120,6 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         }
     }
     public enum EncounterStatus { Active, Draft, Archived };
+    public enum EncounterType { Social, Hidden, Misc, KeyPoint };
 
 }

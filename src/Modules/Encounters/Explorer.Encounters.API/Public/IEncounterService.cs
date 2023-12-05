@@ -14,5 +14,6 @@ namespace Explorer.Encounters.API.Public
         Result Delete(long id);
         Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitute, double latitude);
         Result<TouristProgressResponseDto> CompleteEncounter(long userId, long encounterId);
+        Result<EncounterResponseDto> CancelEncounter(long userId, long encounterId);
     }
 }
