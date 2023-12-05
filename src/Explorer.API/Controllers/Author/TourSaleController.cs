@@ -33,8 +33,14 @@ public class TourSaleController : BaseApiController
         return CreateResponse(result);
     }
 
-    [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    [HttpGet("{id:long}")]
+    public ActionResult<TourSaleResponseDto> GetById(long id)
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpDelete("{id:long}")]
+    public ActionResult Delete(long id)
     {
         var result = _saleService.Delete(id);
         return CreateResponse(result);

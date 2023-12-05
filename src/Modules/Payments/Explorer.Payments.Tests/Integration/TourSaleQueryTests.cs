@@ -43,6 +43,20 @@ public class TourSaleQueryTests : BasePaymentsIntegrationTest
         result.Count.ShouldBe(1);
     }
 
+    [Fact]
+    public void Retrieves_by_id()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+
+        var result = ((ObjectResult)controller.GetById(-2).Result)?.Value as TourSaleResponseDto;
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(-2);
+    }
+
     private static TourSaleController CreateController(IServiceScope scope)
     {
         return new TourSaleController(scope.ServiceProvider.GetRequiredService<ITourSaleService>())
