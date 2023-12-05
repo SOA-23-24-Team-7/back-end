@@ -31,7 +31,7 @@ namespace Explorer.Encounters.Core.UseCases
         public Result<HiddenLocationEncounterResponseDto> CreateHiddenLocationEncounter(HiddenLocationEncounterCreateDto encounter)
         {
             // problem sa konverzijom iz jednog enuma u drugi (iako su isti lol) ovo 0 na kraju
-            var entity = CrudRepository.Create(new HiddenLocationEncounter(encounter.Picture, encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0));
+            var entity = CrudRepository.Create(new HiddenLocationEncounter(encounter.Picture, encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Hidden));
             return MapToDto<HiddenLocationEncounterResponseDto>(entity);
         }
 

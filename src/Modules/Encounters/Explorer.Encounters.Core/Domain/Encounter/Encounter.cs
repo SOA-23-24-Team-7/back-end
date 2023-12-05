@@ -14,7 +14,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public EncounterType Type { get; init; }
         public List<EncounterInstance> Instances { get; } = new List<EncounterInstance>();
 
-        public Encounter(string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status)
+        public Encounter(string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, EncounterType type)
         {
             Title = title;
             Description = description;
@@ -23,6 +23,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
             XpReward = xpReward;
             Radius = radius;
             Status = status;
+            Type = type;
             Validate();
         }
         private void Validate()
