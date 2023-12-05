@@ -80,6 +80,49 @@ namespace Explorer.Payments.Tests.Integration
             result.StatusCode.ShouldBe(404);
         }
 
+        [Theory]
+        [InlineData(-10, "test bundle 11111", 650, new long[] { -8 })]
+        public void Edits(long id, string name, long price, long[] tourIds)
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
+            var editedEntity = new BundleEditDto
+            {
+                Name = name,
+                Price = price,
+                TourIds = tourIds.ToList()
+            };
+
+            var authorId = -11;
+            var claims = new[] { new Claim("id", authorId.ToString()) };
+            var identity = new ClaimsIdentity(claims, "autor1");
+            var user = new ClaimsPrincipal(identity);
+            var context = new DefaultHttpContext { User = user };
+            controller.ControllerContext = new ControllerContext { HttpContext = context };
+
+            // Act
+            var result = ((ObjectResult)controller.Edit(id, editedEntity).Result)?.Value as BundleResponseDto;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBe(0);
+            result.Name.ShouldBe(name);
+            result.Price.ShouldBe(price);
+            result.AuthorId.ShouldBe(authorId);
+            result.Status.ShouldBe("Draft");
+
+            // Assert - Database
+            var storedEntity = dbContext.Bundles.FirstOrDefault(b => b.Id == result.Id);
+            storedEntity.ShouldNotBeNull();
+            storedEntity.Id.ShouldBe(id);
+            storedEntity.Price.ShouldBe(result.Price);
+            storedEntity.Name.ShouldBe(result.Name);
+            storedEntity.AuthorId.ShouldBe(result.AuthorId);
+            storedEntity.Status.ToString().ShouldBe(result.Status);
+        }
+
         private static BundleController CreateController(IServiceScope scope)
         {
             return new BundleController(scope.ServiceProvider.GetRequiredService<IBundleService>())
