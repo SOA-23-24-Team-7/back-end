@@ -53,4 +53,10 @@ public class TourSaleController : BaseApiController
         var result = _saleService.Delete(id);
         return CreateResponse(result);
     }
+
+    [HttpGet("tours/{tourId:long}")]
+    public ActionResult<double?> GetDiscountForTour(long tourId)
+    {
+        throw new NotImplementedException();
+    }
 }
