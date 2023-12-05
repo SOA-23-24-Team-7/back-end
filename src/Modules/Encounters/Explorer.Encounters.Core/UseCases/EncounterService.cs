@@ -13,13 +13,15 @@ namespace Explorer.Encounters.Core.UseCases
     public class EncounterService : CrudService<EncounterResponseDto, Encounter>, IEncounterService
     {
         private readonly IEncounterRepository _encounterRepository;
+        private readonly IHiddenLocationEncounterRepository _hiddenLocationEncounterRepository;
         private readonly ITouristProgressRepository _touristProgressRepository;
         private readonly ICrudRepository<TouristProgress> _touristProgressCrudRepository;
         private readonly IInternalUserService _internalUserService;
         private readonly IMapper _mapper;
-        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper) : base(repository, mapper)
+        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, IHiddenLocationEncounterRepository hiddenLocationEncounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper) : base(repository, mapper)
         {
             _encounterRepository = encounterRepository;
+            _hiddenLocationEncounterRepository = hiddenLocationEncounterRepository;
             _touristProgressRepository = touristProgressRepository;
             _touristProgressCrudRepository = touristProgressCrudRepository;
             _internalUserService = userService;
@@ -29,7 +31,7 @@ namespace Explorer.Encounters.Core.UseCases
         public Result<HiddenLocationEncounterResponseDto> CreateHiddenLocationEncounter(HiddenLocationEncounterCreateDto encounter)
         {
             // problem sa konverzijom iz jednog enuma u drugi (iako su isti lol) ovo 0 na kraju
-            var entity = CrudRepository.Create(new HiddenLocationEncounter(encounter.Picture, encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.XpReward, 0));
+            var entity = CrudRepository.Create(new HiddenLocationEncounter(encounter.Picture, encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0));
             return MapToDto<HiddenLocationEncounterResponseDto>(entity);
         }
 
@@ -61,6 +63,14 @@ namespace Explorer.Encounters.Core.UseCases
             {
                 return Result.Fail(FailureCode.InvalidArgument);
             }
+        }
+
+        public Result<TouristProgressResponseDto> CompleteHiddenLocationEncounter(long userId, long encounterId, double longitute, double latitude)
+        {
+            var encounter = _hiddenLocationEncounterRepository.GetById(encounterId);
+            if (encounter.isUserInCompletionRange(longitute, latitude))
+                return CompleteEncounter(userId, encounterId);
+            return Result.Fail("user not in 5m range");
         }
 
         public Result<TouristProgressResponseDto> CompleteEncounter(long userId, long encounterId)

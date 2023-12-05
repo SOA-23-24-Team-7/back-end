@@ -17,13 +17,6 @@ namespace Explorer.API.Controllers.Tourist
             _encounterService = encounterService;
         }
 
-        [HttpPost("createHidden")]
-        public ActionResult<HiddenLocationEncounterResponseDto> Create([FromBody] HiddenLocationEncounterCreateDto encounter)
-        {
-            var result = _encounterService.CreateHiddenLocationEncounter(encounter);
-            return CreateResponse(result);
-        }
-
         [HttpPost("{id:long}/activate")]
         public ActionResult<EncounterResponseDto> Activate([FromBody] TouristPositionCreateDto position, long id)
         {
