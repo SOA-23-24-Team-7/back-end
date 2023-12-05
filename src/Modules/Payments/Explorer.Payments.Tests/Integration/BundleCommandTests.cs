@@ -202,6 +202,142 @@ namespace Explorer.Payments.Tests.Integration
             storedEntity.Status.ToString().ShouldBe(result.Status);
         }
 
+        [Theory]
+        [InlineData(-12, -11)]
+        public void Publishes_invalid_data(long bundleId, long authorId)
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
+            var claims = new[] { new Claim("id", authorId.ToString()) };
+            var identity = new ClaimsIdentity(claims, "autor1");
+            var user = new ClaimsPrincipal(identity);
+            var context = new DefaultHttpContext { User = user };
+            controller.ControllerContext = new ControllerContext { HttpContext = context };
+
+            // Act
+            var result = (ObjectResult)controller.Publish(bundleId).Result;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(404);
+        }
+
+        [Theory]
+        [InlineData(-13, -12)]
+        public void Archives(long bundleId, long authorId)
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
+            var claims = new[] { new Claim("id", authorId.ToString()) };
+            var identity = new ClaimsIdentity(claims, "autor1");
+            var user = new ClaimsPrincipal(identity);
+            var context = new DefaultHttpContext { User = user };
+            controller.ControllerContext = new ControllerContext { HttpContext = context };
+
+            // Act
+            var result = ((ObjectResult)controller.Archive(bundleId).Result)?.Value as BundleResponseDto;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBe(0);
+            result.Name.ShouldBe("Bundle4");
+            result.Price.ShouldBe(25);
+            result.AuthorId.ShouldBe(authorId);
+            result.Status.ShouldBe("Archived");
+
+            // Assert - Database
+            var storedEntity = dbContext.Bundles.FirstOrDefault(b => b.Id == result.Id);
+            storedEntity.ShouldNotBeNull();
+            storedEntity.Id.ShouldBe(result.Id);
+            storedEntity.Price.ShouldBe(result.Price);
+            storedEntity.Name.ShouldBe(result.Name);
+            storedEntity.AuthorId.ShouldBe(result.AuthorId);
+            storedEntity.Status.ToString().ShouldBe(result.Status);
+        }
+
+        [Theory]
+        [InlineData(-14, -11)]
+        public void Archives_invalid_data(long bundleId, long authorId)
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
+            var claims = new[] { new Claim("id", authorId.ToString()) };
+            var identity = new ClaimsIdentity(claims, "autor1");
+            var user = new ClaimsPrincipal(identity);
+            var context = new DefaultHttpContext { User = user };
+            controller.ControllerContext = new ControllerContext { HttpContext = context };
+
+            // Act
+            var result = (ObjectResult)controller.Archive(bundleId).Result;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(404);
+        }
+
+        [Theory]
+        [InlineData(-16, -11)]
+        public void Deletes(long bundleId, long authorId)
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
+            var claims = new[] { new Claim("id", authorId.ToString()) };
+            var identity = new ClaimsIdentity(claims, "autor1");
+            var user = new ClaimsPrincipal(identity);
+            var context = new DefaultHttpContext { User = user };
+            controller.ControllerContext = new ControllerContext { HttpContext = context };
+
+            // Act
+            var result = ((ObjectResult)controller.Delete(bundleId).Result)?.Value as BundleResponseDto;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBe(0);
+            result.Name.ShouldBe("Bundle7");
+            result.Price.ShouldBe(25);
+            result.AuthorId.ShouldBe(authorId);
+            result.Status.ShouldBe("Deleted");
+
+            // Assert - Database
+            var storedEntity = dbContext.Bundles.FirstOrDefault(b => b.Id == result.Id);
+            storedEntity.ShouldNotBeNull();
+            storedEntity.Id.ShouldBe(result.Id);
+            storedEntity.Price.ShouldBe(result.Price);
+            storedEntity.Name.ShouldBe(result.Name);
+            storedEntity.AuthorId.ShouldBe(result.AuthorId);
+            storedEntity.Status.ToString().ShouldBe(result.Status);
+        }
+
+        [Theory]
+        [InlineData(-11, -12)]
+        public void Deletes_invalid_data(long bundleId, long authorId)
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
+            var claims = new[] { new Claim("id", authorId.ToString()) };
+            var identity = new ClaimsIdentity(claims, "autor1");
+            var user = new ClaimsPrincipal(identity);
+            var context = new DefaultHttpContext { User = user };
+            controller.ControllerContext = new ControllerContext { HttpContext = context };
+
+            // Act
+            var result = (ObjectResult)controller.Delete(bundleId).Result;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(404);
+        }
+
         private static BundleController CreateController(IServiceScope scope)
         {
             return new BundleController(scope.ServiceProvider.GetRequiredService<IBundleService>())
