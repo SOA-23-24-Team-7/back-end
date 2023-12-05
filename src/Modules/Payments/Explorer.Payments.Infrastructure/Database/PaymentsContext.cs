@@ -8,9 +8,10 @@ namespace Explorer.Payments.Infrastructure.Database;
 public class PaymentsContext : DbContext
 {
 
-    public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<TourToken> tourTokens { get; set; }
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<BundleOrderItem> BundleOrderItems { get; set; }
 
     public DbSet<Wallet> Wallets { get; set; }
 
