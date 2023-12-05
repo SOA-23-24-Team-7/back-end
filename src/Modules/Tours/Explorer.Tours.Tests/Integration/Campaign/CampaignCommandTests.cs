@@ -25,7 +25,7 @@ namespace Explorer.Tours.Tests.Integration.Campaign
         [Fact]
         public void Creates()
         {
-            /*
+            
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
@@ -64,7 +64,7 @@ namespace Explorer.Tours.Tests.Integration.Campaign
             storedEntity.AverageDifficulty.ShouldBe(result.AverageDifficulty);
             storedEntity.Name.ShouldBe(result.Name);
             storedEntity.EquipmentIds.Count.ShouldBe(result.Equipments.Count);
-            */
+            
         }
 
         private static CampaignController CreateController(IServiceScope scope)
