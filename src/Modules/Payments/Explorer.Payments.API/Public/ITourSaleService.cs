@@ -11,4 +11,5 @@ public interface ITourSaleService
     Result<TourSaleResponseDto> GetById(long id);
     Result<TourSaleResponseDto> Update(TourSaleUpdateDto sale);
     Result Delete(long id);
+    Result<double?> GetDiscountForTour(long tourId);
 }

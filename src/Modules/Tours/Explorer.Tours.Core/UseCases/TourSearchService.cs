@@ -5,6 +5,7 @@ using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Explorer.Tours.Core.UseCases;
 
@@ -60,7 +61,7 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         }
     }
 
-    public Result<PagedResult<TourResponseDto>> Search(TourSearchFilterDto tourSearchFilterDto, bool publishedOnly)
+    public Result<PagedResult<TourResponseDto>> Search(TourSearchFilterDto tourSearchFilterDto, SortOption sortBy, bool publishedOnly, Func<long, double?> getDiscount)
     {
         try
         {
@@ -71,11 +72,14 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
             var filtered = tours;
             filtered = searchByName(filtered, tourSearchFilterDto.Name);
             filtered = searchByPrice(filtered, tourSearchFilterDto.MinPrice, tourSearchFilterDto.MaxPrice);
+            filtered = filterAndSortByDiscount(filtered, tourSearchFilterDto.OnDiscount, getDiscount);
             filtered = searchByDifficulty(filtered, tourSearchFilterDto.MinDifficulty, tourSearchFilterDto.MaxDifficulty);
             filtered = searchByAverageRating(filtered, tourSearchFilterDto.MinAverageRating);
             filtered = searchByAuthorId(filtered, tourSearchFilterDto.AuthorId);
             filtered = searchByLocation(filtered, tourSearchFilterDto.Longitude, tourSearchFilterDto.Latitude, tourSearchFilterDto.MaxDistance);
             filtered = searchByLength(filtered, tourSearchFilterDto.MinLength, tourSearchFilterDto.MaxLength);
+
+            filtered = sort(filtered, sortBy, getDiscount);
 
             var count = filtered.Count();
 
@@ -122,6 +126,25 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         return tours;
     }
 
+    private List<Tour> sort(List<Tour> tours, SortOption sortBy, Func<long, double?> getDiscount)
+    {
+        switch (sortBy) {
+            case SortOption.DiscountAsc:
+                if (getDiscount == null)
+                {
+                    return tours;
+                }
+                return tours.OrderBy(t => getDiscount(t.Id)).ToList();
+            case SortOption.DiscountDesc:
+                if (getDiscount == null)
+                {
+                    return tours;
+                }
+                return tours.OrderByDescending(t => getDiscount(t.Id)).ToList();
+            default:
+                return tours;
+        }
+    }
     private List<Tour> searchByLocation(List<Tour> tours, double? longitude, double? latitude, double? maxDistance)
     {
         if (longitude != null && latitude != null && maxDistance != null)
@@ -185,6 +208,14 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
         {
             filtered = filtered.FindAll(t => t.Difficulty <= maxPrice);
         }
+        return filtered;
+    }
+
+    private List<Tour> filterAndSortByDiscount(List<Tour> tours, bool shouldFilter, Func<long, double?> getDiscount)
+    {
+        var filtered = tours;
+        if (!shouldFilter || getDiscount == null) return filtered;
+        filtered = filtered.FindAll(t => getDiscount(t.Id) != null);
         return filtered;
     }
 

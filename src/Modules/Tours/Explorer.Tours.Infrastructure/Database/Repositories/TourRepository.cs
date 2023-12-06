@@ -76,7 +76,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public Tour GetById(long id)
         {
-            var entity = _dbSet.Include(x => x.KeyPoints).Include(x => x.Reviews).FirstOrDefault(x => x.Id == id);
+            var entity = _dbSet.Include(x => x.KeyPoints).Include(x => x.EquipmentList).Include(x => x.Reviews).FirstOrDefault(x => x.Id == id);
             if (entity == null) throw new KeyNotFoundException("Not found: " + id);
             return entity;
         }

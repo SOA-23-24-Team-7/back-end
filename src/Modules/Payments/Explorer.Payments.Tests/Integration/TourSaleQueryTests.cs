@@ -57,6 +57,20 @@ public class TourSaleQueryTests : BasePaymentsIntegrationTest
         result.Id.ShouldBe(-2);
     }
 
+    [Fact]
+    public void Retrieves_tour_discount()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+
+        var result = ((ObjectResult)controller.GetDiscountForTour(-5).Result)?.Value as double?;
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.ShouldBe(0.5);
+    }
+
     private static TourSaleController CreateController(IServiceScope scope)
     {
         return new TourSaleController(scope.ServiceProvider.GetRequiredService<ITourSaleService>())

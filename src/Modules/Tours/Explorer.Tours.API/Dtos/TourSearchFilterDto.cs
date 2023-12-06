@@ -5,6 +5,7 @@ public class TourSearchFilterDto
     public string? Name { get; set; }
     public double? MinPrice { get; set; }
     public double? MaxPrice { get; set; }
+    public bool OnDiscount { get; set; } = false;
     public int? MinDifficulty { get; set; }
     public int? MaxDifficulty { get; set; }
     public double? MinDuration { get; set; }
@@ -18,4 +19,11 @@ public class TourSearchFilterDto
     public int? Page { get; set; }
     public int? PageSize { get; set; }
     public int? AuthorId { get; set; }
+}
+
+public enum SortOption
+{
+    NoSort = 0,
+    DiscountAsc,
+    DiscountDesc
 }

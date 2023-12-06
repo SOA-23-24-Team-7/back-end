@@ -15,6 +15,7 @@ namespace Explorer.Tours.API.Dtos
         public long NextKeyPointId { get; set; }
         public double Progress { get; set; }
         public DateTime LastActivity { get; set; }
+        public bool IsCampaign { get; set; }
     }
     public enum TourExecutionSessionStatus
     {

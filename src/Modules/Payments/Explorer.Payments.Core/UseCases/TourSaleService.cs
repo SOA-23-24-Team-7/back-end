@@ -106,4 +106,15 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
         }
     }
+
+    public Result<double?> GetDiscountForTour(long tourId)
+    {
+        var sales = _saleRepository.GetAll();
+
+        var today = DateOnly.FromDateTime(DateTime.Now);
+
+        var sale = sales.Find(s => s.EndDate >= today && s.StartDate <= today && s.TourIds.Contains(tourId));
+
+        return sale?.DiscountPercentage;
+    }
 }
