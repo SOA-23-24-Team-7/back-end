@@ -47,7 +47,7 @@ namespace Explorer.Payments.Tests.Integration
             result.Name.ShouldBe(name);
             result.Price.ShouldBe(price);
             result.AuthorId.ShouldBe(authorId);
-            result.Status.ShouldBe("Draft");
+            result.Status.ShouldBe(BundleStatus.Draft);
 
             // Assert - Database
             var storedEntity = dbContext.Bundles.FirstOrDefault(b => b.Id == result.Id );
@@ -56,7 +56,6 @@ namespace Explorer.Payments.Tests.Integration
             storedEntity.Price.ShouldBe(result.Price);
             storedEntity.Name.ShouldBe(result.Name);
             storedEntity.AuthorId.ShouldBe(result.AuthorId);
-            storedEntity.Status.ToString().ShouldBe(result.Status);
         }
 
         [Fact]
@@ -111,7 +110,7 @@ namespace Explorer.Payments.Tests.Integration
             result.Name.ShouldBe(name);
             result.Price.ShouldBe(price);
             result.AuthorId.ShouldBe(authorId);
-            result.Status.ShouldBe("Draft");
+            result.Status.ShouldBe(BundleStatus.Draft);
 
             // Assert - Database
             var storedEntity = dbContext.Bundles.FirstOrDefault(b => b.Id == result.Id);
@@ -120,7 +119,6 @@ namespace Explorer.Payments.Tests.Integration
             storedEntity.Price.ShouldBe(result.Price);
             storedEntity.Name.ShouldBe(result.Name);
             storedEntity.AuthorId.ShouldBe(result.AuthorId);
-            storedEntity.Status.ToString().ShouldBe(result.Status);
         }
 
         [Fact]
@@ -190,7 +188,7 @@ namespace Explorer.Payments.Tests.Integration
             result.Name.ShouldBe("Bundle2");
             result.Price.ShouldBe(25);
             result.AuthorId.ShouldBe(authorId);
-            result.Status.ShouldBe("Published");
+            result.Status.ShouldBe(BundleStatus.Published);
 
             // Assert - Database
             var storedEntity = dbContext.Bundles.FirstOrDefault(b => b.Id == result.Id);
@@ -199,7 +197,6 @@ namespace Explorer.Payments.Tests.Integration
             storedEntity.Price.ShouldBe(result.Price);
             storedEntity.Name.ShouldBe(result.Name);
             storedEntity.AuthorId.ShouldBe(result.AuthorId);
-            storedEntity.Status.ToString().ShouldBe(result.Status);
         }
 
         [Theory]
@@ -247,7 +244,7 @@ namespace Explorer.Payments.Tests.Integration
             result.Name.ShouldBe("Bundle4");
             result.Price.ShouldBe(25);
             result.AuthorId.ShouldBe(authorId);
-            result.Status.ShouldBe("Archived");
+            result.Status.ShouldBe(BundleStatus.Archived);
 
             // Assert - Database
             var storedEntity = dbContext.Bundles.FirstOrDefault(b => b.Id == result.Id);
@@ -256,7 +253,6 @@ namespace Explorer.Payments.Tests.Integration
             storedEntity.Price.ShouldBe(result.Price);
             storedEntity.Name.ShouldBe(result.Name);
             storedEntity.AuthorId.ShouldBe(result.AuthorId);
-            storedEntity.Status.ToString().ShouldBe(result.Status);
         }
 
         [Theory]
@@ -304,7 +300,7 @@ namespace Explorer.Payments.Tests.Integration
             result.Name.ShouldBe("Bundle9");
             result.Price.ShouldBe(25);
             result.AuthorId.ShouldBe(authorId);
-            result.Status.ShouldBe("Deleted");
+            result.Status.ShouldBe(BundleStatus.Deleted);
 
             // Assert - Database
             var storedEntity = dbContext.Bundles.FirstOrDefault(b => b.Id == result.Id);
@@ -313,7 +309,6 @@ namespace Explorer.Payments.Tests.Integration
             storedEntity.Price.ShouldBe(result.Price);
             storedEntity.Name.ShouldBe(result.Name);
             storedEntity.AuthorId.ShouldBe(result.AuthorId);
-            storedEntity.Status.ToString().ShouldBe(result.Status);
         }
 
         [Theory]

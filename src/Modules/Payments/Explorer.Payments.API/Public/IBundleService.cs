@@ -17,5 +17,7 @@ namespace Explorer.Payments.API.Public
         Result<BundleResponseDto> Archive(long id, long authorId);
         Result<BundleResponseDto> Delete(long id, long authorId);
         Result<List<BundleResponseDto>> GetByAuthor(long authorId);
+        Result<List<BundleResponseDto>> GetPublished(long authorId);
+        Result<BundleResponseDto> GetById(long id);
     }
 }

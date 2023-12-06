@@ -4,5 +4,5 @@ public class BundleItemResponseDto
 {
     public long Id { get; set; }
     public long BundleId { get; set; }
-    public long Tourid { get; set; }
+    public long TourId { get; set; }
 }

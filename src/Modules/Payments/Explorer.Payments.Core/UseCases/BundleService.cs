@@ -3,18 +3,11 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
-using Explorer.Payments.Core.Domain;
 using Explorer.Tours.API.Internal;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Explorer.Stakeholders.API.Dtos;
 using Explorer.Payments.Core.Domain.Bundles;
-using Explorer.BuildingBlocks.Core.Domain;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 
 namespace Explorer.Payments.Core.UseCases
 {
@@ -35,7 +28,7 @@ namespace Explorer.Payments.Core.UseCases
         {
             try
             {
-                var bundle = new Bundle(bundleDto.Name, bundleDto.Price, authorId, BundleStatus.Draft);
+                var bundle = new Bundle(bundleDto.Name, bundleDto.Price, authorId, Domain.Bundles.BundleStatus.Draft);
 
                 List<BundleItem> bundleItems = new List<BundleItem>();
                 foreach (int tourId in bundleDto.TourIds)
@@ -67,7 +60,7 @@ namespace Explorer.Payments.Core.UseCases
             try
             {
                 Expression<Func<Bundle, bool>> filter = b => b.Id == id && b.AuthorId == authorId &&
-                                                        (b.Status == BundleStatus.Draft || b.Status == BundleStatus.Archived);
+                                                        (b.Status == Domain.Bundles.BundleStatus.Draft || b.Status == Domain.Bundles.BundleStatus.Archived);
                 Bundle bundle = _bundleRepository.Get(filter, include: "BundleItems");
 
                 bundle.Rename(bundleDto.Name);
@@ -104,7 +97,7 @@ namespace Explorer.Payments.Core.UseCases
             try
             {
                 Expression<Func<Bundle, bool>> filter = b => b.Id == id && b.AuthorId == authorId &&
-                                                        (b.Status == BundleStatus.Draft || b.Status == BundleStatus.Archived);
+                                                        (b.Status == Domain.Bundles.BundleStatus.Draft || b.Status == Domain.Bundles.BundleStatus.Archived);
                 Bundle bundle = _bundleRepository.Get(filter, include: "BundleItems");
 
                 bundle.Publish();
@@ -126,7 +119,7 @@ namespace Explorer.Payments.Core.UseCases
             try
             {
                 Expression<Func<Bundle, bool>> filter = b => b.Id == id && b.AuthorId == authorId &&
-                                                        b.Status == BundleStatus.Published;
+                                                        b.Status == Domain.Bundles.BundleStatus.Published;
                 Bundle bundle = _bundleRepository.Get(filter, include: "BundleItems");
 
                 bundle.Archive();
@@ -148,7 +141,7 @@ namespace Explorer.Payments.Core.UseCases
             try
             {
                 Expression<Func<Bundle, bool>> filter = b => b.Id == id && b.AuthorId == authorId &&
-                                                        (b.Status == BundleStatus.Draft || b.Status == BundleStatus.Archived);
+                                                        (b.Status == Domain.Bundles.BundleStatus.Draft || b.Status == Domain.Bundles.BundleStatus.Archived);
                 Bundle bundle = _bundleRepository.Get(filter, include: "BundleItems");
 
                 bundle.Delete();
@@ -167,13 +160,38 @@ namespace Explorer.Payments.Core.UseCases
 
         public Result<List<BundleResponseDto>> GetByAuthor(long authorId)
         {
-            var result = _bundleRepository.GetAll(b => b.AuthorId == authorId, include: "BundleItems");
+            var result = _bundleRepository.GetAll(b => b.AuthorId == authorId && b.Status != Domain.Bundles.BundleStatus.Deleted, include: "BundleItems");
             var mapped = new List<BundleResponseDto>();
             foreach (var bundle in result)
             {
                 mapped.Add(_mapper.Map<BundleResponseDto>(bundle));
             }
             return mapped;
+        }
+
+        public Result<List<BundleResponseDto>> GetPublished(long authorId)
+        {
+            var result = _bundleRepository.GetAll(b => b.Status == Domain.Bundles.BundleStatus.Published, include: "BundleItems");
+            var mapped = new List<BundleResponseDto>();
+            foreach (var bundle in result)
+            {
+                mapped.Add(_mapper.Map<BundleResponseDto>(bundle));
+            }
+            return mapped;
+        }
+
+        public Result<BundleResponseDto> GetById(long id)
+        {
+            try
+            {
+                var result = _bundleRepository.Get(b => b.Id == id, include: "BundleItems");
+                var mapped = _mapper.Map<BundleResponseDto>(result);
+                return mapped;
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
         }
     }
 }

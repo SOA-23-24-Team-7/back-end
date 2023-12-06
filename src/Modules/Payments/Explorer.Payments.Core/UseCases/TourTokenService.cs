@@ -124,6 +124,8 @@ namespace Explorer.Payments.Core.UseCases
 
                         var token = _repository.Create(MapToDomain<TourTokenCreateDto>(new TourTokenCreateDto { TourId = tour.Id, TouristId = touristId }));
                         CreateNotfication(token.TouristId, token.TourId);
+                        wallet.Value.AdventureCoin -= bundle.Price;    //tu je snizena cijena!
+                        _walletService.Update(new WalletUpdateDto(wallet.Value.Id, wallet.Value.AdventureCoin));
                     }
 
                     _bundleRecordRepository.Create(new BundleRecord(touristId, bundle.Id, bundle.Price));

@@ -44,7 +44,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPost("bundle/{bundleId:long}")]
-        public ActionResult<TourTokenResponseDto> AddTokensByBundle(long bundleId)
+        public ActionResult AddTokensByBundle(long bundleId)
         {
             long userId = 0;
             var identity = HttpContext.User.Identity as ClaimsIdentity;
