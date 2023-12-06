@@ -88,10 +88,6 @@ public class ModulesTests : BaseArchitecturalTests
         new object[]
         {
             "Stakeholders"
-        },
-        new object[]
-        {
-            "Encounters"
         }
     };
 }

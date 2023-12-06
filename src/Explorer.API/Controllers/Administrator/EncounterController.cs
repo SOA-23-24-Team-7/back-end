@@ -64,5 +64,8 @@ namespace Explorer.API.Controllers.Administrator
             var result = _encounterService.Delete(id);
             return CreateResponse(result);
         }
+
+        
+
     }
 }
