@@ -1,26 +1,32 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Encounters.API.Dtos;
+using Explorer.Encounters.API.Internal;
 using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.Encounter;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.API.Internal;
+using Explorer.Tours.API.Internal;
 using FluentResults;
+using EncounterStatus = Explorer.Encounters.Core.Domain.Encounter.EncounterStatus;
 
 namespace Explorer.Encounters.Core.UseCases
 {
-    public class EncounterService : CrudService<EncounterResponseDto, Encounter>, IEncounterService
+    public class EncounterService : CrudService<EncounterResponseDto, Encounter>, IEncounterService, IInternalEncounterService
     {
         private readonly IEncounterRepository _encounterRepository;
         private readonly IHiddenLocationEncounterRepository _hiddenLocationEncounterRepository;
         private readonly ITouristProgressRepository _touristProgressRepository;
         private readonly ICrudRepository<TouristProgress> _touristProgressCrudRepository;
         private readonly IInternalUserService _internalUserService;
-        private readonly IMiscEncounterRepository _miscEncounterRepository;
+        private readonly IInternalKeyPointService _keypointService;
+        private readonly IKeyPointEncounterRepository _keypointEncounterRepository;
         private readonly IMapper _mapper;
+        private readonly IMiscEncounterRepository _miscEncounterRepository;
 
-        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, IHiddenLocationEncounterRepository hiddenLocationEncounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMiscEncounterRepository miscEncounterRepository, IMapper mapper) : base(repository, mapper)
+
+        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, IHiddenLocationEncounterRepository hiddenLocationEncounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMiscEncounterRepository miscEncounterRepository, IMapper mapper, IInternalKeyPointService keypointService, IKeyPointEncounterRepository keypointEncounterRepository) : base(repository, mapper)
         {
             _encounterRepository = encounterRepository;
             _hiddenLocationEncounterRepository = hiddenLocationEncounterRepository;
@@ -28,6 +34,8 @@ namespace Explorer.Encounters.Core.UseCases
             _touristProgressCrudRepository = touristProgressCrudRepository;
             _internalUserService = userService;
             _mapper = mapper;
+            _keypointService = keypointService;
+            _keypointEncounterRepository = keypointEncounterRepository;
             _miscEncounterRepository = miscEncounterRepository;
         }
 
@@ -77,7 +85,7 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
-        public Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitute, double latitude)
+        public Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitude, double latitude)
         {
             try
             {
@@ -91,7 +99,7 @@ namespace Explorer.Encounters.Core.UseCases
             try
             {
                 var encounter = _encounterRepository.GetById(encounterId);
-                encounter.ActivateEncounter(userId, longitute, latitude);
+                encounter.ActivateEncounter(userId, longitude, latitude);
                 CrudRepository.Update(encounter);
                 return MapToDto<EncounterResponseDto>(encounter);
             }
@@ -137,6 +145,53 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
+        public Result CreateKeyPointEncounter(KeyPointEncounterCreateDto keyPointEncounter, long userId)
+        {
+            try
+            {
+                if (!_keypointService.IsToursAuthor(userId, keyPointEncounter.KeyPointId)) return Result.Fail(FailureCode.Forbidden).WithError("Unauthorized");
+                if (_keypointService.CheckEncounterExists(keyPointEncounter.KeyPointId)) return Result.Fail(FailureCode.Forbidden).WithError("Encounter already exists on this key point");
+
+                var longitude = _keypointService.GetKeyPointLongitude(keyPointEncounter.KeyPointId);
+                var latitude = _keypointService.GetKeyPointLatitude(keyPointEncounter.KeyPointId);
+
+                CrudRepository.Create(new KeyPointEncounter(keyPointEncounter.Title, keyPointEncounter.Description, longitude, latitude, keyPointEncounter.Radius, keyPointEncounter.XpReward, EncounterStatus.Active, keyPointEncounter.KeyPointId));
+
+                _keypointService.AddEncounter(keyPointEncounter.KeyPointId, keyPointEncounter.IsRequired);
+
+                return Result.Ok();
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.Forbidden).WithError(e.Message);
+            }
+        }
+
+        public Result<KeyPointEncounterResponseDto> ActivateKeyPointEncounter(double longitude, double latitude,
+            long keyPointId, long userId)
+        {
+            try
+            {
+                _touristProgressRepository.GetByUserId(userId);
+            }
+            catch (Exception)
+            {
+                _touristProgressCrudRepository.Create(new TouristProgress(userId, 0, 1));
+            }
+
+            try
+            {
+                var encounter = _keypointEncounterRepository.GetByKeyPoint(keyPointId);
+                encounter.ActivateEncounter(userId, longitude, latitude);
+                CrudRepository.Update(encounter);
+                return MapToDto<KeyPointEncounterResponseDto>(encounter);
+            }
+            catch (Exception)
+            {
+                return Result.Fail(FailureCode.InvalidArgument);
+            }
+        }
+
         public Result<EncounterResponseDto> CancelEncounter(long userId, long encounterId)
         {
             try
@@ -153,6 +208,11 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
+        public bool IsEncounterInstanceCompleted(long userId, long keyPointId)
+        {
+            return _keypointEncounterRepository.IsEncounterInstanceCompleted(userId, keyPointId);
+        }
+
         public Result<MiscEncounterResponseDto> CreateMiscEncounter(MiscEncounterCreateDto encounter)
         {
             try
@@ -167,8 +227,6 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
-
-
         public Result<SocialEncounterResponseDto> CreateSocialEncounter(SocialEncounterCreateDto encounterDto)
         {
             try
@@ -182,6 +240,5 @@ namespace Explorer.Encounters.Core.UseCases
                 return Result.Fail(e.Message);
             }
         }
-
     }
 }

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Encounters.API.Internal;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
@@ -16,13 +18,15 @@ namespace Explorer.Tours.Core.UseCases
         private readonly IKeyPointRepository _keyPointRepository;
         private readonly ICampaignRepository _campaignRepository;
         private readonly IMapper _mapper;
-        public TourExecutionSessionService(IMapper mapper, ITourExecutionSessionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository, ITourRepository tourRepository, ICampaignRepository campaignRepository) : base(mapper)
+        private readonly IInternalEncounterService _encounterService;
+        public TourExecutionSessionService(IMapper mapper, ITourExecutionSessionRepository tourExecutionRepository, IKeyPointRepository keyPointRepository, ITourRepository tourRepository, ICampaignRepository campaignRepository, IInternalEncounterService encounterService) : base(mapper)
         {
             _tourExecutionRepository = tourExecutionRepository;
             _keyPointRepository = keyPointRepository;
             _tourRepository = tourRepository;
             _mapper = mapper;
             _campaignRepository = campaignRepository;
+            _encounterService = encounterService;
         }
 
         public Result<TourExecutionSessionResponseDto> StartTour(long tourId, bool isCampaign, long touristId)
@@ -51,21 +55,20 @@ namespace Explorer.Tours.Core.UseCases
         public Result<TourExecutionSessionResponseDto> CheckKeyPointCompletion(long tourId, long touristId, double longitude, double latitude, bool isCampaign)
         {
             TourExecutionSession tourExecution = _tourExecutionRepository.GetStarted(tourId, isCampaign, touristId);
-            if(tourExecution == null)
+            if (tourExecution == null)
             {
                 return null;
             }
-            if (isCampaign)
-                return CheckCampaignKeyPointCompletion(tourExecution, longitude, latitude);
-            else
-                return CheckTourKeyPointCompletion(tourExecution, longitude, latitude);
+            if (isCampaign) return CheckCampaignKeyPointCompletion(tourExecution, longitude, latitude);
+
+            return CheckTourKeyPointCompletion(tourExecution, longitude, latitude, touristId);
         }
 
         private Result<TourExecutionSessionResponseDto> CheckCampaignKeyPointCompletion(TourExecutionSession execution, double longitude, double latitude)
         {
             List<KeyPoint> keyPoints = new List<KeyPoint>();
             Campaign campaign = _campaignRepository.GetById(execution.TourId);
-            foreach(var keyPointId in campaign.KeyPointIds)
+            foreach (var keyPointId in campaign.KeyPointIds)
                 keyPoints.Add(_keyPointRepository.Get(keyPointId));
 
             for (int i = 0; i < keyPoints.Count; i++)
@@ -91,7 +94,7 @@ namespace Explorer.Tours.Core.UseCases
             return MapToDto<TourExecutionSessionResponseDto>(execution);
         }
 
-        private Result<TourExecutionSessionResponseDto> CheckTourKeyPointCompletion(TourExecutionSession execution, double longitude, double latitude)
+        private Result<TourExecutionSessionResponseDto> CheckTourKeyPointCompletion(TourExecutionSession execution, double longitude, double latitude, long touristId)
         {
             List<KeyPoint> keyPoints = _keyPointRepository.GetByTourId(execution.TourId);
             TrackProgress(execution, longitude, latitude);
@@ -100,7 +103,7 @@ namespace Explorer.Tours.Core.UseCases
                 if (keyPoints[i].Id == execution.NextKeyPointId)
                 {
 
-                    if (keyPoints[i].CalculateDistance(longitude, latitude) > 200) break;
+                    if (keyPoints[i].CalculateDistance(longitude, latitude) > 200 || (keyPoints[i].HasEncounter && keyPoints[i].IsEncounterRequired && !_encounterService.IsEncounterInstanceCompleted(touristId, keyPoints[i].Id))) break;
 
                     //ako je kompletirao poslednju kljucnu tacku -> kompletiraj turu
                     if (i + 1 >= keyPoints.Count)
@@ -148,7 +151,7 @@ namespace Explorer.Tours.Core.UseCases
             tourExecutionSession.UpdateProgress(percentage);
             _tourExecutionRepository.Update(tourExecutionSession);
         }
-        
+
         public Result<List<TourExecutionInfoDto>> GetAllFor(long touristId)
         {
             var tourExecutions = _tourExecutionRepository.GetForTourist(touristId);

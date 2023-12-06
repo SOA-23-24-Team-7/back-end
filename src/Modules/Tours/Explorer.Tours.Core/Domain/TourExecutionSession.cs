@@ -1,9 +1,4 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain
 {
@@ -16,7 +11,7 @@ namespace Explorer.Tours.Core.Domain
         public double Progress { get; private set; }
         public DateTime LastActivity { get; private set; }
         public bool IsCampaign { get; private set; }
-        public TourExecutionSession(long tourId, long touristId, long nextKeyPointId, bool isCampaign) 
+        public TourExecutionSession(long tourId, long touristId, long nextKeyPointId, bool isCampaign)
         {
             Status = TourExecutionSessionStatus.Started;
             LastActivity = DateTime.UtcNow;
@@ -26,6 +21,7 @@ namespace Explorer.Tours.Core.Domain
             Progress = 0;
             IsCampaign = isCampaign;
         }
+
         public void Abandon()
         {
             LastActivity = DateTime.UtcNow;

@@ -45,7 +45,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return keyPoints.ToList();
         }
 
-        public List<KeyPoint> GetByTourIdWithoutSercrets(long tourId)
+        public List<KeyPoint> GetByTourIdWithoutSecrets(long tourId)
         {
             var keyPoints = _dbContext.KeyPoints.Where(i => i.TourId == tourId).OrderBy(i => i.Order);
             List<KeyPoint> keyPointsWithoutSecret = keyPoints.ToList();
@@ -94,9 +94,30 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return task.Result;
         }
 
+        public bool IsToursAuthor(long userId, long id)
+        {
+            return _dbSet.FirstOrDefault(x => x.Tour!.AuthorId == userId && x.Id == id) != null;
+        }
+
+        public double GetKeyPointLongitude(long id)
+        {
+            return _dbSet.FirstOrDefault(x => x.Id == id).Longitude;
+        }
+
+        public double GetKeyPointLatitude(long id)
+        {
+            return _dbSet.FirstOrDefault(x => x.Id == id).Latitude;
+        }
+
+        public bool CheckEncounterExists(long keyPointId)
+        {
+            return _dbSet.FirstOrDefault(x => x.Id == keyPointId)!.HasEncounter;
+        }
+
         public List<KeyPoint> GetAll()
         {
             return _dbContext.KeyPoints.ToList();
+
         }
     }
 }

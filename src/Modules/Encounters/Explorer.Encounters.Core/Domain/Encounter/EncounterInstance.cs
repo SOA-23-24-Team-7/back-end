@@ -1,5 +1,6 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.BuildingBlocks.Core.Domain;
 using System.Text.Json.Serialization;
+
 
 namespace Explorer.Encounters.Core.Domain.Encounter
 {
@@ -8,6 +9,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public long UserId { get; set; }
         public EncounterInstanceStatus Status { get; private set; }
         public DateTime? CompletionTime { get; private set; }
+
 
 
         public EncounterInstance(long userId)

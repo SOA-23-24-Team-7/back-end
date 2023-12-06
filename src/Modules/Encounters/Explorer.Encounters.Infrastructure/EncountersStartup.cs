@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Encounters.API.Internal;
 using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.Encounter;
@@ -35,6 +36,8 @@ public static class EncountersStartup
         services.AddScoped(typeof(ICrudRepository<TouristProgress>), typeof(CrudDatabaseRepository<TouristProgress, EncountersContext>));
         services.AddScoped(typeof(ICrudRepository<SocialEncounter>), typeof(CrudDatabaseRepository<SocialEncounter, EncountersContext>));
         services.AddScoped<IEncounterRepository, EncounterDatabaseRepository>();
+        services.AddScoped<IKeyPointEncounterRepository, KeyPointEncounterDatabaseRepository>();
+        services.AddScoped<IInternalEncounterService, EncounterService>();
         services.AddScoped<IMiscEncounterRepository, MiscEncounterDatabaseRepository>();
         services.AddScoped<IHiddenLocationEncounterRepository, HiddenLocationEncounterDatabaseRepository>();
         services.AddScoped<ITouristProgressRepository, TouristProgressDatabaseRepository>();

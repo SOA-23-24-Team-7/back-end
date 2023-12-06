@@ -15,13 +15,16 @@ namespace Explorer.Encounters.API.Public
         Result<EncounterResponseDto> Get(long id);
         Result<MiscEncounterResponseDto> CreateMiscEncounter(MiscEncounterCreateDto encounter);
         Result Delete(long id);
-        Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitute, double latitude);
+        Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitude, double latitude);
         Result<TouristProgressResponseDto> CompleteEncounter(long userId, long encounterId);
+        Result CreateKeyPointEncounter(KeyPointEncounterCreateDto keyPointEncounter, long userId);
+        Result<KeyPointEncounterResponseDto> ActivateKeyPointEncounter(double longitude, double latitude, long keyPointId, long userId);
         Result<TouristProgressResponseDto> CompleteHiddenLocationEncounter(long userId, long encounterId, double longitute, double latitude);
         Result<PagedResult<EncounterResponseDto>> GetAllInRangeOf(double range, double longitude, double latitude, int page, int pageSize);
         Result<EncounterResponseDto> CancelEncounter(long userId, long encounterId);
         Result<HiddenLocationEncounterResponseDto> GetHiddenLocationEncounterById(long id);
         Result<EncounterInstanceResponseDto> GetInstance(long userId, long encounterId);
         bool CheckIfUserInCompletionRange(long userId, long encounterId, double longitude, double latitude);
+
     }
 }

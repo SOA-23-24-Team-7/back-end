@@ -79,11 +79,25 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+
+        [HttpPost("key-point/{keyPointId:long}")]
+        public ActionResult<KeyPointEncounterResponseDto> ActivateKeyPointEncounter(
+            [FromBody] TouristPositionCreateDto position, long keyPointId)
+        {
+            long userId = int.Parse(HttpContext.User.Claims
+                .First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result =
+                _encounterService.ActivateKeyPointEncounter(position.Longitude, position.Latitude, keyPointId, userId);
+
+            return CreateResponse(result);
+        }
+
         [HttpGet("progress")]
         public ActionResult<TouristProgressResponseDto> GetProgress()
         {
             long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _progressService.GetByUserId(userId);
+
             return CreateResponse(result);
         }
     }

@@ -63,7 +63,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 return Conflict();
             }
-            var result = _tourExecutionService.StartTour(executionDto.TourId, executionDto.IsCampaign ,touristId);
+            var result = _tourExecutionService.StartTour(executionDto.TourId, executionDto.IsCampaign, touristId);
             return CreateResponse(result);
         }
 
@@ -79,7 +79,7 @@ namespace Explorer.API.Controllers.Tourist
             else
                 touristId = -21;
             var result = _tourExecutionService.AbandonTour(executionDto.TourId, executionDto.IsCampaign, touristId);
-            if(result == null)
+            if (result == null)
             {
                 return BadRequest();
             }
@@ -98,7 +98,7 @@ namespace Explorer.API.Controllers.Tourist
             else
                 touristId = -21;
             var result = _tourExecutionService.CheckKeyPointCompletion(tourId, touristId, touristPosition.Longitude, touristPosition.Latitude, isCampaign);
-            if(result == null)
+            if (result == null)
             {
                 return BadRequest();
             }
@@ -125,7 +125,7 @@ namespace Explorer.API.Controllers.Tourist
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId = long.Parse(identity.FindFirst("id").Value);
             var result = _tourExecutionService.GetLive(touristId);
-            if(result == null)
+            if (result == null)
             {
                 return NoContent();
             }

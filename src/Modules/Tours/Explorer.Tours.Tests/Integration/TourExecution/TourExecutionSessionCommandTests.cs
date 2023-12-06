@@ -3,6 +3,7 @@ using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristPosition;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,7 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             {
                 HttpContext = context
             };
+
 
             var dto = new TourExecutionDto
             {
@@ -125,15 +127,16 @@ namespace Explorer.Tours.Tests.Integration.TourExecution
             };
 
             // Act
+
             var result = ((ObjectResult)controller.AbandonTour(dto).Result)?.Value as TourExecutionSessionResponseDto;
 
             // Assert - Response
             result.ShouldNotBeNull();
             result.Id.ShouldNotBe(0);
-            result.TourId.ShouldBe(tourId);
+            result.TourId.ShouldBe(dto.TourId);
 
             // Assert - Database
-            var storedEntity = dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == tourId);
+            var storedEntity = dbContext.TourExecutionSessions.FirstOrDefault(t => t.TourId == dto.TourId);
             storedEntity.ShouldNotBeNull();
             storedEntity.Status.ToString().ShouldBe(TourExecutionSessionStatus.Abandoned.ToString());
         }
