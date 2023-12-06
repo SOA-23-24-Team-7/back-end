@@ -84,6 +84,27 @@ namespace Explorer.Payments.Core.UseCases
             }
         }
 
+        public Result AddBundleOrderItem(BundleOrderItemCreateDto item, long userId)
+        {
+           // try
+            //{
+                var cart = _cartRepository.GetByTouristId(userId);
+                if (cart.BundleOrderItems.Any(b => b.BundleId == item.BundleId))
+                    return Result.Fail(FailureCode.InvalidArgument).WithError("Bundle already exists.");
+
+                var bundleOrderItem = new BundleOrderItem(item.BundleId, item.Price, cart.Id);
+                cart.BundleOrderItems.Add(bundleOrderItem);
+                cart.SetTotalPrice();
+                CrudRepository.Update(cart);
+
+                return Result.Ok();
+            /*}
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }*/
+        }
+
         public Result RemoveOrderItem(long id, long shoppingCartId)
         {
             try
@@ -104,6 +125,29 @@ namespace Explorer.Payments.Core.UseCases
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
         }
+
+        public Result RemoveBundleOrderItem(long id, long userId)
+        {
+            try
+            {
+                var cart = _cartRepository.GetByTouristId(userId);
+
+                var boi = cart.BundleOrderItems.FirstOrDefault(x => x.Id == id);
+
+                if (boi == null) throw new KeyNotFoundException();
+
+                cart.BundleOrderItems.Remove(boi);
+                cart.SetTotalPrice();
+                CrudRepository.Update(cart);
+
+                return Result.Ok();
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
         public Result<OrderItemResponseDto> GetItemByTourId(long tourId, long touristId)
         {
             var cart = _cartRepository.GetByTouristId(touristId);

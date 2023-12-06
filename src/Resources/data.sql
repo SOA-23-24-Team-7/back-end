@@ -11,6 +11,18 @@ INSERT INTO stakeholders."Users"(
     (-2, 'author', 'author', 1, true, 'https://imgs.search.brave.com/n8Gm53DmrCXkPu9d7FpTq1FLO8Nj00zDwzTlFac8HH4/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9oYW5kc29tZS10/b3VyaXN0LW1hbi1s/b29rLW1hcC13aGls/ZS1wb2ludGluZy1m/aW5nZXItZGlyZWN0/aW9uLWRlc3RpbmF0/aW9uLXRyYXZlbC1j/b25jZXBfNTY4NTQt/Mzk4NS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'),
     (-3, 'tourist', 'tourist', 2, true, 'https://imgs.search.brave.com/_8gIhJxRAq9aqREpTnh_wGcNfv4JwgEssYFmzKDWow8/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTMw/MTAwMzg3NC9waG90/by95b3VuZy13b21h/bi1hcnJpdmluZy1h/dC1hLXRyb3BpY2Fs/LXJlc29ydC1mb3It/aGVyLXZhY2F0aW9u/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1BT3N1eWltalZm/QkducTZZeVVhOVZ0/aXRQWE9rdWJOMDFq/TFp0R19lb1ZjPQ');
 
+
+-- ******************** SHOPPING CART *******************************
+INSERT INTO payments."ShoppingCarts"(
+	"Id", "TouristId", "TotalPrice", "IsPurchased")
+	VALUES
+		(-1, -168, 0, false),
+		(-2, -169, 0, false),
+		(-3, -171, 0, false),
+		(-4, -172, 0, false),
+		(-5, -3, 0, false);
+
+
 -- ******************************** PEOPLE ********************************
 
 INSERT INTO stakeholders."People" ("Id", "UserId", "Name", "Surname", "Email", "Bio", "Motto") VALUES (-169, -169, 'Filip', 'Simic', 'fsimic346@gmail.com', NULL, 'Brt, guglaj o.0'),
@@ -25,7 +37,7 @@ INSERT INTO stakeholders."People" ("Id", "UserId", "Name", "Surname", "Email", "
 INSERT INTO payments."Wallets"(
 	"Id", "TouristId", "AdventureCoin")
 	VALUES
-		(-1, -3, 100),
+		(-1, -3, 10000),
 		(-2, -168, 200),
 		(-3, -169, 500),
 		(-4, -170, 400),
@@ -98,10 +110,13 @@ INSERT INTO encounters."TouristProgress" ("Id", "UserId", "Xp", "Level") VALUES 
 INSERT INTO tours."Tours"(
 	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations")
 	VALUES
-		(-1, -2, 'Šetnja pored Dunava', 'Tura po obali Dunava u Novom Sadu', 2, '{obala,reka}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 20, "TransportType": 1}]');
+		(-1, -2, 'Šetnja pored Dunava', 'Tura po obali Dunava u Novom Sadu', 2, '{obala,reka}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 20, "TransportType": 1}]'),
+		(-2, -2, 'Obilazak centra', 'Tura po centru Novog Sada', 2, '{grad,istorija,centar}', 1, 100, FALSE, 2.0, '2023-12-04 19:04:04.562161+01', '2023-12-04 19:04:04.562161+01', '[{"Duration": 30, "TransportType": 1}]');
 
 INSERT INTO tours."KeyPoints"(
 	"Id", "TourId", "Name", "Description", "Longitude", "Latitude", "LocationAddress", "ImagePath", "Order", "HaveSecret", "Secret")
 	VALUES
-		(-1, -1, 'Kej žrtava racije', 'U Novom Sadu, na keju koji danas nosi ime Kej žrtava racije, fašistički okupator je u takozvanoj „januarskoj raciji“ od 21. do 23. januara 1942. izvršio masovno streljanje više od hiljadu nedužnih građana Novog Sada.', 19.855529, 45.252574, 'Сунчани кеј, Нови Сад', 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Spomenik_%C5%BErtvama_racije.jpg', 0, TRUE, '{"Description":"Spomenik je rad vajara Jovana Soldatovića i otkriven je 1971. godine."}'),
-		(-2, -1, 'Štrand', 'Štrand je popularna plaža u Novom Sadu. Nalazi se na Dunavu, u blizini Mosta slobode i važi za jednu od najuređenijih plaža na celom toku reke.', 19.847114, 45.236624, 'Сунчани кеј, Нови Сад', 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.tanjug.rs%2Fsrbija%2Fdrustvo%2F38117%2Fnovi-sad-voda-u-dunavu-kod-plaze-strand-hemijski-i-bakterioloski-je-ispravna%2Fvest&psig=AOvVaw1bubtKNNGk2HHO8i-UFykE&ust=1701859943943000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLjp376Q-IIDFQAAAAAdAAAAABAD', 1, TRUE, '{"Description":"Ulaz u plažu je besplatan preko godine."}');
+		(-1, -1, 'Kej žrtava racije', 'U Novom Sadu, na keju koji danas nosi ime Kej žrtava racije, fašistički okupator je u takozvanoj „januarskoj raciji“ od 21. do 23. januara 1942. izvršio masovno streljanje više od hiljadu nedužnih građana Novog Sada.', 19.855529, 45.252574, 'Сунчани кеј, Нови Сад', '', 0, TRUE, '{"Description":"Spomenik je rad vajara Jovana Soldatovića i otkriven je 1971. godine."}'),
+		(-2, -1, 'Štrand', 'Štrand je popularna plaža u Novom Sadu. Nalazi se na Dunavu, u blizini Mosta slobode i važi za jednu od najuređenijih plaža na celom toku reke.', 19.847114, 45.236624, 'Сунчани кеј, Нови Сад', '', 1, TRUE, '{"Description":"Ulaz u plažu je besplatan preko godine."}'),
+		(-3, -2, 'Trg Svetozara Miletića', 'Svetozar Miletić (Mošorin, 22. februar 1826 — Vršac, 4. februar 1901) bio je advokat, političar i gradonačelnik Novog Sada. Miletić je bio jedan od najznačajnijih i najuticajnijih srpskih političara u Austrougarskoj druge polovine XIX veka.', 19.844811, 45.255049, 'Нови Сад', '', 0, TRUE, '{"Description":"Bio je predsednik Družine za ujedinjenje i oslobođenje Srbije sa sedištem na Cetinju, a tada mu je najbliži saradnik na Cetinju Aleksandar Sandić."}'),
+		(-4, -2, 'Trg Jovana Jovanovića Zmaja', 'Jovan Jovanović Zmaj (Novi Sad, 6. decembar 1833 — Sremska Kamenica, 14. jun 1904) bio je srpski pesnik, dramski pisac, prevodilac i lekar. Smatra se za jednog od najvećih liričara srpskog romantizma.', 19.847880, 45.256936, 'Змај Јовина 26, Нови Сад', '', 1, TRUE, '{"Description":"Njegove najznačajnije zbirke pesama su „Đulići“ i „Đulići uveoci“, prva o srećnom porodičnom životu, a druga o bolu za najmilijima."}');

@@ -7,4 +7,5 @@ public class ShoppingCartResponseDto
     public double TotalPrice { get; set; }
     public bool IsPurchased { get; set; }
     public List<OrderItemResponseDto> OrderItems { get; set; }
+    public List<BundleOrderItemResponseDto> BundleOrderItems { get; set; }
 }
