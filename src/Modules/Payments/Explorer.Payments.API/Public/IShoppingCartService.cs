@@ -11,7 +11,9 @@ public interface IShoppingCartService
     Result Delete(long id);
     public bool IsPurchased(long id);
     Result AddOrderItem(OrderItemCreateDto item);
+    Result AddBundleOrderItem(BundleOrderItemCreateDto item, long userId);
     Result RemoveOrderItem(long id, long shoppingCartId);
+    Result RemoveBundleOrderItem(long id, long userId);
     Result<OrderItemResponseDto> GetItemByTourId(long tourId, long touristId);
     public Result<ShoppingCartResponseDto> ApplyCoupon(ApplyCouponRequestDto applyCouponRequestDto);
 }

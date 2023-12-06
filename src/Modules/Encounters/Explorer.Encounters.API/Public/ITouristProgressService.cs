@@ -10,5 +10,6 @@ namespace Explorer.Encounters.API.Public
         Result<PagedResult<TouristProgressResponseDto>> GetPaged(int page, int pageSize);
         Result<TouristProgressResponseDto> Get(long id);
         Result Delete(long id);
+        Result<TouristProgressResponseDto> GetByUserId(long userId);
     }
 }

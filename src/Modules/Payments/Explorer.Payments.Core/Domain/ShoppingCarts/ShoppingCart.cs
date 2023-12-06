@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Payments.Core.Domain.Bundles;
 using Explorer.Tours.API.Dtos;
 
 namespace Explorer.Payments.Core.Domain.ShoppingCarts;
@@ -10,7 +11,7 @@ public class ShoppingCart : Entity
     public bool IsPurchased { get; init; }
 
     public ICollection<OrderItem> OrderItems { get; } = new List<OrderItem>();
-
+    public ICollection<BundleOrderItem> BundleOrderItems { get; } = new List<BundleOrderItem>();
 
     public ShoppingCart(long touristId, bool isPurchased)
     {
@@ -46,6 +47,11 @@ public class ShoppingCart : Entity
             foreach (var items in OrderItems)
             {
                 TotalPrice += items.Price;
+            }
+
+            foreach (var item in BundleOrderItems)
+            {
+                TotalPrice += item.Price;
             }
         }
     }

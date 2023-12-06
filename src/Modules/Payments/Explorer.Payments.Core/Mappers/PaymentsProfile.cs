@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.Core.Domain;
+using Explorer.Payments.Core.Domain.Bundles;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
 
 namespace Explorer.Payments.Core.Mappers;
@@ -40,5 +41,10 @@ public class PaymentsProfile : Profile
         CreateMap<CouponResponseDto, Coupon>().ReverseMap();
         CreateMap<CouponCreateDto, Coupon>().ReverseMap();
         CreateMap<CouponUpdateDto, Coupon>().ReverseMap();
+
+        CreateMap<BundleOrderItem, BundleOrderItemResponseDto>().ReverseMap();
+        CreateMap<BundleItem, BundleItemResponseDto>().ReverseMap();
+        CreateMap<BundleResponseDto, Bundle>().ReverseMap().ForMember(x => x.BundleItems, opt => opt.MapFrom(src => src.BundleItems));
+        CreateMap<BundleRecordResponseDto, BundleRecord>().ReverseMap();
     }
 }

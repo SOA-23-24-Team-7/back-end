@@ -44,6 +44,9 @@ public static class PaymentsStartup
         services.AddScoped<IShoppingNotificationService, ShoppingNotificationService>();
 
         services.AddScoped<ICouponService, CouponService>();
+
+        services.AddScoped<IBundleService, BundleService>();
+        services.AddScoped<IBundleRecordService, BundleRecordService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -69,6 +72,9 @@ public static class PaymentsStartup
 
         services.AddScoped(typeof(ICouponRepository), typeof(CouponDatabaseRepository));
         services.AddScoped(typeof(ICrudRepository<Coupon>), typeof(CrudDatabaseRepository<Coupon, PaymentsContext>));
+
+        services.AddScoped(typeof(IBundleRepository), typeof(BundleDatabaseRepository));
+        services.AddScoped(typeof(IBundleRecordRepository), typeof(BundleRecordDatabaseRepository));
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),

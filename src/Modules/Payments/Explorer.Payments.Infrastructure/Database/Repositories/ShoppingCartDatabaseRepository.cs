@@ -21,7 +21,7 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
 
         public ShoppingCart GetByTouristId(long id)
         {
-            var entity = _dbSet.Include(x => x.OrderItems).ToList().Find(s => s.TouristId == id && !s.IsPurchased);
+            var entity = _dbSet.Include(sc => sc.OrderItems).Include(sc => sc.BundleOrderItems).ToList().Find(s => s.TouristId == id && !s.IsPurchased);
             //if (entity == null) throw new KeyNotFoundException("Not found: " + id);
             return entity;
         }

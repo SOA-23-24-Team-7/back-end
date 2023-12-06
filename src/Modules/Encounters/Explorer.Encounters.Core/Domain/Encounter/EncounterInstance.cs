@@ -1,5 +1,6 @@
-﻿using System.Text.Json.Serialization;
 using Explorer.BuildingBlocks.Core.Domain;
+using System.Text.Json.Serialization;
+
 
 namespace Explorer.Encounters.Core.Domain.Encounter
 {
@@ -9,11 +10,19 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public EncounterInstanceStatus Status { get; private set; }
         public DateTime? CompletionTime { get; private set; }
 
-        [JsonConstructor]
+
+
         public EncounterInstance(long userId)
         {
             UserId = userId;
             Status = EncounterInstanceStatus.Active;
+        }
+
+        [JsonConstructor]
+        public EncounterInstance(long userId, EncounterInstanceStatus status, DateTime? completionTime) : this(userId)
+        {
+            Status = status;
+            CompletionTime = completionTime;
         }
 
         public void Complete()

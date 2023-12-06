@@ -42,5 +42,18 @@ namespace Explorer.API.Controllers.Tourist
             var result = _tokenService.GetTouristsTokens(id);
             return CreateResponse(result);
         }
+
+        [HttpPost("bundle/{bundleId:long}")]
+        public ActionResult AddTokensByBundle(long bundleId)
+        {
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _tokenService.AddTokensByBundle(userId, bundleId);
+            return CreateResponse(result);
+        }
     }
 }

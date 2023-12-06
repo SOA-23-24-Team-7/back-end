@@ -16,27 +16,73 @@ namespace Explorer.Encounters.Core.UseCases
     public class EncounterService : CrudService<EncounterResponseDto, Encounter>, IEncounterService, IInternalEncounterService
     {
         private readonly IEncounterRepository _encounterRepository;
+        private readonly IHiddenLocationEncounterRepository _hiddenLocationEncounterRepository;
         private readonly ITouristProgressRepository _touristProgressRepository;
         private readonly ICrudRepository<TouristProgress> _touristProgressCrudRepository;
         private readonly IInternalUserService _internalUserService;
         private readonly IInternalKeyPointService _keypointService;
         private readonly IKeyPointEncounterRepository _keypointEncounterRepository;
         private readonly IMapper _mapper;
-        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper, IInternalKeyPointService keypointService, IKeyPointEncounterRepository keypointEncounterRepository) : base(repository, mapper)
+        private readonly IMiscEncounterRepository _miscEncounterRepository;
+
+
+        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, IHiddenLocationEncounterRepository hiddenLocationEncounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMiscEncounterRepository miscEncounterRepository, IMapper mapper, IInternalKeyPointService keypointService, IKeyPointEncounterRepository keypointEncounterRepository) : base(repository, mapper)
         {
             _encounterRepository = encounterRepository;
+            _hiddenLocationEncounterRepository = hiddenLocationEncounterRepository;
             _touristProgressRepository = touristProgressRepository;
             _touristProgressCrudRepository = touristProgressCrudRepository;
             _internalUserService = userService;
             _mapper = mapper;
             _keypointService = keypointService;
             _keypointEncounterRepository = keypointEncounterRepository;
+            _miscEncounterRepository = miscEncounterRepository;
+        }
+
+        public Result<EncounterInstanceResponseDto> GetInstance(long userId, long encounterId)
+        {
+            var entity = _encounterRepository.GetInstance(userId, encounterId);
+            return _mapper.Map<EncounterInstanceResponseDto>(entity);
+        }
+
+        public bool CheckIfUserInCompletionRange(long userId, long encounterId, double longitude, double latitude)
+        {
+            return _hiddenLocationEncounterRepository.GetHiddenLocationEncounterById(encounterId).isUserInCompletionRange(longitude, latitude);
+        }
+
+        public Result<HiddenLocationEncounterResponseDto> CreateHiddenLocationEncounter(HiddenLocationEncounterCreateDto encounter)
+        {
+            try
+            {
+                // problem sa konverzijom iz jednog enuma u drugi (iako su isti lol) ovo 0 na kraju
+                var hiddenEncounter = new HiddenLocationEncounter(encounter.Picture, encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Hidden);
+                CrudRepository.Create(hiddenEncounter);
+                return MapToDto<HiddenLocationEncounterResponseDto>(hiddenEncounter);
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(e.Message);
+            }
         }
 
         public Result<PagedResult<EncounterResponseDto>> GetActive(int page, int pageSize)
         {
             var entities = _encounterRepository.GetActive(page, pageSize);
             return MapToDto<EncounterResponseDto>(entities);
+        }
+
+        public Result<HiddenLocationEncounterResponseDto> GetHiddenLocationEncounterById(long id)
+        {
+            try
+            {
+                var entity = _hiddenLocationEncounterRepository.GetHiddenLocationEncounterById(id);
+                return MapToDto<HiddenLocationEncounterResponseDto>(entity);
+
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(e.Message);
+            }
         }
 
         public Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitude, double latitude)
@@ -57,10 +103,24 @@ namespace Explorer.Encounters.Core.UseCases
                 CrudRepository.Update(encounter);
                 return MapToDto<EncounterResponseDto>(encounter);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Result.Fail(FailureCode.InvalidArgument);
+                return Result.Fail(e.Message);
             }
+        }
+
+        public Result<TouristProgressResponseDto> CompleteHiddenLocationEncounter(long userId, long encounterId, double longitute, double latitude)
+        {
+            var encounter = _hiddenLocationEncounterRepository.GetHiddenLocationEncounterById(encounterId);
+            if (encounter.isUserInCompletionRange(longitute, latitude))
+                return CompleteEncounter(userId, encounterId);
+            return Result.Fail("User is not in 5m range");
+        }
+
+        public Result<PagedResult<EncounterResponseDto>> GetAllInRangeOf(double range, double longitude, double latitude, int page, int pageSize)
+        {
+            var entities = _encounterRepository.GetAllInRangeOf(range, longitude, latitude, page, pageSize);
+            return MapToDto<EncounterResponseDto>(entities);
         }
 
         public Result<TouristProgressResponseDto> CompleteEncounter(long userId, long encounterId)
@@ -107,7 +167,8 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
-        public Result<KeyPointEncounterResponseDto> ActivateKeyPointEncounter(double longitude, double latitude, long keyPointId, long userId)
+        public Result<KeyPointEncounterResponseDto> ActivateKeyPointEncounter(double longitude, double latitude,
+            long keyPointId, long userId)
         {
             try
             {
@@ -131,9 +192,53 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
+        public Result<EncounterResponseDto> CancelEncounter(long userId, long encounterId)
+        {
+            try
+            {
+                var encounter = _encounterRepository.GetById(encounterId);
+                encounter.CancelEncounter(userId);
+                CrudRepository.Update(encounter);
+                return MapToDto<EncounterResponseDto>(encounter);
+            }
+            catch (Exception)
+            {
+
+                return Result.Fail(FailureCode.InvalidArgument);
+            }
+        }
+
         public bool IsEncounterInstanceCompleted(long userId, long keyPointId)
         {
             return _keypointEncounterRepository.IsEncounterInstanceCompleted(userId, keyPointId);
+        }
+
+        public Result<MiscEncounterResponseDto> CreateMiscEncounter(MiscEncounterCreateDto encounter)
+        {
+            try
+            {
+                var miscEncounter = new MiscEncounter(encounter.ChallengeDone, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Misc);
+                CrudRepository.Create(miscEncounter);
+                return MapToDto<MiscEncounterResponseDto>(miscEncounter);
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(e.Message);
+            }
+        }
+
+        public Result<SocialEncounterResponseDto> CreateSocialEncounter(SocialEncounterCreateDto encounterDto)
+        {
+            try
+            {
+                var encounter = new SocialEncounter(encounterDto.Title, encounterDto.Description, encounterDto.Longitude, encounterDto.Latitude, encounterDto.Radius, encounterDto.XpReward, (Domain.Encounter.EncounterStatus)encounterDto.Status, encounterDto.PeopleNumber, Domain.Encounter.EncounterType.Social);
+                CrudRepository.Create(encounter);
+                return MapToDto<SocialEncounterResponseDto>(encounter);
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(e.Message);
+            }
         }
     }
 }
