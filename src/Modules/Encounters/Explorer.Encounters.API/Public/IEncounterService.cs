@@ -22,5 +22,6 @@ namespace Explorer.Encounters.API.Public
         Result<EncounterResponseDto> CancelEncounter(long userId, long encounterId);
         Result<HiddenLocationEncounterResponseDto> GetHiddenLocationEncounterById(long id);
         Result<EncounterInstanceResponseDto> GetInstance(long userId, long encounterId);
+        bool CheckIfUserInCompletionRange(long userId, long encounterId, double longitude, double latitude);
     }
 }

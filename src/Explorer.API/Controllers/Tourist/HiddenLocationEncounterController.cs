@@ -34,6 +34,13 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpPost("{id:long}/check-range")]
+        public bool CheckIfUserInCompletionRange([FromBody] TouristPositionCreateDto position, long id)
+        {
+            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            return _encounterService.CheckIfUserInCompletionRange(userId, id, position.Longitude, position.Latitude);
+        }
+
         [HttpPost("create")]
         public ActionResult<HiddenLocationEncounterResponseDto> Create([FromBody] HiddenLocationEncounterCreateDto encounter)
         {

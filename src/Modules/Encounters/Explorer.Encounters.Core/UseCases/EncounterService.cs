@@ -37,6 +37,11 @@ namespace Explorer.Encounters.Core.UseCases
             return _mapper.Map<EncounterInstanceResponseDto>(entity);
         }
 
+        public bool CheckIfUserInCompletionRange(long userId, long encounterId, double longitude, double latitude)
+        {
+            return _hiddenLocationEncounterRepository.GetHiddenLocationEncounterById(encounterId).isUserInCompletionRange(longitude, latitude);
+        }
+
         public Result<HiddenLocationEncounterResponseDto> CreateHiddenLocationEncounter(HiddenLocationEncounterCreateDto encounter)
         {
             try

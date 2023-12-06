@@ -71,12 +71,23 @@ INSERT INTO blog."Comments" ("Id", "AuthorId", "BlogId", "CreatedAt", "UpdatedAt
 
 -- ************************** ENCOUNTERS *********************************
 
-INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-1, 'Dunavac', 'Dunavac', 19.872465872081193, 45.25945586799432, 50, 30, 0, 1, '[]');
-INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-3, 'Novi', 'Novi', 19.80797234187031, 45.25642079076701, 40, 60, 0, 1, '[]');
-INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-2, 'Dunavski', 'Dunavski', 19.851230184015492, 45.25525290879014, 30, 25, 0, 1, '[]');
-INSERT INTO encounters."HiddenLocationEncounters" ("Id", "Picture", "PictureLongitude", "PictureLatitude") VALUES (-1, 'Dunavac', 19.87309526440953, 45.25820732167992);
-INSERT INTO encounters."HiddenLocationEncounters" ("Id", "Picture", "PictureLongitude", "PictureLatitude") VALUES (-3, 'Novi', 19.80894708989473, 45.256046520780075);
-INSERT INTO encounters."HiddenLocationEncounters" ("Id", "Picture", "PictureLongitude", "PictureLatitude") VALUES (-2, 'Dunavski', 19.851230184015492, 45.25525290879014);
+INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-9, 'Balans', 'Pojesti švarcvald balansaru za manje od 4 minute.', 19.8374354839325, 45.25227550147874, 50, 30, 0, 2, '[]');
+INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-14, 'Bubi dupla', 'Pojesti bubi duplu', 19.842451214790348, 45.247939939289836, 50, 15, 0, 2, '[]');
+INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-7, 'Plašenje gotičarki', 'Uraditi 20 sklekova bez majice ispred filozofskog fakulteta.', 19.853737950325012, 45.24668981590247, 30, 85, 0, 2, '[]');
+INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-13, 'Pronaći krticu', 'Gde li se misteriozna krtica krtiči?', 19.84788537025452, 45.235828447337155, 50, 60, 0, 1, '[]');
+INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-12, 'Bustovanje na Štrandiću', 'Pronaći lokaciju sa koje je slikan legendarni tripl Štrandić bust.', 19.849065542221073, 45.23699192743748, 50, 40, 0, 1, '[]');
+INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-10, 'Električna vožnja', 'Sesti u električni bus broj 11.', 19.849312305450443, 45.24810611676206, 50, 12, 0, 2, '[]');
+INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-11, 'Zaja', 'Poduplati sa prijateljima u zaji.', 19.849306941032413, 45.24610440123252, 50, 20, 0, 0, '[]');
+
+INSERT INTO encounters."HiddenLocationEncounters" ("Id", "Picture", "PictureLongitude", "PictureLatitude") VALUES (-13, 'https://media.discordapp.net/attachments/783721881043206154/1182032447857242222/1701888891690.jpg', 19.847493767738346, 45.235973883652456);
+INSERT INTO encounters."HiddenLocationEncounters" ("Id", "Picture", "PictureLongitude", "PictureLatitude") VALUES (-12, 'https://cdn.discordapp.com/attachments/783721881043206154/1182031344956604527/1701888624282.jpg', 19.849011898040775, 45.2370278136203);
+
+INSERT INTO encounters."SocialEncounters" ("Id", "PeopleNumber") VALUES (-11, 1);
+
+INSERT INTO encounters."MiscEncounters" ("Id", "ChallengeDone") VALUES (-7, false);
+INSERT INTO encounters."MiscEncounters" ("Id", "ChallengeDone") VALUES (-10, false);
+INSERT INTO encounters."MiscEncounters" ("Id", "ChallengeDone") VALUES (-9, false);
+INSERT INTO encounters."MiscEncounters" ("Id", "ChallengeDone") VALUES (-14, false);
 
 -- *********************** TOURIST_PROGRESS ******************************
 
