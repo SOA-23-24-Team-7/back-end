@@ -85,7 +85,7 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateEncounterController(scope);
-        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-1") }, "test");
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-21") }, "test");
 
         var context = new DefaultHttpContext()
         {
@@ -116,7 +116,7 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
     {
         using var scope = Factory.Services.CreateScope();
         var controller = CreateEncounterController(scope);
-        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-1") }, "test");
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-21") }, "test");
 
         var context = new DefaultHttpContext()
         {
@@ -146,7 +146,7 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
     {
         using var scope = Factory.Services.CreateScope();
         var controller = CreateEncounterController(scope);
-        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-1") }, "test");
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-21") }, "test");
 
         var context = new DefaultHttpContext()
         {
@@ -160,7 +160,7 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<EncountersContext>();
         var touristPositionDto = new TouristPositionCreateDto
         {
-            TouristId = -1,
+            TouristId = -21,
             Longitude = 45.45,
             Latitude = 45.45
         };
@@ -176,7 +176,7 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
     {
         using var scope = Factory.Services.CreateScope();
         var controller = CreateEncounterController(scope);
-        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-1") }, "test");
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-21") }, "test");
 
         var context = new DefaultHttpContext()
         {
