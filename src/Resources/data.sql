@@ -69,6 +69,18 @@ INSERT INTO blog."Comments" ("Id", "AuthorId", "BlogId", "CreatedAt", "UpdatedAt
 (-6, -172, -14, '2023-11-14 13:49:10.108651+01', NULL, 'ni ja nisam pozvan 😔'),
 (-3, -169, -14, '2023-11-14 13:58:16.459035+01', NULL, 'drugi put');
 
+-- ************************** ENCOUNTERS *********************************
+
+INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-1, 'Dunavac', 'Dunavac', 19.872465872081193, 45.25945586799432, 50, 30, 0, 1, '[]');
+INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-3, 'Novi', 'Novi', 19.80797234187031, 45.25642079076701, 40, 60, 0, 1, '[]');
+INSERT INTO encounters."Encounters" ("Id", "Title", "Description", "Longitude", "Latitude", "Radius", "XpReward", "Status", "Type", "Instances") VALUES (-2, 'Dunavski', 'Dunavski', 19.851230184015492, 45.25525290879014, 30, 25, 0, 1, '[]');
+INSERT INTO encounters."HiddenLocationEncounters" ("Id", "Picture", "PictureLongitude", "PictureLatitude") VALUES (-1, 'Dunavac', 19.87309526440953, 45.25820732167992);
+INSERT INTO encounters."HiddenLocationEncounters" ("Id", "Picture", "PictureLongitude", "PictureLatitude") VALUES (-3, 'Novi', 19.80894708989473, 45.256046520780075);
+INSERT INTO encounters."HiddenLocationEncounters" ("Id", "Picture", "PictureLongitude", "PictureLatitude") VALUES (-2, 'Dunavski', 19.851230184015492, 45.25525290879014);
+
+-- *********************** TOURIST_PROGRESS ******************************
+
+INSERT INTO encounters."TouristProgress" ("Id", "UserId", "Xp", "Level") VALUES (-1, -169, 85, 12);
 
 -- **************************** TOURS ************************************
 INSERT INTO tours."Tours"(

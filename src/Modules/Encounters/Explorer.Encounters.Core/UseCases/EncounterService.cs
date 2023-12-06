@@ -39,9 +39,17 @@ namespace Explorer.Encounters.Core.UseCases
 
         public Result<HiddenLocationEncounterResponseDto> CreateHiddenLocationEncounter(HiddenLocationEncounterCreateDto encounter)
         {
-            // problem sa konverzijom iz jednog enuma u drugi (iako su isti lol) ovo 0 na kraju
-            var entity = CrudRepository.Create(new HiddenLocationEncounter(encounter.Picture, encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Hidden));
-            return MapToDto<HiddenLocationEncounterResponseDto>(entity);
+            try
+            {
+                // problem sa konverzijom iz jednog enuma u drugi (iako su isti lol) ovo 0 na kraju
+                var hiddenEncounter = new HiddenLocationEncounter(encounter.Picture, encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Hidden);
+                CrudRepository.Create(hiddenEncounter);
+                return MapToDto<HiddenLocationEncounterResponseDto>(hiddenEncounter);
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(e.Message);
+            }
         }
 
         public Result<PagedResult<EncounterResponseDto>> GetActive(int page, int pageSize)
@@ -140,12 +148,18 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
-        public Result CreateMiscEncounter(MiscEncounterCreateDto encounter)
+        public Result<MiscEncounterResponseDto> CreateMiscEncounter(MiscEncounterCreateDto encounter)
         {
-
-            var entity = CrudRepository.Create(new MiscEncounter(encounter.ChallengeDone, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Misc));
-            return Result.Ok();
-            //return MapToDto<MiscEncounterResponseDto>(entity);
+            try
+            {
+                var miscEncounter = new MiscEncounter(encounter.ChallengeDone, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Misc);
+                CrudRepository.Create(miscEncounter);
+                return MapToDto<MiscEncounterResponseDto>(miscEncounter);
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(e.Message);
+            }
         }
 
 
