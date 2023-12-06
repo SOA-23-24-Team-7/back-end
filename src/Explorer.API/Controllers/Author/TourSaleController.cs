@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Explorer.API.Controllers.Author;
 
-[Authorize(Policy = "authorPolicy")]
 [Route("api/tour-sales")]
 public class TourSaleController : BaseApiController
 {
@@ -18,6 +17,7 @@ public class TourSaleController : BaseApiController
         _saleService = saleService;
     }
 
+    [Authorize(Policy = "authorPolicy")]
     [HttpPost]
     public ActionResult<TourSaleResponseDto> Create([FromBody] TourSaleCreateDto request)
     {
@@ -25,6 +25,7 @@ public class TourSaleController : BaseApiController
         return CreateResponse(result);
     }
 
+    [Authorize(Policy = "authorPolicy")]
     [HttpGet]
     public ActionResult<List<TourSaleResponseDto>> GetByAuthor()
     {
@@ -33,6 +34,7 @@ public class TourSaleController : BaseApiController
         return CreateResponse(result);
     }
 
+    [Authorize(Policy = "authorPolicy")]
     [HttpGet("{id:long}")]
     public ActionResult<TourSaleResponseDto> GetById(long id)
     {
@@ -40,6 +42,7 @@ public class TourSaleController : BaseApiController
         return CreateResponse(result);
     }
 
+    [Authorize(Policy = "authorPolicy")]
     [HttpPut]
     public ActionResult<TourSaleResponseDto> Update([FromBody] TourSaleUpdateDto request)
     {
@@ -47,6 +50,7 @@ public class TourSaleController : BaseApiController
         return CreateResponse(result);
     }
 
+    [Authorize(Policy = "authorPolicy")]
     [HttpDelete("{id:long}")]
     public ActionResult Delete(long id)
     {
@@ -54,9 +58,11 @@ public class TourSaleController : BaseApiController
         return CreateResponse(result);
     }
 
+    [Authorize(Policy = "nonAdministratorPolicy")]
     [HttpGet("tours/{tourId:long}")]
     public ActionResult<double?> GetDiscountForTour(long tourId)
     {
-        throw new NotImplementedException();
+        var result = _saleService.GetDiscountForTour(tourId);
+        return CreateResponse(result);
     }
 }
