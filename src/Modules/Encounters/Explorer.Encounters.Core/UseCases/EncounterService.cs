@@ -123,7 +123,7 @@ namespace Explorer.Encounters.Core.UseCases
         public Result CreateMiscEncounter(MiscEncounterCreateDto encounter)
         {
             
-            var entity = CrudRepository.Create(new MiscEncounter(encounter.ChallengeDone, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude,encounter.Radius, encounter.XpReward, 0));
+            var entity = CrudRepository.Create(new MiscEncounter(encounter.ChallengeDone, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude,encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Misc));
             return Result.Ok();
             //return MapToDto<MiscEncounterResponseDto>(entity);
         }
