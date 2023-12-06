@@ -6,10 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Payments.Core.Domain.RepositoryInterfaces
-{
-    public interface IBundleRecordRepository : ICrudRepository<BundleRecord>
-    {
+namespace Explorer.Payments.Core.Domain.RepositoryInterfaces;
 
-    }
+public interface IBundleRecordRepository : ICrudRepository<BundleRecord>
+{
+
 }

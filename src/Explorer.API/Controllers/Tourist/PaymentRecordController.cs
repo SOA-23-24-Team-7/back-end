@@ -37,6 +37,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+
         [HttpGet("transactions")]
         public ActionResult<PagedResult<TransactionRecordResponseDto>> GetPagedTransactionsByTouristId([FromQuery] int page, [FromQuery] int pageSize)
         {

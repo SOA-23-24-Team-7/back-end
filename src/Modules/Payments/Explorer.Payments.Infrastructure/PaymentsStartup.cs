@@ -46,6 +46,7 @@ public static class PaymentsStartup
         services.AddScoped<ICouponService, CouponService>();
 
         services.AddScoped<IBundleService, BundleService>();
+        services.AddScoped<IBundleRecordService, BundleRecordService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
