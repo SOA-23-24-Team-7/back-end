@@ -10,5 +10,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
     public interface IPublicKeyPointNotificationRepository
     {
         PagedResult<PublicKeyPointNotification> GetByAuthorId(int page, int pageSize, long authorId);
+        int CountNotSeen(long userId);
+        void Update(PublicKeyPointNotification notification);
     }
 }

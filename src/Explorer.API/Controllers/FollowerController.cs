@@ -23,7 +23,7 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("followers/{id:long}")]
-        public ActionResult<PagedResult<FollowerResponseWithUsernameDto>> GetFollowers([FromQuery] int page, [FromQuery] int pageSize, long id)
+        public ActionResult<PagedResult<FollowerResponseWithUserDto>> GetFollowers([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
             long userId = id;
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -35,7 +35,7 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
         [HttpGet("followings/{id:long}")]
-        public ActionResult<PagedResult<FollowingResponseWithUsernameDto>> GetFollowings([FromQuery] int page, [FromQuery] int pageSize, long id)
+        public ActionResult<PagedResult<FollowingResponseWithUserDto>> GetFollowings([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
             long userId = id;
             var identity = HttpContext.User.Identity as ClaimsIdentity;

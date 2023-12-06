@@ -1,8 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.UseCases;
+﻿using Explorer.Blog.Core.Domain;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
@@ -46,29 +43,33 @@ namespace Explorer.API.Controllers.Administrator
             return CreateResponse(result);
         }
         [HttpPatch("reject/{id:long}/{comment}")]
-        public ActionResult RejectKeyPointRequest(long id,string comment)
+        public ActionResult RejectKeyPointRequest(long id, string comment)
         {
-            var result = _publicKeyPointRequestService.Reject(id,comment);
+            var loggedUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _publicKeyPointRequestService.Reject(id, comment, loggedUserId);
             return CreateResponse(result);
         }
 
         [HttpPatch("accept/{id:long}")]
         public ActionResult AcceptKeyPointRequest(long id)
         {
-            var result = _publicKeyPointRequestService.Accept(id);
+            var loggedUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _publicKeyPointRequestService.Accept(id, loggedUserId);
             return CreateResponse(result);
         }
         [HttpPatch("facility/reject/{id:long}/{comment}")]
-        public ActionResult RejectFacilityRequest(long id,string comment)
+        public ActionResult RejectFacilityRequest(long id, string comment)
         {
-            var result = _publicFacilityRequestService.Reject(id,comment);
+            var loggedUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _publicFacilityRequestService.Reject(id, comment, loggedUserId);
             return CreateResponse(result);
         }
 
         [HttpPatch("facility/accept/{id:long}")]
         public ActionResult AcceptFacilityRequest(long id)
         {
-            var result = _publicFacilityRequestService.Accept(id);
+            var loggedUserId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _publicFacilityRequestService.Accept(id, loggedUserId);
             return CreateResponse(result);
         }
     }

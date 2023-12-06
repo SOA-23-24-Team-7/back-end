@@ -7,5 +7,6 @@ namespace Explorer.Stakeholders.API.Internal
     {
         Result<string> GetNameById(long id);
         Result<UserResponseDto> Get(long id);
+        string GetProfilePicture(long adminId);
     }
 }

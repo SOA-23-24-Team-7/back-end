@@ -1,5 +1,5 @@
-﻿using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
+﻿using Explorer.Payments.API.Dtos;
+using Explorer.Payments.API.Public;
 using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +18,14 @@ namespace Explorer.API.Controllers.Tourist
             _tokenService = tokenService;
         }
 
-        [HttpPost("{tourId:int}")]
-        public ActionResult<TourTokenResponseDto> AddToken(int tourId)
+        [HttpPost("{tourId:long}/{touristId:long}/{totalPrice:long}/{orderItemPrice:long}")]
+        public ActionResult<TourTokenResponseDto> AddToken(long tourId, long touristId,long totalPrice, long orderItemPrice)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             TourTokenCreateDto dto = new TourTokenCreateDto();
             dto.TourId = tourId;
-            if (identity != null && identity.IsAuthenticated)
-            {
-                dto.TouristId = long.Parse(identity.FindFirst("id").Value);
-            }
-            var result = _tokenService.AddToken(dto);
+            dto.TouristId = touristId; 
+            var result = _tokenService.AddToken(dto, totalPrice, orderItemPrice);
             return CreateResponse(result);
         }
 
@@ -43,6 +40,19 @@ namespace Explorer.API.Controllers.Tourist
             }
 
             var result = _tokenService.GetTouristsTokens(id);
+            return CreateResponse(result);
+        }
+
+        [HttpPost("bundle/{bundleId:long}")]
+        public ActionResult AddTokensByBundle(long bundleId)
+        {
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _tokenService.AddTokensByBundle(userId, bundleId);
             return CreateResponse(result);
         }
     }

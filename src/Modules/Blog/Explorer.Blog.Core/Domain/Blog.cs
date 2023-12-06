@@ -4,9 +4,9 @@ using Explorer.BuildingBlocks.Core.Domain;
 namespace Explorer.Blog.Core.Domain
 {
     public enum BlogStatus { Draft, Published, Closed, Active, Famous };
+    public enum BlogVisibilityPolicy { Public, Private };
     public class Blog : Entity
     {
-
         public string Title { get; private set; }
         public string Description { get; private set; }
         public DateTime Date { get; init; }
@@ -17,6 +17,7 @@ namespace Explorer.Blog.Core.Domain
         public ICollection<Comment> Comments { get; } = new List<Comment>();
 
         public ICollection<Vote> Votes { get; } = new List<Vote>();
+        public BlogVisibilityPolicy VisibilityPolicy { get; private set; }
 
         public long VoteCount => Votes.Sum(x =>
         {
@@ -27,7 +28,7 @@ namespace Explorer.Blog.Core.Domain
         public long UpvoteCount => Votes.Sum(x => x.VoteType == VoteType.UPVOTE ? 1 : 0);
         public long DownvoteCount => Votes.Sum(x => x.VoteType == VoteType.DOWNVOTE ? 1 : 0);
 
-        public Blog(string title, string description, DateTime date, BlogStatus status, int authorId)
+        public Blog(string title, string description, DateTime date, BlogStatus status, int authorId, BlogVisibilityPolicy visibilityPolicy)
         {
 
             if (string.IsNullOrEmpty(title))
@@ -40,6 +41,7 @@ namespace Explorer.Blog.Core.Domain
             Description = description;
             Date = DateTime.UtcNow.Date;
             Status = status;
+            VisibilityPolicy = visibilityPolicy;
         }
 
         public void UpdateBlog(string title, string description, BlogStatus status)

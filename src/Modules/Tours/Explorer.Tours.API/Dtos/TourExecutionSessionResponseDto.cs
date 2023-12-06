@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Explorer.Tours.API.Dtos
+﻿namespace Explorer.Tours.API.Dtos
 {
     public class TourExecutionSessionResponseDto
     {
@@ -15,6 +9,7 @@ namespace Explorer.Tours.API.Dtos
         public long NextKeyPointId { get; set; }
         public double Progress { get; set; }
         public DateTime LastActivity { get; set; }
+        public bool IsCampaign { get; set; }
     }
     public enum TourExecutionSessionStatus
     {

@@ -1,6 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
+using Explorer.Payments.API.Dtos; //MENJANO
+using Explorer.Payments.API.Public; //MENJANO
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
@@ -70,6 +70,20 @@ namespace Explorer.API.Controllers.Tourist
 
         }
 
+        [HttpPost("add-bundle")]
+        public ActionResult AddBundle([FromBody] BundleOrderItemCreateDto item)
+        {
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _cartService.AddBundleOrderItem(item, userId);
+            return CreateResponse(result);
+
+        }
+
         [HttpDelete("removeItem/{id:int}/{shoppingCartId:int}")]
         public ActionResult RemoveOrderItem(int id, int shoppingCartId)
         {
@@ -77,6 +91,20 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
 
         }
+
+        [HttpDelete("remove-bundle-item/{id:long}")]
+        public ActionResult RemoveBundleOrderItem(long id)
+        {
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            var result = _cartService.RemoveBundleOrderItem(id, userId);
+            return CreateResponse(result);
+        }
+
         [HttpGet("getItem/{tourId:long}/{touristId:long}")]
         public ActionResult<OrderItemResponseDto> GetItemByTourId(long tourId,long touristId)
         {
@@ -84,6 +112,12 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
 
         }
- 
+
+        [HttpPost("apply-coupon")]
+        public ActionResult<ShoppingCartResponseDto> ApplyCouponDiscount([FromBody] ApplyCouponRequestDto couponRequestDto) 
+        {
+           var result = _cartService.ApplyCoupon(couponRequestDto);
+            return CreateResponse(result);
+        }
     }
 }
