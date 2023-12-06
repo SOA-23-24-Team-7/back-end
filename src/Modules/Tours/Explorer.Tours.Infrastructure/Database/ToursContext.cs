@@ -20,6 +20,7 @@ public class ToursContext : DbContext
     public DbSet<PublicKeyPointNotification> PublicKeyPointNotifications { get; set; }
     public DbSet<PublicFacilityNotification> PublicFacilityNotifications { get; set; }
     public DbSet<PublicKeyPoint> PublicKeyPoints { get; set; }
+    public DbSet<Campaign> Campaigns { get; set; }
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,6 +48,8 @@ public class ToursContext : DbContext
             .WithOne(k => k.Tour)
             .HasForeignKey(k => k.TourId)
             .IsRequired();
+
+        
     }
 
 

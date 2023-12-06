@@ -48,8 +48,8 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [HttpPost("{tourId:long}")]
-        public ActionResult<TourExecutionSessionResponseDto> StartTour(long tourId)
+        [HttpPost]
+        public ActionResult<TourExecutionSessionResponseDto> StartTour(TourExecutionDto executionDto)
         {
             // treba provera da li je tura kupljena
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -63,13 +63,13 @@ namespace Explorer.API.Controllers.Tourist
             {
                 return Conflict();
             }
-            var result = _tourExecutionService.StartTour(tourId, touristId);
+            var result = _tourExecutionService.StartTour(executionDto.TourId, executionDto.IsCampaign ,touristId);
             return CreateResponse(result);
         }
 
         [HttpPut]
         [Route("abandoning")]
-        public ActionResult<TourExecutionSessionResponseDto> AbandonTour(long tourId)
+        public ActionResult<TourExecutionSessionResponseDto> AbandonTour(TourExecutionDto executionDto)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId;
@@ -78,7 +78,7 @@ namespace Explorer.API.Controllers.Tourist
             // za potrebe testiranja
             else
                 touristId = -21;
-            var result = _tourExecutionService.AbandonTour(tourId, touristId);
+            var result = _tourExecutionService.AbandonTour(executionDto.TourId, executionDto.IsCampaign, touristId);
             if(result == null)
             {
                 return BadRequest();
@@ -87,8 +87,8 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPut]
-        [Route("{tourId:long}/keypoint")]
-        public ActionResult<TourExecutionSessionResponseDto> CompleteKeyPoint(long tourId, TouristPositionResponseDto touristPosition)
+        [Route("{tourId:long}/{isCampaign:bool}/keypoint")]
+        public ActionResult<TourExecutionSessionResponseDto> CompleteKeyPoint(long tourId, bool isCampaign, TouristPositionResponseDto touristPosition)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long touristId;
@@ -97,7 +97,7 @@ namespace Explorer.API.Controllers.Tourist
             // za potrebe testiranja
             else
                 touristId = -21;
-            var result = _tourExecutionService.CheckKeyPointCompletion(tourId, touristId, touristPosition.Longitude, touristPosition.Latitude);
+            var result = _tourExecutionService.CheckKeyPointCompletion(tourId, touristId, touristPosition.Longitude, touristPosition.Latitude, isCampaign);
             if(result == null)
             {
                 return BadRequest();
