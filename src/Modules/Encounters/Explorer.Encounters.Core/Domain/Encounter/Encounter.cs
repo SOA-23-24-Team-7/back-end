@@ -7,14 +7,16 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public string Title { get; init; }
         public string Description { get; init; }
         public double Longitude { get; init; }
-        public double Latitude { get; init; }
+        public double Latitude { get; init; }     
         public double Radius { get; init; }
         public int XpReward { get; init; }
         public EncounterStatus Status { get; private set; }
         public EncounterType Type { get; init; }
         public List<EncounterInstance> Instances { get; } = new List<EncounterInstance>();
+
         public Encounter() { }
         public Encounter(string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, EncounterType type)
+
         {
             Title = title;
             Description = description;

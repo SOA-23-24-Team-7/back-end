@@ -17,8 +17,10 @@ namespace Explorer.Encounters.Core.UseCases
         private readonly ITouristProgressRepository _touristProgressRepository;
         private readonly ICrudRepository<TouristProgress> _touristProgressCrudRepository;
         private readonly IInternalUserService _internalUserService;
+        private readonly IMiscEncounterRepository _miscEncounterRepository;
         private readonly IMapper _mapper;
-        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, IHiddenLocationEncounterRepository hiddenLocationEncounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMapper mapper) : base(repository, mapper)
+
+        public EncounterService(ICrudRepository<Encounter> repository, IEncounterRepository encounterRepository, IHiddenLocationEncounterRepository hiddenLocationEncounterRepository, ITouristProgressRepository touristProgressRepository, ICrudRepository<TouristProgress> touristProgressCrudRepository, IInternalUserService userService, IMiscEncounterRepository miscEncounterRepository, IMapper mapper) : base(repository, mapper)
         {
             _encounterRepository = encounterRepository;
             _hiddenLocationEncounterRepository = hiddenLocationEncounterRepository;
@@ -26,6 +28,7 @@ namespace Explorer.Encounters.Core.UseCases
             _touristProgressCrudRepository = touristProgressCrudRepository;
             _internalUserService = userService;
             _mapper = mapper;
+            _miscEncounterRepository = miscEncounterRepository;
         }
 
         public Result<HiddenLocationEncounterResponseDto> CreateHiddenLocationEncounter(HiddenLocationEncounterCreateDto encounter)
@@ -117,6 +120,16 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
+        public Result CreateMiscEncounter(MiscEncounterCreateDto encounter)
+        {
+            
+            var entity = CrudRepository.Create(new MiscEncounter(encounter.ChallengeDone, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude,encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Misc));
+            return Result.Ok();
+            //return MapToDto<MiscEncounterResponseDto>(entity);
+        }
+
+
+
         public Result<SocialEncounterResponseDto> CreateSocialEncounter(SocialEncounterCreateDto encounterDto)
         {
             try
@@ -130,5 +143,6 @@ namespace Explorer.Encounters.Core.UseCases
                 return Result.Fail(e.Message);
             }
         }
+
     }
 }

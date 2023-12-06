@@ -13,11 +13,13 @@ namespace Explorer.Encounters.API.Public
         Result<PagedResult<EncounterResponseDto>> GetPaged(int page, int pageSize);
         Result<PagedResult<EncounterResponseDto>> GetActive(int page, int pageSize);
         Result<EncounterResponseDto> Get(long id);
+        Result CreateMiscEncounter(MiscEncounterCreateDto encounter);
         Result Delete(long id);
         Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitute, double latitude);
         Result<TouristProgressResponseDto> CompleteEncounter(long userId, long encounterId);
         Result<TouristProgressResponseDto> CompleteHiddenLocationEncounter(long userId, long encounterId, double longitute, double latitude);
         Result<PagedResult<EncounterResponseDto>> GetAllInRangeOf(double range, double longitude, double latitude, int page, int pageSize);
         Result<EncounterResponseDto> CancelEncounter(long userId, long encounterId);
+
     }
 }
