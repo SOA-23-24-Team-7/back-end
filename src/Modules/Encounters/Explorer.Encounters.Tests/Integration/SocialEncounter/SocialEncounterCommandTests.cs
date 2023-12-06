@@ -1,4 +1,16 @@
-﻿namespace Explorer.Encounters.Tests.Integration.SocialEncounter;
+﻿using Explorer.API.Controllers.Author;
+using Explorer.API.Controllers.Tourist;
+using Explorer.Encounters.API.Dtos;
+using Explorer.Encounters.API.Public;
+using Explorer.Encounters.Infrastructure.Database;
+using Explorer.Tours.API.Dtos.TouristPosition;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Shouldly;
+using System.Security.Claims;
+
+namespace Explorer.Encounters.Tests.Integration.SocialEncounter;
 
 [Collection("Sequential")]
 public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
@@ -7,85 +19,171 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
     {
     }
 
-    //[Fact]
-    //public void Succesfully_activate_social_encounter()
-    //{
-    //    Arrange
-    //    using var scope = Factory.Services.CreateScope();
-    //    var dbContext = scope.ServiceProvider.GetRequiredService<EncountersContext>();
-    //    var touristPositionDto = new TouristPositionCreateDto
-    //    {
-    //        TouristId = -1,
-    //        Longitude = 45.45,
-    //        Latitude = 45.45
-    //    };
-    //    var controller = CreateSocialEncounterController(scope);
-    //    Act
-    //   var result = (ObjectResult)controller.Activate(touristPositionDto, -2).Result;
+    [Fact]
+    public void Succesfully_create_social_encounter()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<EncountersContext>();
+        var createEncounterDto = new SocialEncounterCreateDto
+        {
+            Title = "test",
+            Description = "test",
+            Longitude = 45.45,
+            Latitude = 45.45,
+            Radius = 100,
+            XpReward = 5,
+            Status = EncounterStatus.Active,
+            PeopleNumber = 1
+        };
+        var controller = CreateSocialEncounterController(scope);
+        // Act
+        var result = (ObjectResult)controller.Create(createEncounterDto).Result;
 
-    //    Assert - Response
-    //    result.ShouldNotBeNull();
-    //    result.StatusCode.ShouldBe(500);
-    //    Assert - Database
-    //    var storedEntity = dbContext.Encounters.FirstOrDefault(e => e.Id = -2);
-    //    storedEntity.ShouldNotBeNull();
-    //}
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(200);
+        SocialEncounterResponseDto resultValue = (SocialEncounterResponseDto)result.Value;
+        long id = resultValue.Id;
+        // Assert - Database
+        var storedEntity = dbContext.Encounters.FirstOrDefault(e => e.Id == id);
+        storedEntity.ShouldNotBeNull();
+    }
 
-    //[Fact]
-    //public void Unsucesfully_activate_social_encounter()
-    //{
-    //    Arrange
-    //    using var scope = Factory.Services.CreateScope();
-    //    var touristPositionDto = new TouristPositionCreateDto
-    //    {
-    //        TouristId = -1,
-    //        Longitude = 45.45,
-    //        Latitude = 45.45
-    //    };
-    //    var controller = CreateSocialEncounterController(scope);
-    //    Act
-    //   var result = (ObjectResult)controller.Activate(touristPositionDto, -2).Result;
+    [Fact]
+    public void Unsuccesfully_create_social_encounter()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<EncountersContext>();
+        var createEncounterDto = new SocialEncounterCreateDto
+        {
+            Title = "test",
+            Description = "test",
+            Longitude = 45.45,
+            Latitude = 45.45,
+            Radius = 100,
+            XpReward = 5,
+            Status = EncounterStatus.Active,
+            PeopleNumber = 0
+        };
+        var controller = CreateSocialEncounterController(scope);
+        // Act
+        var result = (ObjectResult)controller.Create(createEncounterDto).Result;
 
-    //    Assert - Response
-    //    result.ShouldNotBeNull();
-    //    Assert - Database
-    //}
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(500);
+        // Assert - Database
+        var storedEntity = dbContext.Encounters.FirstOrDefault(e => e.Id == 1);
+        storedEntity.ShouldBeNull();
+    }
 
-    //[Fact]
-    //public void Succesfully_complete_social_encounter()
-    //{
-    //    Arrange
-    //    using var scope = Factory.Services.CreateScope();
-    //    var socialEncounterDto = SetupSocialEncounterDto();
-    //    var controller = CreateSocialEncounterController(scope);
-    //    // Act
-    //    var result = ((ObjectResult)controller.Complete(socialEncounterDto).Result)?.Value as SocialEncounterResponseDto;
+    [Fact]
+    public void Succesfully_activate_social_encounter()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateEncounterController(scope);
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-1") }, "test");
 
-    //    // Assert - Response
-    //    result.ShouldNotBeNull();
-    //    Assert - Database
-    //}
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(contextUser)
+        };
 
-    //[Fact]
-    //public void Unsucesfullt_complete_social_encounter()
-    //{
-    //    Arrange
-    //    using var scope = Factory.Services.CreateScope();
-    //    var socialEncounterDto = ;
-    //    var controller = CreateSocialEncounterController(scope);
-    //    // Act
-    //    var result = ((ObjectResult)controller.Complete(socialEncounterDto).Result)?.Value as SocialEncounterResponseDto;
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+        var dbContext = scope.ServiceProvider.GetRequiredService<EncountersContext>();
+        var touristPositionDto = new TouristPositionCreateDto
+        {
+            TouristId = -1,
+            Longitude = 45.45,
+            Latitude = 45.45
+        };
+        // Act
+        var result = (ObjectResult)controller.Activate(touristPositionDto, -1).Result;
 
-    //    // Assert - Response
-    //    result.ShouldNotBeNull();
-    //    Assert - Database
-    //}
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(200);
+    }
 
-    //private static EncounterController CreateSocialEncounterController(IServiceScope scope)
-    //{
-    //    return new EncounterController(scope.ServiceProvider.GetRequiredService<IEncounterService>())
-    //    {
-    //        ControllerContext = BuildContext("-1")
-    //    };
-    //}
+    [Fact]
+    public void Unsuccesfully_activate_social_encounter()
+    {
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateEncounterController(scope);
+        var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-1") }, "test");
+
+        var context = new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(contextUser)
+        };
+
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = context
+        };
+        var dbContext = scope.ServiceProvider.GetRequiredService<EncountersContext>();
+        var touristPositionDto = new TouristPositionCreateDto
+        {
+            TouristId = -1,
+            Longitude = 46.55,
+            Latitude = 45.45
+        };
+        // Act
+        var result = (ObjectResult)controller.Activate(touristPositionDto, -1).Result;
+
+        // Assert - Response
+        result.StatusCode.ShouldBe(500);
+    }
+
+    [Fact]
+    public void Succesfully_complete_social_encounter()
+    {
+        // Arrange
+        //using var scope = Factory.Services.CreateScope();
+        //var socialEncounterDto = SetupSocialEncounterDto();
+        //var controller = CreateSocialEncounterController(scope);
+        //// Act
+        //var result = ((ObjectResult)controller.Complete(socialEncounterDto).Result)?.Value as SocialEncounterResponseDto;
+
+        //// Assert - Response
+        //result.ShouldNotBeNull();
+        // Assert - Database
+    }
+
+    [Fact]
+    public void Unsuccesfullt_complete_social_encounter()
+    {
+        // Arrange
+        //using var scope = Factory.Services.CreateScope();
+        //var socialEncounterDto = ;
+        //var controller = CreateSocialEncounterController(scope);
+        //// Act
+        //var result = ((ObjectResult)controller.Complete(socialEncounterDto).Result)?.Value as SocialEncounterResponseDto;
+
+        //// Assert - Response
+        //result.ShouldNotBeNull();
+        // Assert - Database
+    }
+
+    private static Explorer.API.Controllers.Author.SocialEncounterController CreateSocialEncounterController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Author.SocialEncounterController(scope.ServiceProvider.GetRequiredService<IEncounterService>())
+        {
+            ControllerContext = BuildContext("-1")
+        };
+    }
+
+    private static Explorer.API.Controllers.Tourist.EncounterController CreateEncounterController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Tourist.EncounterController(scope.ServiceProvider.GetRequiredService<IEncounterService>(), scope.ServiceProvider.GetRequiredService<ITouristProgressService>())
+        {
+            ControllerContext = BuildContext("-1")
+        };
+    }
 }
