@@ -93,7 +93,7 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
 
     private static EncounterController CreateSocialEncounterController(IServiceScope scope)
     {
-        return new EncounterController(scope.ServiceProvider.GetRequiredService<IEncounterService>())
+        return new EncounterController(scope.ServiceProvider.GetRequiredService<IEncounterService>(), scope.ServiceProvider.GetRequiredService<ITouristProgressService>())
         {
             ControllerContext = BuildContext("-1")
         };
