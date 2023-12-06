@@ -22,7 +22,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<RecordResponseDto>> GetByTourist()
+        public ActionResult<List<BundleRecordResponseDto>> GetByTourist()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             long id;
