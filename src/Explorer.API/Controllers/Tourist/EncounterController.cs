@@ -12,9 +12,11 @@ namespace Explorer.API.Controllers.Tourist
     public class EncounterController : BaseApiController
     {
         private readonly IEncounterService _encounterService;
-        public EncounterController(IEncounterService encounterService)
+        private readonly ITouristProgressService _progressService;
+        public EncounterController(IEncounterService encounterService, ITouristProgressService progressService)
         {
             _encounterService = encounterService;
+            _progressService = progressService;
         }
 
         [HttpPost("{id:long}/activate")]
@@ -66,6 +68,14 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<PagedResult<EncounterResponseDto>> GetActive([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _encounterService.GetActive(page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("progress")]
+        public ActionResult<TouristProgressResponseDto> GetProgress()
+        {
+            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _progressService.GetByUserId(userId);
             return CreateResponse(result);
         }
     }
