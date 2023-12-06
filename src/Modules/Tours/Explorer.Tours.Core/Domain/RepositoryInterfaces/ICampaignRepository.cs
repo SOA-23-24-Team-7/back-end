@@ -12,5 +12,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         public List<Campaign> GetByTouristId(long touristId);
         public void Save (Campaign campaign);
         public void Delete (long id);
+
+        public Equipment GetEquipment(long id);
     }
 }

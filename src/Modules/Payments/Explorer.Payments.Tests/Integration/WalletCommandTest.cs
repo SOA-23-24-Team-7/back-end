@@ -22,10 +22,16 @@ namespace Explorer.Payments.Tests.Integration
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
 
-            var newEntity = new WalletUpdateDto
+            var newEntity = new WalletUpdateDto(-67, 15);
+
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-1234") }, "test");
+            var context = new DefaultHttpContext()
             {
-                Id = -67,
-                AdventureCoin = 15,
+                User = new ClaimsPrincipal(contextUser)
+            };
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
             };
 
             var result = ((ObjectResult)controller.UpdateWallet(newEntity).Result)?.Value as WalletResponseDto;

@@ -11,8 +11,7 @@ namespace Explorer.Payments.API.Public
 {
     public interface ICouponService
     {
-        //Result<PagedResult<CouponResponseDto>> GetPagedByTourId(int page, int pageSize, long tourId);
-       
+        Result<PagedResult<CouponResponseDto>> GetPaged(int page, int pageSize);
         Result<CouponResponseDto> Create<CouponCreateDto>(CouponCreateDto review);
         Result<CouponResponseDto> Update<CouponUpdateDto>(CouponUpdateDto review);
         Result Delete(long id);
