@@ -8,6 +8,7 @@ using Explorer.Encounters.Core.Mappers;
 using Explorer.Encounters.Core.UseCases;
 using Explorer.Encounters.Infrastructure.Database;
 using Explorer.Encounters.Infrastructure.Database.Repositories;
+using Explorer.Payments.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,8 +32,10 @@ public static class EncountersStartup
     {
         services.AddScoped(typeof(ICrudRepository<Encounter>), typeof(CrudDatabaseRepository<Encounter, EncountersContext>));
         services.AddScoped(typeof(ICrudRepository<TouristProgress>), typeof(CrudDatabaseRepository<TouristProgress, EncountersContext>));
+        services.AddScoped(typeof(ICrudRepository<SocialEncounter>), typeof(CrudDatabaseRepository<SocialEncounter, EncountersContext>));
         services.AddScoped<IEncounterRepository, EncounterDatabaseRepository>();
         services.AddScoped<IMiscEncounterRepository, MiscEncounterDatabaseRepository>();
+        services.AddScoped<IHiddenLocationEncounterRepository, HiddenLocationEncounterDatabaseRepository>();
         services.AddScoped<ITouristProgressRepository, TouristProgressDatabaseRepository>();
         services.AddDbContext<EncountersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("encounters"),
