@@ -7,4 +7,5 @@ public class BundleResponseDto
     public long Price { get; set; }
     public long AuthorId { get; set; }
     public string Status { get; set; }
+    public List<BundleItemResponseDto> BundleItems { get; set; }
 }

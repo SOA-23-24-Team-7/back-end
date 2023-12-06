@@ -164,5 +164,16 @@ namespace Explorer.Payments.Core.UseCases
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             };
         }
+
+        public Result<List<BundleResponseDto>> GetByAuthor(long authorId)
+        {
+            var result = _bundleRepository.GetAll(b => b.AuthorId == authorId, include: "BundleItems");
+            var mapped = new List<BundleResponseDto>();
+            foreach (var bundle in result)
+            {
+                mapped.Add(_mapper.Map<BundleResponseDto>(bundle));
+            }
+            return mapped;
+        }
     }
 }

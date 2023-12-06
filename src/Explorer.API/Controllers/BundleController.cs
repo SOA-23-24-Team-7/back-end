@@ -1,4 +1,5 @@
-﻿using Explorer.Payments.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,14 @@ namespace Explorer.API.Controllers
         public BundleController(IBundleService bundleService)
         {
             _bundleService = bundleService;
+        }
+
+        [HttpGet]
+        public ActionResult<PagedResult<BundleResponseDto>> GetForAuthor()
+        {
+            var userId = getUserIdByToken();
+            var result = _bundleService.GetByAuthor(userId);
+            return CreateResponse(result);
         }
 
         [HttpPost]
@@ -80,6 +89,17 @@ namespace Explorer.API.Controllers
             }
             var result = _bundleService.Delete(id, userId);
             return CreateResponse(result);
+        }
+
+        private long getUserIdByToken()
+        {
+            long userId = 0;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                userId = long.Parse(identity.FindFirst("id").Value);
+            }
+            return userId;
         }
     }
 }

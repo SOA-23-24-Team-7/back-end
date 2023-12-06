@@ -1,4 +1,5 @@
-﻿using Explorer.Payments.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Dtos;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,6 @@ namespace Explorer.Payments.API.Public
         Result<BundleResponseDto> Publish(long id, long authorId);
         Result<BundleResponseDto> Archive(long id, long authorId);
         Result<BundleResponseDto> Delete(long id, long authorId);
+        Result<List<BundleResponseDto>> GetByAuthor(long authorId);
     }
 }
