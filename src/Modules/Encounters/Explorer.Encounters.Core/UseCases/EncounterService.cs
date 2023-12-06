@@ -52,8 +52,16 @@ namespace Explorer.Encounters.Core.UseCases
 
         public Result<HiddenLocationEncounterResponseDto> GetHiddenLocationEncounterById(long id)
         {
-            var entity = _hiddenLocationEncounterRepository.GetHiddenLocationEncounterById(id);
-            return MapToDto<HiddenLocationEncounterResponseDto>(entity);
+            try
+            {
+                var entity = _hiddenLocationEncounterRepository.GetHiddenLocationEncounterById(id);
+                return MapToDto<HiddenLocationEncounterResponseDto>(entity);
+
+            }
+            catch (Exception e)
+            {
+                return Result.Fail(e.Message);
+            }
         }
 
         public Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitute, double latitude)
@@ -134,8 +142,8 @@ namespace Explorer.Encounters.Core.UseCases
 
         public Result CreateMiscEncounter(MiscEncounterCreateDto encounter)
         {
-            
-            var entity = CrudRepository.Create(new MiscEncounter(encounter.ChallengeDone, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude,encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Misc));
+
+            var entity = CrudRepository.Create(new MiscEncounter(encounter.ChallengeDone, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Misc));
             return Result.Ok();
             //return MapToDto<MiscEncounterResponseDto>(entity);
         }

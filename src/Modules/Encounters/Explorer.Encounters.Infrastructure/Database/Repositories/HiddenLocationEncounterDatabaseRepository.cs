@@ -28,7 +28,7 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
 
         public HiddenLocationEncounter GetHiddenLocationEncounterById(long id)
         {
-            var entity = _dbSet.First(x => x.Id == id);
+            var entity = _dbSet.FirstOrDefault(x => x.Id == id);
             if (entity == null) throw new KeyNotFoundException("Not found: " + id);
             return entity;
         }
