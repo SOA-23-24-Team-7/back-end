@@ -15,5 +15,6 @@ namespace Explorer.Encounters.API.Public
         Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitude, double latitude);
         Result<TouristProgressResponseDto> CompleteEncounter(long userId, long encounterId);
         Result CreateKeyPointEncounter(KeyPointEncounterCreateDto keyPointEncounter, long userId);
+        Result<KeyPointEncounterResponseDto> ActivateKeyPointEncounter(double longitude, double latitude, long keyPointId, long userId);
     }
 }

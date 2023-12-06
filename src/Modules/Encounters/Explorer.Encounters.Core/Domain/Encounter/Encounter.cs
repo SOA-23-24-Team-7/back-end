@@ -49,7 +49,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
                 throw new ArgumentException("Encounter is not yet published.");
             if (hasUserActivatedEncounter(userId))
                 throw new ArgumentException("User has already activated/completed this encounter.");
-            if (isUserInRange(userLongitude, userLatitude))
+            if (!isUserInRange(userLongitude, userLatitude))
                 throw new ArgumentException("User is not close enough to the encounter.");
 
             Instances.Add(new EncounterInstance(userId));

@@ -107,6 +107,30 @@ namespace Explorer.Encounters.Core.UseCases
             }
         }
 
+        public Result<KeyPointEncounterResponseDto> ActivateKeyPointEncounter(double longitude, double latitude, long keyPointId, long userId)
+        {
+            try
+            {
+                _touristProgressRepository.GetByUserId(userId);
+            }
+            catch (Exception)
+            {
+                _touristProgressCrudRepository.Create(new TouristProgress(userId, 0, 1));
+            }
+
+            try
+            {
+                var encounter = _keypointEncounterRepository.GetByKeyPoint(keyPointId);
+                encounter.ActivateEncounter(userId, longitude, latitude);
+                CrudRepository.Update(encounter);
+                return MapToDto<KeyPointEncounterResponseDto>(encounter);
+            }
+            catch (Exception)
+            {
+                return Result.Fail(FailureCode.InvalidArgument);
+            }
+        }
+
         public bool IsEncounterInstanceCompleted(long userId, long keyPointId)
         {
             return _keypointEncounterRepository.IsEncounterInstanceCompleted(userId, keyPointId);

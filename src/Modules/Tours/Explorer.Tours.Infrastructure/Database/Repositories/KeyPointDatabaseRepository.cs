@@ -106,7 +106,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public double GetKeyPointLatitude(long id)
         {
-            return _dbSet.FirstOrDefault(x => x.Id == id).Longitude;
+            return _dbSet.FirstOrDefault(x => x.Id == id).Latitude;
         }
 
         public bool CheckEncounterExists(long keyPointId)

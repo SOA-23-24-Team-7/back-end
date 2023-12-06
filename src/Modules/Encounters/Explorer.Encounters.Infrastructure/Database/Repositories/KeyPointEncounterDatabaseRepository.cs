@@ -1,6 +1,8 @@
-﻿using Explorer.Encounters.Core.Domain.Encounter;
+﻿using Explorer.Encounters.API.Dtos;
+using Explorer.Encounters.Core.Domain.Encounter;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using EncounterInstanceStatus = Explorer.Encounters.Core.Domain.Encounter.EncounterInstanceStatus;
 
 namespace Explorer.Encounters.Infrastructure.Database.Repositories;
 
@@ -25,5 +27,13 @@ public class KeyPointEncounterDatabaseRepository : IKeyPointEncounterRepository
 
         return encounterInstance.Status == EncounterInstanceStatus.Completed;
 
+    }
+
+    public KeyPointEncounter GetByKeyPoint(long keyPointId)
+    {
+        var encounter = _dbSet.FirstOrDefault(x => x.KeyPointId == keyPointId);
+        if (encounter == null) throw new ArgumentException("Encounter doesn't exist");
+
+        return encounter;
     }
 }

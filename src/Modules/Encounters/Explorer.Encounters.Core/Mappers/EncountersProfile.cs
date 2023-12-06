@@ -12,6 +12,7 @@ public class EncountersProfile : Profile
         CreateMap<EncounterCreateDto, Encounter>().ReverseMap();
         CreateMap<EncounterUpdateDto, Encounter>().ReverseMap();
         CreateMap<EncounterResponseDto, Encounter>().ReverseMap();
+        CreateMap<KeyPointEncounterResponseDto, KeyPointEncounter>().ReverseMap();
         CreateMap<EncounterInstanceResponseDto, EncounterInstance>().ReverseMap();
         CreateMap<TouristProgressResponseDto, TouristProgress>().ReverseMap();
     }
