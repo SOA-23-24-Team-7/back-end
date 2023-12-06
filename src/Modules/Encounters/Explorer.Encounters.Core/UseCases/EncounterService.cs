@@ -37,9 +37,14 @@ namespace Explorer.Encounters.Core.UseCases
             return _mapper.Map<EncounterInstanceResponseDto>(entity);
         }
 
+        public bool CheckIfUserInCompletionRange(long userId, long encounterId, double longitude, double latitude)
+        {
+            return _hiddenLocationEncounterRepository.GetHiddenLocationEncounterById(encounterId).isUserInCompletionRange(longitude, latitude);
+        }
+
         public Result<HiddenLocationEncounterResponseDto> CreateHiddenLocationEncounter(HiddenLocationEncounterCreateDto encounter)
         {
-            // problem sa konverzijom iz jednog enuma u drugi (iako su isti lol) ovo 0 na kraju
+
             var entity = CrudRepository.Create(new HiddenLocationEncounter(encounter.Picture, encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Hidden));
             return MapToDto<HiddenLocationEncounterResponseDto>(entity);
         }
