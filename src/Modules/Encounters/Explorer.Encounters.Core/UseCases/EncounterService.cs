@@ -31,6 +31,12 @@ namespace Explorer.Encounters.Core.UseCases
             _miscEncounterRepository = miscEncounterRepository;
         }
 
+        public Result<EncounterInstanceResponseDto> GetInstance(long userId, long encounterId)
+        {
+            var entity = _encounterRepository.GetInstance(userId, encounterId);
+            return _mapper.Map<EncounterInstanceResponseDto>(entity);
+        }
+
         public Result<HiddenLocationEncounterResponseDto> CreateHiddenLocationEncounter(HiddenLocationEncounterCreateDto encounter)
         {
             // problem sa konverzijom iz jednog enuma u drugi (iako su isti lol) ovo 0 na kraju
@@ -42,6 +48,12 @@ namespace Explorer.Encounters.Core.UseCases
         {
             var entities = _encounterRepository.GetActive(page, pageSize);
             return MapToDto<EncounterResponseDto>(entities);
+        }
+
+        public Result<HiddenLocationEncounterResponseDto> GetHiddenLocationEncounterById(long id)
+        {
+            var entity = _hiddenLocationEncounterRepository.GetHiddenLocationEncounterById(id);
+            return MapToDto<HiddenLocationEncounterResponseDto>(entity);
         }
 
         public Result<EncounterResponseDto> ActivateEncounter(long userId, long encounterId, double longitute, double latitude)
@@ -70,7 +82,7 @@ namespace Explorer.Encounters.Core.UseCases
 
         public Result<TouristProgressResponseDto> CompleteHiddenLocationEncounter(long userId, long encounterId, double longitute, double latitude)
         {
-            var encounter = _hiddenLocationEncounterRepository.GetById(encounterId);
+            var encounter = _hiddenLocationEncounterRepository.GetHiddenLocationEncounterById(encounterId);
             if (encounter.isUserInCompletionRange(longitute, latitude))
                 return CompleteEncounter(userId, encounterId);
             return Result.Fail("User is not in 5m range");

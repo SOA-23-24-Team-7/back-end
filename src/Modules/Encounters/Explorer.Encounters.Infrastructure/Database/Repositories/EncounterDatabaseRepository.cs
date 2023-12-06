@@ -49,5 +49,11 @@ namespace Explorer.Encounters.Infrastructure.Database.Repositories
             if (entity == null) throw new KeyNotFoundException("Not found: " + id);
             return entity;
         }
+        public EncounterInstance GetInstance(long userId, long encounterId)
+        {
+            var entity = _dbSet.First(x => x.Id == encounterId);
+            var instance = entity.Instances.FirstOrDefault(x => x.UserId == userId);
+            return instance;
+        }
     }
 }

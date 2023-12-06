@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Encounters.Core.Domain.Encounter;
 
 namespace Explorer.Encounters.Core.Domain.RepositoryInterfaces
 {
@@ -8,5 +9,6 @@ namespace Explorer.Encounters.Core.Domain.RepositoryInterfaces
         PagedResult<Encounter.Encounter> GetAll(int page, int pageSize);
         PagedResult<Encounter.Encounter> GetAllInRangeOf(double range, double longitude, double latitude, int page, int pageSize);
         Encounter.Encounter GetById(long id);
+        EncounterInstance GetInstance(long userId, long encounterId);
     }
 }

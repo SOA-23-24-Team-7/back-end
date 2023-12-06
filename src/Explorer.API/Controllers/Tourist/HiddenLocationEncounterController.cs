@@ -16,6 +16,13 @@ namespace Explorer.API.Controllers.Tourist
             _encounterService = encounterService;
         }
 
+        [HttpGet("{id:long}")]
+        public ActionResult<EncounterResponseDto> GetHiddenLocationEncounterById(long id)
+        {
+            var result = _encounterService.GetHiddenLocationEncounterById(id);
+            return CreateResponse(result);
+        }
+
         [HttpPost("{id:long}/complete")]
         public ActionResult<EncounterResponseDto> Complete([FromBody] TouristPositionCreateDto position, long id)
         {

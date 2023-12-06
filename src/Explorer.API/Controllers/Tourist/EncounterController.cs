@@ -19,6 +19,14 @@ namespace Explorer.API.Controllers.Tourist
             _progressService = progressService;
         }
 
+        [HttpGet("{encounterId:long}/instance")]
+        public ActionResult<EncounterResponseDto> GetInstance(long encounterId)
+        {
+            long userId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            var result = _encounterService.GetInstance(userId, encounterId);
+            return CreateResponse(result);
+        }
+
         [HttpPost("{id:long}/activate")]
         public ActionResult<EncounterResponseDto> Activate([FromBody] TouristPositionCreateDto position, long id)
         {
