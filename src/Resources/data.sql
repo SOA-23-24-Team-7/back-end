@@ -43,24 +43,25 @@ INSERT INTO stakeholders."Followers" ("Id", "UserId", "FollowedById") VALUES (-1
 
 -- ******************************** BLOGS ********************************
 
-INSERT INTO blog."Blogs" ("Id", "Title", "Description", "Date", "Status", "AuthorId", "Votes") VALUES (-11, 'Off-the-Beaten-Path Travel', 'Discover charming villages and secret natural havens off the tourist path. Immerse yourself in the heart of local cultures and explore hidden treasures. Pack your bags for an authentic travel experience!
+INSERT INTO blog."Blogs" ("Id", "Title", "Description", "Date", "Status", "AuthorId", "Votes", "VisibilityPolicy") VALUES (-11, 'Off-the-Beaten-Path Travel', 'Discover charming villages and secret natural havens off the tourist path. Immerse yourself in the heart of local cultures and explore hidden treasures. Pack your bags for an authentic travel experience!
 
 ![Village Retreat](https://live.staticflickr.com/65535/53244354274_f096dbce42.jpg)
 
-Join us on the road less traveled!', '2023-11-14 00:00:00+01', 3, -170, '[{"UserId": -168, "VoteType": 1}, {"UserId": -170, "VoteType": 1}]'),
+Join us on the road less traveled!', '2023-11-14 00:00:00+01', 3, -170, '[{"UserId": -168, "VoteType": 1}, {"UserId": -170, "VoteType": 1}]', 0),
 (-12, 'Historical Wonders: Time Travel Edition', 'Step into history with ancient ruins and medieval castles. Explore the mysteries of past civilizations and witness the grandeur of medieval architecture. Join us on a captivating journey through time!
 
 ![Historical Landmarks](https://live.staticflickr.com/65535/53280758885_34afd10b3a.jpg)
 
 Walk the corridors of history with us!
-', '2023-11-14 00:00:00+01', 1, -169, '[{"UserId": -168, "VoteType": 0}, {"UserId": -170, "VoteType": 0}]'),
+', '2023-11-14 00:00:00+01', 1, -169, '[{"UserId": -168, "VoteType": 0}, {"UserId": -170, "VoteType": 0}]', 0),
 (-13, 'Urban Wanderlust: City Exploration', 'Delve into the heartbeat of vibrant cities! Explore bustling markets, iconic landmarks, and hidden gems within the urban landscape. Immerse yourself in the culture and energy of city life.
 
 ![City Exploration](https://live.staticflickr.com/65535/53308142182_84983c1cc3.jpg)
 
-Experience the pulse of the city with us!', '2023-11-14 00:00:00+01', 0, -170, '[]'),
-(-14, 'Team building grupa 1 (produžeci)', 'Nastavak kod Dragana na svirku i drinkić ![Team building](https://cdn.discordapp.com/attachments/1165638888082124852/1174054126708064327/IMG-20231113-WA0004.jpg?ex=6566321c&is=6553bd1c&hm=be7fc6baf1721ed5fcc861db7fb1692075556efcf6f95d12210aadbacda3cb8e&)', '2023-11-14 00:00:00+01', 1, -170, '[]'),
-(-15, 'Team building grupa 1', 'Divno veče u ambijentu još divnijih ljudi huh ![Team building](https://cdn.discordapp.com/attachments/1165638888082124852/1174053744795734026/IMG-20231113-WA0006.jpg?ex=656631c1&is=6553bcc1&hm=ca8f361cba4201ae655e7465673fbb8b214aa835c5903a8b41ec3b2c299f2233&)', '2023-11-14 00:00:00+01', 1, -170, '[]');
+Experience the pulse of the city with us!', '2023-11-14 00:00:00+01', 0, -170, '[]', 0),
+(-14, 'Team building grupa 1 (produžeci)', 'Nastavak kod Dragana na svirku i drinkić ![Team building](https://cdn.discordapp.com/attachments/1165638888082124852/1174054126708064327/IMG-20231113-WA0004.jpg?ex=6566321c&is=6553bd1c&hm=be7fc6baf1721ed5fcc861db7fb1692075556efcf6f95d12210aadbacda3cb8e&)', '2023-11-14 00:00:00+01', 1, -170, '[]', 0),
+(-15, 'Team building grupa 1', 'Divno veče u ambijentu još divnijih ljudi huh ![Team building](https://cdn.discordapp.com/attachments/1165638888082124852/1174053744795734026/IMG-20231113-WA0006.jpg?ex=656631c1&is=6553bcc1&hm=ca8f361cba4201ae655e7465673fbb8b214aa835c5903a8b41ec3b2c299f2233&)', '2023-11-14 00:00:00+01', 1, -170, '[]', 0);
+
 
 INSERT INTO blog."Comments" ("Id", "AuthorId", "BlogId", "CreatedAt", "UpdatedAt", "Text") VALUES (-1, -168, -11, '2023-11-14 13:49:10.108651+01', NULL, 'dobar blog!'),
 (-2, -168, -11, '2023-11-14 13:49:23.737314+01', NULL, 'opet sam procitao, i jos je bolji...'),

@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
@@ -11,10 +12,12 @@ namespace Explorer.API.Controllers
     public class TourSearchController : BaseApiController
     {
         private readonly ITourSearchService _tourSearchService;
+        private readonly ITourSaleService? _tourSaleService;
 
-        public TourSearchController(ITourSearchService tourSearchService)
+        public TourSearchController(ITourSearchService tourSearchService, ITourSaleService? tourSaleService)
         {
             _tourSearchService = tourSearchService;
+            _tourSaleService = tourSaleService;
         }
 
         [HttpGet]
@@ -25,16 +28,30 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("search")]
-        public ActionResult<PagedResult<TourResponseDto>> Search([FromQuery] TourSearchFilterDto tourSearchFilterDto)
+        public ActionResult<PagedResult<TourResponseDto>> Search([FromQuery] TourSearchFilterDto tourSearchFilterDto, [FromQuery] SortOption? sortBy = null)
         {
-            var result = _tourSearchService.Search(tourSearchFilterDto, true);
+            Func<long, double?>? getDiscount = null;
+
+            if (_tourSaleService != null)
+            {
+                getDiscount = tourId => _tourSaleService.GetDiscountForTour(tourId).Value;
+            }
+
+            var result = _tourSearchService.Search(tourSearchFilterDto, sortBy == null ? SortOption.NoSort : (SortOption)sortBy, true, getDiscount);
             return CreateResponse(result);
         }
 
         [HttpGet("author-search")]
-        public ActionResult<PagedResult<TourResponseDto>> AuthorSearch([FromQuery] TourSearchFilterDto tourSearchFilterDto)
+        public ActionResult<PagedResult<TourResponseDto>> AuthorSearch([FromQuery] TourSearchFilterDto tourSearchFilterDto, [FromQuery] SortOption? sortBy = null)
         {
-            var result = _tourSearchService.Search(tourSearchFilterDto, false);
+            Func<long, double?>? getDiscount = null;
+
+            if (_tourSaleService != null)
+            {
+                getDiscount = tourId => _tourSaleService.GetDiscountForTour(tourId).Value;
+            }
+
+            var result = _tourSearchService.Search(tourSearchFilterDto, sortBy == null ? SortOption.NoSort : (SortOption)sortBy, false, getDiscount);
             return CreateResponse(result);
         }
     }

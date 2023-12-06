@@ -1,4 +1,5 @@
 using AutoMapper;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Dtos.TouristEquipment;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.TouristEquipment;
@@ -19,6 +20,9 @@ public class ToursProfile : Profile
         CreateMap<ReviewCreateDto, Review>().ReverseMap();
         CreateMap<ReviewUpdateDto, Review>().ReverseMap();
         CreateMap<ReviewResponseDto, Review>().ReverseMap();
+
+        CreateMap<CampaignResponseDto, Campaign>().ReverseMap();
+        CreateMap<TourCampaignResponseDto, Campaign>().ReverseMap();
 
         CreateMap<TourResponseDto, Tour>().ReverseMap();
         CreateMap<TourCreateDto, Tour>().ReverseMap();
