@@ -186,11 +186,15 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
     private List<Tour> searchByLength(List<Tour> tours, double? minLength, double? maxLength)
     {
         var filtered = tours;
-        if (minLength != null)
+        if(minLength!=null && maxLength!=null)
+        {
+            filtered = filtered.FindAll(t => t.CalculateLength() >= minLength * 1000 && t.CalculateLength() <= maxLength * 1000);
+        }
+        else if (minLength != null)
         {
             filtered = filtered.FindAll(t => t.CalculateLength() >= minLength * 1000);
         }
-        if (maxLength != null)
+        else if (maxLength != null)
         {
             filtered = filtered.FindAll(t => t.CalculateLength() <= maxLength * 1000);
         }
@@ -200,14 +204,20 @@ public class TourSearchService : BaseService<Tour>, ITourSearchService
     private List<Tour> searchByPrice(List<Tour> tours, double? minPrice, double? maxPrice)
     {
         var filtered = tours;
+        if(minPrice!=null && maxPrice != null)
+        {
+
+            filtered = filtered.FindAll(t => t.Price >= minPrice && t.Price <= maxPrice);
+        }
         if (minPrice != null)
         {
-            filtered = filtered.FindAll(t => t.Difficulty >= minPrice);
+            filtered = filtered.FindAll(t => t.Price >= minPrice);
         }
-        if (maxPrice != null)
+        else if (maxPrice != null)
         {
-            filtered = filtered.FindAll(t => t.Difficulty <= maxPrice);
+            filtered = filtered.FindAll(t => t.Price <= maxPrice);
         }
+        
         return filtered;
     }
 
