@@ -1,5 +1,6 @@
 ﻿using Explorer.Tours.API.Dtos;
 using FluentResults;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,9 @@ namespace Explorer.Tours.API.Public
         Result<TourExecutionSessionResponseDto> CheckKeyPointCompletion(long tourId, long touristId, double longitude, double latitude, bool isCampaign);
         Result<List<TourExecutionInfoDto>> GetAllFor(long touristId);
         Result<TourExecutionSessionResponseDto> GetLive(long touristId);
+        Result<List<TourExecutionSessionResponseDto>> GetAll();
+        Result<List<TourExecutionSessionResponseDto>> GetByTourId(long tourId);
+        Result<List<TourExecutionSessionResponseDto>> GetByTourAndTouristId(long tourId, long touristId);
+        List<long> GetTouristsIds();
     }
 }

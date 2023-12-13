@@ -175,5 +175,38 @@ namespace Explorer.Tours.Core.UseCases
             }
             return MapToDto<TourExecutionSessionResponseDto>(liveTourExecution);
         }
+
+        public Result<List<TourExecutionSessionResponseDto>> GetAll()
+        {
+            return MapToDto<TourExecutionSessionResponseDto>(_tourExecutionRepository.GetAll());
+        }
+
+        public Result<List<TourExecutionSessionResponseDto>>GetByTourId(long tourId)
+        {
+            return MapToDto<TourExecutionSessionResponseDto>(_tourExecutionRepository.GetAll().Where(tes => tes.TourId == tourId).ToList());
+        }
+
+        public Result<List<TourExecutionSessionResponseDto>> GetByTourAndTouristId(long tourId, long touristId)
+        {
+            return MapToDto<TourExecutionSessionResponseDto>(_tourExecutionRepository.GetAll().Where(tes => tes.TourId == tourId && tes.TourId == touristId).ToList());
+        }
+
+        public List<long> GetTouristsIds()
+        {
+            List<long> ids = new List<long>();
+            foreach (var tes in _tourExecutionRepository.GetAll())
+            {
+                if (!ids.Contains(tes.TouristId))
+                {
+                    ids.Add(tes.TouristId);
+                }
+            }
+
+            return ids;
+        }
+        
+
+
+
     }
 }

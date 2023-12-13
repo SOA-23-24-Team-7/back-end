@@ -78,6 +78,10 @@ public static class ToursStartup
 
         services.AddScoped<IInternalNotificationService, NotificationService>();
 
+     
+        services.AddScoped<API.Public.ITourStatisticsService, Core.Domain.Services.TourStatisticsService>();
+        
+
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
