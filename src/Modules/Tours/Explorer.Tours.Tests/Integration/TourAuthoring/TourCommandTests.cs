@@ -574,6 +574,53 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
     }
 
+    [Theory]
+    [InlineData(-11, 3, 1)]
+    [InlineData(-12, 0, 0)]
+    public void StatisticsForTour(long tourId, int startedNumber, int completedNumber)
+    {
+        
+        // Arrange - Controller and dbContext
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result1 = (ObjectResult)controller.GetStartedSessionNumber(tourId).Result;
+        var result2 = (ObjectResult)controller.GetCompletedSessionNumber(tourId).Result;
+
+
+        // Assert - Database
+        (int)result1.Value.ShouldBe(startedNumber);
+        (int)result2.Value.ShouldBe(completedNumber);
+
+    }
+
+
+    [Theory]
+    [InlineData(-11, 1, 1)]
+    [InlineData(-12, 0, 0)]
+    public void StatisticsForAuthorsTours(long authorId, int startedNumber, int completedNumber)
+    {
+
+        // Arrange - Controller and dbContext
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result1 = (ObjectResult)controller.GetTotalStartedSessionNumber(tourId).Result;
+        var result2 = (ObjectResult)controller.GetTotalCompletedSessionNumber(tourId).Result;
+
+
+        // Assert - Database
+        (int)result1.Value.ShouldBe(startedNumber);
+        (int)result2.Value.ShouldBe(completedNumber);
+
+    }
+
+
+
     private static TourController CreateController(IServiceScope scope)
     {
         return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())

@@ -10,6 +10,7 @@ using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Infrastructure.Database;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,7 +55,51 @@ namespace Explorer.Payments.Tests.Integration
             storedEntity.TourId.ShouldBe(result.TourId);
         }
 
-        
+
+        [Theory]
+        [InlineData(-11, 1)]
+        [InlineData(-12, 3)]
+        public void StatisticsForTour(long tourId, int bougthNumber)
+        {
+
+            // Arrange - Controller and dbContext
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+            // Act
+            var result1 = (ObjectResult)controller.GetBoughtNumber(tourId).Result;
+            
+
+
+            // Assert - Database
+            (int)result1.Value.ShouldBe(bougthNumber);
+            
+
+        }
+
+
+        [Theory]
+        [InlineData(-11, 0)]
+        [InlineData(-12, 4)]
+        public void StatisticsForAuthorsTours(long authorId, int bougthNumber)
+        {
+
+            // Arrange - Controller and dbContext
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+            // Act
+            var result1 = (ObjectResult)controller.GetTotalBoughtNumber(authorId).Result;
+
+
+            // Assert - Database
+            (int)result1.Value.ShouldBe(bougthNumber);
+
+        }
+
+
         private static TourTokenController CreateController(IServiceScope scope)
         {
             return new TourTokenController(scope.ServiceProvider.GetRequiredService<ITourTokenService>())
