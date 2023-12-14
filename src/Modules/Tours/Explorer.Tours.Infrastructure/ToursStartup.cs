@@ -76,6 +76,8 @@ public static class ToursStartup
 
         services.AddScoped<ITourTokenService, TourTokenService>();
 
+        services.AddScoped<IToursRecommendersService, TourRecommendersService>();
+
         services.AddScoped<IInternalNotificationService, NotificationService>();
 
     }
