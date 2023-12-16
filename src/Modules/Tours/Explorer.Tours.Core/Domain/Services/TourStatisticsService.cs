@@ -1,18 +1,5 @@
-﻿using AutoMapper;
-using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Internal;
-using Explorer.Stakeholders.API.Public;
-using Explorer.Tours.API.Internal;
+﻿using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
-using Explorer.Tours.Core.Domain.RepositoryInterfaces;
-using Explorer.Tours.Core.Domain.Tours;
-using Explorer.Tours.Core.UseCases;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain.Services;
 
@@ -42,14 +29,14 @@ public class TourStatisticsService : ITourStatisticsService
 
     public int GetNumberOfStartedToursByPurchase(long authorId)
     {
-        IEnumerable<long> authorsTours = _tourService.GetAuthorsTours(authorId);
-        
+        List<long> authorsTours = _tourService.GetAuthorsTours(authorId).ToList();
+
         int counter = 0;
-        foreach(long tourId in authorsTours)
+        foreach (long tourId in authorsTours)
         {
             List<long> ids = new List<long>();
             var tourSessions = _tourExecutionSessionService.GetByTourId(tourId);
-            foreach(var session in tourSessions.Value)
+            foreach (var session in tourSessions.Value)
             {
                 if (!ids.Contains(session.TouristId))
                 {
@@ -64,7 +51,7 @@ public class TourStatisticsService : ITourStatisticsService
 
     public int GetNumberOfCompletedToursByPurchase(long authorId)
     {
-        IEnumerable<long> authorsTours = _tourService.GetAuthorsTours(authorId);
+        List<long> authorsTours = _tourService.GetAuthorsTours(authorId);
 
         int counter = 0;
         foreach (long tourId in authorsTours)
@@ -86,12 +73,11 @@ public class TourStatisticsService : ITourStatisticsService
 
     public List<long> GetMaxProgressDistribution(long authorId)
     {
-        IEnumerable<long> authorsTours = _tourService.GetAuthorsTours(authorId);
+        List<long> authorsTours = _tourService.GetAuthorsTours(authorId);
         long firstQuarterCompletionCount = 0;
         long secondQuarterCompletionCount = 0;
         long thirdQuarterCompletionCount = 0;
         long fourthQuarterCompletionCount = 0;
-        int counter = 0;
 
         foreach (long tourId in authorsTours)
         {
@@ -106,9 +92,11 @@ public class TourStatisticsService : ITourStatisticsService
                 {
                     foreach (var session in tourSessions.Value)
                     {
+                        // Proveravamo da li je turista vise puta pokretao istu turu, ako jeste, uzimamo u obzir pokretanje na kojem je imao veci progres
                         if (!touristIdsInserted.Contains(session.TouristId))
                         {
                             maxProgress = session.Progress;
+                            touristIdsInserted.Add(session.TouristId);
                         }
                         else if (session.Progress > maxProgress)
                         {
@@ -116,6 +104,7 @@ public class TourStatisticsService : ITourStatisticsService
                         }
                     }
 
+                    // Svrstavamo progres u odredjenu kategoriju
                     if (maxProgress <= 25)
                     {
                         firstQuarterCompletionCount++;
@@ -128,7 +117,7 @@ public class TourStatisticsService : ITourStatisticsService
                     {
                         thirdQuarterCompletionCount++;
                     }
-                    else if (maxProgress <= 100)
+                    else
                     {
                         fourthQuarterCompletionCount++;
                     }
@@ -136,13 +125,15 @@ public class TourStatisticsService : ITourStatisticsService
             }
 
         }
+        
+        // Formiramo listu koju vracamo na frontu grafikonima radi iscrtavanja
         List<long> ret = new()
-    {
-        firstQuarterCompletionCount,
-        secondQuarterCompletionCount,
-        thirdQuarterCompletionCount,
-        fourthQuarterCompletionCount
-    };
+        {
+            firstQuarterCompletionCount,
+            secondQuarterCompletionCount,
+            thirdQuarterCompletionCount,
+            fourthQuarterCompletionCount
+        };
 
         return ret;
     }

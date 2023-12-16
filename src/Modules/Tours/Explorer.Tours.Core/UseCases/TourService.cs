@@ -91,9 +91,9 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
     }
 
-    public IEnumerable<long> GetAuthorsTours(long id)
+    public List<long> GetAuthorsTours(long id)
     {
-        return _tourRepository.GetAuthorsTours(id);
+        return _tourRepository.GetAuthorsTours(id).ToList();
     }
 
     public string GetToursName(long id)

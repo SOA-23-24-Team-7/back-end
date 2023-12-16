@@ -57,7 +57,6 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             return result;
         }
 
-        
 
         [Authorize(Roles = "author")]
         [HttpGet("started/{tourId:int}")]

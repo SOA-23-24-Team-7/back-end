@@ -188,25 +188,24 @@ namespace Explorer.Tours.Core.UseCases
 
         public Result<List<TourExecutionSessionResponseDto>> GetByTourAndTouristId(long tourId, long touristId)
         {
-            return MapToDto<TourExecutionSessionResponseDto>(_tourExecutionRepository.GetAll().Where(tes => tes.TourId == tourId && tes.TourId == touristId).ToList());
+            List<TourExecutionSession> matchingSessions = _tourExecutionRepository
+                                                          .GetAll()
+                                                          .Where(tes => tes.TourId == tourId && tes.TouristId == touristId)
+                                                          .ToList();
+
+            return MapToDto<TourExecutionSessionResponseDto>(matchingSessions);
         }
 
         public List<long> GetTouristsIds()
         {
-            List<long> ids = new List<long>();
-            foreach (var tes in _tourExecutionRepository.GetAll())
-            {
-                if (!ids.Contains(tes.TouristId))
-                {
-                    ids.Add(tes.TouristId);
-                }
-            }
+            List<long> uniqueTouristIds = _tourExecutionRepository
+                .GetAll()
+                .Select(tes => tes.TouristId)
+                .Distinct()
+                .ToList();
 
-            return ids;
+            return uniqueTouristIds;
         }
-        
-
-
 
     }
 }
