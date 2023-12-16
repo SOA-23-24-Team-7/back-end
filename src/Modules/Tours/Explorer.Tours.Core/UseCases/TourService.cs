@@ -151,7 +151,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
     }
 
-
     public Result<PagedResult<TourResponseDto>> GetPublished(int page, int pageSize)
     {
         var allTours = _tourRepository.GetAll(page, pageSize);
@@ -165,7 +164,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
         return dtos;
     }
-
 
     public Result<PagedResult<TourResponseDto>> GetAllPaged(int page, int pageSize)
     {
@@ -187,6 +185,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
                                                                     te.TouristId == userId && te.Progress >= 35 && (te.LastActivity > DateTime.UtcNow.AddDays(-7)) && !te.IsCampaign);
         return tourExecutions.Any();
     }
+
     public Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize)
     {
         try
@@ -257,9 +256,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         return dto;
     }
 
-
-
-
     public Result MarkAsReady(long id, long touristId)
     {
         try
@@ -320,6 +316,17 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         return new PagedResult<TourResponseDto>(tourResponseDtos, tourResponseDtos.Count);
     }
 
+    public List<long> GetKeyPointIds(long tourId)
+    {
+        List<long> ids = new();
+        var tour = _tourRepository.GetById(tourId);
+        
+        foreach (var keyPoint in tour.KeyPoints)
+        {
+            ids.Add(keyPoint.Id);
+        }
 
+        return ids;
+    }
 }
 

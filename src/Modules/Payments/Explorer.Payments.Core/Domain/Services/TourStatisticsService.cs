@@ -1,11 +1,5 @@
 ﻿using Explorer.Payments.API.Public;
-using Explorer.Payments.Core.UseCases;
 using Explorer.Tours.API.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Payments.Core.Domain.Services;
 

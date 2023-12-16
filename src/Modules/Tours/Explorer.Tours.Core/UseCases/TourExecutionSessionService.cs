@@ -11,7 +11,7 @@ using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases
 {
-    public class TourExecutionSessionService : BaseService<TourExecutionSession>, ITourExecutionSessionService
+    public class TourExecutionSessionService : BaseService<TourExecutionSession>, ITourExecutionSessionService, IInternalTourExecutionSessionService
     {
         private readonly ITourRepository _tourRepository;
         private readonly ITourExecutionSessionRepository _tourExecutionRepository;
@@ -200,6 +200,18 @@ namespace Explorer.Tours.Core.UseCases
         {
             List<long> uniqueTouristIds = _tourExecutionRepository
                 .GetAll()
+                .Select(tes => tes.TouristId)
+                .Distinct()
+                .ToList();
+
+            return uniqueTouristIds;
+        }
+
+        public List<long> GetTouristsByTourId(long tourId)
+        {
+            List<long> uniqueTouristIds = _tourExecutionRepository
+                .GetAll()
+                .Where(tes => tes.TourId == tourId)
                 .Select(tes => tes.TouristId)
                 .Distinct()
                 .ToList();

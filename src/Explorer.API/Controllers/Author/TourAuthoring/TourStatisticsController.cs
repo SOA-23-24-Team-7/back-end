@@ -1,7 +1,4 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
-using Explorer.Tours.Core.UseCases;
+﻿using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -14,11 +11,13 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         private readonly Explorer.Tours.API.Public.ITourStatisticsService _tourExecutionStatisticsService;
         private readonly Explorer.Payments.API.Public.ITourStatisticsService _tourPurchasingStatisticsService;
+        private readonly Explorer.Encounters.API.Public.ITourStatisticsService _tourEncounterStatisticsService;
 
-        public TourStatisticsController(ITourStatisticsService tourExecutionStatisticsService, Explorer.Payments.API.Public.ITourStatisticsService tourPurchasingStatisticsService)
+        public TourStatisticsController(ITourStatisticsService tourExecutionStatisticsService, Explorer.Payments.API.Public.ITourStatisticsService tourPurchasingStatisticsService, Encounters.API.Public.ITourStatisticsService tourEncounterStatisticsService)
         {
             _tourExecutionStatisticsService = tourExecutionStatisticsService;
             _tourPurchasingStatisticsService = tourPurchasingStatisticsService;
+            _tourEncounterStatisticsService = tourEncounterStatisticsService;
         }
 
         [Authorize(Roles = "author")]
@@ -107,6 +106,13 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         public List<double> GetKeyPointVisitPercentage(int tourId)
         {
             return _tourExecutionStatisticsService.GetKeyPointVisitPercentage(tourId);
+        }
+
+        [Authorize(Roles = "author")]
+        [HttpGet("keyPointEncounterCompletionPercentage/{tourId:int}")]
+        public Dictionary<long, double> GetKeyPointEncounterCompletionPercentage(int tourId)
+        {
+            return _tourEncounterStatisticsService.GetKeyPointEncounterCompletionPercentage(tourId);
         }
     }
 }

@@ -151,8 +151,6 @@ public class TourStatisticsService : ITourStatisticsService
             }
         }
 
-        // radimo sa sortiranoom listom
-
         long[] counters = new long[tour.Value.KeyPoints.Count];
 
         foreach(var session in tourExecutionsSorted)
@@ -175,15 +173,28 @@ public class TourStatisticsService : ITourStatisticsService
             }
         }
 
-        List<double> ret = new();
+        if(tourExecutionsSorted.Count > 0)
+        {
+
+            List<double> ret = new();
+
+            for (int i = 0; i < counters.Length; i++)
+            {
+                double value = Math.Round((counters[i] / (double)tourExecutionsSorted.Count) * 100, 2);
+                ret.Add(value);
+            }
+
+            return ret;
+        }
+
+        List<double> retIfNull = new();
 
         for (int i = 0; i < counters.Length; i++)
         {
-            double value = counters[i] / (double)tourExecutionsSorted.Count;
-            ret.Add(value * 100);
+            retIfNull.Add(0);
         }
 
-        return ret;
+        return retIfNull;
     }
 
 }
