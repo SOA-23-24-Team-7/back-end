@@ -140,4 +140,9 @@ public class KeyPointService : BaseService<KeyPoint>, IKeyPointService, IInterna
         List<KeyPoint>? keyPoints = new List<KeyPoint>(campaign.KeyPoints);
         return MapToDto<KeyPointResponseDto>(keyPoints);
     }
+
+    public Result<KeyPointResponseDto> GetById(long id)
+    {
+        return MapToDto<KeyPointResponseDto>(_keyPointRepository.Get(id));
+    }
 }

@@ -207,5 +207,35 @@ namespace Explorer.Tours.Core.UseCases
             return uniqueTouristIds;
         }
 
+        public Result<TourExecutionSessionResponseDto> GetMaximumPorgressExecutionsForTourists(long tourId, long touristId)
+        {
+            TourExecutionSessionResponseDto ret = new();
+            double maxProgress = 0.0;
+
+            var sessions = GetByTourAndTouristId(tourId, touristId);
+
+            if(sessions.Value.Count > 1)
+            {
+                foreach (var session in sessions.Value)
+                {
+                    if (session.Progress > maxProgress)
+                    {
+                        maxProgress = session.Progress;
+                        ret = session;
+                    }
+                }
+            }
+            else if (sessions.Value.Count == 1)
+            {
+               ret = sessions.Value[0];
+            }
+            else
+            {
+                return null;
+            }
+            
+            return ret;
+        }
+
     }
 }

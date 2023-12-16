@@ -20,5 +20,7 @@ namespace Explorer.Tours.API.Public
         Result<List<TourExecutionSessionResponseDto>> GetByTourId(long tourId);
         Result<List<TourExecutionSessionResponseDto>> GetByTourAndTouristId(long tourId, long touristId);
         List<long> GetTouristsIds();
+        Result<TourExecutionSessionResponseDto> GetMaximumPorgressExecutionsForTourists(long tourId, long touristId);
+
     }
 }

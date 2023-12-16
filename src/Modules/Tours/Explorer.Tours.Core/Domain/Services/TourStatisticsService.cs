@@ -1,5 +1,7 @@
-﻿using Explorer.Tours.API.Internal;
+﻿using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.API.Public.TourAuthoring;
 
 namespace Explorer.Tours.Core.Domain.Services;
 
@@ -7,10 +9,13 @@ public class TourStatisticsService : ITourStatisticsService
 {
     private ITourExecutionSessionService _tourExecutionSessionService;
     private IInternalTourService _tourService;
-    public TourStatisticsService(ITourExecutionSessionService tourExecutionSessionService, IInternalTourService tourService)
+    private IKeyPointService _keyPointService;
+
+    public TourStatisticsService(ITourExecutionSessionService tourExecutionSessionService, IInternalTourService tourService, IKeyPointService keyPointService)
     {
         _tourExecutionSessionService = tourExecutionSessionService;
         _tourService = tourService;
+        _keyPointService = keyPointService;
     }
 
     public int GetNumberOfTourExecutionSessions(long tourId)
@@ -92,13 +97,7 @@ public class TourStatisticsService : ITourStatisticsService
                 {
                     foreach (var session in tourSessions.Value)
                     {
-                        // Proveravamo da li je turista vise puta pokretao istu turu, ako jeste, uzimamo u obzir pokretanje na kojem je imao veci progres
-                        if (!touristIdsInserted.Contains(session.TouristId))
-                        {
-                            maxProgress = session.Progress;
-                            touristIdsInserted.Add(session.TouristId);
-                        }
-                        else if (session.Progress > maxProgress)
+                        if (session.Progress > maxProgress)
                         {
                             maxProgress = session.Progress;
                         }
@@ -138,5 +137,53 @@ public class TourStatisticsService : ITourStatisticsService
         return ret;
     }
 
+    public List<double> GetKeyPointVisitPercentage(long tourId)
+    {
+        var tour  = _tourService.Get(tourId);
+        var touristIds = _tourExecutionSessionService.GetTouristsIds();
+        List<TourExecutionSessionResponseDto> tourExecutionsSorted = new();
+
+        foreach (var touristId in touristIds)
+        {
+            if(_tourExecutionSessionService.GetMaximumPorgressExecutionsForTourists(tourId, touristId) != null)
+            {
+                tourExecutionsSorted.Add(_tourExecutionSessionService.GetMaximumPorgressExecutionsForTourists(tourId, touristId).Value);
+            }
+        }
+
+        // radimo sa sortiranoom listom
+
+        long[] counters = new long[tour.Value.KeyPoints.Count];
+
+        foreach(var session in tourExecutionsSorted)
+        {
+            if(session.NextKeyPointId == -1 && session.Progress == 100)
+            {
+                for(int i=0; i < counters.Length; i++)
+                {
+                    counters[i]++;
+                }
+            }
+            else if(_keyPointService.GetById(session.NextKeyPointId).Value.Order > 0)
+            {
+                var keyPoint = _keyPointService.GetById(session.NextKeyPointId);
+
+                for(long i = (keyPoint.Value.Order - 1); i >= 0; i--)
+                {
+                    counters[i]++;
+                }
+            }
+        }
+
+        List<double> ret = new();
+
+        for (int i = 0; i < counters.Length; i++)
+        {
+            double value = counters[i] / (double)tourExecutionsSorted.Count;
+            ret.Add(value * 100);
+        }
+
+        return ret;
+    }
 
 }

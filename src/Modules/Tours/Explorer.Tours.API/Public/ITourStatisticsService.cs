@@ -13,6 +13,10 @@ public interface ITourStatisticsService
     public int GetNumberOfStartedToursByPurchase(long authorId);
 
     public int GetNumberOfCompletedToursByPurchase(long authorId);
+    
     List<long> GetMaxProgressDistribution(long authorId);
+
+    List<double> GetKeyPointVisitPercentage(long tourId);
+
 }
 

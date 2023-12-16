@@ -102,6 +102,12 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             return result;
         }
 
+        [Authorize(Roles = "author")]
+        [HttpGet("keyPointVisitPercentage/{tourId:int}")]
+        public List<double> GetKeyPointVisitPercentage(int tourId)
+        {
+            return _tourExecutionStatisticsService.GetKeyPointVisitPercentage(tourId);
+        }
     }
 }
 
