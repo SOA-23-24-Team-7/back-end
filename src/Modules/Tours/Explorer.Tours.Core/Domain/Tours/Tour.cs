@@ -21,8 +21,8 @@ public class Tour : Entity
     public ICollection<KeyPoint>? KeyPoints { get; } = new List<KeyPoint>();
     public ICollection<TourDuration>? Durations { get; } = new List<TourDuration>();
     public ICollection<Review>? Reviews { get; init; }
-
-    public Tour(long authorId, string name, string description, List<string> tags, int difficulty = 1, DateTime? archiveDate = null, DateTime? publishDate = null, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
+    public TourCategory Category { get; private set; }
+    public Tour(long authorId, string name, string description, TourCategory category, List<string> tags, int difficulty = 1, DateTime? archiveDate = null, DateTime? publishDate = null, double distance = 0, TourStatus status = TourStatus.Draft, double price = 0, bool isDeleted = false)
     {
         AuthorId = authorId;
         Name = name;
@@ -35,6 +35,7 @@ public class Tour : Entity
         Distance = distance;
         PublishDate = publishDate;
         ArchiveDate = archiveDate;
+        Category = category;
         Validate();
     }
 
@@ -149,4 +150,11 @@ public enum TourStatus
     Published,
     Archived,
     Ready
+}
+public enum TourCategory
+{
+    Adventure,
+    FamilyTrips,
+    Cruise,
+    Cultural
 }

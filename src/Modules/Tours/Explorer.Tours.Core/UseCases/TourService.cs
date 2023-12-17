@@ -320,6 +320,57 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         return new PagedResult<TourResponseDto>(tourResponseDtos, tourResponseDtos.Count);
     }
 
+    public Result<PagedResult<TourResponseDto>> GetAdventureTours(int page, int pageSize)
+    {
+        var allTours = _tourRepository.GetPopularAdventureTours(page, pageSize).Results.ToList();
+        var pagedResult = new PagedResult<Tour>(allTours, allTours.Count);
+        var dtos = MapToDto<TourResponseDto>(pagedResult);
+        var newDtos = new List<TourResponseDto>();
+        for (int i = 0; i < allTours.Count; i++)
+        {
+            var averageRating = allTours.ElementAt(i).GetAverageRating();
+            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
+        }
+        return dtos;
+    }
 
+    public Result<PagedResult<TourResponseDto>> GetFamilyTours(int page, int pageSize)
+    {
+        var allTours = _tourRepository.GetPopularFamilyTours(page, pageSize).Results.ToList();
+        var pagedResult = new PagedResult<Tour>(allTours, allTours.Count);
+        var dtos = MapToDto<TourResponseDto>(pagedResult);
+        for (int i = 0; i < allTours.Count; i++)
+        {
+            var averageRating = allTours.ElementAt(i).GetAverageRating();
+            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
+        }
+        return dtos;
+    }
+
+    public Result<PagedResult<TourResponseDto>> GetCruiseTours(int page, int pageSize)
+    {
+        var allTours = _tourRepository.GetPopularCruiseTours(page, pageSize).Results.ToList();
+        var pagedResult = new PagedResult<Tour>(allTours, allTours.Count);
+        var dtos = MapToDto<TourResponseDto>(pagedResult);
+        for (int i = 0; i < allTours.Count; i++)
+        {
+            var averageRating = allTours.ElementAt(i).GetAverageRating();
+            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
+        }
+        return dtos;
+    }
+
+    public Result<PagedResult<TourResponseDto>> GetCulturalTours(int page, int pageSize)
+    {
+        var allTours = _tourRepository.GetPopularCulturalTours(page, pageSize).Results.ToList();
+        var pagedResult = new PagedResult<Tour>(allTours, allTours.Count);
+        var dtos = MapToDto<TourResponseDto>(pagedResult);
+        for (int i = 0; i < allTours.Count; i++)
+        {
+            var averageRating = allTours.ElementAt(i).GetAverageRating();
+            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
+        }
+        return dtos;
+    }
 }
 
