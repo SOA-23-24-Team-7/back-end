@@ -5,6 +5,7 @@ using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
+using System.Security.Principal;
 using BC = BCrypt.Net;
 
 namespace Explorer.Stakeholders.Core.UseCases;
@@ -73,5 +74,10 @@ public class AuthenticationService : IAuthenticationService
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             throw;
         }
+    }
+
+    private string cryptPassword(string password)
+    {
+        return BC.BCrypt.HashPassword(password);
     }
 }
