@@ -34,4 +34,11 @@ public class AuthenticationController : BaseApiController
         var result = _authenticationService.Login(credentials);
         return CreateResponse(result);
     }
+
+    [HttpPost("reset-password")]
+    public ActionResult<ResetPasswordTokenDto> GenerateResetPasswordLink([FromBody] ResetPasswordEmailDto resetPasswordEmail)
+    {
+        var result = _authenticationService.GenerateResetPasswordToken(resetPasswordEmail);
+        return CreateResponse(result);
+    }
 }

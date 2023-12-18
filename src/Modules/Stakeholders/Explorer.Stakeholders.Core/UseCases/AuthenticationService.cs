@@ -12,9 +12,9 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly ITokenGenerator _tokenGenerator;
     private readonly IUserRepository _userRepository;
-    private readonly ICrudRepository<Person> _personRepository;
+    private readonly IPersonRepository _personRepository;
 
-    public AuthenticationService(IUserRepository userRepository, ICrudRepository<Person> personRepository, ITokenGenerator tokenGenerator)
+    public AuthenticationService(IUserRepository userRepository, IPersonRepository personRepository, ITokenGenerator tokenGenerator)
     {
         _tokenGenerator = tokenGenerator;
         _userRepository = userRepository;
@@ -52,6 +52,24 @@ public class AuthenticationService : IAuthenticationService
         {
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             // There is a subtle issue here. Can you find it?
+        }
+    }
+
+    public Result<ResetPasswordTokenDto> GenerateResetPasswordToken(ResetPasswordEmailDto resetPasswordEmailDto)
+    {
+        var email = resetPasswordEmailDto.Email;
+        if (!_personRepository.ExistsByEmail(email)) return Result.Fail(FailureCode.NotFound);
+
+        try
+        {
+            var user = _personRepository.GetByEmail(email);
+
+            return _tokenGenerator.GenerateResetPasswordToken(email);
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            throw;
         }
     }
 }
