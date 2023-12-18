@@ -5,6 +5,7 @@ using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
+using BC = BCrypt.Net;
 
 namespace Explorer.Stakeholders.Core.UseCases;
 
@@ -24,7 +25,7 @@ public class AuthenticationService : IAuthenticationService
     public Result<AuthenticationTokensDto> Login(CredentialsDto credentials)
     {
         var user = _userRepository.GetActiveByName(credentials.Username);
-        if (user == null || credentials.Password != user.Password) return Result.Fail(FailureCode.NotFound);
+        if (user == null || !(BC.BCrypt.Verify(credentials.Password, user.Password))) return Result.Fail(FailureCode.NotFound);
         long personId;
         try
         {
@@ -43,7 +44,8 @@ public class AuthenticationService : IAuthenticationService
 
         try
         {
-            var user = _userRepository.Create(new User(account.Username, account.Password, UserRole.Tourist, true));
+            string cryptedPassword = BC.BCrypt.HashPassword(account.Password);
+            var user = _userRepository.Create(new User(account.Username, cryptedPassword, UserRole.Tourist, true));
             var person = _personRepository.Create(new Person(user.Id, account.Name, account.Surname, account.Email));
 
             return _tokenGenerator.GenerateAccessToken(user, person.Id);
