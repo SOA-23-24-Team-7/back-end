@@ -44,6 +44,7 @@ public static class StakeholdersStartup
         services.AddScoped<IFollowerService, FollowerService>();
         services.AddScoped<IMessageService, MessageService>();
         services.AddScoped<IInternalUserService, UserService>();
+        services.AddScoped<IEmailSender, EmailSender>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)

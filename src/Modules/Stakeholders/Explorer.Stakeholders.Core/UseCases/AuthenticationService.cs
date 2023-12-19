@@ -5,7 +5,10 @@ using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
+using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 using System.Security.Principal;
+using System.Text;
 using BC = BCrypt.Net;
 
 namespace Explorer.Stakeholders.Core.UseCases;
@@ -15,12 +18,14 @@ public class AuthenticationService : IAuthenticationService
     private readonly ITokenGenerator _tokenGenerator;
     private readonly IUserRepository _userRepository;
     private readonly IPersonRepository _personRepository;
+    private readonly IEmailSender _emailSender;
 
-    public AuthenticationService(IUserRepository userRepository, IPersonRepository personRepository, ITokenGenerator tokenGenerator)
+    public AuthenticationService(IUserRepository userRepository, IPersonRepository personRepository, ITokenGenerator tokenGenerator, IEmailSender emailSender)
     {
         _tokenGenerator = tokenGenerator;
         _userRepository = userRepository;
         _personRepository = personRepository;
+        _emailSender = emailSender;
     }
 
     public Result<AuthenticationTokensDto> Login(CredentialsDto credentials)
@@ -65,9 +70,24 @@ public class AuthenticationService : IAuthenticationService
 
         try
         {
+            var passwordResetTokenResult = _tokenGenerator.GenerateResetPasswordToken(email);
+            var passwordResetToken = passwordResetTokenResult.Value.ResetPasswordToken;
+            var passwordResetLink = "http://localhost:4200/reset-password-edit?reset_password_token=" + passwordResetToken;
+
             var user = _personRepository.GetByEmail(email);
 
-            return _tokenGenerator.GenerateResetPasswordToken(email);
+            string subject = "Explorer - Password reset link";
+
+            StringBuilder body = new StringBuilder();
+            body.AppendLine($"Dear {user.Name} {user.Surname},");
+            body.AppendLine($"<p>Here's your password reset <a href=\"{passwordResetLink}\">link</a>.</p>");
+            body.AppendLine($"<p>Or you can copy this link into your browser: <a href=\"{passwordResetLink}\">{passwordResetLink}</a></p>");
+            body.AppendLine($"Best regards,<br>");
+            body.AppendLine($"Explorer team");
+
+            _emailSender.SendEmailAsync(email, subject, body.ToString());
+
+            return passwordResetTokenResult;
         }
         catch (Exception e)
         {
