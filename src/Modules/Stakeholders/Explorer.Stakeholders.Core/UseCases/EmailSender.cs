@@ -9,6 +9,7 @@ public class EmailSender : IEmailSender
     public Task SendEmailAsync(string email, string subject, string message)
     {
         var senderEmail = "explorer.team.service@gmail.com";
+        var senderName = "Explorer";
         var password = "qpmg yemi mldm soxz";
 
         var client = new SmtpClient("smtp.gmail.com", 587)
@@ -17,12 +18,14 @@ public class EmailSender : IEmailSender
             Credentials = new NetworkCredential(senderEmail, password)
         };
 
-        var mailMessage = new MailMessage(
-            from: senderEmail,
-            to: email,
-            subject: subject,
-            body: message);
-        mailMessage.IsBodyHtml = true;
+        var mailMessage = new MailMessage()
+        {
+            From = new MailAddress(senderEmail, senderName),
+            Subject = subject,
+            Body = message,
+            IsBodyHtml = true
+        };
+        mailMessage.To.Add(email);
 
         var result = client.SendMailAsync(mailMessage);
 
