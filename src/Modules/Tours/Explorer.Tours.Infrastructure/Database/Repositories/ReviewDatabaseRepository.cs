@@ -45,5 +45,20 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             }
             return allRatings.Average();
         }
+
+        public int GetTourReviewCountsAllTime(long tourId)
+        {
+            int count = _dbSet.Where(review => review.TourId == tourId).Count();
+            return count;
+        }
+        public double? GetTourReviewAverageRatingAllTime(long tourId)
+        {
+            var allRatings = _dbSet.Where(review => review.TourId == tourId).Select(review => review.Rating);
+            if (!allRatings.Any())
+            {
+                return 0;
+            }
+            return allRatings.Average();
+        }
     }
 }

@@ -32,7 +32,6 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         {
             var preference = _dbContext.Preferences;
             var found = preference.FirstOrDefault(tp => tp.UserId == userId);
-            if (found == null) throw new KeyNotFoundException("Not found!");
             return found;
         }
 

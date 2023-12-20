@@ -8,5 +8,8 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         bool ReviewExists(long touristId, long tourId);
         int GetTourReviewCounts(long tourId, int forLastNDays);
         double? GetTourReviewAverageRating(long tourId, int forLastNDays);
+
+        int GetTourReviewCountsAllTime(long tourId);
+        double? GetTourReviewAverageRatingAllTime(long tourId);
     }
 }
