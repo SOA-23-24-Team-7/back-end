@@ -5,9 +5,6 @@ using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-using System.ComponentModel.DataAnnotations;
-using System.Net.Mail;
-using System.Security.Principal;
 using System.Text;
 using BC = BCrypt.Net;
 
@@ -70,11 +67,11 @@ public class AuthenticationService : IAuthenticationService
 
         try
         {
-            var passwordResetTokenResult = _tokenGenerator.GenerateResetPasswordToken(email);
+            var user = _personRepository.GetByEmail(email);
+            var passwordResetTokenResult = _tokenGenerator.GenerateResetPasswordToken(user.UserId, email);
             var passwordResetToken = passwordResetTokenResult.Value.ResetPasswordToken;
             var passwordResetLink = "http://localhost:4200/reset-password-edit?reset_password_token=" + passwordResetToken;
 
-            var user = _personRepository.GetByEmail(email);
 
             string subject = "Explorer - Password reset link";
 
@@ -99,5 +96,15 @@ public class AuthenticationService : IAuthenticationService
     private string cryptPassword(string password)
     {
         return BC.BCrypt.HashPassword(password);
+    }
+
+    public Result ResetPassword(ResetPasswordRequestDto resetPasswordRequestDto, string email)
+    {
+        var person = _personRepository.GetByEmail(email);
+        var user = _userRepository.Get(person.UserId);
+        string cryptedPassword = BC.BCrypt.HashPassword(resetPasswordRequestDto.NewPassword);
+        user.Password = cryptedPassword;
+        user = _userRepository.Update(user);
+        return Result.Ok();
     }
 }

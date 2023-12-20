@@ -6,7 +6,7 @@ namespace Explorer.Stakeholders.Core.Domain;
 public class User : Entity
 {
     public string Username { get; private set; }
-    public string Password { get; private set; }
+    public string Password { get; set; }
     public UserRole Role { get; private set; }
     public string? ProfilePicture { get; private set; }
     public bool IsActive { get; set; }

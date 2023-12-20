@@ -3,7 +3,7 @@ using FluentResults;
 
 namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 
-public interface IUserRepository
+public interface IUserRepository : ICrudRepository<User>
 {
     User? Get(long id);
     bool Exists(string username);

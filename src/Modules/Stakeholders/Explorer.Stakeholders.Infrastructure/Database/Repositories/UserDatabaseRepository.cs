@@ -2,18 +2,16 @@
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
-using FluentResults;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories;
 
-public class UserDatabaseRepository : IUserRepository
+public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersContext>, IUserRepository
 {
     private readonly StakeholdersContext _dbContext;
     private readonly DbSet<User> _dbSet;
 
-    public UserDatabaseRepository(StakeholdersContext dbContext)
+    public UserDatabaseRepository(StakeholdersContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
         _dbSet = _dbContext.Set<User>();

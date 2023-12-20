@@ -35,7 +35,7 @@ public class JwtGenerator : ITokenGenerator
         return authenticationResponse;
     }
 
-    public Result<ResetPasswordTokenDto> GenerateResetPasswordToken(string email)
+    public Result<ResetPasswordTokenDto> GenerateResetPasswordToken(long id, string email)
     {
         var resetPasswordResponse = new ResetPasswordTokenDto();
 
