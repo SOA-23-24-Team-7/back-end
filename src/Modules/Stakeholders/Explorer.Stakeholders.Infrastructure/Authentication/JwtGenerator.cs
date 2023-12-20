@@ -3,6 +3,7 @@ using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.UseCases;
 using FluentResults;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -64,5 +65,22 @@ public class JwtGenerator : ITokenGenerator
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public Result<ResetPasswordTokenDto> GenerateRegistrationConfirmationToken(User user)
+    {
+        var confirmRegistrationToken = new ResetPasswordTokenDto();
+
+        var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new("id", user.Id.ToString()),
+            new("username", user.Username),
+            new("confirm", "true")
+        };
+
+        string token = CreateToken(claims, 15);
+        confirmRegistrationToken.ResetPasswordToken = token;
+        return confirmRegistrationToken;
     }
 }

@@ -82,4 +82,17 @@ public class UserDatabaseRepository : IUserRepository
     {
         return _dbSet.FirstOrDefault(x => x.Id == adminId).ProfilePicture;
     }
+
+    public User GetByUsername(string username)
+    {
+        return _dbContext.Users.FirstOrDefault(user => user.Username == username);
+    }
+
+    public User EnableUser(long userId)
+    {
+        var user = _dbContext.Users.FirstOrDefault(user => user.Id == userId);
+        user.IsActive = true;
+        _dbContext.SaveChanges();
+        return user;
+    }
 }

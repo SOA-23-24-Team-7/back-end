@@ -44,17 +44,21 @@ public class AuthenticationService : IAuthenticationService
         return _tokenGenerator.GenerateAccessToken(user, personId);
     }
 
-    public Result<AuthenticationTokensDto> RegisterTourist(AccountRegistrationDto account)
+    public Result<RegistrationConfirmationTokenDto> RegisterTourist(AccountRegistrationDto account)
     {
         if (_userRepository.Exists(account.Username)) return Result.Fail(FailureCode.NonUniqueUsername);
 
         try
         {
             string cryptedPassword = BC.BCrypt.HashPassword(account.Password);
-            var user = _userRepository.Create(new User(account.Username, cryptedPassword, UserRole.Tourist, true));
+            var user = _userRepository.Create(new User(account.Username, cryptedPassword, UserRole.Tourist, false));
             var person = _personRepository.Create(new Person(user.Id, account.Name, account.Surname, account.Email));
-
-            return _tokenGenerator.GenerateAccessToken(user, person.Id);
+            //emailsending
+            string token = getRegistrationConfirmationEmail(user, person);
+            var returnValue = new RegistrationConfirmationTokenDto();
+            returnValue.Id = user.Id;
+            returnValue.RegistrationConfirmationToken = token;
+            return returnValue;
         }
         catch (ArgumentException e)
         {
@@ -99,5 +103,33 @@ public class AuthenticationService : IAuthenticationService
     private string cryptPassword(string password)
     {
         return BC.BCrypt.HashPassword(password);
+    }
+
+    private string getRegistrationConfirmationEmail(User user, Person person)
+    {
+        var registrationConfirmationToken = _tokenGenerator.GenerateRegistrationConfirmationToken(user).Value.ResetPasswordToken;
+        string subject = "Explorer - Registration confirmation";
+        var passwordResetLink = "https://localhost:44333/api/users/confirm-registration?confirm_registration_token=" + registrationConfirmationToken;
+
+        StringBuilder body = new StringBuilder();
+        body.AppendLine($"Dear {person.Name} {person.Surname},");
+        body.AppendLine($"<p>Please click the following  <a href=\"{passwordResetLink}\">link</a>.</p> to confirm your registration.");
+        body.AppendLine($"<p>Or you can copy this link into your browser: <a href=\"{passwordResetLink}\">{passwordResetLink}</a></p>");
+        body.AppendLine($"Best regards,<br>");
+        body.AppendLine($"Explorer team");
+
+        _emailSender.SendEmailAsync(person.Email, subject, body.ToString());
+
+        return registrationConfirmationToken;
+    }
+
+    public Result<string> ConfirmRegistration(string username, string claim)
+    {
+        var user = _userRepository.GetByUsername(username);
+        if(user == null || !claim.Equals("true")) { Result.Fail(FailureCode.InvalidArgument); }
+
+        //var updatedUser = _userRepository.Create(new User(user.Username, user.Password, UserRole.Tourist, false));
+        _userRepository.EnableUser(user.Id);
+        return "Registration was  succsessfully confirmed!" ;
     }
 }
