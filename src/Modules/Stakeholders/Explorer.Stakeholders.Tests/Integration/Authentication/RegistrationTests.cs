@@ -33,15 +33,15 @@ public class RegistrationTests : BaseStakeholdersIntegrationTest
         };
 
         // Act
-        var authenticationResponse = ((ObjectResult)controller.RegisterTourist(account).Result).Value as AuthenticationTokensDto;
+        var authenticationResponse = ((ObjectResult)controller.RegisterTourist(account).Result).Value as RegistrationConfirmationTokenDto;
 
         // Assert - Response
         authenticationResponse.ShouldNotBeNull();
         authenticationResponse.Id.ShouldNotBe(0);
-        var decodedAccessToken = new JwtSecurityTokenHandler().ReadJwtToken(authenticationResponse.AccessToken);
-        var personId = decodedAccessToken.Claims.FirstOrDefault(c => c.Type == "personId");
-        personId.ShouldNotBeNull();
-        personId.Value.ShouldNotBe("0");
+        var decodedAccessToken = new JwtSecurityTokenHandler().ReadJwtToken(authenticationResponse.RegistrationConfirmationToken);
+        var username = decodedAccessToken.Claims.FirstOrDefault(c => c.Type == "username");
+        username.ShouldNotBeNull();
+        username.Value.ShouldNotBe("turistaA@gmail.com");
 
         // Assert - Database
         dbContext.ChangeTracker.Clear();
