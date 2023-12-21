@@ -16,13 +16,14 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
     private readonly ICrudRepository<Tour> _repository;
     private readonly IMapper _mapper;
     private readonly ITourRepository _tourRepository;
+    private readonly ICrudRepository<Tour> _tourCrudRepository;
     private readonly ITourExecutionSessionRepository _tourExecutionSessionRepository;
     private readonly IInternalProblemService _problemService;
     private readonly IReviewRepository _reviewRepository;
     private readonly IKeyPointRepository _keyPointRepository;
     private readonly ICrudRepository<PublicKeyPoint> _publicKeyPointRepository;
 
-    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository, IReviewRepository reviewRepository, IInternalProblemService problemService, IKeyPointRepository keyPointRepository, ICrudRepository<PublicKeyPoint> publicKeyPointRepository) : base(repository, mapper)
+    public TourService(ICrudRepository<Tour> repository, IMapper mapper, ITourRepository tourRepository, ITourExecutionSessionRepository tourExecutionSessionRepository, IReviewRepository reviewRepository, IInternalProblemService problemService, IKeyPointRepository keyPointRepository, ICrudRepository<PublicKeyPoint> publicKeyPointRepository, ICrudRepository<Tour> tourCrudRepository) : base(repository, mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -32,6 +33,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         _tourExecutionSessionRepository = tourExecutionSessionRepository;
         _keyPointRepository = keyPointRepository;
         _publicKeyPointRepository = publicKeyPointRepository;
+        _tourCrudRepository = tourCrudRepository;
     }
 
     public Result<PagedResult<TourResponseDto>> GetAuthorsPagedTours(long authorId, int page, int pageSize)
@@ -322,54 +324,58 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
 
     public Result<PagedResult<TourResponseDto>> GetAdventureTours(int page, int pageSize)
     {
-        var allTours = _tourRepository.GetPopularAdventureTours(page, pageSize).Results.ToList();
-        var pagedResult = new PagedResult<Tour>(allTours, allTours.Count);
+        var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published && t.Category == Domain.Tours.TourCategory.Adventure, include: "Reviews,KeyPoints");
+        //var allTours = _tourRepository.GetPopularAdventureTours(page, pageSize).Results.ToList();
+        var pagedResult = new PagedResult<Tour>(tours, tours.Count);
         var dtos = MapToDto<TourResponseDto>(pagedResult);
         var newDtos = new List<TourResponseDto>();
-        for (int i = 0; i < allTours.Count; i++)
+        /*for (int i = 0; i < allTours.Count; i++)
         {
             var averageRating = allTours.ElementAt(i).GetAverageRating();
             dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
-        }
+        }*/
         return dtos;
     }
 
     public Result<PagedResult<TourResponseDto>> GetFamilyTours(int page, int pageSize)
     {
-        var allTours = _tourRepository.GetPopularFamilyTours(page, pageSize).Results.ToList();
-        var pagedResult = new PagedResult<Tour>(allTours, allTours.Count);
+        var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published && t.Category == Domain.Tours.TourCategory.FamilyTrips, include: "Reviews,KeyPoints");
+        //var allTours = _tourRepository.GetPopularFamilyTours(page, pageSize).Results.ToList();
+        var pagedResult = new PagedResult<Tour>(tours, tours.Count);
         var dtos = MapToDto<TourResponseDto>(pagedResult);
-        for (int i = 0; i < allTours.Count; i++)
+        /*for (int i = 0; i < allTours.Count; i++)
         {
             var averageRating = allTours.ElementAt(i).GetAverageRating();
             dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
-        }
+        }*/
         return dtos;
     }
 
     public Result<PagedResult<TourResponseDto>> GetCruiseTours(int page, int pageSize)
     {
-        var allTours = _tourRepository.GetPopularCruiseTours(page, pageSize).Results.ToList();
-        var pagedResult = new PagedResult<Tour>(allTours, allTours.Count);
+        var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published && t.Category==Domain.Tours.TourCategory.Cruise, include: "Reviews,KeyPoints");
+        //var allTours = _tourRepository.GetPopularCruiseTours(page, pageSize).Results.ToList();
+        var pagedResult = new PagedResult<Tour>(tours, tours.Count);
         var dtos = MapToDto<TourResponseDto>(pagedResult);
-        for (int i = 0; i < allTours.Count; i++)
+        /*for (int i = 0; i < tours.Count; i++)
         {
-            var averageRating = allTours.ElementAt(i).GetAverageRating();
+            var averageRating = tours.ElementAt(i).GetAverageRating();
             dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
-        }
+        }*/
         return dtos;
     }
 
     public Result<PagedResult<TourResponseDto>> GetCulturalTours(int page, int pageSize)
     {
-        var allTours = _tourRepository.GetPopularCulturalTours(page, pageSize).Results.ToList();
-        var pagedResult = new PagedResult<Tour>(allTours, allTours.Count);
+        var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published && t.Category == Domain.Tours.TourCategory.Cultural, include: "Reviews,KeyPoints");
+        //var allTours = _tourRepository.GetPopularCulturalTours(page, pageSize).Results.ToList();
+        var pagedResult = new PagedResult<Tour>(tours, tours.Count);
         var dtos = MapToDto<TourResponseDto>(pagedResult);
-        for (int i = 0; i < allTours.Count; i++)
+        /*for (int i = 0; i < allTours.Count; i++)
         {
             var averageRating = allTours.ElementAt(i).GetAverageRating();
             dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
-        }
+        }*/
         return dtos;
     }
 }
