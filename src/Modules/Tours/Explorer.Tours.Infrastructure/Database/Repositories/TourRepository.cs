@@ -87,5 +87,33 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             task.Wait();
             return task.Result;
         }
+
+        public PagedResult<Tour> GetPopularAdventureTours(int page, int pageSize)
+        {
+            var task = _dbSet.Include(x => x.KeyPoints).Where(s => s.Status == TourStatus.Published && s.Category==TourCategory.Adventure).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
+        }
+
+        public PagedResult<Tour> GetPopularFamilyTours(int page, int pageSize)
+        {
+            var task = _dbSet.Include(x => x.KeyPoints).Where(s => s.Status == TourStatus.Published && s.Category == TourCategory.FamilyTrips).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
+        }
+
+        public PagedResult<Tour> GetPopularCruiseTours(int page, int pageSize)
+        {
+            var task = _dbSet.Include(x => x.KeyPoints).Where(s => s.Status == TourStatus.Published && s.Category == TourCategory.Cruise).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
+        }
+
+        public PagedResult<Tour> GetPopularCulturalTours(int page, int pageSize)
+        {
+            var task = _dbSet.Include(x => x.KeyPoints).Where(s => s.Status == TourStatus.Published && s.Category == TourCategory.Cultural).GetPagedById(page, pageSize);
+            task.Wait();
+            return task.Result;
+        }
     }
 }

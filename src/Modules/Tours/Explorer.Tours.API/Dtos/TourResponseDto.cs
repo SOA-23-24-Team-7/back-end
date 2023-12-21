@@ -17,6 +17,7 @@ public class TourResponseDto
     public List<TourDurationResponseDto> Durations { get; set; }
     public DateTime PublishDate { get; set; }
     public DateTime ArchiveDate { get; set; }
+    public TourCategory Category { get; set; }
 }
 
 public enum TourStatus
@@ -26,3 +27,12 @@ public enum TourStatus
     Archived,
     Ready
 }
+
+public enum TourCategory
+{
+    Adventure,
+    FamilyTrips,
+    Cruise,
+    Cultural
+}
+

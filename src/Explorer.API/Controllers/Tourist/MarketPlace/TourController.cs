@@ -60,6 +60,46 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
             var result = _tourService.GetLimitedInfoTours(page, pageSize, tourIds);
             return CreateResponse(result);
         }
+        /*[HttpGet("tours/inCart/{id:long}")]
+        public ActionResult<PagedResult<LimitedTourViewResponseDto>> GetToursInCart([FromQuery] int page, [FromQuery] int pageSize, long id)
+        {
+            var cart = _shoppingCartService.GetByTouristId(id);
+            if (cart == null)
+            {
+                return NotFound();
+            }
+            var tourIds = cart.Value.OrderItems.Select(order => order.TourId).ToList();
+            var result = _tourService.GetLimitedInfoTours(page, pageSize, tourIds);
+            return CreateResponse(result);
+        }*/
+
+        [HttpGet("tours/adventure")]
+        public ActionResult<PagedResult<TourResponseDto>> GetPopularAdventureTours([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _tourService.GetAdventureTours(page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("tours/family")]
+        public ActionResult<PagedResult<TourResponseDto>> GetPopularFamilyTours([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _tourService.GetFamilyTours(page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("tours/cruise")]
+        public ActionResult<PagedResult<TourResponseDto>> GetPopularCruiseTours([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _tourService.GetCruiseTours(page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("tours/cultural")]
+        public ActionResult<PagedResult<TourResponseDto>> GetPopularCulturalTours([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _tourService.GetCulturalTours(page, pageSize);
+            return CreateResponse(result);
+        }
 
     }
 }
