@@ -4,6 +4,8 @@ using Explorer.Stakeholders.API.Internal;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.Utilities;
 using FluentResults;
 
@@ -105,10 +107,13 @@ namespace Explorer.Tours.Core.UseCases
             {
                 var dto = MapToDto<PublicFacilityRequestResponseDto>(req);
                 dto.FacilityName = _facilityRepository.Get(req.FacilityId).Name;
+                dto.Author = _userService.Get(req.AuthorId).Value;
                 resultsDto.Add(dto);
             }
             resultsDto.Reverse();
             return new PagedResult<PublicFacilityRequestResponseDto>(resultsDto, resultsDto.Count);
+
+            
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Stakeholders.API.Dtos;
 
 namespace Explorer.Tours.API.Dtos
 {
@@ -11,6 +12,8 @@ namespace Explorer.Tours.API.Dtos
         public DateTime Created { get; set; }
         public string AuthorName { get; set; }
         public string? KeyPointName { get; set; }
+
+        public UserResponseDto Author { get; set; }
 
     }
 }
