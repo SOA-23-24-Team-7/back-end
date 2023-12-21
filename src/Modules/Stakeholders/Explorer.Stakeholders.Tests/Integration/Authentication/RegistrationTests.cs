@@ -25,12 +25,14 @@ public class RegistrationTests : BaseStakeholdersIntegrationTest
         var controller = CreateController(scope);
         var account = new AccountRegistrationDto
         {
+            
             Username = "turistaA@gmail.com",
             Email = "turistaA@gmail.com",
             Password = "turistaA",
             Name = "Žika",
             Surname = "Žikić"
         };
+
 
         // Act
         var authenticationResponse = ((ObjectResult)controller.RegisterTourist(account).Result).Value as RegistrationConfirmationTokenDto;
@@ -41,7 +43,7 @@ public class RegistrationTests : BaseStakeholdersIntegrationTest
         var decodedAccessToken = new JwtSecurityTokenHandler().ReadJwtToken(authenticationResponse.RegistrationConfirmationToken);
         var username = decodedAccessToken.Claims.FirstOrDefault(c => c.Type == "username");
         username.ShouldNotBeNull();
-        username.Value.ShouldNotBe("turistaA@gmail.com");
+        username.Value.ShouldBe("turistaA@gmail.com");
 
         // Assert - Database
         dbContext.ChangeTracker.Clear();
