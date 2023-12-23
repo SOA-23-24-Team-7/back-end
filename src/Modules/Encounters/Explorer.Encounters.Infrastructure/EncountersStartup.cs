@@ -5,6 +5,7 @@ using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.Encounter;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
+using Explorer.Encounters.Core.Domain.Services;
 using Explorer.Encounters.Core.Mappers;
 using Explorer.Encounters.Core.UseCases;
 using Explorer.Encounters.Infrastructure.Database;
@@ -28,6 +29,7 @@ public static class EncountersStartup
     {
         services.AddScoped<IEncounterService, EncounterService>();
         services.AddScoped<ITouristProgressService, TouristProgressService>();
+        services.AddScoped<ITourStatisticsService, TourStatisticsService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)

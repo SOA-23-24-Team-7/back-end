@@ -10,8 +10,6 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public EncounterInstanceStatus Status { get; private set; }
         public DateTime? CompletionTime { get; private set; }
 
-
-
         public EncounterInstance(long userId)
         {
             UserId = userId;

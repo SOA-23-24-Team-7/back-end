@@ -7,4 +7,6 @@ public interface IKeyPointEncounterRepository
 {
     bool IsEncounterInstanceCompleted(long userId, long keyPointId);
     KeyPointEncounter GetByKeyPoint(long keyPointId);
+    KeyPointEncounter GetByKeyPointId(long keyPointId);
+
 }
