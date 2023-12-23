@@ -130,7 +130,28 @@ namespace Explorer.Tours.Core.UseCases
             var tourExecutions = _tourExecutionRepository.GetForTourist(touristId);
 
             int toursCount = 0;
-
+            foreach (TourExecutionSession tourExecution in tourExecutions)
+            {
+                if (tourExecution.IsCampaign)
+                {
+                    continue;
+                }
+                if (tourExecution.Status != Domain.TourExecutionSessionStatus.Completed)
+                {
+                    continue;
+                }
+                toursCount++;
+                var tour = _tourRepository.GetById(tourExecution.TourId);
+                foreach (string t in tour.Tags)
+                {
+                    tags[t] = 0;
+                }
+                if (toursCount == v)
+                {
+                    break;
+                }
+            }
+            toursCount = 0;
             foreach (TourExecutionSession tourExecution in tourExecutions)
             {
                 if(tourExecution.IsCampaign)
