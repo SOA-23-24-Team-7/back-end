@@ -78,6 +78,8 @@ public static class ToursStartup
 
         services.AddScoped<IInternalNotificationService, NotificationService>();
 
+        services.AddScoped<IMailingListScheduler, MailingListScheduler>();
+
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
