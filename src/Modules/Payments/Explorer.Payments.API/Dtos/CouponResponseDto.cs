@@ -15,5 +15,6 @@ namespace Explorer.Payments.API.Dtos
         public DateTime? ExpirationDate { get; set; }
         public bool AllFromAuthor { get; set; }
         public string TourName { get; set; }
+        public long AuthorId { get; set; }
     }
 }
