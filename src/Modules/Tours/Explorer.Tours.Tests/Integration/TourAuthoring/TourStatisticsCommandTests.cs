@@ -1,14 +1,7 @@
 ﻿using Explorer.API.Controllers.Author.TourAuthoring;
-using Explorer.Tours.API.Public;
 using Explorer.Tours.Infrastructure.Database;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Tours.Tests.Integration.TourAuthoring;
 [Collection("Sequential")]
@@ -33,16 +26,14 @@ public class TourStatisticsCommandTests : BaseToursIntegrationTest
         var result1 = controller.GetNumberOfStartedTourExecutionSessions(tourId);
         var result2 = controller.GetNumberOfCompletedTourExecutionSessions(tourId);
 
-
         // Assert - Database
         result1.ShouldBe(startedNumber);
         result2.ShouldBe(completedNumber);
-
     }
 
 
     [Theory]
-    [InlineData( 1, 1)]
+    [InlineData(1, 1)]
     public void StatisticsForAuthorsTours(int startedNumber, int completedNumber)
     {
 
@@ -59,13 +50,13 @@ public class TourStatisticsCommandTests : BaseToursIntegrationTest
         // Assert - Database
         result1.ShouldBe(startedNumber);
         result2.ShouldBe(completedNumber);
-
     }
-
 
     private static TourStatisticsController CreateController(IServiceScope scope)
     {
-        return new TourStatisticsController(scope.ServiceProvider.GetRequiredService<Explorer.Tours.API.Public.ITourStatisticsService>(), scope.ServiceProvider.GetRequiredService<Explorer.Payments.API.Public.ITourStatisticsService>())
+        return new TourStatisticsController(scope.ServiceProvider.GetRequiredService<Explorer.Tours.API.Public.ITourStatisticsService>(),
+                                            scope.ServiceProvider.GetRequiredService<Explorer.Payments.API.Public.ITourStatisticsService>(),
+                                            scope.ServiceProvider.GetRequiredService<Explorer.Encounters.API.Public.ITourStatisticsService>())
         {
             ControllerContext = BuildContext("-1")
         };
