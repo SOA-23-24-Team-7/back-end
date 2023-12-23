@@ -574,6 +574,8 @@ public class TourCommandTests : BaseToursIntegrationTest
         storedEntity.Status.ToString().ShouldBe(expectedStatus.ToString());
     }
 
+
+
     private static TourController CreateController(IServiceScope scope)
     {
         return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())

@@ -144,5 +144,11 @@ namespace Explorer.Payments.Core.UseCases
             }
 
         }
+
+        public  Result<List<TourTokenResponseDto>> GetAll()
+        {
+            return MapToDto<TourTokenResponseDto>(_repository.GetAll());
+        }
+
     }
 }
