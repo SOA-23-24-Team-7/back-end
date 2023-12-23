@@ -6,6 +6,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
     {
         public string Title { get; init; }
         public string Description { get; init; }
+        public string Picture { get; init; }
         public double Longitude { get; init; }
         public double Latitude { get; init; }
         public double Radius { get; init; }
@@ -14,10 +15,11 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         public EncounterType Type { get; init; }
         public List<EncounterInstance> Instances { get; } = new List<EncounterInstance>();
 
-        public Encounter(string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, EncounterType type)
+        public Encounter(string title, string description, string picture, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, EncounterType type)
         {
             Title = title;
             Description = description;
+            Picture = picture;
             Longitude = longitude;
             Latitude = latitude;
             Radius = radius;
@@ -31,6 +33,7 @@ namespace Explorer.Encounters.Core.Domain.Encounter
         {
             if (string.IsNullOrWhiteSpace(Title)) throw new ArgumentException("Invalid Title");
             if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description");
+            if (string.IsNullOrWhiteSpace(Picture)) throw new ArgumentException("Invalid Picture");
             if (Longitude < -180 || Longitude > 180) throw new ArgumentException("Invalid Longitude");
             if (Latitude < -90 || Latitude > 90) throw new ArgumentException("Invalid Latitude");
             if (XpReward < 0) throw new ArgumentException("XP cannot be negative");

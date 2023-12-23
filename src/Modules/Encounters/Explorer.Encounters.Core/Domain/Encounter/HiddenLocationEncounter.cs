@@ -2,22 +2,15 @@
 {
     public class HiddenLocationEncounter : Encounter
     {
-        public string Picture { get; init; }
         public double PictureLongitude { get; init; }
         public double PictureLatitude { get; init; }
 
-        public HiddenLocationEncounter(string picture, double pictureLongitude, double pictureLatitude, string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, EncounterType type) : base(title, description, longitude, latitude, radius, xpReward, status, type)
+        public HiddenLocationEncounter(double pictureLongitude, double pictureLatitude, string title, string description, string picture, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, EncounterType type) : base(title, description, picture, longitude, latitude, radius, xpReward, status, type)
         {
-            Picture = picture;
             PictureLongitude = pictureLongitude;
             PictureLatitude = pictureLatitude;
-            Validate();
         }
 
-        public void Validate()
-        {
-            if (string.IsNullOrWhiteSpace(Picture)) throw new ArgumentException("Invalid Picture");
-        }
 
         public bool isUserInCompletionRange(double userLongitute, double userLatitude)
         {
