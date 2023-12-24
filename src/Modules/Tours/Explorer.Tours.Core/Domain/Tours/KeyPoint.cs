@@ -18,8 +18,6 @@ public class KeyPoint : Entity
     public bool IsEncounterRequired { get; private set; }
     public bool HasEncounter { get; private set; }
 
-    public KeyPoint() { }
-
     public KeyPoint(long tourId, string name, string description, double longitude, double latitude, string locationAddress, string imagePath, long order, KeyPointSecret? secret)
     {
         TourId = tourId;
