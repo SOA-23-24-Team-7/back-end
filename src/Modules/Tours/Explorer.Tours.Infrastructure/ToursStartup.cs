@@ -9,6 +9,7 @@ using Explorer.Tours.API.Public.TourAuthoring;
 using Explorer.Tours.API.Public.TourExecution;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Services;
 using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases;

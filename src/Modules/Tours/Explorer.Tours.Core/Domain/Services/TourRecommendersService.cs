@@ -8,7 +8,7 @@ using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
 
-namespace Explorer.Tours.Core.UseCases
+namespace Explorer.Tours.Core.Domain.Services
 {
     public class TourRecommendersService : BaseService<Tour>, IToursRecommendersService
     {
@@ -20,7 +20,7 @@ namespace Explorer.Tours.Core.UseCases
         private readonly IMapper _mapper;
         private readonly IReviewRepository _reviewRepository;
         private readonly IInternalTourTokenService _internalTourTokenService;
-        public TourRecommendersService(IMapper mapper, IPreferenceRepository preferenceRepository, ITourRepository tourRepository, IKeyPointRepository keyPointRepository, ITouristPositionRepository touristPositionRepository, ITourExecutionSessionRepository tourExecutionRepository, IReviewRepository reviewRepository, IInternalTourTokenService internalTourTokenService) : base (mapper)
+        public TourRecommendersService(IMapper mapper, IPreferenceRepository preferenceRepository, ITourRepository tourRepository, IKeyPointRepository keyPointRepository, ITouristPositionRepository touristPositionRepository, ITourExecutionSessionRepository tourExecutionRepository, IReviewRepository reviewRepository, IInternalTourTokenService internalTourTokenService) : base(mapper)
         {
             _tourRepository = tourRepository;
             _keyPointRepository = keyPointRepository;
@@ -66,6 +66,10 @@ namespace Explorer.Tours.Core.UseCases
         private List<Tour> GetNearbyTours(long touristId, int numberOfToursToGet)
         {
             TouristPosition position = _touristPositionRepository.GetByTouristId(touristId);
+            if (position == null)
+            {
+                position = new TouristPosition(touristId, 19.8, 45.2);
+            }
             var tours = _tourRepository.GetPublishedTours(0, 0);
             List<Tour> nearbyTours = new List<Tour>();
             foreach (var tour in tours.Results)
@@ -136,7 +140,7 @@ namespace Explorer.Tours.Core.UseCases
                 {
                     continue;
                 }
-                if (tourExecution.Status != Domain.TourExecutionSessionStatus.Completed)
+                if (tourExecution.Status != TourExecutionSessionStatus.Completed)
                 {
                     continue;
                 }
@@ -154,21 +158,21 @@ namespace Explorer.Tours.Core.UseCases
             toursCount = 0;
             foreach (TourExecutionSession tourExecution in tourExecutions)
             {
-                if(tourExecution.IsCampaign)
+                if (tourExecution.IsCampaign)
                 {
                     continue;
                 }
-                if(tourExecution.Status != Domain.TourExecutionSessionStatus.Completed)
+                if (tourExecution.Status != TourExecutionSessionStatus.Completed)
                 {
                     continue;
                 }
-                toursCount ++;
+                toursCount++;
                 var tour = _tourRepository.GetById(tourExecution.TourId);
-                foreach(string t in tour.Tags)
+                foreach (string t in tour.Tags)
                 {
                     tags[t] += 1;
                 }
-                if(toursCount == v)
+                if (toursCount == v)
                 {
                     break;
                 }
@@ -181,16 +185,16 @@ namespace Explorer.Tours.Core.UseCases
         {
             double res = 1.0;
             Tour tour = _tourRepository.GetById(tourId);
-            if(preference != null)
+            if (preference != null)
             {
                 //da li se poklapa sa preferiranom tezinom
-                if(tour.Difficulty == preference.DifficultyLevel)
+                if (tour.Difficulty == preference.DifficultyLevel)
                 {
                     res *= 1.2;
                 }
 
             }
-            foreach(string tagT in tour.Tags)
+            foreach (string tagT in tour.Tags)
             {
                 if (preference != null)
                 {
@@ -214,7 +218,7 @@ namespace Explorer.Tours.Core.UseCases
             }
             long numberOfReviews = _reviewRepository.GetTourReviewCountsAllTime(tourId);
             double averageReviewRating = _reviewRepository.GetTourReviewAverageRatingAllTime(tourId) ?? 0;
-            if(averageReviewRating > 4.0 && numberOfReviews > 50) 
+            if (averageReviewRating > 4.0 && numberOfReviews > 50)
             {
                 res *= 2;
             }
