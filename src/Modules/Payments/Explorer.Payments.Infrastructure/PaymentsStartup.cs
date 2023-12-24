@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
@@ -33,6 +34,7 @@ public static class PaymentsStartup
         services.AddScoped<IOrderItemService, OrderItemService>();
 
         services.AddScoped<ITourTokenService, TourTokenService>();
+        services.AddScoped<IInternalTourTokenService, TourTokenService>();
 
         services.AddScoped<ITourSaleService, TourSaleService>();
 
