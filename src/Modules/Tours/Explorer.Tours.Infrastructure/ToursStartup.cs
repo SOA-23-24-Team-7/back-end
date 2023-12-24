@@ -58,6 +58,8 @@ public static class ToursStartup
 
         services.AddScoped<ITourExecutionSessionService, TourExecutionSessionService>();
 
+        services.AddScoped<IInternalTourExecutionSessionService, TourExecutionSessionService>();
+
         services.AddScoped<ICampaignService, CampaignService>();
 
         services.AddScoped<ITouristPositionService, TouristPositionService>();
@@ -77,6 +79,10 @@ public static class ToursStartup
         services.AddScoped<ITourTokenService, TourTokenService>();
 
         services.AddScoped<IInternalNotificationService, NotificationService>();
+
+     
+        services.AddScoped<API.Public.ITourStatisticsService, Core.Domain.Services.TourStatisticsService>();
+        
 
     }
 

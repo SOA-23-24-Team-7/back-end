@@ -13,4 +13,5 @@ public interface IKeyPointService
     Result<KeyPointResponseDto> GetFirstByTourId(long tourId);
     Result<PagedResult<KeyPointResponseDto>> GetPaged(int page, int pageSize);
     Result<List<KeyPointResponseDto>> GetByCampaignId(long campaignId);
+    Result<KeyPointResponseDto> GetById(long id);
 }
