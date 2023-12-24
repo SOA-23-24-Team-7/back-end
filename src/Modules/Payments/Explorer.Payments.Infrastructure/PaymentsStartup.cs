@@ -48,7 +48,10 @@ public static class PaymentsStartup
         services.AddScoped<ICouponService, CouponService>();
 
         services.AddScoped<IBundleService, BundleService>();
-        services.AddScoped<IBundleRecordService, BundleRecordService>();
+       
+        services.AddScoped<API.Public.ITourStatisticsService, Core.Domain.Services.TourStatisticsService>();
+
+
     }
 
     private static void SetupInfrastructure(IServiceCollection services)

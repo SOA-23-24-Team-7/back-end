@@ -11,7 +11,7 @@ using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases
 {
-    public class TourExecutionSessionService : BaseService<TourExecutionSession>, ITourExecutionSessionService
+    public class TourExecutionSessionService : BaseService<TourExecutionSession>, ITourExecutionSessionService, IInternalTourExecutionSessionService
     {
         private readonly ITourRepository _tourRepository;
         private readonly ITourExecutionSessionRepository _tourExecutionRepository;
@@ -175,5 +175,79 @@ namespace Explorer.Tours.Core.UseCases
             }
             return MapToDto<TourExecutionSessionResponseDto>(liveTourExecution);
         }
+
+        public Result<List<TourExecutionSessionResponseDto>> GetAll()
+        {
+            return MapToDto<TourExecutionSessionResponseDto>(_tourExecutionRepository.GetAll());
+        }
+
+        public Result<List<TourExecutionSessionResponseDto>>GetByTourId(long tourId)
+        {
+            return MapToDto<TourExecutionSessionResponseDto>(_tourExecutionRepository.GetAll().Where(tes => tes.TourId == tourId).ToList());
+        }
+
+        public Result<List<TourExecutionSessionResponseDto>> GetByTourAndTouristId(long tourId, long touristId)
+        {
+            List<TourExecutionSession> matchingSessions = _tourExecutionRepository
+                                                          .GetAll()
+                                                          .Where(tes => tes.TourId == tourId && tes.TouristId == touristId)
+                                                          .ToList();
+
+            return MapToDto<TourExecutionSessionResponseDto>(matchingSessions);
+        }
+
+        public List<long> GetTouristsIds()
+        {
+            List<long> uniqueTouristIds = _tourExecutionRepository
+                .GetAll()
+                .Select(tes => tes.TouristId)
+                .Distinct()
+                .ToList();
+
+            return uniqueTouristIds;
+        }
+
+        public List<long> GetTouristsByTourId(long tourId)
+        {
+            List<long> uniqueTouristIds = _tourExecutionRepository
+                .GetAll()
+                .Where(tes => tes.TourId == tourId)
+                .Select(tes => tes.TouristId)
+                .Distinct()
+                .ToList();
+
+            return uniqueTouristIds;
+        }
+
+        public Result<TourExecutionSessionResponseDto> GetMaximumPorgressExecutionsForTourists(long tourId, long touristId)
+        {
+            TourExecutionSessionResponseDto ret = new();
+            double maxProgress = 0.0;
+
+            var sessions = GetByTourAndTouristId(tourId, touristId);
+
+            if(sessions.Value.Count > 1)
+            {
+                foreach (var session in sessions.Value)
+                {
+                    if (session.Progress > maxProgress)
+                    {
+                        maxProgress = session.Progress;
+                        ret = session;
+                    }
+                }
+            }
+            else if (sessions.Value.Count == 1)
+            {
+               ret = sessions.Value[0];
+            }
+            else
+            {
+                return null;
+            }
+            
+            return ret;
+        }
+
     }
 }

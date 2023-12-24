@@ -37,7 +37,7 @@ public class ToursProfile : Profile
 
         CreateMap<KeyPointResponseDto, KeyPoint>().ReverseMap();
         CreateMap<KeyPointCreateDto, KeyPoint>().ForMember(dest => dest.HaveSecret, opt => opt.MapFrom(src => src.Secret != null));
-        CreateMap<KeyPointUpdateDto, KeyPoint>().ReverseMap();
+        CreateMap<KeyPoint, KeyPointUpdateDto>().ReverseMap().ConstructUsing(x => new KeyPoint(x.TourId, x.Name, x.Description, x.Longitude, x.Latitude, x.LocationAddress, x.ImagePath, x.Order, null));
 
         CreateMap<TourExecutionSession, TourExecutionSessionResponseDto>();
         CreateMap<TourExecutionSession, TourExecutionInfoDto>().ForMember(dest => dest.TourStatus, opt => opt.MapFrom(src => src.Status));
@@ -69,8 +69,8 @@ public class ToursProfile : Profile
         CreateMap<PublicFacilityRequestResponseDto, PublicFacilityRequest>().ReverseMap();
         CreateMap<PublicFacilityRequestUpdateDto, PublicFacilityRequest>().ReverseMap();
 
-        CreateMap<TourDurationResponseDto, TourDuration>().ReverseMap(); 
-        CreateMap<TourDurationUpdateDto, TourDuration>().ReverseMap(); 
+        CreateMap<TourDurationResponseDto, TourDuration>().ReverseMap();
+        CreateMap<TourDurationUpdateDto, TourDuration>().ReverseMap();
 
         CreateMap<PublicFacilityNotificationResponseDto, PublicFacilityNotification>().ReverseMap();
         CreateMap<PublicFacilityNotificationCreateDto, PublicFacilityNotification>().ReverseMap();

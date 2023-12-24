@@ -151,6 +151,10 @@ namespace Explorer.Payments.Core.UseCases
             long count = _repository.GetAll(tk => tk.TourId == tourId).Count();
             return count;
         }
+        public  Result<List<TourTokenResponseDto>> GetAll()
+        {
+            return MapToDto<TourTokenResponseDto>(_repository.GetAll());
+        }
 
     }
 }
