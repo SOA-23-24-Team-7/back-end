@@ -10,4 +10,5 @@ public interface IClubMemberManagementService
     Result AddMember(long clubId, long touristId);
     void DeleteByClubId(long clubId);
     Result<PagedResult<ClubMemberDto>> GetMembers(long clubId);
+    Result<PagedResult<ClubResponseDto>> GetUserClubs(long userId);
 }

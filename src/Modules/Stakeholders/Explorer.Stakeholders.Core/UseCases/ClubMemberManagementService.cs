@@ -73,6 +73,34 @@ public class ClubMemberManagementService : IClubMemberManagementService
         }
     }
 
+    public Result<PagedResult<ClubResponseDto>> GetUserClubs(long userId)
+    {
+        try
+        {
+            var dtos = new List<ClubResponseDto>();
+            var ownerClubs = _clubRepository.GetAll(c => c.OwnerId == userId);
+            foreach (var ownerClub in ownerClubs)
+            {
+                var clubDto = new ClubResponseDto() { Id = ownerClub.Id, Name = ownerClub.Name, Description = ownerClub.Description, Image = ownerClub.Image, OwnerId = userId };
+                dtos.Add(clubDto);
+            }
+            var memberships = _clubMembershipRepository.GetAll(m => m.TouristId == userId);
+            
+            foreach (var membership in memberships)
+            {
+                var club = _clubRepository.Get(membership.ClubId);
+                var clubDto = new ClubResponseDto() { Id = club.Id, Name = club.Name, Description = club.Description, Image = club.Image, OwnerId = club.OwnerId };
+                dtos.Add(clubDto);
+            }
+            var result = new PagedResult<ClubResponseDto>(dtos, dtos.Count);
+            return result;
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
+        }
+    }
+
     public Result KickTourist(long membershipId, long userId)
     {
         try

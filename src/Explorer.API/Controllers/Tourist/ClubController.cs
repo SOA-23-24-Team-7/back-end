@@ -35,6 +35,14 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet]
+        [Route("{id:long}")]
+        public ActionResult<PagedResult<ClubResponseDto>> Get(long id)
+        {
+            var result = _clubService.Get(id);
+            return CreateResponse(result);
+        }
+
         [HttpPost]
         public ActionResult<ClubResponseDto> Create([FromBody] ClubCreateDto club)
         {

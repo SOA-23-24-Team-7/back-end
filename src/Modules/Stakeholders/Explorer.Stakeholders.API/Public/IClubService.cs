@@ -10,6 +10,7 @@ namespace Explorer.Stakeholders.API.Public
         Result<PagedResult<ClubResponseWithOwnerDto>> GetClubsPaged(int page, int pageSize);
         Result<ClubResponseDto> Create<CreateDto>(CreateDto club);
         Result<ClubResponseDto> Update<UpdateDto>(UpdateDto club);
+        Result<ClubResponseDto> Get(long id);
         Result<PagedResult<ClubResponseDto>> GetOwnerClubs(long ownerId);
         public Result Delete(long id);
     }
