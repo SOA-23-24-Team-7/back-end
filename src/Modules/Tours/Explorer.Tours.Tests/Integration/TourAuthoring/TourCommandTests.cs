@@ -98,7 +98,8 @@ public class TourCommandTests : BaseToursIntegrationTest
             Tags = new List<string> { "sport", "priroda" },
             Status = TourStatus.Draft,
             Price = 0,
-            IsDeleted = false
+            IsDeleted = false,
+            Category = TourCategory.Adventure
         };
 
         // Act

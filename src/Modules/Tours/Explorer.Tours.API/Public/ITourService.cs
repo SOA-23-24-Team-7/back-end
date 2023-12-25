@@ -26,4 +26,8 @@ public interface ITourService
     Result<List<TourResponseDto>> GetTours(List<long> toursIds);
     Result MarkAsReady(long id, long touristId);
     Result<PagedResult<TourResponseDto>> GetToursBasedOnSelectedKeyPoints(int page, int pageSize, List<long> publicKeyPointIds, long authorId);
+    Result<PagedResult<TourResponseDto>> GetAdventureTours(int page, int pageSize);
+    Result<PagedResult<TourResponseDto>> GetFamilyTours(int page, int pageSize);
+    Result<PagedResult<TourResponseDto>> GetCruiseTours(int page, int pageSize);
+    Result<PagedResult<TourResponseDto>> GetCulturalTours(int page, int pageSize);
 }

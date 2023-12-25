@@ -14,5 +14,9 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
         string GetToursName(long id);
         long GetAuthorsId(long id);
         PagedResult<Tour> GetPublishedTours(int page, int pageSize);
+        PagedResult<Tour> GetPopularAdventureTours(int page, int pageSize);
+        PagedResult<Tour> GetPopularFamilyTours(int page, int pageSize);
+        PagedResult<Tour> GetPopularCruiseTours(int page, int pageSize);
+        PagedResult<Tour> GetPopularCulturalTours(int page, int pageSize);
     }
 }
