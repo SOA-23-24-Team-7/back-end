@@ -67,20 +67,20 @@ public class AuthenticationController : BaseApiController
         var emailClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
         return emailClaim;
     }
-}
+
     [HttpGet("confirm-registration")]
     public ActionResult ConfirmPassword([FromQuery] string confirm_registration_token)
     {
-       
+
         var tokenHandler = new JwtSecurityTokenHandler();
 
         var jwtToken = tokenHandler.ReadJwtToken(confirm_registration_token);
 
         var usermname = jwtToken.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
         var confirm = jwtToken.Claims.FirstOrDefault(c => c.Type == "confirm")?.Value;
-            
+
         var result = _authenticationService.ConfirmRegistration(usermname, confirm);
-        
+
         return CreateResponse(result);
     }
 }
