@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
+using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
@@ -12,7 +13,7 @@ using System.Diagnostics;
 
 namespace Explorer.Payments.Core.UseCases
 {
-    public class TourTokenService : CrudService<TourTokenResponseDto, TourToken>, ITourTokenService
+    public class TourTokenService : CrudService<TourTokenResponseDto, TourToken>, ITourTokenService, IInternalTourTokenService
     {
         private readonly ICrudRepository<TourToken> _repository;
         private readonly ICrudRepository<Record> _recordRepository;
@@ -144,5 +145,16 @@ namespace Explorer.Payments.Core.UseCases
             }
 
         }
+
+        public long GetTourTokenCount(long tourId)
+        {
+            long count = _repository.GetAll(tk => tk.TourId == tourId).Count();
+            return count;
+        }
+        public  Result<List<TourTokenResponseDto>> GetAll()
+        {
+            return MapToDto<TourTokenResponseDto>(_repository.GetAll());
+        }
+
     }
 }

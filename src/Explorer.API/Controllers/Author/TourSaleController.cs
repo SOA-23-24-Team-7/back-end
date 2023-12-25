@@ -58,7 +58,7 @@ public class TourSaleController : BaseApiController
         return CreateResponse(result);
     }
 
-    [Authorize(Policy = "nonAdministratorPolicy")]
+    //[Authorize(Policy = "nonAdministratorPolicy")]
     [HttpGet("tours/{tourId:long}")]
     public ActionResult<double?> GetDiscountForTour(long tourId)
     {

@@ -7,6 +7,7 @@ using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using System;
 
 namespace Explorer.Tours.Core.UseCases
 {
@@ -26,6 +27,7 @@ namespace Explorer.Tours.Core.UseCases
             try
             {
                 var preference = _tourPreferenceRepository.GetByUserId(id);
+                if (preference == null) throw new KeyNotFoundException("Not found!");
                 var preferenceDto = _mapper.Map<PreferenceResponseDto>(preference);
 
                 return Result.Ok(preferenceDto);
