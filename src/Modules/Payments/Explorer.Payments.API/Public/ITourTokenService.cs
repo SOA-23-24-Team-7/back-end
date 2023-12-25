@@ -9,4 +9,5 @@ public interface ITourTokenService
     Result<List<TourTokenResponseDto>> GetTouristsTokens(long touristId);
     Result<List<long>> GetTouristToursId(long touristId);
     public Result AddTokensByBundle(long touristId, long bundleId);
+    Result<List<TourTokenResponseDto>> GetAll();
 }

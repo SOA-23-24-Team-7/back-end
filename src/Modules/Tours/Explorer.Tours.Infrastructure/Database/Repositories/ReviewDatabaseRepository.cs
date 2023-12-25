@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Explorer.Tours.Infrastructure.Database.Repositories
 {
@@ -29,6 +30,35 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         {
             var entity = _dbSet.Where(x => x.TouristId == touristId && x.TourId == tourId).FirstOrDefault();
             return entity != null;
+        }
+        public int GetTourReviewCounts(long tourId, int forLastNDays)
+        {
+            int count = _dbSet.Where(review => review.TourId == tourId && review.CommentDate.AddDays(forLastNDays).CompareTo(DateOnly.FromDateTime(DateTime.Now)) >= 0).Count();
+            return count;
+        }
+        public double? GetTourReviewAverageRating(long tourId, int forLastNDays)
+        {
+            var allRatings = _dbSet.Where(review => review.TourId == tourId && review.CommentDate.AddDays(forLastNDays).CompareTo(DateOnly.FromDateTime(DateTime.Now)) >= 0).Select(review => review.Rating);
+            if(!allRatings.Any())
+            {
+                return 0;
+            }
+            return allRatings.Average();
+        }
+
+        public int GetTourReviewCountsAllTime(long tourId)
+        {
+            int count = _dbSet.Where(review => review.TourId == tourId).Count();
+            return count;
+        }
+        public double? GetTourReviewAverageRatingAllTime(long tourId)
+        {
+            var allRatings = _dbSet.Where(review => review.TourId == tourId).Select(review => review.Rating);
+            if (!allRatings.Any())
+            {
+                return 0;
+            }
+            return allRatings.Average();
         }
     }
 }

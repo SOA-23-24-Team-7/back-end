@@ -240,5 +240,11 @@ namespace Explorer.Encounters.Core.UseCases
                 return Result.Fail(e.Message);
             }
         }
+
+        public KeyPointEncounterResponseDto GetByKeyPointId(long keyPointId)
+        {
+            return MapToDto<KeyPointEncounterResponseDto>(_keypointEncounterRepository.GetByKeyPointId(keyPointId));
+        }
+
     }
 }

@@ -36,4 +36,11 @@ public class KeyPointEncounterDatabaseRepository : IKeyPointEncounterRepository
 
         return encounter;
     }
+
+    public KeyPointEncounter GetByKeyPointId(long keyPointId)
+    {
+        var encounter = _dbSet.FirstOrDefault(x => x.KeyPointId == keyPointId);
+        
+        return encounter;
+    }
 }

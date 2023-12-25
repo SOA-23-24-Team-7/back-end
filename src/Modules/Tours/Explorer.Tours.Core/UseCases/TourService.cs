@@ -93,9 +93,9 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
     }
 
-    public IEnumerable<long> GetAuthorsTours(long id)
+    public List<long> GetAuthorsTours(long id)
     {
-        return _tourRepository.GetAuthorsTours(id);
+        return _tourRepository.GetAuthorsTours(id).ToList();
     }
 
     public string GetToursName(long id)
@@ -153,7 +153,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
     }
 
-
     public Result<PagedResult<TourResponseDto>> GetPublished(int page, int pageSize)
     {
         var allTours = _tourRepository.GetAll(page, pageSize);
@@ -167,7 +166,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
         return dtos;
     }
-
 
     public Result<PagedResult<TourResponseDto>> GetAllPaged(int page, int pageSize)
     {
@@ -189,6 +187,7 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
                                                                     te.TouristId == userId && te.Progress >= 35 && (te.LastActivity > DateTime.UtcNow.AddDays(-7)) && !te.IsCampaign);
         return tourExecutions.Any();
     }
+
     public Result<PagedResult<LimitedTourViewResponseDto>> GetPublishedLimitedView(int page, int pageSize)
     {
         try
@@ -259,9 +258,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         return dto;
     }
 
-
-
-
     public Result MarkAsReady(long id, long touristId)
     {
         try
@@ -321,7 +317,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         }
         return new PagedResult<TourResponseDto>(tourResponseDtos, tourResponseDtos.Count);
     }
-
     public Result<PagedResult<TourResponseDto>> GetAdventureTours(int page, int pageSize)
     {
         var tours = _tourCrudRepository.GetAll(t => t.Status == Domain.Tours.TourStatus.Published && t.Category == Domain.Tours.TourCategory.Adventure, include: "Reviews,KeyPoints");
@@ -329,11 +324,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         var pagedResult = new PagedResult<Tour>(tours, tours.Count);
         var dtos = MapToDto<TourResponseDto>(pagedResult);
         var newDtos = new List<TourResponseDto>();
-        /*for (int i = 0; i < allTours.Count; i++)
-        {
-            var averageRating = allTours.ElementAt(i).GetAverageRating();
-            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
-        }*/
         return dtos;
     }
 
@@ -343,11 +333,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         //var allTours = _tourRepository.GetPopularFamilyTours(page, pageSize).Results.ToList();
         var pagedResult = new PagedResult<Tour>(tours, tours.Count);
         var dtos = MapToDto<TourResponseDto>(pagedResult);
-        /*for (int i = 0; i < allTours.Count; i++)
-        {
-            var averageRating = allTours.ElementAt(i).GetAverageRating();
-            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
-        }*/
         return dtos;
     }
 
@@ -357,11 +342,6 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         //var allTours = _tourRepository.GetPopularCruiseTours(page, pageSize).Results.ToList();
         var pagedResult = new PagedResult<Tour>(tours, tours.Count);
         var dtos = MapToDto<TourResponseDto>(pagedResult);
-        /*for (int i = 0; i < tours.Count; i++)
-        {
-            var averageRating = tours.ElementAt(i).GetAverageRating();
-            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
-        }*/
         return dtos;
     }
 
@@ -371,12 +351,20 @@ public class TourService : CrudService<TourResponseDto, Tour>, ITourService, IIn
         //var allTours = _tourRepository.GetPopularCulturalTours(page, pageSize).Results.ToList();
         var pagedResult = new PagedResult<Tour>(tours, tours.Count);
         var dtos = MapToDto<TourResponseDto>(pagedResult);
-        /*for (int i = 0; i < allTours.Count; i++)
-        {
-            var averageRating = allTours.ElementAt(i).GetAverageRating();
-            dtos.Value.Results.ElementAt(i).AverageRating = averageRating;
-        }*/
         return dtos;
+    }
+
+    public List<long> GetKeyPointIds(long tourId)
+    {
+        List<long> ids = new();
+        var tour = _tourRepository.GetById(tourId);
+        
+        foreach (var keyPoint in tour.KeyPoints)
+        {
+            ids.Add(keyPoint.Id);
+        }
+
+        return ids;
     }
 }
 
