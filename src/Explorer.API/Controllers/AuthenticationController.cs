@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Explorer.API.Controllers;
 
@@ -23,7 +24,7 @@ public class AuthenticationController : BaseApiController
     }
 
     [HttpPost]
-    public ActionResult<AuthenticationTokensDto> RegisterTourist([FromBody] AccountRegistrationDto account)
+    public ActionResult<RegistrationConfirmationTokenDto> RegisterTourist([FromBody] AccountRegistrationDto account)
     {
         var result = _authenticationService.RegisterTourist(account);
         if(result.IsSuccess && !result.IsFailed)
@@ -65,5 +66,21 @@ public class AuthenticationController : BaseApiController
         // Access claims directly from the token
         var emailClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
         return emailClaim;
+    }
+}
+    [HttpGet("confirm-registration")]
+    public ActionResult ConfirmPassword([FromQuery] string confirm_registration_token)
+    {
+       
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var jwtToken = tokenHandler.ReadJwtToken(confirm_registration_token);
+
+        var usermname = jwtToken.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+        var confirm = jwtToken.Claims.FirstOrDefault(c => c.Type == "confirm")?.Value;
+            
+        var result = _authenticationService.ConfirmRegistration(usermname, confirm);
+        
+        return CreateResponse(result);
     }
 }
