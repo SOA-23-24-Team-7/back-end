@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 
@@ -15,6 +16,7 @@ public class ClubMemberManagementService : IClubMemberManagementService
     private readonly IPersonRepository _personRepository;
     private readonly IClubRepository _clubRepository;
     private readonly IClubMembershipRepository _clubMembershipRepository;
+
 
     public ClubMemberManagementService(IMapper mapper, IUserRepository userRepository, IPersonRepository personRepository, IClubRepository clubRepository, IClubMembershipRepository clubMembershipRepository)
     {
@@ -62,6 +64,32 @@ public class ClubMemberManagementService : IClubMemberManagementService
             {
                 var person = _personRepository.GetByUserId(membership.TouristId);
                 var memberDto = new ClubMemberDto() { UserId = person.UserId, FirstName = person.Name, LastName = person.Surname, Username = membership.Tourist.Username, MembershipId = membership.Id };
+                dtos.Add(memberDto);
+            }
+            var result = new PagedResult<ClubMemberDto>(dtos, dtos.Count);
+            return result;
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
+        }
+    }
+
+    public Result<PagedResult<ClubMemberDto>> GetMembersWithOwner(long clubId)
+    {
+        try
+        {
+            var dtos = new List<ClubMemberDto>();
+            var club = _clubRepository.Get(clubId);
+            var ownerUser = _userRepository.Get(club.OwnerId);
+            var ownerPerson = _personRepository.GetByUserId(club.OwnerId);
+            var memberDto = new ClubMemberDto() { UserId = ownerUser.Id, FirstName = ownerPerson.Name, LastName = ownerPerson.Surname, Username = ownerUser.Username, MembershipId = 0 };
+            dtos.Add(memberDto);
+            var memberships = _clubMembershipRepository.GetAll(m => m.ClubId == clubId);
+            foreach (var membership in memberships)
+            {
+                var person = _personRepository.GetByUserId(membership.TouristId);
+                memberDto = new ClubMemberDto() { UserId = person.UserId, FirstName = person.Name, LastName = person.Surname, Username = membership.Tourist.Username, MembershipId = membership.Id };
                 dtos.Add(memberDto);
             }
             var result = new PagedResult<ClubMemberDto>(dtos, dtos.Count);
