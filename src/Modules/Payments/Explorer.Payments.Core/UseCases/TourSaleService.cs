@@ -144,9 +144,10 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
                 sb.Append("' ");
             }
             sb.Append("from your wishlist is currently on sale!");
-            sb.AppendLine("Sale perntage is: ");
+            sb.Append("Sale perntage is: ");
             sb.Append(sale.DiscountPercentage.ToString());
-            WishlistNotification notification = new WishlistNotification(w.TouristId, w.TourId, sb.ToString());
+            WishlistNotification notification = new WishlistNotification(w.TourId, w.TouristId, sb.ToString());
+            _wishlistNotificationRepository.Create(notification);
             sb.Clear();
         }
     }

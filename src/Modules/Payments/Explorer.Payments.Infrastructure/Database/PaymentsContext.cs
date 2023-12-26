@@ -25,6 +25,7 @@ public class PaymentsContext : DbContext
     public DbSet<Bundle> Bundles { get; set; }
     public DbSet<BundleItem> BundleItems { get; set; }
     public DbSet<Wishlist> Wishlists { get; set; }
+    public DbSet<WishlistNotification> WishlistsNotification { get; set; }
 
 
     public PaymentsContext(DbContextOptions<PaymentsContext> options) : base(options) { }
