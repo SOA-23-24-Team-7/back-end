@@ -12,10 +12,10 @@ namespace Explorer.API.Controllers.Tourist
 {
     [Authorize(Policy = "touristPolicy")]
     [Route("api/tourist/subscriber")]
-    public class SubscriberControler : BaseApiController
+    public class SubscriberController : BaseApiController
     {
         private readonly ISubscriberService _subscriberService;
-        public SubscriberControler(ISubscriberService subscriberService)
+        public SubscriberController(ISubscriberService subscriberService)
         {
             _subscriberService = subscriberService;
         }
@@ -23,7 +23,7 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPost]
         public ActionResult<SubscriberResponseDto> SaveCampaign(SubscriberCreateDto createDto)
         {
-            var result = _subscriberService.Create(createDto);
+            var result = _subscriberService.SaveOrUpdate(createDto);
             if (result == null)
             {
                 return BadRequest();
@@ -37,6 +37,13 @@ namespace Explorer.API.Controllers.Tourist
         {
             var result = _subscriberService.GetPaged(0,0);
             
+            return CreateResponse(result);
+        }
+
+        [HttpGet("by-user/{userId:int}")]
+        public ActionResult<SubscriberResponseDto> Get(int userId)
+        {
+            var result = _subscriberService.GetByUserId(userId);
             return CreateResponse(result);
         }
     }

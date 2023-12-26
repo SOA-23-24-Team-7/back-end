@@ -14,5 +14,7 @@ namespace Explorer.Tours.API.Public
     {
         Result<PagedResult<SubscriberResponseDto>> GetPaged(int page, int pageSize);
         Result<SubscriberResponseDto> Create<SubscriberCreateDto>(SubscriberCreateDto subscriber);
+        Result<SubscriberResponseDto> SaveOrUpdate(SubscriberCreateDto subscriber);
+        Result<SubscriberResponseDto> GetByUserId(int userId);
     }
 }

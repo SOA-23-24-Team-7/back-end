@@ -28,7 +28,7 @@ public class MailingListScheduler : BackgroundService, IMailingListScheduler
         TimeSpan timeUntilFirstRun = firstOccurence - now;
 
         int seconds = daysPeriod * 24 * 60 * 60;
-        //Timer _timer = new Timer(sendEmails, emails, timeUntilFirstRun, TimeSpan.FromSeconds(seconds)); 
+        //Timer _timer = new Timer(sendEmails, daysPeriod, timeUntilFirstRun, TimeSpan.FromSeconds(seconds));
         Timer _timer = new Timer(sendEmails, daysPeriod, timeUntilFirstRun, TimeSpan.FromSeconds(30)); // za testiranje
     }
 

@@ -11,7 +11,7 @@ namespace Explorer.Tours.Core.Domain
     {
         public long TouristId { get; init; }
         public string? EmailAddress { get; init; }
-        public int Frequency { get; init; }
+        public int Frequency { get; set; }
         public DateOnly LastTimeSent { get; init; }
 
         public Subscriber(long touristId, string emailAddress, int frequency, DateOnly lastTimeSent)

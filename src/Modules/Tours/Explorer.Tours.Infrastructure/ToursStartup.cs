@@ -94,7 +94,7 @@ public static class ToursStartup
     {
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
 
-        services.AddScoped(typeof(ICrudRepository<Subscriber>), typeof(CrudDatabaseRepository<Subscriber, ToursContext>));
+        services.AddScoped(typeof(ISubscriberRepository), typeof(SubscriberDatabaseRepository));
 
 
         services.AddScoped(typeof(ICrudRepository<Facility>), typeof(CrudDatabaseRepository<Facility, ToursContext>));
