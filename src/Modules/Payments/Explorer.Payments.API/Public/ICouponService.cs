@@ -12,8 +12,9 @@ namespace Explorer.Payments.API.Public
     public interface ICouponService
     {
         Result<PagedResult<CouponResponseDto>> GetPaged(int page, int pageSize);
-        Result<CouponResponseDto> Create<CouponCreateDto>(CouponCreateDto review);
-        Result<CouponResponseDto> Update<CouponUpdateDto>(CouponUpdateDto review);
+        Result<PagedResult<CouponResponseDto>> GetPagedByAuthorId(int page, int pageSize,long id);
+        Result<CouponResponseDto> Create<CouponCreateDto>(CouponCreateDto coupon);
+        Result<CouponResponseDto> Update<CouponUpdateDto>(CouponUpdateDto coupon);
         Result Delete(long id);
     }
 }

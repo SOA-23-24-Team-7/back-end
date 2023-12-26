@@ -22,6 +22,7 @@ DELETE FROM tours."PublicFacilityRequests";
 DELETE FROM tours."TourExecutionSessions";
 DELETE FROM tours."TouristPositions";
 DELETE FROM tours."KeyPoints";
+DELETE FROM tours."PublicKeyPoints";
 DELETE FROM tours."Facilities";
 DELETE FROM tours."Reviews";
 DELETE FROM tours."TourEquipment";
