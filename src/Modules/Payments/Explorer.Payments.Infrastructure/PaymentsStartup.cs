@@ -51,7 +51,7 @@ public static class PaymentsStartup
        
         services.AddScoped<API.Public.ITourStatisticsService, Core.Domain.Services.TourStatisticsService>();
 
-
+        services.AddScoped<IWishlistService, WishlistService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -80,6 +80,8 @@ public static class PaymentsStartup
 
         services.AddScoped(typeof(IBundleRepository), typeof(BundleDatabaseRepository));
         services.AddScoped(typeof(IBundleRecordRepository), typeof(BundleRecordDatabaseRepository));
+
+        services.AddScoped(typeof(ICrudRepository<Wishlist>), typeof(CrudDatabaseRepository<Wishlist, PaymentsContext>));
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),
