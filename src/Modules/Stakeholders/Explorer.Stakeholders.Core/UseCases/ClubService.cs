@@ -32,5 +32,11 @@ namespace Explorer.Tours.Core.UseCases
             }
             return ownerClubs;
         }
+
+        public Result<ClubResponseDto> GetById(int id)
+        {
+            var result = _clubRepository.Get(c => c.Id == id);
+            return MapToDto<ClubResponseDto>(result);
+        }
     }
 }

@@ -61,7 +61,7 @@ public class ClubMemberManagementService : IClubMemberManagementService
             foreach (var membership in memberships)
             {
                 var person = _personRepository.GetByUserId(membership.TouristId);
-                var memberDto = new ClubMemberDto() { UserId = person.UserId, FirstName = person.Name, LastName = person.Surname, Username = membership.Tourist.Username, MembershipId = membership.Id };
+                var memberDto = new ClubMemberDto() { UserId = person.UserId, FirstName = person.Name, LastName = person.Surname, Username = membership.Tourist.Username, MembershipId = membership.Id, ProfilePicture = membership.Tourist.ProfilePicture };
                 dtos.Add(memberDto);
             }
             var result = new PagedResult<ClubMemberDto>(dtos, dtos.Count);
