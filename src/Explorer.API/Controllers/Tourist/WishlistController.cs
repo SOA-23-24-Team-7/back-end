@@ -1,5 +1,6 @@
 ﻿using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -29,5 +30,10 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpDelete("{wishlistId:long}")]
+        public void RemoveTourFromWishlist(long wishlistId)
+        {
+            _wishlistService.RemoveTourFromWishlist(wishlistId);
+        }
     }
 }

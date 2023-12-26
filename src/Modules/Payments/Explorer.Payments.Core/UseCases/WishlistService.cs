@@ -28,5 +28,11 @@ namespace Explorer.Payments.Core.UseCases
             }
 
         }
+
+        public void RemoveTourFromWishlist(long wishlistId)
+        {
+            _repository.Delete(wishlistId);
+            return;
+        }
     }
 }
