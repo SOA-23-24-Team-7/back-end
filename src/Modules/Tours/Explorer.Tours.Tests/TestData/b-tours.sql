@@ -38,13 +38,13 @@ INSERT INTO tours."Tours"(
 	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category")
 VALUES (-9, -11,'Tura za ready', 'Ova treba da padne', 1,  ARRAY ['istorija', 'kultura'], 0, 0, false, 0, '0001-01-01 12:00:00.789123+00:00', '0001-01-01 12:00:00.789123+00:00', '[{{"Duration":81, "TransportType":0}}, {{"Duration":40, "TransportType":2}}]',0);
 INSERT INTO tours."Tours"(
-	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations")
-VALUES (-10, -11,'Tura za ready', 'Ova treba da prodje', 1,  ARRAY ['istorija', 'kultura'], 0, 0, false, 0, '0001-01-01 12:00:00.789123+00:00', '0001-01-01 12:00:00.789123+00:00', '[{{"Duration":81, "TransportType":0}}, {{"Duration":40, "TransportType":2}}]');
+	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category")
+VALUES (-10, -11,'Tura za ready', 'Ova treba da prodje', 1,  ARRAY ['istorija', 'kultura'], 0, 0, false, 0, '0001-01-01 12:00:00.789123+00:00', '0001-01-01 12:00:00.789123+00:00', '[{{"Duration":81, "TransportType":0}}, {{"Duration":40, "TransportType":2}}]', 0);
 INSERT INTO tours."Tours"(
-	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations")
-VALUES (-11, -12,'Tura za statistiku', 'Prva pokrenuta', 1,  ARRAY ['istorija', 'kultura'], 1, 0, false, 0, '0001-01-01 12:00:00.789123+00:00', '0001-01-01 12:00:00.789123+00:00', '[{{"Duration":81, "TransportType":0}}, {{"Duration":40, "TransportType":2}}]');
+	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category")
+VALUES (-11, -12,'Tura za statistiku', 'Prva pokrenuta', 1,  ARRAY ['istorija', 'kultura'], 1, 0, false, 0, '0001-01-01 12:00:00.789123+00:00', '0001-01-01 12:00:00.789123+00:00', '[{{"Duration":81, "TransportType":0}}, {{"Duration":40, "TransportType":2}}]', 0);
 INSERT INTO tours."Tours"(
-	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations")
-VALUES (-12, -12,'Tura za statistiku', 'Druga pokrenuta i prva zavrsena', 1,  ARRAY ['istorija', 'kultura'], 1, 0, false, 0, '0001-01-01 12:00:00.789123+00:00', '0001-01-01 12:00:00.789123+00:00', '[{{"Duration":81, "TransportType":0}}, {{"Duration":40, "TransportType":2}}]');
+	"Id", "AuthorId", "Name", "Description", "Difficulty", "Tags", "Status", "Price", "IsDeleted", "Distance", "PublishDate", "ArchiveDate", "Durations", "Category")
+VALUES (-12, -12,'Tura za statistiku', 'Druga pokrenuta i prva zavrsena', 1,  ARRAY ['istorija', 'kultura'], 1, 0, false, 0, '0001-01-01 12:00:00.789123+00:00', '0001-01-01 12:00:00.789123+00:00', '[{{"Duration":81, "TransportType":0}}, {{"Duration":40, "TransportType":2}}]', 0);
 
 

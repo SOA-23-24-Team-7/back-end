@@ -44,7 +44,8 @@ namespace Explorer.Blog.Tests.Integration.Blog
                 Description = "Test",
                 Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Status = API.Dtos.BlogStatus.Published,
-                AuthorId = -12
+                AuthorId = -12,
+                VisibilityPolicy = 0
             };
 
             // Act
