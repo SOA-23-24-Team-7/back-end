@@ -2,9 +2,11 @@
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Infrastructure.Database;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System.Security.Claims;
 
 namespace Explorer.Stakeholders.Tests.Integration.Club
 {
@@ -43,9 +45,22 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
         [Fact]
         public void Create_fails_invalid_data()
         {
-            // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
+            var contextUser = new ClaimsIdentity(new Claim[] { new Claim("id", "-12") }, "test");
+
+            var context = new DefaultHttpContext()
+            {
+                User = new ClaimsPrincipal(contextUser)
+            };
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = context
+            };
+
+            // Arrange
+
             var updatedEntity = new ClubCreateDto
             {
                 Description = "Test"
