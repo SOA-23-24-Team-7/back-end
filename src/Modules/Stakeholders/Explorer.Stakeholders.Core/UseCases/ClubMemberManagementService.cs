@@ -80,12 +80,6 @@ public class ClubMemberManagementService : IClubMemberManagementService
         try
         {
             var dtos = new List<ClubResponseDto>();
-            var ownerClubs = _clubRepository.GetAll(c => c.OwnerId == userId);
-            foreach (var ownerClub in ownerClubs)
-            {
-                var clubDto = new ClubResponseDto() { Id = ownerClub.Id, Name = ownerClub.Name, Description = ownerClub.Description, Image = ownerClub.Image, OwnerId = userId };
-                dtos.Add(clubDto);
-            }
             var memberships = _clubMembershipRepository.GetAll(m => m.TouristId == userId);
             
             foreach (var membership in memberships)

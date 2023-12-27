@@ -127,7 +127,7 @@ namespace Explorer.API.Controllers
         }
 
         [Authorize(Policy = "touristPolicy")]
-        [HttpPost("getClubBlogs")]
+        [HttpGet("getClubBlogs")]
         public ActionResult<BlogResponseDto> GetClubBlogs([FromQuery] int page, [FromQuery] int pageSize, long clubId)
         {
             var result = _blogService.GetAllFromBlogs(page, pageSize, clubId);
