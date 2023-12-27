@@ -2,6 +2,7 @@
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -53,8 +54,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 club.OwnerId = long.Parse(identity.FindFirst("id").Value);
             }
-            var result = _clubService.Create(club);
-            _clubMemberManagementService.AddMember(result.Value.Id, club.OwnerId);
+            var result = _clubService.CreateClubAndMember(club, club.OwnerId);
             return CreateResponse(result);
         }
 
