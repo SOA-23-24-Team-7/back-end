@@ -49,6 +49,11 @@ namespace Explorer.Tours.Core.Domain.Services
                 .Take(10)
                 .ToList();
 
+            for(int i = 0; i < 10; i++)
+            {
+                topNearbyTours[i] = _tourRepository.GetById(topNearbyTours[i].Id);
+            }
+
             var activeTours = MapToResponseDto(topNearbyTours);
 
             return activeTours;
