@@ -5,22 +5,31 @@ using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Internal;
 using FluentResults;
+using System.Text;
 
 namespace Explorer.Payments.Core.UseCases;
 
 public class TourSaleService : BaseService<TourSale>, ITourSaleService
 {
     private readonly ITourSaleRepository _saleRepository;
+    private readonly ICrudRepository<Wishlist> _wishlistRepository;
+    private readonly ICrudRepository<WishlistNotification> _wishlistNotificationRepository;
+    private readonly IInternalTourService _tourService;
 
     private Action<TourSale> CheckIfTourIsAlreadyOnSale(TourSale sale)
     {
         return s => { if (s.Id != sale.Id && sale.EndDate >= s.StartDate && sale.StartDate <= s.EndDate && sale.TourIds.Any(t => s.TourIds.Contains(t))) throw new InvalidOperationException("At least one of the tours is already on sale."); };
     }
 
-    public TourSaleService(IMapper mapper, ITourSaleRepository saleRepository) : base(mapper)
+    public TourSaleService(IMapper mapper, ITourSaleRepository saleRepository, ICrudRepository<Wishlist> wishlistRepository, ICrudRepository<WishlistNotification> wishlistNotificationRepository, IInternalTourService tourService) : base(mapper)
     {
         _saleRepository = saleRepository;
+        _wishlistRepository = wishlistRepository;
+        _tourService = tourService;
+        _wishlistNotificationRepository = wishlistNotificationRepository;
     }
 
     public Result<TourSaleResponseDto> Create(TourSaleCreateDto sale)
@@ -31,6 +40,10 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
             List<TourSale> tourSales = _saleRepository.GetAll();
             tourSales.ForEach(CheckIfTourIsAlreadyOnSale(saleDomain));
             var result = _saleRepository.Create(saleDomain);
+
+            //slanje notifikacije svim turistima
+            var wishlists = _wishlistRepository.GetAll().FindAll(w => sale.TourIds.Contains(w.TourId));
+            SendNotifications(wishlists, sale);
             return MapToDto<TourSaleResponseDto>(result);
         }
         catch (ArgumentException e)
@@ -116,5 +129,26 @@ public class TourSaleService : BaseService<TourSale>, ITourSaleService
         var sale = sales.Find(s => s.EndDate >= today && s.StartDate <= today && s.TourIds.Contains(tourId));
 
         return sale?.DiscountPercentage;
+    }
+
+    private void SendNotifications(List<Wishlist> wislists, TourSaleCreateDto sale)
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach(Wishlist w in wislists)
+        {
+            sb.Append("Tour '");
+            var tour = _tourService.Get(w.TourId).Value;
+            if(tour != null)
+            {
+                sb.Append(tour.Name);
+                sb.Append("' ");
+            }
+            sb.Append("from your wishlist is currently on sale!");
+            sb.Append("Sale perntage is: ");
+            sb.Append(sale.DiscountPercentage.ToString());
+            WishlistNotification notification = new WishlistNotification(w.TourId, w.TouristId, sb.ToString());
+            _wishlistNotificationRepository.Create(notification);
+            sb.Clear();
+        }
     }
 }
