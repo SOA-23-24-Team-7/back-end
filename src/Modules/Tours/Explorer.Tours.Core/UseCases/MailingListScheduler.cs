@@ -88,7 +88,7 @@ public class MailingListScheduler : BackgroundService, IMailingListScheduler
                     subs = subs.Where(s => dayOfSending % s.Frequency == 0).ToList();
                     foreach (SubscriberResponseDto sub in subs)
                     {
-                        string body = File.ReadAllText("Startup/templateMail.html");
+                        string body = File.ReadAllText("../Resources/templateMail.html");
                         string toursList = "";
                         List<TourResponseDto> tours = toursRecommendersService.GetRecommendedToursForMail(sub.TouristId);
                         foreach (TourResponseDto t in tours)
@@ -118,7 +118,7 @@ public class MailingListScheduler : BackgroundService, IMailingListScheduler
                     }
                 }
                 await Task.Delay(TimeSpan.FromSeconds(5));
-            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(24*3600));
+            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(24*1));
 
             await Task.Delay(-1, stoppingToken);
 
