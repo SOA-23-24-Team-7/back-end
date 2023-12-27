@@ -9,8 +9,8 @@ namespace Explorer.Encounters.Core.Domain.Encounter
     {
         public bool ChallengeDone { get; init; }
 
-        public MiscEncounter(bool challengeDone, string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, EncounterType type)
-     : base(title, description, longitude, latitude, radius, xpReward, status, type)
+        public MiscEncounter(bool challengeDone, string title, string description, string picture, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, EncounterType type)
+     : base(title, description, picture, longitude, latitude, radius, xpReward, status, type)
         {
             ChallengeDone = challengeDone;
         }

@@ -55,7 +55,7 @@ namespace Explorer.Encounters.Core.UseCases
             try
             {
                 // problem sa konverzijom iz jednog enuma u drugi (iako su isti lol) ovo 0 na kraju
-                var hiddenEncounter = new HiddenLocationEncounter(encounter.Picture, encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Hidden);
+                var hiddenEncounter = new HiddenLocationEncounter(encounter.PictureLongitude, encounter.PictureLatitude, encounter.Title, encounter.Description, encounter.Picture, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Hidden);
                 CrudRepository.Create(hiddenEncounter);
                 return MapToDto<HiddenLocationEncounterResponseDto>(hiddenEncounter);
             }
@@ -155,7 +155,7 @@ namespace Explorer.Encounters.Core.UseCases
                 var longitude = _keypointService.GetKeyPointLongitude(keyPointEncounter.KeyPointId);
                 var latitude = _keypointService.GetKeyPointLatitude(keyPointEncounter.KeyPointId);
 
-                CrudRepository.Create(new KeyPointEncounter(keyPointEncounter.Title, keyPointEncounter.Description, longitude, latitude, keyPointEncounter.Radius, keyPointEncounter.XpReward, EncounterStatus.Active, keyPointEncounter.KeyPointId));
+                CrudRepository.Create(new KeyPointEncounter(keyPointEncounter.Title, keyPointEncounter.Description, keyPointEncounter.Picture, longitude, latitude, keyPointEncounter.Radius, keyPointEncounter.XpReward, EncounterStatus.Active, keyPointEncounter.KeyPointId));
 
                 _keypointService.AddEncounter(keyPointEncounter.KeyPointId, keyPointEncounter.IsRequired);
 
@@ -217,7 +217,7 @@ namespace Explorer.Encounters.Core.UseCases
         {
             try
             {
-                var miscEncounter = new MiscEncounter(encounter.ChallengeDone, encounter.Title, encounter.Description, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Misc);
+                var miscEncounter = new MiscEncounter(encounter.ChallengeDone, encounter.Title, encounter.Description,encounter.Picture, encounter.Longitude, encounter.Latitude, encounter.Radius, encounter.XpReward, 0, Domain.Encounter.EncounterType.Misc);
                 CrudRepository.Create(miscEncounter);
                 return MapToDto<MiscEncounterResponseDto>(miscEncounter);
             }
@@ -231,7 +231,7 @@ namespace Explorer.Encounters.Core.UseCases
         {
             try
             {
-                var encounter = new SocialEncounter(encounterDto.Title, encounterDto.Description, encounterDto.Longitude, encounterDto.Latitude, encounterDto.Radius, encounterDto.XpReward, (Domain.Encounter.EncounterStatus)encounterDto.Status, encounterDto.PeopleNumber, Domain.Encounter.EncounterType.Social);
+                var encounter = new SocialEncounter(encounterDto.Title, encounterDto.Description, encounterDto.Picture, encounterDto.Longitude, encounterDto.Latitude, encounterDto.Radius, encounterDto.XpReward, (Domain.Encounter.EncounterStatus)encounterDto.Status, encounterDto.PeopleNumber, Domain.Encounter.EncounterType.Social);
                 CrudRepository.Create(encounter);
                 return MapToDto<SocialEncounterResponseDto>(encounter);
             }
