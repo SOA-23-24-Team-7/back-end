@@ -80,7 +80,7 @@ public class ClubMemberManagementService : IClubMemberManagementService
             var membership = _clubMembershipRepository.Get(membershipId);
             var club = _clubRepository.Get(membership.ClubId);
 
-            if (club.OwnerId != userId)
+            if (club.OwnerId != userId && membership.TouristId != userId)
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(FailureCode.InvalidArgument);
             }
