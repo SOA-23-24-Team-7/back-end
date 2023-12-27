@@ -20,12 +20,11 @@ namespace Explorer.API.Controllers.Tourist
         [HttpGet]
         public ActionResult<List<WishlistNotificationResponseDto>> GetByTouristId()
         {
-            
-            var result = _wishlistNotificationService.GetByTouristId(extractUserIdFromHttpContext());
+            var result = _wishlistNotificationService.GetByTouristId(ExtractUserIdFromHttpContext());
             return CreateResponse(result);
         }
 
-        private long extractUserIdFromHttpContext()
+        private long ExtractUserIdFromHttpContext()
         {
             return long.Parse((HttpContext.User.Identity as ClaimsIdentity).FindFirst("id").Value);
         }

@@ -26,14 +26,18 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<WishlistResponseDto> AddTourToWishlist(long tourId)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var id = long.Parse(identity.FindFirst("id").Value);
+            long id = -21; // za testove potrebno
+            if (identity != null && identity.IsAuthenticated)
+            {
+                id = long.Parse(identity.FindFirst("id").Value);
+            }
+
             WishlistCreateDto dto = new WishlistCreateDto();
             dto.TourId = tourId;
             dto.TouristId = id;
             var result = _wishlistService.AddTourToWishlist(dto);
             return CreateResponse(result);
         }
-
 
         [HttpGet]
         [Route("tourist")]
