@@ -33,6 +33,16 @@ namespace Explorer.Tours.Core.UseCases
             }
         }
 
+        public List<SubscriberResponseDto> GetAll()
+        {
+            List<SubscriberResponseDto> result = new List<SubscriberResponseDto>();
+            foreach (var s in _subscriberRepository.GetAll())
+            {
+                result.Add(MapToDto<SubscriberResponseDto>(s));
+            }
+            return result;
+        }
+
         public Result<SubscriberResponseDto> SaveOrUpdate(SubscriberCreateDto subscriberCreateDto)
         {
             if (subscriberCreateDto.Frequency != 0)

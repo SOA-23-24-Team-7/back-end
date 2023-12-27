@@ -127,6 +127,26 @@ namespace Explorer.Tours.Core.Domain.Services
             return new PagedResult<TourResponseDto>(activeTours, activeTours.Count);
         }
 
+        public List<TourResponseDto> GetRecommendedToursForMail(long touristId)
+        {
+            List<Tour> nearbyTours = GetNearbyTours(touristId, 10);
+
+            Preference preference = _tourPreferenceRepository.GetByUserId((int)touristId);
+
+            Dictionary<string, int> favouriteTags = GetFinishedTags(touristId, 10);
+
+            List<double> nearbyToursScores = GetToursRecommendScores(nearbyTours.Select(tour => tour.Id).ToList(), preference, favouriteTags);
+
+            List<Tour> topNearbyTours = nearbyTours.Zip(nearbyToursScores)
+                .OrderByDescending(tourScore => tourScore.Second)
+                .Select(tourScore => tourScore.First)
+                .Take(10)
+                .ToList();
+
+            var activeTours = MapToResponseDto(topNearbyTours);
+            return activeTours;
+        }
+
         private Dictionary<string, int> GetFinishedTags(long touristId, int v)
         {
             Dictionary<string, int> tags = new Dictionary<string, int>();

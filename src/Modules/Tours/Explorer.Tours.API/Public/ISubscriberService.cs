@@ -16,5 +16,7 @@ namespace Explorer.Tours.API.Public
         Result<SubscriberResponseDto> Create<SubscriberCreateDto>(SubscriberCreateDto subscriber);
         Result<SubscriberResponseDto> SaveOrUpdate(SubscriberCreateDto subscriber);
         Result<SubscriberResponseDto> GetByUserId(int userId);
+
+        public List<SubscriberResponseDto> GetAll();
     }
 }
