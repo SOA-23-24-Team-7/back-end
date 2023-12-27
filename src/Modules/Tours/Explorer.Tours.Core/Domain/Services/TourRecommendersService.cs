@@ -49,7 +49,7 @@ namespace Explorer.Tours.Core.Domain.Services
                 .Take(10)
                 .ToList();
 
-            for(int i = 0; i < 10; i++)
+            for(int i = 0; i < topNearbyTours.Count; i++)
             {
                 topNearbyTours[i] = _tourRepository.GetById(topNearbyTours[i].Id);
             }
