@@ -53,6 +53,7 @@ public static class PaymentsStartup
         services.AddScoped<API.Public.ITourStatisticsService, Core.Domain.Services.TourStatisticsService>();
 
         services.AddScoped<IWishlistService, WishlistService>();
+        services.AddScoped<IWishlistNotificationService, WishlistNotificationService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
