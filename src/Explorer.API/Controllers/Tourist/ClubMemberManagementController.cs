@@ -32,6 +32,12 @@ public class ClubMemberManagementController : BaseApiController
         var members = _clubMemberManagementService.GetMembers(clubId);
         return CreateResponse(members);
     }
+    [HttpGet("userclubs/{userId:long}")]
+    public ActionResult<PagedResult<ClubResponseDto>> GetClubs(long userId)
+    {
+        var members = _clubMemberManagementService.GetUserClubs(userId);
+        return CreateResponse(members);
+    }
 
     private long extractUserIdFromHttpContext()
     {

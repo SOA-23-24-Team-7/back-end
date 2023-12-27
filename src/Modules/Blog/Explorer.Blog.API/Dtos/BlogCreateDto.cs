@@ -7,6 +7,7 @@
         public DateTime Date { get; set; }
         public BlogStatus Status { get; init; }
         public int AuthorId { get; set; }
+        public long? ClubId { get; set; }
         public BlogVisibilityPolicy VisibilityPolicy { get; set; }
     }
 }

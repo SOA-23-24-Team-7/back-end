@@ -61,6 +61,8 @@ INSERT INTO payments."Wallets"(
 	"Id", "TouristId", "AdventureCoin")
 	VALUES
 		(-1, -3, 10000),
+		(-1, -4, 10000),
+		(-1, -5, 10000),
 		(-2, -168, 200),
 		(-3, -169, 500),
 		(-4, -170, 400),

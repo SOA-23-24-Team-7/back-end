@@ -20,5 +20,6 @@ namespace Explorer.Blog.API.Dtos
         public long DownvoteCount { get; set; }
         public int AuthorId { get; set; }
         public UserResponseDto Author { get; set; }
+        public long? ClubId { get; set; }
     }
 }
