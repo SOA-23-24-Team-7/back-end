@@ -12,4 +12,5 @@
         public EncounterStatus Status { get; set; }
         public EncounterType Type { get; set; }
     }
+   
 }

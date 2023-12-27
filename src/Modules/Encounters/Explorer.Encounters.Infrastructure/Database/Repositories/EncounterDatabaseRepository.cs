@@ -2,6 +2,7 @@
 using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Encounters.Core.Domain.Encounter;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
+using FluentResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Encounters.Infrastructure.Database.Repositories
@@ -42,6 +43,22 @@ namespace Explorer.Encounters.Infrastructure.Database.Repositories
 
             return task.Result;
         }
+
+        public PagedResult<Encounter> GetAllDoneByUser(int currentUserId, int page, int pageSize)
+        {
+            var allEncounters = _dbSet.ToList();
+            var doneEncounters = allEncounters.Where(encounter =>
+                encounter.Instances.Any(instance => instance.UserId == currentUserId)).ToList();
+
+            var filteredIds = doneEncounters.Select(e => e.Id).ToList();
+            var task = _dbSet.Where(e => filteredIds.Contains(e.Id)).GetPaged(page, pageSize);
+            task.Wait();
+
+            return task.Result;
+        }
+
+
+
 
         public Encounter GetById(long id)
         {

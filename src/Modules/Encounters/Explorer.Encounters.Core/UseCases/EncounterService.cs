@@ -7,8 +7,11 @@ using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.Encounter;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.API.Internal;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Internal;
 using FluentResults;
+using System.Globalization;
+using System.Xml.Linq;
 using EncounterStatus = Explorer.Encounters.Core.Domain.Encounter.EncounterStatus;
 
 namespace Explorer.Encounters.Core.UseCases
@@ -123,6 +126,15 @@ namespace Explorer.Encounters.Core.UseCases
             return MapToDto<EncounterResponseDto>(entities);
         }
 
+        public Result<PagedResult<EncounterResponseDto>> GetAllDoneByUser(int currentUserId, int page, int pageSize)
+        {
+              var doneEncountersResult = _encounterRepository.GetAllDoneByUser(currentUserId, page, pageSize);
+
+            return MapToDto<EncounterResponseDto>(doneEncountersResult);
+
+        }
+
+
         public Result<TouristProgressResponseDto> CompleteEncounter(long userId, long encounterId)
         {
             try
@@ -191,6 +203,7 @@ namespace Explorer.Encounters.Core.UseCases
                 return Result.Fail(FailureCode.InvalidArgument);
             }
         }
+        
 
         public Result<EncounterResponseDto> CancelEncounter(long userId, long encounterId)
         {
@@ -245,6 +258,10 @@ namespace Explorer.Encounters.Core.UseCases
         {
             return MapToDto<KeyPointEncounterResponseDto>(_keypointEncounterRepository.GetByKeyPointId(keyPointId));
         }
+
+
+
+
 
     }
 }
