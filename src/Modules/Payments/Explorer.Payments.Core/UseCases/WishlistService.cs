@@ -3,6 +3,10 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain;
+using Explorer.Stakeholders.API.Public;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
 
 namespace Explorer.Payments.Core.UseCases
@@ -27,6 +31,34 @@ namespace Explorer.Payments.Core.UseCases
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
 
+        }
+
+        public Result<List<long>> GetTouristToursId(long touristId)
+        {
+            var wishlist = _repository.GetAll().FindAll(w => w.TouristId == touristId);
+            return wishlist.Select(token => token.TourId).ToList();
+        }
+
+        public Result RemoveTourFromWishlist(long tourId, long touristId)
+        {
+            try
+            {
+                var wishlist = _repository.GetAll().FirstOrDefault(w => w.TourId == tourId && w.TouristId == touristId);
+                if(wishlist != null)
+                {
+                    _repository.Delete(wishlist.Id);
+                    return Result.Ok();
+                }
+                else
+                {
+                    return Result.Fail(FailureCode.NotFound);
+                }
+    
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
         }
     }
 }
