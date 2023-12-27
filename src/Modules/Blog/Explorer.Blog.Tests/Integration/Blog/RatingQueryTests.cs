@@ -3,6 +3,7 @@ using Explorer.API.Controllers.Tourist;
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -39,7 +40,9 @@ namespace Explorer.Blog.Tests.Integration.Blog
 
         private static BlogController CreateController(IServiceScope scope)
         {
-            return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>())
+            return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>(),
+                                      scope.ServiceProvider.GetRequiredService<IClubMemberManagementService>(),
+                                      scope.ServiceProvider.GetRequiredService<IClubService>())
             {
                 ControllerContext = BuildContext("-1")
             };

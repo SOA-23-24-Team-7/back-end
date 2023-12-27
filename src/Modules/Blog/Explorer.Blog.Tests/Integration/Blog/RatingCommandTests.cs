@@ -3,6 +3,7 @@ using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.Blog.Core.Domain;
 using Explorer.Blog.Infrastructure.Database;
+using Explorer.Stakeholders.API.Public;
 using FluentResults;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -87,7 +88,9 @@ namespace Explorer.Blog.Tests.Integration.Blog
 
         private static BlogController CreateController(IServiceScope scope)
         {
-            return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>())
+            return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>(),
+                                      scope.ServiceProvider.GetRequiredService<IClubMemberManagementService>(),
+                                      scope.ServiceProvider.GetRequiredService<IClubService>())
             {
                 ControllerContext = BuildContext("-1")
             };

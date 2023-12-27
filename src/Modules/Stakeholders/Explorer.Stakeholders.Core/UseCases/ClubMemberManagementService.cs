@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 
@@ -15,6 +16,7 @@ public class ClubMemberManagementService : IClubMemberManagementService
     private readonly IPersonRepository _personRepository;
     private readonly IClubRepository _clubRepository;
     private readonly IClubMembershipRepository _clubMembershipRepository;
+
 
     public ClubMemberManagementService(IMapper mapper, IUserRepository userRepository, IPersonRepository personRepository, IClubRepository clubRepository, IClubMembershipRepository clubMembershipRepository)
     {
@@ -65,6 +67,28 @@ public class ClubMemberManagementService : IClubMemberManagementService
                 dtos.Add(memberDto);
             }
             var result = new PagedResult<ClubMemberDto>(dtos, dtos.Count);
+            return result;
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(FailureCode.NotFound);
+        }
+    }
+
+    public Result<PagedResult<ClubResponseDto>> GetUserClubs(long userId)
+    {
+        try
+        {
+            var dtos = new List<ClubResponseDto>();
+            var memberships = _clubMembershipRepository.GetAll(m => m.TouristId == userId);
+            
+            foreach (var membership in memberships)
+            {
+                var club = _clubRepository.Get(membership.ClubId);
+                var clubDto = new ClubResponseDto() { Id = club.Id, Name = club.Name, Description = club.Description, Image = club.Image, OwnerId = club.OwnerId };
+                dtos.Add(clubDto);
+            }
+            var result = new PagedResult<ClubResponseDto>(dtos, dtos.Count);
             return result;
         }
         catch (KeyNotFoundException e)
