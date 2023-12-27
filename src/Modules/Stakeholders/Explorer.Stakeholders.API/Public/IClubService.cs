@@ -7,6 +7,7 @@ namespace Explorer.Stakeholders.API.Public
     public interface IClubService
     {
         Result<PagedResult<ClubResponseDto>> GetPaged(int page, int pageSize);
+        Result<ClubResponseDto> GetById(int id);
         Result<PagedResult<ClubResponseWithOwnerDto>> GetClubsPaged(int page, int pageSize);
         Result<ClubResponseDto> Create<CreateDto>(CreateDto club);
         Result<ClubResponseDto> Update<UpdateDto>(UpdateDto club);

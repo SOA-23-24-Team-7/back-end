@@ -19,7 +19,7 @@ namespace Explorer.API.Controllers.Tourist
             _reviewService = reviewService;
         }
 
-        [Authorize(Policy = "nonAdministratorPolicy")]
+        //[Authorize(Policy = "nonAdministratorPolicy")]
         [HttpGet("{tourId:int}")]
         public ActionResult<PagedResult<ReviewResponseDto>> GetAllByTourId([FromQuery] int page, [FromQuery] int pageSize, long tourId)
         {

@@ -3,7 +3,7 @@ using FluentResults;
 
 namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 
-public interface IUserRepository
+public interface IUserRepository : ICrudRepository<User>
 {
     User? Get(long id);
     bool Exists(string username);
@@ -14,4 +14,6 @@ public interface IUserRepository
     public PagedResult<User> SearchUsers(int page, int pageSize, string searchUsername, long id);
     string GetNameById(long id);
     string GetProfilePicture(long adminId);
+    User GetByUsername(string username);
+    User EnableUser(long userId);
 }

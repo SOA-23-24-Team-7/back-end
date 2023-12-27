@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 {
-    public class PersonDataBaseRepository : IPersonRepository
+    public class PersonDatabaseRepository : CrudDatabaseRepository<Person, StakeholdersContext>, IPersonRepository
     {
 
         private readonly StakeholdersContext _dbContext;
         private readonly DbSet<Person> _dbSet;
 
-        public PersonDataBaseRepository(StakeholdersContext dbContext)
+        public PersonDatabaseRepository(StakeholdersContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<Person>();
@@ -37,6 +37,16 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             var task = _dbContext.People.Include(x => x.User).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
+        }
+
+        public bool ExistsByEmail(string email)
+        {
+            return _dbContext.People.Any(user => user.Email == email);
+        }
+
+        public Person GetByEmail(string email)
+        {
+            return _dbContext.People.FirstOrDefault(user => user.Email == email);
         }
     }
 }
