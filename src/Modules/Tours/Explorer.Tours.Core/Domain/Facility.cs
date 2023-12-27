@@ -6,8 +6,8 @@ public class Facility : Entity
 {
     public string Name { get; init; }
     public string? Description { get; init; }
-    public string? ImagePath { get; init; } 
-    public int AuthorId { get; init; } 
+    public string? ImagePath { get; init; }
+    public int AuthorId { get; init; }
     public FacilityCategory Category { get; init; }
     public double Longitude { get; init; }
     public double Latitude { get; init; }
@@ -28,7 +28,6 @@ public class Facility : Entity
     {
         if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name.");
         if (string.IsNullOrWhiteSpace(Category.ToString())) throw new ArgumentException("Invalid Category.");
-        if (AuthorId < 0) throw new ArgumentException("Invalid Author Id.");
     }
 
     public string GetCategoryName()
