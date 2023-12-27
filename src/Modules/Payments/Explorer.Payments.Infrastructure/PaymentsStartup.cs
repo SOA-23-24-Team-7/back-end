@@ -9,6 +9,7 @@ using Explorer.Payments.Core.Mappers;
 using Explorer.Payments.Core.UseCases;
 using Explorer.Payments.Infrastructure.Database;
 using Explorer.Payments.Infrastructure.Database.Repositories;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.UseCases;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,8 @@ public static class PaymentsStartup
        
         services.AddScoped<API.Public.ITourStatisticsService, Core.Domain.Services.TourStatisticsService>();
 
-
+        services.AddScoped<IWishlistService, WishlistService>();
+        services.AddScoped<IWishlistNotificationService, WishlistNotificationService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -80,6 +82,9 @@ public static class PaymentsStartup
 
         services.AddScoped(typeof(IBundleRepository), typeof(BundleDatabaseRepository));
         services.AddScoped(typeof(IBundleRecordRepository), typeof(BundleRecordDatabaseRepository));
+
+        services.AddScoped(typeof(ICrudRepository<Wishlist>), typeof(CrudDatabaseRepository<Wishlist, PaymentsContext>));
+        services.AddScoped(typeof(ICrudRepository<WishlistNotification>), typeof(CrudDatabaseRepository<WishlistNotification, PaymentsContext>));
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),
