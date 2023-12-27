@@ -36,7 +36,7 @@ public static class ToursStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IEquipmentService, EquipmentService>();
-
+        services.AddScoped<ISubscriberService, SubscriberService>();
         services.AddScoped<IFacilityService, FacilityService>();
 
         services.AddScoped<ITourService, TourService>();
@@ -83,6 +83,7 @@ public static class ToursStartup
 
         services.AddScoped<IInternalNotificationService, NotificationService>();
 
+        services.AddScoped<IMailingListScheduler, MailingListScheduler>();
      
         services.AddScoped<API.Public.ITourStatisticsService, Core.Domain.Services.TourStatisticsService>();
         
@@ -92,6 +93,9 @@ public static class ToursStartup
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
+
+        services.AddScoped(typeof(ISubscriberRepository), typeof(SubscriberDatabaseRepository));
+
 
         services.AddScoped(typeof(ICrudRepository<Facility>), typeof(CrudDatabaseRepository<Facility, ToursContext>));
 

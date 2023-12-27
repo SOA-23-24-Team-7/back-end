@@ -13,5 +13,8 @@ namespace Explorer.Tours.API.Public
     {
         Result<PagedResult<TourResponseDto>> GetRecommendedTours(long touristId);
         Result<PagedResult<TourResponseDto>> GetActiveTours(long touristId);
+        List<TourResponseDto> GetActiveToursList(long touristId);
+
+        List<TourResponseDto> GetRecommendedToursForMail(long touristId);
     }
 }
