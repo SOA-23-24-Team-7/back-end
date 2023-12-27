@@ -7,4 +7,5 @@ public class ClubMemberDto
     public string LastName { get; set; }
     public string Username { get; set; }
     public long MembershipId { get; set; }
+    public string ProfilePicture { get; set; }
 }

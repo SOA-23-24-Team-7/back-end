@@ -71,12 +71,13 @@ namespace Explorer.Tours.Core.Domain.Services
                 position = new TouristPosition(touristId, 19.8, 45.2);
             }
             var tours = _tourRepository.GetPublishedTours(0, 0);
+            List<long> purchasedTours = _internalTourTokenService.GetPurchasedToursIds(touristId);
             List<Tour> nearbyTours = new List<Tour>();
             foreach (var tour in tours.Results)
             {
                 var keyPoints = _keyPointRepository.GetByTourId(tour.Id);
                 var nearbyKeypoints = keyPoints.Where(k => k.CalculateDistance(position.Longitude, position.Latitude) <= 40000);
-                if (nearbyKeypoints.Any())
+                if (nearbyKeypoints.Any() && !purchasedTours.Contains(tour.Id))
                 {
                     nearbyTours.Add(tour);
                 }
