@@ -1,13 +1,8 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
-<<<<<<< HEAD
-using FluentResults;
-=======
-using Explorer.Payments.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
->>>>>>> d901044fd0482460c9a1e5c4ed7bf8172adaf944
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -39,13 +34,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-<<<<<<< HEAD
-        [HttpDelete("{wishlistId:long}")]
-        public void RemoveTourFromWishlist(long wishlistId)
-        {
-            _wishlistService.RemoveTourFromWishlist(wishlistId);
-        }
-=======
+
         [HttpGet]
         [Route("tourist")]
         public ActionResult<PagedResult<TourResponseDto>> GetPurchasedTours()
@@ -69,6 +58,5 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
->>>>>>> d901044fd0482460c9a1e5c4ed7bf8172adaf944
     }
 }
