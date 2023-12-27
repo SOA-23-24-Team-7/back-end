@@ -28,10 +28,11 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
         }
         private static ClubController CreateController(IServiceScope scope)
         {
-            return new ClubController(scope.ServiceProvider.GetRequiredService<IClubService>())
+            /*return new ClubController(scope.ServiceProvider.GetRequiredService<IClubService>())
             {
                 ControllerContext = BuildContext("-1")
-            };
+            };*/
+            return null;
         }
     }
 }
