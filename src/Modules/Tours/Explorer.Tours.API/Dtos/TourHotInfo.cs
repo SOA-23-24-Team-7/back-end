@@ -33,7 +33,7 @@ namespace Explorer.Tours.API.Dtos
                 averageReviewContribution = Math.Pow(12 * (averageReviewRating - 3.5) - 3, 1 / 3) + 2.2;
             }
             double reviewCountContribution = Math.Log(numberOfReviews + 1);
-            double purchaseCountContribution = 1 / 9 * numberOfPurchases;
+            double purchaseCountContribution = 1.0 / 9.0 * numberOfPurchases;
             return averageReviewContribution * reviewCountContribution + purchaseCountContribution;
         }
     }
