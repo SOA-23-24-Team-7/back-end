@@ -122,6 +122,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Club
             {
                 ControllerContext = BuildContext("-1")
             };
+            return null;
         }
     }
 }
