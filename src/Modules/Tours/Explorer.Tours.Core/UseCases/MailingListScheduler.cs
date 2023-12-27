@@ -89,8 +89,16 @@ public class MailingListScheduler : BackgroundService, IMailingListScheduler
                     foreach (SubscriberResponseDto sub in subs)
                     {
                         string body = File.ReadAllText("../Resources/templateMail.html");
+
+                        string headers = "<tr><th>Tour Name</th><th>Description</th><th>Price</th><th>Distance</th><th>Difficulty</th>";
+
+                        string tables = "";
                         string toursList = "";
-                        List<TourResponseDto> tours = toursRecommendersService.GetRecommendedToursForMail(sub.TouristId);
+                        var tours = toursRecommendersService.GetRecommendedToursForMail(sub.TouristId).Take(5).ToList();
+                        var activeTours = toursRecommendersService.GetActiveToursList(sub.TouristId).Take(5).ToList();
+
+                        toursList += "<table><thead>";
+                        toursList += headers;
                         foreach (TourResponseDto t in tours)
                         {
                             toursList += "<tr>";
@@ -101,7 +109,29 @@ public class MailingListScheduler : BackgroundService, IMailingListScheduler
                             toursList += "<td style='border:1px solid #dddddd;text-align:left;padding:8px;'>" + t.Difficulty + "</td>";
                             toursList += "</tr>";
                         }
-                        body = body.Replace("[[TOURS]]", toursList);
+                        toursList += "</thead></table>";
+
+                        body = body.Replace("[[TABLE1]]", toursList);
+
+                        tables += toursList;
+
+                        toursList = "";
+                        toursList += "<table><thead>";
+                        toursList += headers;
+                        foreach (TourResponseDto t in activeTours)
+                        {
+                            toursList += "<tr>";
+                            toursList += "<td style='border:1px solid #dddddd;text-align:left;padding:8px;'>" + t.Name + "</td>";
+                            toursList += "<td style='border:1px solid #dddddd;text-align:left;padding:8px;'>" + t.Description + "</td>";
+                            toursList += "<td style='border:1px solid #dddddd;text-align:left;padding:8px;'>" + t.Price + "</td>";
+                            toursList += "<td style='border:1px solid #dddddd;text-align:left;padding:8px;'>" + t.Distance + "</td>";
+                            toursList += "<td style='border:1px solid #dddddd;text-align:left;padding:8px;'>" + t.Difficulty + "</td>";
+                            toursList += "</tr>";
+                        }
+                        toursList += "</thead></table>";
+
+                        body = body.Replace("[[TABLE2]]", toursList);
+
                         await _emailSender.SendEmailAsync(sub.EmailAddress, "Daily digest", body );
                     }
 
@@ -118,7 +148,7 @@ public class MailingListScheduler : BackgroundService, IMailingListScheduler
                     }
                 }
                 await Task.Delay(TimeSpan.FromSeconds(5));
-            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(24*1));
+            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(24*3600));
 
             await Task.Delay(-1, stoppingToken);
 

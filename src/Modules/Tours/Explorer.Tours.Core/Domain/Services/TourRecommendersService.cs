@@ -34,6 +34,12 @@ namespace Explorer.Tours.Core.Domain.Services
 
         public Result<PagedResult<TourResponseDto>> GetActiveTours(long touristId)
         {
+            var activeTours = GetActiveToursList(touristId);
+            return new PagedResult<TourResponseDto>(activeTours, activeTours.Count);
+        }
+
+        public List<TourResponseDto> GetActiveToursList(long touristId)
+        {
             List<Tour> nearbyTours = GetNearbyTours(touristId, 100);
             List<double> nearbyToursScores = GetToursHotScores(nearbyTours.Select(tour => tour.Id).ToList());
 
@@ -44,9 +50,9 @@ namespace Explorer.Tours.Core.Domain.Services
                 .ToList();
 
             var activeTours = MapToResponseDto(topNearbyTours);
-            return new PagedResult<TourResponseDto>(activeTours, activeTours.Count);
-        }
 
+            return activeTours;
+        }
 
         private List<TourResponseDto> MapToResponseDto(List<Tour> tours)
         {
