@@ -44,15 +44,16 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
 
         private long extractUserIdFromHttpContext()
         {
-            return long.Parse((HttpContext.User.Identity as ClaimsIdentity).FindFirst("id").Value);
+            return long.Parse((HttpContext.User.Identity as ClaimsIdentity).FindFirst("id")?.Value);
         }
-        [Authorize(Policy ="touristPolicy")]
+
+        [Authorize(Policy = "touristPolicy")]
         [Authorize(Roles = "tourist")]
         [HttpGet("tours/inCart/{id:long}")]
         public ActionResult<PagedResult<LimitedTourViewResponseDto>> GetToursInCart([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
             var cart = _shoppingCartService.GetByTouristId(id);
-            if(cart == null)
+            if (cart.Value == null)
             {
                 return NotFound();
             }
