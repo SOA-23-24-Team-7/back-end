@@ -2,11 +2,11 @@
 {
     public class HiddenLocationEncounterCreateDto
     {
-        public string Picture { get; set; }
         public double PictureLongitude { get; set; }
         public double PictureLatitude { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Picture { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public double Radius { get; set; }
