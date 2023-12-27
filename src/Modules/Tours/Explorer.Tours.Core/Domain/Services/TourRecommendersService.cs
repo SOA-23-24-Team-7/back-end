@@ -34,6 +34,12 @@ namespace Explorer.Tours.Core.Domain.Services
 
         public Result<PagedResult<TourResponseDto>> GetActiveTours(long touristId)
         {
+            var activeTours = GetActiveToursList(touristId);
+            return new PagedResult<TourResponseDto>(activeTours, activeTours.Count);
+        }
+
+        public List<TourResponseDto> GetActiveToursList(long touristId)
+        {
             List<Tour> nearbyTours = GetNearbyTours(touristId, 100);
             List<double> nearbyToursScores = GetToursHotScores(nearbyTours.Select(tour => tour.Id).ToList());
 
@@ -43,10 +49,15 @@ namespace Explorer.Tours.Core.Domain.Services
                 .Take(10)
                 .ToList();
 
-            var activeTours = MapToResponseDto(topNearbyTours);
-            return new PagedResult<TourResponseDto>(activeTours, activeTours.Count);
-        }
+            for(int i = 0; i < 10; i++)
+            {
+                topNearbyTours[i] = _tourRepository.GetById(topNearbyTours[i].Id);
+            }
 
+            var activeTours = MapToResponseDto(topNearbyTours);
+
+            return activeTours;
+        }
 
         private List<TourResponseDto> MapToResponseDto(List<Tour> tours)
         {
@@ -126,6 +137,26 @@ namespace Explorer.Tours.Core.Domain.Services
 
             var activeTours = MapToResponseDto(topNearbyTours);
             return new PagedResult<TourResponseDto>(activeTours, activeTours.Count);
+        }
+
+        public List<TourResponseDto> GetRecommendedToursForMail(long touristId)
+        {
+            List<Tour> nearbyTours = GetNearbyTours(touristId, 10);
+
+            Preference preference = _tourPreferenceRepository.GetByUserId((int)touristId);
+
+            Dictionary<string, int> favouriteTags = GetFinishedTags(touristId, 10);
+
+            List<double> nearbyToursScores = GetToursRecommendScores(nearbyTours.Select(tour => tour.Id).ToList(), preference, favouriteTags);
+
+            List<Tour> topNearbyTours = nearbyTours.Zip(nearbyToursScores)
+                .OrderByDescending(tourScore => tourScore.Second)
+                .Select(tourScore => tourScore.First)
+                .Take(10)
+                .ToList();
+
+            var activeTours = MapToResponseDto(topNearbyTours);
+            return activeTours;
         }
 
         private Dictionary<string, int> GetFinishedTags(long touristId, int v)

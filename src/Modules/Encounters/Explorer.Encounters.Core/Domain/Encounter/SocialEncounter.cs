@@ -3,7 +3,7 @@
 public class SocialEncounter : Encounter
 {
     public int PeopleNumber { get; init; }
-    public SocialEncounter(string title, string description, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, int peopleNumber, EncounterType type) : base(title, description, longitude, latitude, radius, xpReward, status, type)
+    public SocialEncounter(string title, string description, string picture, double longitude, double latitude, double radius, int xpReward, EncounterStatus status, int peopleNumber, EncounterType type) : base(title, description, picture, longitude, latitude, radius, xpReward, status, type)
     {
         PeopleNumber = peopleNumber;
         Validate();
