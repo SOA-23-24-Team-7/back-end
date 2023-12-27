@@ -15,6 +15,8 @@ DELETE FROM stakeholders."Followers";
 DELETE FROM stakeholders."Messages";
 DELETE FROM stakeholders."People";
 DELETE FROM stakeholders."Users";
+DELETE FROM tours."Subscribers";
+DELETE FROM tours."Campaigns";
 DELETE FROM tours."PublicKeyPointNotifications";
 DELETE FROM tours."PublicKeyPointRequests";
 DELETE FROM tours."PublicFacilityNotifications";
