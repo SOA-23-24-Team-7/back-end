@@ -116,7 +116,7 @@ namespace Explorer.API.Controllers
             }
             if (!touristInClub)
             {
-                if(_clubService.Get((long)blog.ClubId).Value.OwnerId != blog.AuthorId)
+                if(_clubService.GetById((int)blog.ClubId).Value.OwnerId != blog.AuthorId)
                 {
                     return BadRequest();
                 }
