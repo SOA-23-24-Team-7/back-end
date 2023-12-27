@@ -12,6 +12,7 @@ namespace Explorer.Blog.Core.Domain
         public DateTime Date { get; init; }
         public BlogStatus Status { get; private set; }
         public int AuthorId { get; init; }
+        public long? ClubId { get; init; }
 
         [InverseProperty("Blog")]
         public ICollection<Comment> Comments { get; } = new List<Comment>();
@@ -42,6 +43,7 @@ namespace Explorer.Blog.Core.Domain
             Date = DateTime.UtcNow.Date;
             Status = status;
             VisibilityPolicy = visibilityPolicy;
+            ClubId = null;
         }
 
         public void UpdateBlog(string title, string description, BlogStatus status)

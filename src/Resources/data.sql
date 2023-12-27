@@ -10,6 +10,8 @@ INSERT INTO stakeholders."Users"(
     (-1, 'dop', 'dop123', 0, true, ''),
     (-2, 'author', 'author', 1, true, 'https://imgs.search.brave.com/n8Gm53DmrCXkPu9d7FpTq1FLO8Nj00zDwzTlFac8HH4/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9oYW5kc29tZS10/b3VyaXN0LW1hbi1s/b29rLW1hcC13aGls/ZS1wb2ludGluZy1m/aW5nZXItZGlyZWN0/aW9uLWRlc3RpbmF0/aW9uLXRyYXZlbC1j/b25jZXBfNTY4NTQt/Mzk4NS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'),
     (-3, 'tourist', 'tourist', 2, true, 'https://imgs.search.brave.com/_8gIhJxRAq9aqREpTnh_wGcNfv4JwgEssYFmzKDWow8/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTMw/MTAwMzg3NC9waG90/by95b3VuZy13b21h/bi1hcnJpdmluZy1h/dC1hLXRyb3BpY2Fs/LXJlc29ydC1mb3It/aGVyLXZhY2F0aW9u/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1BT3N1eWltalZm/QkducTZZeVVhOVZ0/aXRQWE9rdWJOMDFq/TFp0R19lb1ZjPQ');
+    (-4, 'tourist1', 'tourist', 2, true, 'https://imgs.search.brave.com/_8gIhJxRAq9aqREpTnh_wGcNfv4JwgEssYFmzKDWow8/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTMw/MTAwMzg3NC9waG90/by95b3VuZy13b21h/bi1hcnJpdmluZy1h/dC1hLXRyb3BpY2Fs/LXJlc29ydC1mb3It/aGVyLXZhY2F0aW9u/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1BT3N1eWltalZm/QkducTZZeVVhOVZ0/aXRQWE9rdWJOMDFq/TFp0R19lb1ZjPQ');
+    (-5, 'tourist2', 'tourist', 2, true, 'https://imgs.search.brave.com/_8gIhJxRAq9aqREpTnh_wGcNfv4JwgEssYFmzKDWow8/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTMw/MTAwMzg3NC9waG90/by95b3VuZy13b21h/bi1hcnJpdmluZy1h/dC1hLXRyb3BpY2Fs/LXJlc29ydC1mb3It/aGVyLXZhY2F0aW9u/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1BT3N1eWltalZm/QkducTZZeVVhOVZ0/aXRQWE9rdWJOMDFq/TFp0R19lb1ZjPQ');
 
 
 -- ******************** SHOPPING CART *******************************
@@ -31,13 +33,17 @@ INSERT INTO stakeholders."People" ("Id", "UserId", "Name", "Surname", "Email", "
 (-171, -171, 'Vlada', 'Devic', 'brmbrm@gmail.com', NULL, NULL),
 (-172, -172, 'Mihajlo', 'Bukarica', 'buki@gmail.com', NULL, NULL),
 (-1, -2, 'John', 'Johnson', 'author@gmail.com', 'I love making tours.', 'Never give up.'),
-(-2, -3, 'Charles', 'Smith', 'tourist@gmail.com', 'I love tours.', 'Stay strong.');
+(-2, -3, 'Charles', 'Smith', 'tourist@gmail.com', 'I love tours.', 'Stay strong.'),
+(-3, -4, 'Charles', 'Smith', 'tourist1@gmail.com', 'I love tours so much.', 'Stay.'),
+(-3, -5, 'Charles', 'Smith', 'tourist2@gmail.com', 'I love tours so so much.', 'Stay.');
 
 -- ***************** WALLETS **********************
 INSERT INTO payments."Wallets"(
 	"Id", "TouristId", "AdventureCoin")
 	VALUES
 		(-1, -3, 10000),
+		(-1, -4, 10000),
+		(-1, -5, 10000),
 		(-2, -168, 200),
 		(-3, -169, 500),
 		(-4, -170, 400),
@@ -55,24 +61,25 @@ INSERT INTO stakeholders."Followers" ("Id", "UserId", "FollowedById") VALUES (-1
 
 -- ******************************** BLOGS ********************************
 
-INSERT INTO blog."Blogs" ("Id", "Title", "Description", "Date", "Status", "AuthorId", "Votes", "VisibilityPolicy") VALUES (-11, 'Off-the-Beaten-Path Travel', 'Discover charming villages and secret natural havens off the tourist path. Immerse yourself in the heart of local cultures and explore hidden treasures. Pack your bags for an authentic travel experience!
+INSERT INTO blog."Blogs" ("Id", "Title", "Description", "Date", "Status", "AuthorId", "Votes", "VisibilityPolicy", "ClubId") VALUES (-11, 'Off-the-Beaten-Path Travel', 'Discover charming villages and secret natural havens off the tourist path. Immerse yourself in the heart of local cultures and explore hidden treasures. Pack your bags for an authentic travel experience!
 
 ![Village Retreat](https://live.staticflickr.com/65535/53244354274_f096dbce42.jpg)
 
-Join us on the road less traveled!', '2023-11-14 00:00:00+01', 3, -170, '[{"UserId": -168, "VoteType": 1}, {"UserId": -170, "VoteType": 1}]', 0),
+Join us on the road less traveled!', '2023-11-14 00:00:00+01', 3, -170, '[{"UserId": -168, "VoteType": 1}, {"UserId": -170, "VoteType": 1}]', 0, NULL),
 (-12, 'Historical Wonders: Time Travel Edition', 'Step into history with ancient ruins and medieval castles. Explore the mysteries of past civilizations and witness the grandeur of medieval architecture. Join us on a captivating journey through time!
 
 ![Historical Landmarks](https://live.staticflickr.com/65535/53280758885_34afd10b3a.jpg)
 
 Walk the corridors of history with us!
-', '2023-11-14 00:00:00+01', 1, -169, '[{"UserId": -168, "VoteType": 0}, {"UserId": -170, "VoteType": 0}]', 0),
+', '2023-11-14 00:00:00+01', 1, -169, '[{"UserId": -168, "VoteType": 0}, {"UserId": -170, "VoteType": 0}]', 0, NULL),
 (-13, 'Urban Wanderlust: City Exploration', 'Delve into the heartbeat of vibrant cities! Explore bustling markets, iconic landmarks, and hidden gems within the urban landscape. Immerse yourself in the culture and energy of city life.
 
 ![City Exploration](https://live.staticflickr.com/65535/53308142182_84983c1cc3.jpg)
 
-Experience the pulse of the city with us!', '2023-11-14 00:00:00+01', 0, -170, '[]', 0),
-(-14, 'Team building grupa 1 (produžeci)', 'Nastavak kod Dragana na svirku i drinkić ![Team building](https://cdn.discordapp.com/attachments/1165638888082124852/1174054126708064327/IMG-20231113-WA0004.jpg?ex=6566321c&is=6553bd1c&hm=be7fc6baf1721ed5fcc861db7fb1692075556efcf6f95d12210aadbacda3cb8e&)', '2023-11-14 00:00:00+01', 1, -170, '[]', 0),
-(-15, 'Team building grupa 1', 'Divno veče u ambijentu još divnijih ljudi huh ![Team building](https://cdn.discordapp.com/attachments/1165638888082124852/1174053744795734026/IMG-20231113-WA0006.jpg?ex=656631c1&is=6553bcc1&hm=ca8f361cba4201ae655e7465673fbb8b214aa835c5903a8b41ec3b2c299f2233&)', '2023-11-14 00:00:00+01', 1, -170, '[]', 0);
+Experience the pulse of the city with us!', '2023-11-14 00:00:00+01', 0, -170, '[]', 0, NULL),
+(-14, 'Team building grupa 1 (produžeci)', 'Nastavak kod Dragana na svirku i drinkić ![Team building](https://cdn.discordapp.com/attachments/1165638888082124852/1174054126708064327/IMG-20231113-WA0004.jpg?ex=6566321c&is=6553bd1c&hm=be7fc6baf1721ed5fcc861db7fb1692075556efcf6f95d12210aadbacda3cb8e&)', '2023-11-14 00:00:00+01', 1, -170, '[]', 0, NULL),
+(-15, 'Team building grupa 1', 'Divno veče u ambijentu još divnijih ljudi huh ![Team building](https://cdn.discordapp.com/attachments/1165638888082124852/1174053744795734026/IMG-20231113-WA0006.jpg?ex=656631c1&is=6553bcc1&hm=ca8f361cba4201ae655e7465673fbb8b214aa835c5903a8b41ec3b2c299f2233&)', '2023-11-14 00:00:00+01', 1, -170, '[]', 0, NULL),
+(-16, 'Winter trail Fruska gora', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae blandit massa. Integer eget pulvinar eros, nec convallis libero. Phasellus pretium porttitor lacinia. Nunc tincidunt, risus eu porta aliquet, justo ipsum pretium nulla, eu gravida purus dolor et nisl. Ut.', '2023-11-14 00:00:00+01', 1, -170, '[]', 0, NULL);
 
 
 INSERT INTO blog."Comments" ("Id", "AuthorId", "BlogId", "CreatedAt", "UpdatedAt", "Text") VALUES (-1, -168, -11, '2023-11-14 13:49:10.108651+01', NULL, 'dobar blog!'),
@@ -127,3 +134,16 @@ INSERT INTO tours."KeyPoints"(
 
 INSERT INTO tours."PublicKeyPoints" ("Id", "Name", "Description", "Longitude", "Latitude", "ImagePath", "Order", "LocationAddress") VALUES (-8, 'Tenk u parkiću', 'Dva srpska tenka jedan uz drugi, veoma blizu, čak i u kontaktu.', 19.853166, 45.256736, 'https://cdn.discordapp.com/attachments/783721881043206154/1187480628950728734/WhatsApp_Image_2023-12-21_at_13.12.05_3d992c74.jpg', 0, 'Park prisajedinjenja');
 	
+-- **************************** CLUBS ************************************
+INSERT INTO stakeholders."Clubs"(
+	"Id", "OwnerId", "Name", "Description", "Image")
+	VALUES
+		(-1, -3, 'Najjaci klub', 'Ovo je najjaci klub', ''),
+		(-2, -4, 'Najjacii klubb', 'Ovo je najjaci klub', '');
+
+INSERT INTO stakeholders."ClubMemberships"(
+	"Id", "ClubId", "TouristId", "TimeJoined")
+	VALUES
+		(-1, -2, -5, '2023-12-04 19:04:04.562161+01'),
+		(-2, -1, -5, '2023-12-04 19:04:04.562161+01'),
+		(-3, -2, -3, '2023-12-04 19:04:04.562161+01');

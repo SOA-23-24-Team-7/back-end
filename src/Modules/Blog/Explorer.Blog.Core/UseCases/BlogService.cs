@@ -83,5 +83,17 @@ namespace Explorer.Blog.Core.UseCases
             }
             return false;
         }
+
+        public Result<PagedResult<BlogResponseDto>> GetAllFromBlogs(int page, int pageSize, long clubId)
+        {
+            var entities = _repository.GetAllFromClub(page, pageSize, clubId);
+            var result = MapToDto<BlogResponseDto>(entities);
+            foreach (var blog in result.Value.Results)
+            {
+                var user = _internalUserService.Get(blog.AuthorId).Value;
+                blog.Author = user;
+            }
+            return result;
+        }
     }
 }
