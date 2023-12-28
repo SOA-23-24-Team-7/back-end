@@ -32,7 +32,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [Authorize(Policy = "touristPolicy")]
+        [Authorize(Policy = "userPolicy")]
         [HttpPut("{commentId:long}")]
         public ActionResult<CommentResponseDto> Update([FromBody] CommentUpdateDto commentData, long commentId)
         {
@@ -51,7 +51,7 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [Authorize(Policy = "touristPolicy")]
+        [Authorize(Policy = "userPolicy")]
         [HttpDelete("{commentId:long}")]
         public ActionResult Delete(long commentId)
         {

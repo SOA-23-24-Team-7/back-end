@@ -10,6 +10,7 @@ using Explorer.Stakeholders.Core.UseCases;
 using Explorer.Stakeholders.Infrastructure.Authentication;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Stakeholders.Infrastructure.Database.Repositories;
+using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.UseCases;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,7 @@ public static class StakeholdersStartup
         services.AddScoped<IFollowerService, FollowerService>();
         services.AddScoped<IMessageService, MessageService>();
         services.AddScoped<IInternalUserService, UserService>();
+        services.AddSingleton<IEmailSender, EmailSender>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -63,7 +65,7 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<Rating>), typeof(CrudDatabaseRepository<Rating, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<User>), typeof(CrudDatabaseRepository<User, StakeholdersContext>));
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
-        services.AddScoped<IPersonRepository, PersonDataBaseRepository>();
+        services.AddScoped<IPersonRepository, PersonDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Problem>), typeof(CrudDatabaseRepository<Problem, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<ProblemResolvingNotification>), typeof(CrudDatabaseRepository<ProblemResolvingNotification, StakeholdersContext>));
         services.AddScoped<IProblemRepository, ProblemDatabaseRepository>();

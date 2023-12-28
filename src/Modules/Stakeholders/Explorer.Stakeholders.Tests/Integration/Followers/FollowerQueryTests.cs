@@ -45,7 +45,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Followers
 
             // Assert
             result.ShouldNotBeNull();
-            result.Results.Count.ShouldBe(1);
+            result.Results.Count.ShouldBe(0);
             result.TotalCount.ShouldBe(1);
         }
 

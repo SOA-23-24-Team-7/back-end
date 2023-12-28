@@ -72,6 +72,14 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+
+        [HttpGet("done-encounters")]
+        public ActionResult<PagedResult<EncounterResponseDto>> GetAllDoneByUser(int currentUserId, [FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _encounterService.GetAllDoneByUser(currentUserId, page, pageSize);
+            return CreateResponse(result);
+        }
+
         [HttpGet("active")]
         public ActionResult<PagedResult<EncounterResponseDto>> GetActive([FromQuery] int page, [FromQuery] int pageSize)
         {

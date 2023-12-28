@@ -16,5 +16,6 @@ namespace Explorer.Blog.API.Public
         Result<BlogResponseDto> Get(long id);
         Result<BlogResponseDto> UpdateBlog(BlogUpdateDto blog);
         public Result Delete(long id);
+        Result<PagedResult<BlogResponseDto>> GetAllFromBlogs(int page, int pageSize, long clubId);
     }
 }

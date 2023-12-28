@@ -20,11 +20,14 @@ namespace Explorer.Encounters.API.Public
         Result CreateKeyPointEncounter(KeyPointEncounterCreateDto keyPointEncounter, long userId);
         Result<KeyPointEncounterResponseDto> ActivateKeyPointEncounter(double longitude, double latitude, long keyPointId, long userId);
         Result<TouristProgressResponseDto> CompleteHiddenLocationEncounter(long userId, long encounterId, double longitute, double latitude);
-        Result<PagedResult<EncounterResponseDto>> GetAllInRangeOf(double range, double longitude, double latitude, int page, int pageSize);
+        Result<PagedResult<EncounterResponseDto>> GetAllInRangeOf(double range, double longitude, double latitude, int page, int pageSize); 
+        Result<PagedResult<EncounterResponseDto>> GetAllDoneByUser(int currentUserId, int page, int pageSize);
         Result<EncounterResponseDto> CancelEncounter(long userId, long encounterId);
         Result<HiddenLocationEncounterResponseDto> GetHiddenLocationEncounterById(long id);
         Result<EncounterInstanceResponseDto> GetInstance(long userId, long encounterId);
         bool CheckIfUserInCompletionRange(long userId, long encounterId, double longitude, double latitude);
+        KeyPointEncounterResponseDto GetByKeyPointId(long keyPointId);
+        bool IsEncounterInstanceCompleted(long userId, long keyPointId);
 
     }
 }

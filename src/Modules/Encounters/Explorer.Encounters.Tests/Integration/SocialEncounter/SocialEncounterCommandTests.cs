@@ -34,7 +34,8 @@ public class SocialEncounterCommandTests : BaseEncountersIntegrationTest
             Radius = 100,
             XpReward = 5,
             Status = EncounterStatus.Active,
-            PeopleNumber = 1
+            PeopleNumber = 1,
+            Picture = "https://static.vecteezy.com/system/resources/previews/009/273/280/non_2x/concept-of-loneliness-and-disappointment-in-love-sad-man-sitting-element-of-the-picture-is-decorated-by-nasa-free-photo.jpg"
         };
         var controller = CreateSocialEncounterController(scope);
         // Act

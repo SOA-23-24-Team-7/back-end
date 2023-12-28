@@ -2,6 +2,7 @@
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -12,16 +13,26 @@ namespace Explorer.API.Controllers.Tourist
     public class ClubController : BaseApiController
     {
         private readonly IClubService _clubService;
+        private readonly IClubMemberManagementService _clubMemberManagementService;
 
-        public ClubController(IClubService clubService)
+        public ClubController(IClubService clubService, IClubMemberManagementService clubMemberManagementService)
         {
             _clubService = clubService;
+            _clubMemberManagementService = clubMemberManagementService;
         }
 
         [HttpGet]
         public ActionResult<PagedResult<ClubResponseWithOwnerDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _clubService.GetClubsPaged(page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public ActionResult<ClubResponseDto> GetById(int id)
+        {
+            var result = _clubService.GetById(id);
             return CreateResponse(result);
         }
 
@@ -43,7 +54,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 club.OwnerId = long.Parse(identity.FindFirst("id").Value);
             }
-            var result = _clubService.Create(club);
+            var result = _clubService.CreateClubAndMember(club, club.OwnerId);
             return CreateResponse(result);
         }
 

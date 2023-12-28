@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>My List Email Template</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .outer-div {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: 10px;
+        margin-top: 10px;
+        background-color: #e6e6e6; /* Light gray background color for outer div */
+        padding: 10px; /* Adding padding to create space around the table */
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        background-color: #4f7ef9; /* Blue background color */
+        color: #ffffff; /* White text color */
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      td {
+        background-color: #ffffff; /* White background color for cells */
+        padding: 20px;
+      }
+      h1 {
+        color: #333333;
+      }
+      h3 {
+        color: #333333;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="outer-div">
+      <!-- <table>
+        <thead>
+          <tr>
+            <th>Tour Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Distance</th>
+            <th>Difficulty</th>
+          </tr>
+        </thead>
+        <tbody>
+          [[TOURS]]
+        </tbody>
+      </table> -->
+      <h1>Recommended tours for you</h1>
+      [[TABLE1]]
+      <h1>Active tours</h1>
+      [[TABLE2]]
+      <h3>Thank you for choosing our company! Have a nice day!</h3>
+    </div>
+  </body>
+</html>

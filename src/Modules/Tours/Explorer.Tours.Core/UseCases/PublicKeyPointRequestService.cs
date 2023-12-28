@@ -126,6 +126,7 @@ namespace Explorer.Tours.Core.UseCases
             {
                 var dto = MapToDto<PublicKeyPointRequestResponseDto>(req);
                 dto.KeyPointName = _keyPointRepository.Get(req.KeyPointId).Name;
+                dto.Author = _userService.Get(req.AuthorId).Value;
                 resultsDto.Add(dto);
             }
             resultsDto.Reverse();

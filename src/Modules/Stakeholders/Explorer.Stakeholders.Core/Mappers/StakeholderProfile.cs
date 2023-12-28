@@ -10,7 +10,7 @@ public class StakeholderProfile : Profile
     public StakeholderProfile()
     {
         CreateMap<ClubJoinRequestSendDto, ClubJoinRequest>()
-            .ConstructUsing(src => new ClubJoinRequest(src.TouristId, src.ClubId, DateTime.Now, ClubJoinRequestStatus.Pending));
+            .ConstructUsing(src => new ClubJoinRequest(src.TouristId, src.ClubId, DateTime.UtcNow, ClubJoinRequestStatus.Pending));
 
         CreateMap<ClubJoinRequest, ClubJoinRequestCreatedDto>()
             .ConstructUsing(src => new ClubJoinRequestCreatedDto { Id = src.Id, TouristId = src.TouristId, ClubId = src.ClubId, RequestedAt = src.RequestedAt, Status = src.GetPrimaryStatusName() });
@@ -63,7 +63,7 @@ public class StakeholderProfile : Profile
         CreateMap<UserResponseDto, User>().ReverseMap();
         CreateMap<RatingResponseDto, Rating>().ReverseMap();
         CreateMap<Rating, RatingWithUserDto>()
-            .ConstructUsing(src => new RatingWithUserDto { Id = src.Id, UserId = src.UserId, Grade = src.Grade, Comment = src.Comment, UserName = src.User.Username });
+            .ConstructUsing(src => new RatingWithUserDto { Id = src.Id, UserId = src.UserId, Grade = src.Grade, Comment = src.Comment, UserName = src.User.Username, ProfilePicture = src.User.ProfilePicture });
         CreateMap<RatingCreateDto, Rating>().ReverseMap();
         CreateMap<RatingUpdateDto, Rating>().ReverseMap();
         CreateMap<Problem, ProblemResponseDto>().ConstructUsing(src => new ProblemResponseDto

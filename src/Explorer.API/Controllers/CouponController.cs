@@ -5,6 +5,7 @@ using Explorer.Payments.API.Public;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.UseCases;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +26,11 @@ namespace Explorer.API.Controllers
         [HttpPost]
         public ActionResult<CouponResponseDto> Create([FromBody] CouponCreateDto coupon)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null && identity.IsAuthenticated)
+            {
+                coupon.AuthorId = long.Parse(identity.FindFirst("id").Value);
+            }
             var result = _couponService.Create(coupon);
             return CreateResponse(result);
         }
@@ -43,9 +49,15 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
         [HttpGet]
-        public ActionResult<PagedResult<ProblemResponseDto>> Get([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<CouponResponseDto>> Get([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = _couponService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }
+        [HttpGet("{id:long}")]
+        public ActionResult<PagedResult<CouponResponseDto>> GetByAuthorId([FromQuery] int page, [FromQuery] int pageSize, long id)
+        {
+            var result = _couponService.GetPagedByAuthorId(page, pageSize, id);
             return CreateResponse(result);
         }
     }

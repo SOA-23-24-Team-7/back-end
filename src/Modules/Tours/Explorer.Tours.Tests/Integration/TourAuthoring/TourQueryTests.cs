@@ -25,8 +25,8 @@ public class TourQueryTests : BaseToursIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(14);
-        result.TotalCount.ShouldBe(14);
+        result.Results.Count.ShouldBe(16);
+        result.TotalCount.ShouldBe(16);
     }
 
     [Fact]
@@ -41,8 +41,8 @@ public class TourQueryTests : BaseToursIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(6);
-        result.TotalCount.ShouldBe(6);
+        result.Results.Count.ShouldBe(8);
+        result.TotalCount.ShouldBe(8);
     }
 
     [Fact]

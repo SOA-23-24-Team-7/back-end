@@ -33,7 +33,8 @@ namespace Explorer.Payments.Tests.Integration
                 Discount = 50,
                 TourId = -1500, //ovo ce se mozda morati promijeniti ako dodamo da 1 tura ne smije imati vise kupona
                 ExpirationDate = DateTime.UtcNow.AddDays(5),
-                AllFromAuthor = false
+                AllFromAuthor = false,
+                AuthorId = -1000,
             };
 
             // Act

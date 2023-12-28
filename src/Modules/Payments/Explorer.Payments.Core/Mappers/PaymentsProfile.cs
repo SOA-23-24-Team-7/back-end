@@ -46,5 +46,9 @@ public class PaymentsProfile : Profile
         CreateMap<BundleItem, BundleItemResponseDto>().ReverseMap();
         CreateMap<BundleResponseDto, Bundle>().ReverseMap().ForMember(x => x.BundleItems, opt => opt.MapFrom(src => src.BundleItems));
         CreateMap<BundleRecordResponseDto, BundleRecord>().ReverseMap();
+
+        CreateMap<WishlistResponseDto, Wishlist>().ReverseMap();
+        CreateMap<WishlistCreateDto, Wishlist>().ReverseMap();
+        CreateMap<WishlistUpdateDto, Wishlist>().ReverseMap();
     }
 }

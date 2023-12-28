@@ -11,5 +11,6 @@
         public double Price { get; set; }
         public bool IsDeleted { get; set; }
         public double Distance { get; set; }
+        public TourCategory Category { get; set; }
     }
 }

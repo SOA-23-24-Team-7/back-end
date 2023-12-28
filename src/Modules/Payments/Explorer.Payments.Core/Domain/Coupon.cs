@@ -16,8 +16,8 @@ namespace Explorer.Payments.Core.Domain
         public long TourId { get; init; }
         public DateTime ExpirationDate { get; init; }
         public bool AllFromAuthor { get; init; }    //ako se checkbox odabere da vazi za sve ture tog autora
-
-        public Coupon(double discount, long tourId, DateTime expirationDate, bool allFromAuthor)
+        public long AuthorId { get; init; }
+        public Coupon(double discount, long tourId, DateTime expirationDate, bool allFromAuthor, long authorId)
         {
             if (discount < 0) throw new ArgumentException("Invalid discount.");
 
@@ -25,6 +25,7 @@ namespace Explorer.Payments.Core.Domain
             TourId = tourId;
             ExpirationDate = expirationDate;
             AllFromAuthor = allFromAuthor;
+            AuthorId = authorId;
             Code = GenerateCode();
         }
         private string GenerateCode()

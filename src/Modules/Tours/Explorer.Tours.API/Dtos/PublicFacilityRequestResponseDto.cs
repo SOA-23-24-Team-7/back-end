@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Explorer.Stakeholders.API.Dtos;
 
 namespace Explorer.Tours.API.Dtos
 {
@@ -15,5 +16,6 @@ namespace Explorer.Tours.API.Dtos
         public DateTime Created { get; set; }
         public string AuthorName { get; set; }
         public string? FacilityName { get; set; }
+        public UserResponseDto Author { get; set; }
     }
 }

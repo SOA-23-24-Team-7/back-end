@@ -3,6 +3,7 @@ using Explorer.API.Controllers.Tourist;
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.Blog.Infrastructure.Database;
+using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,7 +45,8 @@ namespace Explorer.Blog.Tests.Integration.Blog
                 Description = "Test",
                 Date = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 Status = API.Dtos.BlogStatus.Published,
-                AuthorId = -12
+                AuthorId = -12,
+                VisibilityPolicy = 0
             };
 
             // Act
@@ -154,7 +156,9 @@ namespace Explorer.Blog.Tests.Integration.Blog
 
         private static BlogController CreateBlogController(IServiceScope scope)
         {
-            return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>())
+            return new BlogController(scope.ServiceProvider.GetRequiredService<IBlogService>(),
+                                      scope.ServiceProvider.GetRequiredService<IClubMemberManagementService>(),
+                                      scope.ServiceProvider.GetRequiredService<IClubService>())
             {
                 ControllerContext = BuildContext("-1")
             };

@@ -9,6 +9,7 @@ using Explorer.Tours.API.Public.TourAuthoring;
 using Explorer.Tours.API.Public.TourExecution;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Services;
 using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases;
@@ -35,7 +36,7 @@ public static class ToursStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IEquipmentService, EquipmentService>();
-
+        services.AddScoped<ISubscriberService, SubscriberService>();
         services.AddScoped<IFacilityService, FacilityService>();
 
         services.AddScoped<ITourService, TourService>();
@@ -58,6 +59,8 @@ public static class ToursStartup
 
         services.AddScoped<ITourExecutionSessionService, TourExecutionSessionService>();
 
+        services.AddScoped<IInternalTourExecutionSessionService, TourExecutionSessionService>();
+
         services.AddScoped<ICampaignService, CampaignService>();
 
         services.AddScoped<ITouristPositionService, TouristPositionService>();
@@ -76,13 +79,23 @@ public static class ToursStartup
 
         services.AddScoped<ITourTokenService, TourTokenService>();
 
+        services.AddScoped<IToursRecommendersService, TourRecommendersService>();
+
         services.AddScoped<IInternalNotificationService, NotificationService>();
+
+        services.AddScoped<IMailingListScheduler, MailingListScheduler>();
+     
+        services.AddScoped<API.Public.ITourStatisticsService, Core.Domain.Services.TourStatisticsService>();
+        
 
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
+
+        services.AddScoped(typeof(ISubscriberRepository), typeof(SubscriberDatabaseRepository));
+
 
         services.AddScoped(typeof(ICrudRepository<Facility>), typeof(CrudDatabaseRepository<Facility, ToursContext>));
 
