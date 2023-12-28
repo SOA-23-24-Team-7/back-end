@@ -1,11 +1,11 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
+﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.API.Public.Administration;
 using FluentResults;
-using AutoMapper;
-using Explorer.Stakeholders.API.Public;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {

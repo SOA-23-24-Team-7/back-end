@@ -10,7 +10,7 @@ public class StakeholderProfile : Profile
     public StakeholderProfile()
     {
         CreateMap<ClubJoinRequestSendDto, ClubJoinRequest>()
-            .ConstructUsing(src => new ClubJoinRequest(src.TouristId, src.ClubId, DateTime.Now, ClubJoinRequestStatus.Pending));
+            .ConstructUsing(src => new ClubJoinRequest(src.TouristId, src.ClubId, DateTime.UtcNow, ClubJoinRequestStatus.Pending));
 
         CreateMap<ClubJoinRequest, ClubJoinRequestCreatedDto>()
             .ConstructUsing(src => new ClubJoinRequestCreatedDto { Id = src.Id, TouristId = src.TouristId, ClubId = src.ClubId, RequestedAt = src.RequestedAt, Status = src.GetPrimaryStatusName() });

@@ -24,7 +24,7 @@ namespace Explorer.Stakeholders.Core.Domain
         {
             if (TouristId == 0) throw new ArgumentException("Invalid TouristId");
             if (ClubId == 0) throw new ArgumentException("Invalid ClubId");
-            if (RequestedAt > DateTime.Now) throw new ArgumentException("Invalid RequestedAt");
+            //if (RequestedAt > DateTime.Now) throw new ArgumentException("Invalid RequestedAt");
         }
 
         public void Respond(bool accepted)
@@ -44,7 +44,7 @@ namespace Explorer.Stakeholders.Core.Domain
             return Enum.GetName(typeof(ClubJoinRequestStatus), Status);
         }
     }
-    
+
     public enum ClubJoinRequestStatus
     {
         Pending,
