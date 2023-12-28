@@ -164,7 +164,7 @@ INSERT INTO tours."Tours"(
 		(-24, -2, 1, 'Evropska prestonica kulture', 'Obilazak znacajnih mesta u gradu', 3, '{Umetnost,Kultura}', 1, 100, false, 1.6, '-infinity', '-infinity', '[]'),		
 		(-25, -2, 2, 'Obilazak restorana Novog Sada', 'Probajte specijalitete Novog Sada u popularnim restoranima.', 3, '{Gastronomija,Hrana}', 1, 280, false, 3.1, '-infinity', '-infinity', '[]'),
 		(-26, -2, 2, 'Vinarije u Novom Sadu', 'Probajte super vina.', 2, '{Gastronomija,Vino}', 1, 40, false, 0.2, '-infinity', '-infinity', '[]'),
-		(-27, -2, 2, 'Izlasci u Novom Sadu', 'Posetite popularne pubove.', 5, '{Umetnost,Muzej,Park,Istorija,Kultura}', 1, 190, false, 0.9, '-infinity', '-infinity', '[]'),
+		(-27, -2, 0, 'Izlasci u Novom Sadu', 'Posetite popularne pubove.', 5, '{Umetnost,Muzej,Park,Istorija,Kultura}', 1, 190, false, 0.9, '-infinity', '-infinity', '[]'),
 		(-28, -2, 3, 'Setnja gradom', 'Protegnite noge u Novom Sadu.', 1, '{Setnja,Park,Aktivnost}', 1, 230, false, 1.3, '-infinity', '-infinity', '[]'),
 		(-29, -2, 3, 'Tura sa enkaunterom', 'Neki opis vau', 4, '{kultura,arhitektura}', 1, 250, false, 7.86, '2023-12-27 21:55:47.844174+01', '-infinity', '[{"Duration": 176, "TransportType": 0}, {"Duration": 54, "TransportType": 2}]');
 
@@ -213,7 +213,7 @@ INSERT INTO tours."Reviews"(
 VALUES (-30, 4, 'OK tour.', -168, '2023-10-10', '2023-12-26', -27, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
 INSERT INTO tours."Reviews"(
     "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
-VALUES (-31, 3, 'OK tour.', -168, '2023-10-10', '2023-12-26', -27, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
+VALUES (-31, 5, 'OK tour.', -168, '2023-10-10', '2023-12-26', -27, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
 INSERT INTO tours."Reviews"(
     "Id", "Rating", "Comment", "TouristId", "TourVisitDate", "CommentDate", "TourId", "Images")
 VALUES (-32, 5, 'OK tour.', -168, '2023-10-10', '2023-12-26', -24, ARRAY ['https://media.istockphoto.com/id/1160139387/photo/early-morning-in-a-mountains.jpg?s=612x612&w=0&k=20&c=kYe3OeVfR4tx5gQcH3R53QdxwJWV_qSqYFZ7KNRj-Lk=']);
@@ -313,3 +313,7 @@ INSERT INTO tours."TourExecutionSessions" ("Id", "Status", "TourId", "TouristId"
 INSERT INTO tours."TourExecutionSessions" ("Id", "Status", "TourId", "TouristId", "NextKeyPointId", "Progress", "LastActivity", "IsCampaign") VALUES (-9, 1, -29, -4, -58, 55, '2023-12-27 20:51:32.625288+01', false);
 INSERT INTO tours."TourExecutionSessions" ("Id", "Status", "TourId", "TouristId", "NextKeyPointId", "Progress", "LastActivity", "IsCampaign") VALUES (-11, 2, -22, -3, -1, 100, '2023-12-26 00:00:00+01', false);
 INSERT INTO tours."TourExecutionSessions" ("Id", "Status", "TourId", "TouristId", "NextKeyPointId", "Progress", "LastActivity", "IsCampaign") VALUES (-12, 2, -25, -169, -1, 100, '2023-12-26 00:00:00+01', false);
+
+-- **************************** TOUR SALES ************************************
+
+INSERT INTO payments."TourSales"("Id","AuthorId", "Name", "StartDate","EndDate","DiscountPercentage","TourIds") VALUES (-1, -2, 'Popust', '2023-12-27', '2023-12-31', 0.2,  '[-24]')

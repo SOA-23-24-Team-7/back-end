@@ -5,6 +5,7 @@ DELETE FROM payments."OrderItems";
 DELETE FROM payments."tourTokens";
 DELETE FROM payments."Wallets";
 DELETE FROM payments."Coupons";
+DELETE FROM payments."TourSales";
 DELETE FROM stakeholders."ClubInvitations";
 DELETE FROM stakeholders."ClubJoinRequests";
 DELETE FROM stakeholders."ClubMemberships";
