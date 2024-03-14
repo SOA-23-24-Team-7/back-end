@@ -56,6 +56,12 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
                 var res = JsonSerializer.Deserialize<List<TourRespondeDtoNew>>(jsonString);
+                foreach(var dto in res)
+                {
+                    //OVO PROMIJENITI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    dto.KeyPoints = new List<KeyPointResponseDto>();
+                    
+                }
                 // u paged result
                 var resPaged = new PagedResult<TourRespondeDtoNew>(res, res.Count);
                 return CreateResponse(FluentResults.Result.Ok(resPaged));
@@ -65,7 +71,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
             }
 
-            var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
+            //var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
             //return CreateResponse(result);
         }
 
