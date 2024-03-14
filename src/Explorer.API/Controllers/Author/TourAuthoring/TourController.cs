@@ -43,12 +43,30 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("authors")]
-        public ActionResult<PagedResult<TourResponseDto>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<ActionResult<PagedResult<TourRespondeDtoNew>>> GetAuthorsTours([FromQuery] int page, [FromQuery] int pageSize)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
+
+
+            // http request to external service
+            var response = await _httpClient.GetAsync($"/tours/authors/{id}");
+
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var res = JsonSerializer.Deserialize<List<TourRespondeDtoNew>>(jsonString);
+                // u paged result
+                var resPaged = new PagedResult<TourRespondeDtoNew>(res, res.Count);
+                return CreateResponse(FluentResults.Result.Ok(resPaged));
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
+
             var result = _tourService.GetAuthorsPagedTours(id, page, pageSize);
-            return CreateResponse(result);
+            //return CreateResponse(result);
         }
 
         [Authorize(Roles = "author, tourist")]
