@@ -27,7 +27,6 @@ namespace Explorer.Blog.Core.UseCases
             foreach (var comment in result.Value.Results)
             {
                 var user = _internalUserService.Get(comment.AuthorId).Value;
-                comment.Author = user;
             }
             return result;
         }
@@ -40,7 +39,6 @@ namespace Explorer.Blog.Core.UseCases
                 comment.UpdateText(commentData.Text);
                 var result = CrudRepository.Update(comment);
                 var dtoResult = MapToDto<CommentResponseDto>(result);
-                dtoResult.Author = _internalUserService.Get(result.AuthorId).Value;
                 return dtoResult;
             }
             catch (KeyNotFoundException e)
