@@ -1,8 +1,11 @@
 using Explorer.API.Startup;
+using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
+using Explorer.BuildingBlocks.Infrastructure.HTTP;
 using Explorer.Tours.Core.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<IHttpClientService, HttpClientService>();
 builder.Services.AddControllers();
 builder.Services.AddHostedService<MailingListScheduler>();
 builder.Services.ConfigureSwagger(builder.Configuration);
