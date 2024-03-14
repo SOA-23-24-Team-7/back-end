@@ -3,7 +3,11 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Explorer.API.Controllers.Author.TourAuthoring
 {
@@ -12,10 +16,13 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
     public class TourController : BaseApiController
     {
         private readonly ITourService _tourService;
+        private readonly HttpClient _httpClient;
 
         public TourController(ITourService tourService)
         {
             _tourService = tourService;
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri("http://localhost:8087");
         }
 
         [Authorize(Roles = "author")]
@@ -46,15 +53,31 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author, tourist")]
         [HttpPost]
-        public ActionResult<TourResponseDto> Create([FromBody] TourCreateDto tour)
+        public async Task<ActionResult<TourRespondeDtoNew>> Create([FromBody] TourCreateDto tour)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
             {
                 tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
-            var result = _tourService.Create(tour);
-            return CreateResponse(result);
+
+            //preparation for contacting external application
+            string requestBody = JsonSerializer.Serialize(tour);
+            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync("/tours", content);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var res = JsonSerializer.Deserialize<TourRespondeDtoNew>(jsonString);
+                return CreateResponse(FluentResults.Result.Ok(res));
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
+            //var result = _tourService.Create(tour);
+            //return CreateResponse(result);
         }
 
         [Authorize(Roles = "author, tourist")]
