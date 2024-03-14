@@ -145,10 +145,21 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("{tourId:long}")]
-        public ActionResult<PagedResult<TourResponseDto>> GetById(long tourId)
+        public async Task<ActionResult<PagedResult<TourRespondeDtoNew>>> GetById(long tourId)
         {
-            var result = _tourService.GetById(tourId);
-            return CreateResponse(result);
+            var response = await _httpClient.GetAsync($"tours/{tourId}");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var res = JsonSerializer.Deserialize<TourRespondeDtoNew>(jsonString);
+                return CreateResponse(FluentResults.Result.Ok(res));
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
+            //var result = _tourService.GetById(tourId);
+            //return CreateResponse(result);
         }
 
         [Authorize(Roles = "author")]

@@ -4,7 +4,9 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace Explorer.API.Controllers.Tourist.MarketPlace
 {
@@ -13,11 +15,14 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
     {
         private readonly ITourService _tourService;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly HttpClient _httpClient;
 
         public TourController(ITourService service, IShoppingCartService shoppingCartService)
         {
             _tourService = service;
             _shoppingCartService = shoppingCartService;
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri("http://localhost:8087");
         }
 
         [Authorize(Roles = "author, tourist")]
@@ -29,10 +34,21 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         }
 
         [HttpGet("tours/{tourId:long}")]
-        public ActionResult<PagedResult<TourResponseDto>> GetById(long tourId)
+        public async Task<ActionResult<PagedResult<TourResponseDto>>> GetById(long tourId)
         {
-            var result = _tourService.GetById(tourId);
-            return CreateResponse(result);
+            var response = await _httpClient.GetAsync($"tours/{tourId}");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var res = JsonSerializer.Deserialize<TourRespondeDtoNew>(jsonString);
+                return CreateResponse(FluentResults.Result.Ok(res));
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
+            //var result = _tourService.GetById(tourId);
+            //return CreateResponse(result);
         }
 
         [HttpGet("tours/can-be-rated/{tourId:long}")]
