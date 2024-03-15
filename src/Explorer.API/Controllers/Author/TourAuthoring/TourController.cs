@@ -1,4 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.BuildingBlocks.Infrastructure.HTTP;
+using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Microsoft.AspNetCore.Authorization;
@@ -16,13 +18,13 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
     public class TourController : BaseApiController
     {
         private readonly ITourService _tourService;
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientService _httpClient;
 
-        public TourController(ITourService tourService)
+        public TourController(ITourService tourService, IHttpClientService httpClient)
         {
             _tourService = tourService;
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("http://localhost:8087");
+            _httpClient = httpClient;
+            
         }
 
         [Authorize(Roles = "author")]
@@ -48,9 +50,9 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
 
-
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/authors/{id}");
             // http request to external service
-            var response = await _httpClient.GetAsync($"/tours/authors/{id}");
+            var response = await _httpClient.GetAsync(uri);
 
             if (response != null && response.IsSuccessStatusCode)
             {
@@ -85,11 +87,12 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
 
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "tours");
             //preparation for contacting external application
             string requestBody = JsonSerializer.Serialize(tour);
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("/tours", content);
+            var response = await _httpClient.PostAsync(uri, content);
             if (response != null && response.IsSuccessStatusCode)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
@@ -153,7 +156,8 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         [HttpGet("{tourId:long}")]
         public async Task<ActionResult<PagedResult<TourRespondeDtoNew>>> GetById(long tourId)
         {
-            var response = await _httpClient.GetAsync($"tours/{tourId}");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/{tourId}");
+            var response = await _httpClient.GetAsync(uri);
             if (response != null && response.IsSuccessStatusCode)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
