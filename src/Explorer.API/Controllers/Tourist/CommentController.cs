@@ -86,6 +86,9 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+
+
+
         [HttpGet]
         public async Task<String> GetAll()
         {

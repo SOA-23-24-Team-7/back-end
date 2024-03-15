@@ -1,5 +1,6 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.Blog.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Stakeholders.API.Public;
@@ -7,6 +8,7 @@ using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using System.Text;
 using System.Text.Json;
 
@@ -36,7 +38,7 @@ namespace Explorer.API.Controllers
         {
             blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs");
-            string jsonContent = JsonSerializer.Serialize(blog);
+            string jsonContent = System.Text.Json.JsonSerializer.Serialize(blog);
             var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             var response = await _httpClientService.PostAsync(uri, requestContent);
             if (response.IsSuccessStatusCode)
@@ -110,6 +112,9 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
+
+
+
         [Authorize(Policy = "userPolicy")]
         [HttpGet("upvote/{id:long}")]
         public ActionResult Upvote(long id)
@@ -117,8 +122,53 @@ namespace Explorer.API.Controllers
             if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
 
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _blogService.SetVote(id, userId, VoteType.UPVOTE);
+            var result = _blogService.SetVote(id, userId, Blog.API.Dtos.VoteType.UPVOTE);
             return CreateResponse(result);
+        }
+
+        //[Authorize(Policy = "userPolicy")]
+
+        [HttpPost]
+        [Route("blogs/upvote")]
+        public async Task<ActionResult> UpvoteBlog(long id)
+        {
+            if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+
+            var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+
+            var voteRequest = new VoteRequestDto
+            {
+                UserId = userId,
+                BlogId = id,
+                VoteType = Blog.API.Dtos.VoteType.UPVOTE
+            };
+
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs/votes");
+
+            try
+            {
+                var json = JsonConvert.SerializeObject(voteRequest);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClientService.PostAsync(uri, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    var goCommentResponse = JsonConvert.DeserializeObject<CommentResponseDto>(responseString);
+
+                    return CreateResponse(Result.Ok(goCommentResponse));
+                }
+                else
+                {
+                    return StatusCode(500, "Error voting");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error voting");
+            }
+
         }
 
         [Authorize(Policy = "userPolicy")]
@@ -128,9 +178,53 @@ namespace Explorer.API.Controllers
             if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
 
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _blogService.SetVote(id, userId, VoteType.DOWNVOTE);
+            var result = _blogService.SetVote(id, userId, Blog.API.Dtos.VoteType.DOWNVOTE);
             return CreateResponse(result);
         }
+
+        [HttpPost]
+        [Route("blogs/downvote")]
+        public async Task<ActionResult> DownvoteBlog(long id)
+        {
+            if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+
+            var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+
+            var voteRequest = new VoteRequestDto
+            {
+                UserId = userId,
+                BlogId = id,
+                VoteType = Blog.API.Dtos.VoteType.DOWNVOTE
+            };
+
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs/votes");
+
+            try
+            {
+                var json = JsonConvert.SerializeObject(voteRequest);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClientService.PostAsync(uri, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    var goCommentResponse = JsonConvert.DeserializeObject<CommentResponseDto>(responseString);
+
+                    return CreateResponse(Result.Ok(goCommentResponse));
+                }
+                else
+                {
+                    return StatusCode(500, "Error voting");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error voting");
+            }
+
+        }
+
 
         [Authorize(Policy = "touristPolicy")]
         [HttpPost("createClubBlog")]
