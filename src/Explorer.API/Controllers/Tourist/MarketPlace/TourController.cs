@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
@@ -15,14 +16,14 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
     {
         private readonly ITourService _tourService;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientService _httpClient;
 
-        public TourController(ITourService service, IShoppingCartService shoppingCartService)
+        public TourController(ITourService service, IShoppingCartService shoppingCartService, IHttpClientService httpClient)
         {
             _tourService = service;
             _shoppingCartService = shoppingCartService;
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("http://localhost:8087");
+            _httpClient = httpClient;
+            
         }
 
         [Authorize(Roles = "author, tourist")]
@@ -36,7 +37,8 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         [HttpGet("tours/{tourId:long}")]
         public async Task<ActionResult<PagedResult<TourResponseDto>>> GetById(long tourId)
         {
-            var response = await _httpClient.GetAsync($"tours/{tourId}");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/{tourId}");
+            var response = await _httpClient.GetAsync(uri);
             if (response != null && response.IsSuccessStatusCode)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
