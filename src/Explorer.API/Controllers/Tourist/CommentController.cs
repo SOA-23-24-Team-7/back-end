@@ -167,5 +167,48 @@ namespace Explorer.API.Controllers.Tourist
             }
         }
 
+
+        [HttpDelete]
+        [Route("comments/delete")]
+        public async Task<IActionResult> DeleteComment(long commentId)
+        {
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "comments/" + commentId);
+            try
+            {
+                var response = await _httpClientService.DeleteAsync(uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Ok("Comment deleted successfully");
+                }
+                else
+                {
+                    string errorMessage = await response.Content.ReadAsStringAsync();
+                    return StatusCode(500, $"Error deleting comment: {errorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error deleting comment: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Route("comments/blogComments")]
+        public async Task<String> GetAllBlogComments(long blogId)
+        {
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogComments/"+blogId);
+            var response = await _httpClientService.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                return content;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }
