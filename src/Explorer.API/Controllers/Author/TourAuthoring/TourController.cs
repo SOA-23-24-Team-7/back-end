@@ -170,12 +170,23 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 //return CreateResponse(result);
             }
 
-            [Authorize(Roles = "author, tourist")]
+        [Authorize(Roles = "author, tourist")]
         [HttpDelete("equipment/{tourId:int}/{equipmentId:int}")]
-        public ActionResult DeleteEquipment(int tourId, int equipmentId)
+        public async Task<ActionResult> DeleteEquipment(int tourId, int equipmentId)
         {
-            var result = _tourService.DeleteEquipment(tourId, equipmentId);
-            return CreateResponse(result);
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/equipment/{tourId}/{equipmentId}");
+            var response = await _httpClient.DeleteAsync(uri);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                return CreateResponse(FluentResults.Result.Ok());
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
+
+            //var result = _tourService.DeleteEquipment(tourId, equipmentId);
+            //return CreateResponse(result);
         }
 
         [Authorize(Roles = "author, tourist")]
