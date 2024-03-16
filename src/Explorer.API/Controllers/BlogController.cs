@@ -132,15 +132,15 @@ namespace Explorer.API.Controllers
         [Route("blogs/upvote")]
         public async Task<ActionResult> UpvoteBlog(long id)
         {
-            if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+            //if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
 
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
-            var voteRequest = new VoteRequestDto
+            var voteRequest = new VoteCreateDto
             {
                 UserId = userId,
                 BlogId = id,
-                VoteType = Blog.API.Dtos.VoteType.UPVOTE
+                VoteType = "UPVOTE"
             };
 
             string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs/votes");
@@ -186,15 +186,15 @@ namespace Explorer.API.Controllers
         [Route("blogs/downvote")]
         public async Task<ActionResult> DownvoteBlog(long id)
         {
-            if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
+            //if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
 
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
-            var voteRequest = new VoteRequestDto
+            var voteRequest = new VoteCreateDto
             {
                 UserId = userId,
                 BlogId = id,
-                VoteType = Blog.API.Dtos.VoteType.DOWNVOTE
+                VoteType = "DOWNVOTE"
             };
 
             string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs/votes");
