@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Infrastructure.HTTP;
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
@@ -130,10 +131,24 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("equipment/{tourId:int}")]
-        public ActionResult GetEquipment(int tourId)
+        public async Task<ActionResult> GetEquipment(int tourId)
         {
-            var result = _tourService.GetEquipment(tourId);
-            return CreateResponse(result);
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/equipment/{tourId}");
+            var response = await _httpClient.GetAsync(uri);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var res = JsonSerializer.Deserialize<List<EquipmentResponseDto>>(jsonString);
+                var resPaged = new PagedResult<EquipmentResponseDto>(res, res.Count);
+                return CreateResponse(FluentResults.Result.Ok(resPaged));
+               
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
+
+            
         }
 
         [Authorize(Roles = "author, tourist")]
