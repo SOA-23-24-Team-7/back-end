@@ -1,11 +1,14 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Stakeholders.API.Public;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text;
+using System.Text.Json;
 
 namespace Explorer.API.Controllers
 {
@@ -16,23 +19,36 @@ namespace Explorer.API.Controllers
         private readonly IBlogService _blogService;
         private readonly IClubMemberManagementService _clubMemberManagmentService;
         private readonly IClubService _clubService;
+        private readonly IHttpClientService _httpClientService;
 
-        public BlogController(IBlogService authenticationService, IClubMemberManagementService clubMemberManagmentService, IClubService clubService)
+        public BlogController(IBlogService authenticationService, IClubMemberManagementService clubMemberManagmentService, IClubService clubService, IHttpClientService httpClientService)
         {
             _blogService = authenticationService;
             _clubMemberManagmentService = clubMemberManagmentService;
             _clubService = clubService;
+            _httpClientService = httpClientService;
         }
 
 
         [Authorize(Policy = "userPolicy")]
         [HttpPost("create")]
-        public ActionResult<BlogResponseDto> Create([FromBody] BlogCreateDto blog)
+        public async Task<String> Create([FromBody] BlogCreationDto blog)
         {
-            blog.Date = DateTime.UtcNow;
             blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            var result = _blogService.Create(blog);
-            return CreateResponse(result);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs");
+            string jsonContent = JsonSerializer.Serialize(blog);
+            var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await _httpClientService.PostAsync(uri, requestContent);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                return content;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [Authorize(Policy = "userPolicy")]
@@ -53,17 +69,37 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<BlogResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<String> GetAll()
         {
-            var result = _blogService.GetAll(page, pageSize);
-            return CreateResponse(result);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs/published");
+            var response = await _httpClientService.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                return content;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [HttpGet("{id:long}")]
-        public ActionResult<BlogResponseDto> Get(long id)
+        public async Task<String> Get(long id)
         {
-            var result = _blogService.GetById(id);
-            return CreateResponse(result);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, $"blogs/{id}");
+            var response = await _httpClientService.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                return content;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [HttpPut("{id:int}")]
