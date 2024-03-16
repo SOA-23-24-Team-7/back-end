@@ -141,11 +141,10 @@ namespace Explorer.API.Controllers.Tourist
             }
         }
 
-        [HttpPut]
-        [Route("comments/update")]
-        public async Task<IActionResult> UpdateComment(long commentId, CommentUpdateDto comment)
+        [HttpPut("comments/update/{id:long}")]
+        public async Task<IActionResult> UpdateComment(long id, CommentUpdateDto comment)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "comments/"+commentId);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "comments/"+id);
 
             try
             {
@@ -172,19 +171,17 @@ namespace Explorer.API.Controllers.Tourist
             }
         }
 
-
-        [HttpDelete]
-        [Route("comments/delete")]
-        public async Task<IActionResult> DeleteComment(long commentId)
+        [HttpDelete("comments/delete/{id:long}")]
+        public async Task<IActionResult> DeleteComment(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "comments/" + commentId);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "comments/" + id);
             try
             {
                 var response = await _httpClientService.DeleteAsync(uri);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return Ok("Comment deleted successfully");
+                    return CreateResponse(Result.Ok());
                 }
                 else
                 {

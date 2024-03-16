@@ -116,7 +116,7 @@ namespace Explorer.API.Controllers
 
 
         [Authorize(Policy = "userPolicy")]
-        [HttpGet("upvote/{id:long}")]
+        [HttpGet("upvotsahde/{id:long}")]
         public ActionResult Upvote(long id)
         {
             if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
@@ -128,8 +128,7 @@ namespace Explorer.API.Controllers
 
         //[Authorize(Policy = "userPolicy")]
 
-        [HttpPost]
-        [Route("blogs/upvote")]
+        [HttpGet("upvote/{id:long}")]
         public async Task<ActionResult> UpvoteBlog(long id)
         {
 
@@ -171,7 +170,7 @@ namespace Explorer.API.Controllers
         }
 
         [Authorize(Policy = "userPolicy")]
-        [HttpGet("downvote/{id:long}")]
+        [HttpGet("downvosdbcte/{id:long}")]
         public ActionResult Downvote(long id)
         {
             if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
@@ -181,8 +180,7 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-        [HttpPost]
-        [Route("blogs/downvote")]
+        [HttpGet("downvote/{id:long}")]
         public async Task<ActionResult> DownvoteBlog(long id)
         {
 
@@ -261,6 +259,23 @@ namespace Explorer.API.Controllers
             var result = _blogService.GetAllFromBlogs(page, pageSize, clubId);
             return CreateResponse(result);
         }
+
+        [HttpGet("getBlogs/{type}")]
+        public async Task<String> GetWithType(string type)
+        {
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, $"blogs/type/{type}");
+            var response = await _httpClientService.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return content;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
     }
 
 }
