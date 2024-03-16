@@ -132,7 +132,6 @@ namespace Explorer.API.Controllers
         [Route("blogs/upvote")]
         public async Task<ActionResult> UpvoteBlog(long id)
         {
-            //if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
 
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
@@ -186,7 +185,6 @@ namespace Explorer.API.Controllers
         [Route("blogs/downvote")]
         public async Task<ActionResult> DownvoteBlog(long id)
         {
-            //if (_blogService.IsBlogClosed(id)) return CreateResponse(Result.Fail(FailureCode.InvalidArgument));
 
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 

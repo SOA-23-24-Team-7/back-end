@@ -110,6 +110,8 @@ namespace Explorer.API.Controllers.Tourist
         [Route("comments/new")]
         public async Task<ActionResult<CommentResponseDto>> CreateComment([FromBody] CommentCreateDto comment)
         {
+            var authorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            comment.AuthorId = authorId;
             comment.CreatedAt = DateTime.UtcNow;
            
             string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "comments");
@@ -196,11 +198,10 @@ namespace Explorer.API.Controllers.Tourist
             }
         }
 
-        [HttpGet]
-        [Route("comments/blogComments")]
-        public async Task<String> GetAllBlogComments(long blogId)
+        [HttpGet("comments/blogComments/{id:long}")]
+        public async Task<String> GetAllBlogComments(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogComments/"+blogId);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, $"blogComments/{id}");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
