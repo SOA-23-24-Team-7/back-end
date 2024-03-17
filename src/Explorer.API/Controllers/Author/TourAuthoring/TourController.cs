@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Infrastructure.HTTP;
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
@@ -60,9 +61,20 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 var res = JsonSerializer.Deserialize<List<TourRespondeDtoNew>>(jsonString);
                 foreach(var dto in res)
                 {
-                    //OVO PROMIJENITI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    dto.KeyPoints = new List<KeyPointResponseDto>();
-                    
+                    string keyPointUri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "tours/" + dto.Id + "/key-points");
+
+                    var keyPointResponse = await _httpClient.GetAsync(keyPointUri);
+                    if (keyPointResponse != null && keyPointResponse.IsSuccessStatusCode)
+                    {
+                        var keyPointJsonString = await keyPointResponse.Content.ReadAsStringAsync();
+                        var keyPointRes = JsonSerializer.Deserialize<KeyPointResponseDto[]>(keyPointJsonString);
+
+                        dto.KeyPoints = new List<KeyPointResponseDto>(keyPointRes);
+                    }
+                    else
+                    {
+                        return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+                    }
                 }
                 // u paged result
                 var resPaged = new PagedResult<TourRespondeDtoNew>(res, res.Count);
@@ -97,6 +109,8 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
                 var res = JsonSerializer.Deserialize<TourRespondeDtoNew>(jsonString);
+                res.KeyPoints = new List<KeyPointResponseDto>();
+
                 return CreateResponse(FluentResults.Result.Ok(res));
             }
             else
@@ -130,26 +144,62 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("equipment/{tourId:int}")]
-        public ActionResult GetEquipment(int tourId)
+        public async Task<ActionResult> GetEquipment(int tourId)
         {
-            var result = _tourService.GetEquipment(tourId);
-            return CreateResponse(result);
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/equipment/{tourId}");
+            var response = await _httpClient.GetAsync(uri);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var res = JsonSerializer.Deserialize<List<EquipmentResponseDto>>(jsonString);
+                var resPaged = new PagedResult<EquipmentResponseDto>(res, res.Count);
+                return CreateResponse(FluentResults.Result.Ok(resPaged));
+               
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
+
+            
         }
 
         [Authorize(Roles = "author, tourist")]
         [HttpPost("equipment/{tourId:int}/{equipmentId:int}")]
-        public ActionResult AddEquipment(int tourId, int equipmentId)
+        public async Task<ActionResult> AddEquipment(int tourId, int equipmentId)
         {
-            var result = _tourService.AddEquipment(tourId, equipmentId);
-            return CreateResponse(result);
-        }
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/equipment/{tourId}/{equipmentId}");
+            var content = new StringContent("", Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(uri,content);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                return CreateResponse(FluentResults.Result.Ok());
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
+                //var result = _tourSevice.AddEquipment(tourId, equipmentId);
+                //return CreateResponse(result);
+            }
 
         [Authorize(Roles = "author, tourist")]
         [HttpDelete("equipment/{tourId:int}/{equipmentId:int}")]
-        public ActionResult DeleteEquipment(int tourId, int equipmentId)
+        public async Task<ActionResult> DeleteEquipment(int tourId, int equipmentId)
         {
-            var result = _tourService.DeleteEquipment(tourId, equipmentId);
-            return CreateResponse(result);
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/equipment/{tourId}/{equipmentId}");
+            var response = await _httpClient.DeleteAsync(uri);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                return CreateResponse(FluentResults.Result.Ok());
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
+
+            //var result = _tourService.DeleteEquipment(tourId, equipmentId);
+            //return CreateResponse(result);
         }
 
         [Authorize(Roles = "author, tourist")]
