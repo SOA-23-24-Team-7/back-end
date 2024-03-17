@@ -43,6 +43,22 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
                 var res = JsonSerializer.Deserialize<TourRespondeDtoNew>(jsonString);
+
+                string keyPointUri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "tours/" + res.Id + "/key-points");
+
+                var keyPointResponse = await _httpClient.GetAsync(keyPointUri);
+                if (keyPointResponse != null && keyPointResponse.IsSuccessStatusCode)
+                {
+                    var keyPointJsonString = await keyPointResponse.Content.ReadAsStringAsync();
+                    var keyPointRes = JsonSerializer.Deserialize<KeyPointResponseDto[]>(keyPointJsonString);
+
+                    res.KeyPoints = new List<KeyPointResponseDto>(keyPointRes);
+                }
+                else
+                {
+                    return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+                }
+
                 return CreateResponse(FluentResults.Result.Ok(res));
             }
             else

@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Infrastructure.HTTP;
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
@@ -60,9 +61,20 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 var res = JsonSerializer.Deserialize<List<TourRespondeDtoNew>>(jsonString);
                 foreach(var dto in res)
                 {
-                    //OVO PROMIJENITI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    dto.KeyPoints = new List<KeyPointResponseDto>();
-                    
+                    string keyPointUri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "tours/" + dto.Id + "/key-points");
+
+                    var keyPointResponse = await _httpClient.GetAsync(keyPointUri);
+                    if (keyPointResponse != null && keyPointResponse.IsSuccessStatusCode)
+                    {
+                        var keyPointJsonString = await keyPointResponse.Content.ReadAsStringAsync();
+                        var keyPointRes = JsonSerializer.Deserialize<KeyPointResponseDto[]>(keyPointJsonString);
+
+                        dto.KeyPoints = new List<KeyPointResponseDto>(keyPointRes);
+                    }
+                    else
+                    {
+                        return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+                    }
                 }
                 // u paged result
                 var resPaged = new PagedResult<TourRespondeDtoNew>(res, res.Count);
