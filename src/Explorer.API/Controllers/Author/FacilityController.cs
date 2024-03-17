@@ -1,9 +1,14 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text;
 
 namespace Explorer.API.Controllers.Author
 {
@@ -11,31 +16,42 @@ namespace Explorer.API.Controllers.Author
     [Route("api/facility")]
     public class FacilityController : BaseApiController
     {
-        private readonly IFacilityService _facilityService;
+        private readonly IHttpClientService _httpClient;
 
-        public FacilityController(IFacilityService facilityService)
+        public FacilityController(IHttpClientService httpClient)
         {
-            _facilityService = facilityService;
+            _httpClient = httpClient;
         }
 
         [HttpGet]
         public ActionResult<PagedResult<FacilityResponseDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _facilityService.GetPaged(page, pageSize);
-            return CreateResponse(result);
+            throw new NotImplementedException();
         }
 
         [HttpGet("authorsFacilities")]
-        public ActionResult<PagedResult<FacilityResponseDto>> GetByAuthorId([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<ActionResult<PagedResult<FacilityResponseDto>>> GetByAuthorId([FromQuery] int page, [FromQuery] int pageSize)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var loggedInAuthorId = int.Parse(identity.FindFirst("id").Value);
-            var result = _facilityService.GetPagedByAuthorId(page, pageSize, loggedInAuthorId);
-            return CreateResponse(result);
+
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "authors/" + loggedInAuthorId + "/facilities");
+
+            var response = await _httpClient.GetAsync(uri);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var res = JsonSerializer.Deserialize<FacilityResponseDto[]>(jsonString);
+                return CreateResponse(FluentResults.Result.Ok(new PagedResult<FacilityResponseDto>(res.ToList(), res.Length)));
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
         }
 
         [HttpPost]
-        public ActionResult<FacilityResponseDto> Create([FromBody] FacilityCreateDto facility)
+        public async Task<ActionResult<FacilityResponseDto>> Create([FromBody] FacilityCreateDto facility)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
@@ -43,29 +59,34 @@ namespace Explorer.API.Controllers.Author
                 facility.AuthorId = int.Parse(identity.FindFirst("id").Value);
             }
 
-            var result = _facilityService.Create(facility);
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "facilities");
 
-            return CreateResponse(result);
+            string requestBody = JsonSerializer.Serialize(facility);
+            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(uri, content);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var res = JsonSerializer.Deserialize<FacilityResponseDto>(jsonString);
+                return CreateResponse(FluentResults.Result.Ok(res));
+            }
+            else
+            {
+                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
+            }
         }
 
         [HttpPut("{id:int}")]
         public ActionResult<FacilityResponseDto> Update([FromBody] FacilityUpdateDto facility)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null && identity.IsAuthenticated)
-            {
-                facility.AuthorId = int.Parse(identity.FindFirst("id").Value);
-            }
-
-            var result = _facilityService.Update(facility);
-            return CreateResponse(result);
+            throw new NotImplementedException();
         }
 
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var result = _facilityService.Delete(id);
-            return CreateResponse(result);
+            throw new NotImplementedException();
         }
     }
 }
