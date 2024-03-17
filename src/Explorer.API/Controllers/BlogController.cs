@@ -82,10 +82,20 @@ namespace Explorer.API.Controllers
 
         [Authorize(Policy = "userPolicy")]
         [HttpDelete("delete/{id:long}")]
-        public ActionResult<BlogResponseDto> Delete(int id)
+        public async Task<String> Delete(int id)
         {
-            var result = _blogService.Delete(id);
-            return CreateResponse(result);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, $"blogs/{id}");
+            var response = await _httpClientService.DeleteAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                return content;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [HttpGet]
