@@ -260,16 +260,19 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-        [HttpGet("getBlogs/{type}")]
+        [HttpGet("type/{type}")]
         public async Task<String> GetWithType(string type)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, $"blogs/type/{type}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs/type/" + type);
+
+
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 return content;
             }
+
             else
             {
                 return null;
