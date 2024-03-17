@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
 
@@ -60,6 +61,23 @@ namespace Explorer.API.Controllers
             blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             var result = _blogService.Update(blog);
             return CreateResponse(result);
+        }
+
+        [HttpPatch("block/{id:long}")]
+        public async Task<String> Block(long id)
+        {
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, $"blogs/{id}");
+            var response = await _httpClientService.PatchAsync(uri, null);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                return content;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [Authorize(Policy = "userPolicy")]
