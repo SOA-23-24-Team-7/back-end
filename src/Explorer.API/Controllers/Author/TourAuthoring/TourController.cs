@@ -109,6 +109,8 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
                 var res = JsonSerializer.Deserialize<TourRespondeDtoNew>(jsonString);
+                res.KeyPoints = new List<KeyPointResponseDto>();
+
                 return CreateResponse(FluentResults.Result.Ok(res));
             }
             else
