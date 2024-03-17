@@ -36,7 +36,7 @@ public class KeyPointController : BaseApiController
         if (response != null && response.IsSuccessStatusCode)
         {
             var jsonString = await response.Content.ReadAsStringAsync();
-            var res = JsonSerializer.Deserialize<TourRespondeDtoNew>(jsonString);
+            var res = JsonSerializer.Deserialize<KeyPointResponseDto>(jsonString);
             return CreateResponse(FluentResults.Result.Ok(res));
         }
         else
