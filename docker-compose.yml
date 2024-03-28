@@ -1,0 +1,116 @@
+version: '3.9'
+
+services:
+  explorer:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: final
+    restart: on-failure
+    networks:
+      - database
+      - microservice
+    ports:
+      - "8080:80"
+    environment:
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
+      DATABASE_PASSWORD: super
+      DATABASE_USER: postgres
+      DATABASE_SCHEMA: explorer
+    depends_on:
+      - database
+  database:
+    image: postgres:13
+    restart: always
+    networks:
+      - database
+    environment:
+      POSTGRES_PASSWORD: super
+      POSTGRES_USER: postgres
+      POSTGRES_DB: explorer
+    volumes:
+      - type: volume
+        source: database-data
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: src/Resources/data.sql
+        target: /tmp/explorer-init.sql
+    ports:
+      - "5432:5432"
+  tour-service:
+    build:
+      dockerfile: Dockerfile
+      context: ../tour-service
+    restart: on-failure
+    networks:
+      - tours-database
+      - microservice
+    ports:
+      - "8087:8087"
+    depends_on:
+      - tours-database
+  tours-database:
+    image: postgres:13
+    restart: always
+    networks:
+      - tours-database
+    environment:
+      POSTGRES_PASSWORD: super
+      POSTGRES_USER: postgres
+      POSTGRES_DB: soa-tours
+    volumes:
+      - type: volume
+        source: tours-data
+        target: /var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+  blog-service:
+    build:
+      dockerfile: Dockerfile
+      context: ../blog-service
+    restart: on-failure
+    networks:
+      - blog-database
+      - microservice
+    ports:
+      - "8090:8087"
+    depends_on:
+      - blog-database
+  blog-database:
+    image: postgres:13
+    restart: always
+    networks:
+      - blog-database
+    environment:
+      POSTGRES_PASSWORD: super
+      POSTGRES_USER: postgres
+      POSTGRES_DB: soa-blog
+    volumes:
+      - type: volume
+        source: blog-data
+        target: /var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+volumes:
+  database-data:
+    name: explorer
+  tours-data:
+    name: explorer-tours
+  blog-data:
+    name: explorer-blog
+
+networks:
+  database:
+    name: database
+    driver: bridge
+  tours-database:
+    name: tours-database
+    driver: bridge
+  blog-database:
+    name: blog-database
+    driver: bridge
+  microservice:
+    name: microservice
+    driver: bridge
