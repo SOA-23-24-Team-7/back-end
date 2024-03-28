@@ -13,7 +13,7 @@ public class ImageUploadController : BaseApiController
 
         var imageExtension = Path.GetExtension(image.FileName);
         var imageName = Guid.NewGuid().ToString() + imageExtension;
-        var imagePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images", imageName);
+        var imagePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/images", imageName);
         using (var fileStream = new FileStream(imagePath, FileMode.Create))
         {
                 image.CopyTo(fileStream);
