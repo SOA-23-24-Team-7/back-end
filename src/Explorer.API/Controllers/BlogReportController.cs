@@ -19,7 +19,7 @@ namespace Explorer.API.Controllers
         [HttpGet("{id:long}")]
         public async Task<String> GetByBlog(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, $"reports/{id}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, $"reports/{id}");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -37,7 +37,7 @@ namespace Explorer.API.Controllers
         public async Task<String> Create([FromBody] BlogReportCreateDto report)
         {
             report.UserId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "reports");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "reports");
             string jsonContent = System.Text.Json.JsonSerializer.Serialize(report);
             var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             var response = await _httpClientService.PostAsync(uri, requestContent);

@@ -27,7 +27,7 @@ namespace Explorer.API.Controllers.Administrator.Administration
         [HttpGet]
         public async  Task<ActionResult<PagedResult<EquipmentResponseDto>>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8087, "equipment");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "tour-service", 8087, "equipment");
             // http request to external service
             var response = await _httpClientService.GetAsync(uri);
 
@@ -51,7 +51,7 @@ namespace Explorer.API.Controllers.Administrator.Administration
         public async Task<ActionResult<EquipmentResponseDto>> Create([FromBody] EquipmentCreateDto equipment)
         {
 
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8087, "equipment");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "tour-service", 8087, "equipment");
             //preparation for contacting external application
             string requestBody = JsonSerializer.Serialize(equipment);
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");

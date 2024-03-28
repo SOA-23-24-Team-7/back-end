@@ -35,7 +35,7 @@ namespace Explorer.API.Controllers.Author
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var loggedInAuthorId = int.Parse(identity.FindFirst("id").Value);
 
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "authors/" + loggedInAuthorId + "/facilities");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "authors/" + loggedInAuthorId + "/facilities");
 
             var response = await _httpClient.GetAsync(uri);
             if (response != null && response.IsSuccessStatusCode)
@@ -59,7 +59,7 @@ namespace Explorer.API.Controllers.Author
                 facility.AuthorId = int.Parse(identity.FindFirst("id").Value);
             }
 
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "facilities");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "facilities");
 
             string requestBody = JsonSerializer.Serialize(facility);
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");

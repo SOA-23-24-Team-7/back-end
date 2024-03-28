@@ -25,7 +25,7 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         [HttpGet("tours/{tourId:long}/key-points")]
         public async Task<ActionResult<KeyPointResponseDto[]>> GetKeyPoints(long tourId)
         {
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "tours/" + tourId + "/key-points");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "tours/" + tourId + "/key-points");
 
             var response = await _httpClient.GetAsync(uri);
             if (response != null && response.IsSuccessStatusCode)

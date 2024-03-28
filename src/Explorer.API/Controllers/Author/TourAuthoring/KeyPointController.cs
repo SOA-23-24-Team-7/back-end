@@ -27,7 +27,7 @@ public class KeyPointController : BaseApiController
     {
         keyPoint.TourId = tourId;
 
-        string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "key-points");
+        string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "key-points");
 
         string requestBody = JsonSerializer.Serialize(keyPoint);
         var content = new StringContent(requestBody, Encoding.UTF8, "application/json");

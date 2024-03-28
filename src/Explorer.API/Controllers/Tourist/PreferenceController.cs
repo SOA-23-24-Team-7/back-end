@@ -33,7 +33,7 @@ namespace Explorer.API.Controllers.Tourist
                 id = int.Parse(identity.FindFirst("id").Value);
             }
 
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "tourists/" + id + "/tour-preference");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "tourists/" + id + "/tour-preference");
 
             var response = await _httpClient.GetAsync(uri);
             if (response != null && response.IsSuccessStatusCode)
@@ -53,7 +53,7 @@ namespace Explorer.API.Controllers.Tourist
         {
             preference.UserId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "tour-preferences");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "tour-preferences");
 
             string requestBody = JsonSerializer.Serialize(preference);
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");

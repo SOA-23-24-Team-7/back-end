@@ -51,7 +51,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
 
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/authors/{id}");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, $"tours/authors/{id}");
             // http request to external service
             var response = await _httpClient.GetAsync(uri);
 
@@ -61,7 +61,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 var res = JsonSerializer.Deserialize<List<TourRespondeDtoNew>>(jsonString);
                 foreach(var dto in res)
                 {
-                    string keyPointUri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "tours/" + dto.Id + "/key-points");
+                    string keyPointUri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "tours/" + dto.Id + "/key-points");
 
                     var keyPointResponse = await _httpClient.GetAsync(keyPointUri);
                     if (keyPointResponse != null && keyPointResponse.IsSuccessStatusCode)
@@ -99,7 +99,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
                 tour.AuthorId = long.Parse(identity.FindFirst("id").Value);
             }
 
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "tours");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "tours");
             //preparation for contacting external application
             string requestBody = JsonSerializer.Serialize(tour);
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
@@ -146,7 +146,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         [HttpGet("equipment/{tourId:int}")]
         public async Task<ActionResult> GetEquipment(int tourId)
         {
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/equipment/{tourId}");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, $"tours/equipment/{tourId}");
             var response = await _httpClient.GetAsync(uri);
             if (response != null && response.IsSuccessStatusCode)
             {
@@ -168,7 +168,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         [HttpPost("equipment/{tourId:int}/{equipmentId:int}")]
         public async Task<ActionResult> AddEquipment(int tourId, int equipmentId)
         {
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/equipment/{tourId}/{equipmentId}");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, $"tours/equipment/{tourId}/{equipmentId}");
             var content = new StringContent("", Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(uri,content);
             if (response != null && response.IsSuccessStatusCode)
@@ -187,7 +187,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         [HttpDelete("equipment/{tourId:int}/{equipmentId:int}")]
         public async Task<ActionResult> DeleteEquipment(int tourId, int equipmentId)
         {
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/equipment/{tourId}/{equipmentId}");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, $"tours/equipment/{tourId}/{equipmentId}");
             var response = await _httpClient.DeleteAsync(uri);
             if (response != null && response.IsSuccessStatusCode)
             {
@@ -206,7 +206,7 @@ namespace Explorer.API.Controllers.Author.TourAuthoring
         [HttpGet("{tourId:long}")]
         public async Task<ActionResult<PagedResult<TourRespondeDtoNew>>> GetById(long tourId)
         {
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/{tourId}");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, $"tours/{tourId}");
             var response = await _httpClient.GetAsync(uri);
             if (response != null && response.IsSuccessStatusCode)
             {

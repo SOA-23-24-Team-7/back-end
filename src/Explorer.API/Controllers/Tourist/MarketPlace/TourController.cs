@@ -37,14 +37,14 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         [HttpGet("tours/{tourId:long}")]
         public async Task<ActionResult<PagedResult<TourResponseDto>>> GetById(long tourId)
         {
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, $"tours/{tourId}");
+            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, $"tours/{tourId}");
             var response = await _httpClient.GetAsync(uri);
             if (response != null && response.IsSuccessStatusCode)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
                 var res = JsonSerializer.Deserialize<TourRespondeDtoNew>(jsonString);
 
-                string keyPointUri = _httpClient.BuildUri(Protocol.HTTP, "localhost", 8087, "tours/" + res.Id + "/key-points");
+                string keyPointUri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "tours/" + res.Id + "/key-points");
 
                 var keyPointResponse = await _httpClient.GetAsync(keyPointUri);
                 if (keyPointResponse != null && keyPointResponse.IsSuccessStatusCode)

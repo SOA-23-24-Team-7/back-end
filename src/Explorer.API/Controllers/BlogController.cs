@@ -38,7 +38,7 @@ namespace Explorer.API.Controllers
         public async Task<String> Create([FromBody] BlogCreationDto blog)
         {
             blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "blogs");
             string jsonContent = System.Text.Json.JsonSerializer.Serialize(blog);
             var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             var response = await _httpClientService.PostAsync(uri, requestContent);
@@ -66,7 +66,7 @@ namespace Explorer.API.Controllers
         [HttpPatch("block/{id:long}")]
         public async Task<String> Block(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, $"blogs/{id}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, $"blogs/{id}");
             var response = await _httpClientService.PatchAsync(uri, null);
             if (response.IsSuccessStatusCode)
             {
@@ -84,7 +84,7 @@ namespace Explorer.API.Controllers
         [HttpDelete("delete/{id:long}")]
         public async Task<String> Delete(int id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, $"blogs/{id}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, $"blogs/{id}");
             var response = await _httpClientService.DeleteAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -101,7 +101,7 @@ namespace Explorer.API.Controllers
         [HttpGet]
         public async Task<String> GetAll()
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs/published");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "blogs/published");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -118,7 +118,7 @@ namespace Explorer.API.Controllers
         [HttpGet("{id:long}")]
         public async Task<String> Get(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, $"blogs/{id}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, $"blogs/{id}");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -169,7 +169,7 @@ namespace Explorer.API.Controllers
                 VoteType = "UPVOTE"
             };
 
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs/votes");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "blogs/votes");
 
             try
             {
@@ -221,7 +221,7 @@ namespace Explorer.API.Controllers
                 VoteType = "DOWNVOTE"
             };
 
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs/votes");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "blogs/votes");
 
             try
             {
@@ -291,7 +291,7 @@ namespace Explorer.API.Controllers
         [HttpGet("type/{type}")]
         public async Task<String> GetWithType(string type)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8090, "blogs/type/" + type);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "blogs/type/" + type);
 
 
             var response = await _httpClientService.GetAsync(uri);

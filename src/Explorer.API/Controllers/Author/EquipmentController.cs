@@ -24,7 +24,7 @@ namespace Explorer.API.Controllers.Author
         [HttpGet]
         public async Task<ActionResult<PagedResult<EquipmentResponseDto>>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8087, "equipment");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "tour-service", 8087, "equipment");
             // http request to external service
             var response = await _httpClientService.GetAsync(uri);
 
