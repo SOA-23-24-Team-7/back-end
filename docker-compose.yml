@@ -20,6 +20,8 @@ services:
       DATABASE_SCHEMA: explorer
     depends_on:
       - database
+      - tour-service
+      - blog-service
   database:
     image: postgres:13
     restart: always
