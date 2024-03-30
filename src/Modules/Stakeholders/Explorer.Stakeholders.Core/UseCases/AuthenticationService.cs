@@ -116,7 +116,7 @@ public class AuthenticationService : IAuthenticationService
     {
         var registrationConfirmationToken = _tokenGenerator.GenerateRegistrationConfirmationToken(user).Value.ResetPasswordToken;
         string subject = "Explorer - Registration confirmation";
-        var passwordResetLink = "https://localhost:44333/api/users/confirm-registration?confirm_registration_token=" + registrationConfirmationToken;
+        var passwordResetLink = "https://localhost:8080/api/users/confirm-registration?confirm_registration_token=" + registrationConfirmationToken;
 
         StringBuilder body = new StringBuilder();
         body.AppendLine($"Dear {person.Name} {person.Surname},");
