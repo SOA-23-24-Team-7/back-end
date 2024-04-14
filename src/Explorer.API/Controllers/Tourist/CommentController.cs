@@ -92,7 +92,7 @@ namespace Explorer.API.Controllers.Tourist
         [HttpGet]
         public async Task<String> GetAll()
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "comments");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -114,7 +114,7 @@ namespace Explorer.API.Controllers.Tourist
             comment.AuthorId = authorId;
             comment.CreatedAt = DateTime.UtcNow;
            
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "comments");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments");
 
             try
             {
@@ -144,7 +144,7 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPut("comments/update/{id:long}")]
         public async Task<IActionResult> UpdateComment(long id, CommentUpdateDto comment)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "comments/"+id);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments/"+id);
 
             try
             {
@@ -174,7 +174,7 @@ namespace Explorer.API.Controllers.Tourist
         [HttpDelete("comments/delete/{id:long}")]
         public async Task<IActionResult> DeleteComment(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "comments/" + id);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments/" + id);
             try
             {
                 var response = await _httpClientService.DeleteAsync(uri);
@@ -198,7 +198,7 @@ namespace Explorer.API.Controllers.Tourist
         [HttpGet("comments/blogComments/{id:long}")]
         public async Task<String> GetAllBlogComments(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, $"blogComments/{id}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogComments/{id}");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {

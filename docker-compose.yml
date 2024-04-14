@@ -76,7 +76,7 @@ services:
       - blog-database
       - microservice
     ports:
-      - "8090:8087"
+      - "8088:8088"
     depends_on:
       - blog-database
   blog-database:
@@ -85,7 +85,7 @@ services:
     ports:
       - 27018:27017
     networks:
-      - database
+      - blog-database
     volumes:
       - blog-data:/data/db
 
