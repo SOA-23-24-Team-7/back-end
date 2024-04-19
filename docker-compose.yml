@@ -39,7 +39,7 @@ services:
         source: src/Resources/data.sql
         target: /tmp/explorer-init.sql
     ports:
-      - "5432:5432"
+      - "5434:5432"
   tour-service:
     build:
       dockerfile: Dockerfile
@@ -76,24 +76,18 @@ services:
       - blog-database
       - microservice
     ports:
-      - "8090:8087"
+      - "8088:8088"
     depends_on:
       - blog-database
   blog-database:
-    image: postgres:13
-    restart: always
+    image: mongo
+    container_name: blog-database
+    ports:
+      - 27018:27017
     networks:
       - blog-database
-    environment:
-      POSTGRES_PASSWORD: super
-      POSTGRES_USER: postgres
-      POSTGRES_DB: soa-blog
     volumes:
-      - type: volume
-        source: blog-data
-        target: /var/lib/postgresql/data
-    ports:
-      - "5434:5432"
+      - blog-data:/data/db
 
 volumes:
   database-data:
