@@ -3,13 +3,17 @@ using Explorer.Blog.API.Public;
 using Explorer.Blog.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
+using Explorer.Tours.API.Dtos;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.Reflection.Metadata;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
@@ -306,6 +310,50 @@ namespace Explorer.API.Controllers
                 return null;
             }
         }
+
+        //NEW -RESTRICTING GET of all blogs- only followers can see blogs
+        [Authorize(Policy = "userPolicy")]
+        [HttpGet("following")]
+        public async Task<List<BlogResponseDto>> GetFollowingBlogs()
+        {
+            //pronalazenje blogova 
+
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/published");
+            var response = await _httpClientService.GetAsync(uri);
+            
+
+            //fetching followings of the logged in user
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var id = long.Parse(identity.FindFirst("id").Value);
+            string uriFollowing = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8095, $"followers/getFollowing/{id}"); ; //IZMIJENITI KAD SE DOKERIZUJE
+            var responseFollowing = await _httpClientService.GetAsync(uriFollowing);
+
+            List<BlogResponseDto> returnValue = new List<BlogResponseDto>();
+            if (response.IsSuccessStatusCode && responseFollowing.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var allblogs = System.Text.Json.JsonSerializer.Deserialize<List<BlogResponseDto>>(content);
+
+                var contentFollowing = await responseFollowing.Content.ReadAsStringAsync();
+                var allFollowing = System.Text.Json.JsonSerializer.Deserialize<List<FollowerDto>>(contentFollowing);
+
+                //filtering blogs
+                foreach(BlogResponseDto blog in allblogs)
+                {
+                    if(allFollowing.Find(f => f.UserId == blog.AuthorId) != null)
+                    {
+                        returnValue.Add(blog);
+                    }
+                }
+
+                return returnValue;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
     }
 
