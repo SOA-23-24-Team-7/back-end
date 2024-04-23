@@ -88,6 +88,32 @@ services:
       - blog-database
     volumes:
       - blog-data:/data/db
+  follower-service:
+    build:
+      dockerfile: Dockerfile
+      context: ../follower-service
+    restart: on-failure
+    networks:
+      - follower-database
+      - microservice
+    ports:
+      - "8095:8095"
+    depends_on:
+      - follower-database
+  follower-database:
+    image: neo4j:latest
+    restart: always
+    networks:
+      - follower-database
+    environment:
+      NEO4J_AUTH: neo4j/password
+    volumes:
+      - type: volume
+        source: follower-data
+        target: /data
+    ports:
+      - "7474:7474"
+      - "7687:7687"
 
 volumes:
   database-data:
@@ -96,6 +122,8 @@ volumes:
     name: explorer-tours
   blog-data:
     name: explorer-blog
+  follower-data:
+    name: explorer-follower
 
 networks:
   database:
@@ -106,6 +134,9 @@ networks:
     driver: bridge
   blog-database:
     name: blog-database
+    driver: bridge
+  follower-database:
+    name: follower-database
     driver: bridge
   microservice:
     name: microservice

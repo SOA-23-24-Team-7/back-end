@@ -325,7 +325,7 @@ namespace Explorer.API.Controllers
             //fetching followings of the logged in user
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
-            string uriFollowing = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8095, $"followers/getFollowing/{id}"); ; //IZMIJENITI KAD SE DOKERIZUJE
+            string uriFollowing = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowing/{id}"); ; //IZMIJENITI KAD SE DOKERIZUJE
             var responseFollowing = await _httpClientService.GetAsync(uriFollowing);
 
             List<BlogResponseDto> returnValue = new List<BlogResponseDto>();
