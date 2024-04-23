@@ -27,13 +27,15 @@ namespace Explorer.API.Controllers
         private readonly IClubMemberManagementService _clubMemberManagmentService;
         private readonly IClubService _clubService;
         private readonly IHttpClientService _httpClientService;
+        private readonly ILogger<BlogController> _logger;
 
-        public BlogController(IBlogService authenticationService, IClubMemberManagementService clubMemberManagmentService, IClubService clubService, IHttpClientService httpClientService)
+        public BlogController(IBlogService authenticationService, IClubMemberManagementService clubMemberManagmentService, IClubService clubService, IHttpClientService httpClientService, ILogger<BlogController> logger)
         {
             _blogService = authenticationService;
             _clubMemberManagmentService = clubMemberManagmentService;
             _clubService = clubService;
             _httpClientService = httpClientService;
+            _logger = logger;
         }
 
 
@@ -314,7 +316,7 @@ namespace Explorer.API.Controllers
         //NEW -RESTRICTING GET of all blogs- only followers can see blogs
         [Authorize(Policy = "userPolicy")]
         [HttpGet("following")]
-        public async Task<List<BlogResponseDto>> GetFollowingBlogs()
+        public async Task<List<BlogResponseSOADto>> GetFollowingBlogs()
         {
             //pronalazenje blogova 
 
@@ -325,22 +327,32 @@ namespace Explorer.API.Controllers
             //fetching followings of the logged in user
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
-            string uriFollowing = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowing/{id}"); ; //IZMIJENITI KAD SE DOKERIZUJE
+            string uriFollowing = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowing/{id}"); 
             var responseFollowing = await _httpClientService.GetAsync(uriFollowing);
 
-            List<BlogResponseDto> returnValue = new List<BlogResponseDto>();
+
+            _logger.LogInformation($"Value of id: {id}");
+            
+
+
+            List<BlogResponseSOADto> returnValue = new List<BlogResponseSOADto>();
             if (response.IsSuccessStatusCode && responseFollowing.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                var allblogs = System.Text.Json.JsonSerializer.Deserialize<List<BlogResponseDto>>(content);
+                var allblogs = System.Text.Json.JsonSerializer.Deserialize<List<BlogResponseSOADto>>(content);
+                _logger.LogInformation($"Value of blogs: {allblogs?.ToString()}");
 
                 var contentFollowing = await responseFollowing.Content.ReadAsStringAsync();
                 var allFollowing = System.Text.Json.JsonSerializer.Deserialize<List<FollowerDto>>(contentFollowing);
 
                 //filtering blogs
-                foreach(BlogResponseDto blog in allblogs)
+                foreach(BlogResponseSOADto blog in allblogs)
                 {
-                    if(allFollowing.Find(f => f.UserId == blog.AuthorId) != null)
+                    if(allFollowing!= null &&( allFollowing.Find(f => f.UserId == blog.AuthorId) != null || blog.AuthorId == (int)id))
+                    {
+                        returnValue.Add(blog);
+                    }
+                    else if(blog.AuthorId == (int)id)
                     {
                         returnValue.Add(blog);
                     }
