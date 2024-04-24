@@ -5,60 +5,29 @@ using Explorer.Stakeholders.API.Public;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace Explorer.API.Controllers
 {
-    [Authorize(Policy = "nonAdministratorPolicy")]
     [Route("api/follower")]
     public class FollowerController : BaseApiController
     {
         private readonly IFollowerService _followerService;
         private readonly IUserService _userService;
         private readonly IHttpClientService _httpClientService;
-        public FollowerController(IFollowerService followerService, IUserService userService, IHttpClientService httpClientService)
+        private readonly IPersonService _personService;
+
+        private readonly ILogger<FollowerController> _logger;
+        public FollowerController(IFollowerService followerService, IUserService userService, IHttpClientService httpClientService, ILogger<FollowerController> logger, IPersonService personService)
         {
             _followerService = followerService;
             _userService = userService;
             _httpClientService = httpClientService;
+            _logger = logger;
+            _personService = personService;
         }
 
-        [HttpGet("followers/{id:long}")]
-        public async Task<string> GetFollowers([FromQuery] int page, [FromQuery] int pageSize, long id)
-        {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowers/{id}");
-            var response = await _httpClientService.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                var result = await _followerService.GetFollowers(content, page, pageSize);
-
-                return result;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
-        [HttpGet("followings/{id:long}")]
-        public async Task<string> GetFollowings([FromQuery] int page, [FromQuery] int pageSize, long id)
-        {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowings/{id}");
-            var response = await _httpClientService.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                var result = await _followerService.GetFollowings(content, page, pageSize);
-
-                return result;
-            }
-            else
-            {
-                return null;
-            }
-        }
 
         [HttpDelete("{id:long}")]
         public ActionResult Delete(long id)
@@ -125,37 +94,69 @@ namespace Explorer.API.Controllers
             }
         }
 
+
         [HttpGet("getFollowers/{id:long}")]
-        public async Task<String> GetAllFollowers(long id)
+        public async Task<IActionResult> GetFollowers(int id)
         {
             string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowers/{id}");
             var response = await _httpClientService.GetAsync(uri);
+
+            _logger.LogInformation($"GETTING FOLLOWERS");
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
+                var users = JsonConvert.DeserializeObject<List<UserSOADto>>(content);
 
-                return content;
+                // Extract user IDs into a list
+                var followers = users.Select(u => u.UserId).ToList();
+
+                // Convert follower IDs to appropriate DTOs
+                var followerDtos = followers.Select(f => new FollowerResponseWithUserDto
+                {
+                    FollowedBy = _userService.Get(f).Value,
+                    FollowedByPerson = _personService.Get(f).Value,
+
+                }).ToList();
+                _logger.LogInformation($"FOLLOWERS: {followerDtos?.ToString()}");
+
+                return Ok(followerDtos);
             }
             else
             {
-                return null;
+                return StatusCode((int)response.StatusCode);
             }
         }
-
         [HttpGet("getFollowings/{id:long}")]
-        public async Task<String> GetAllFollowings(long id)
+        public async Task<IActionResult> GetFollowings(int id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8095, $"followers/getFollowings/{id}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowing/{id}");
             var response = await _httpClientService.GetAsync(uri);
+
+            _logger.LogInformation($"GETTING FOLLOWINGS");
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
+                var users = JsonConvert.DeserializeObject<List<UserSOADto>>(content);
 
-                return content;
+                // Extract user IDs into a list
+                var followers = users.Select(u => u.UserId).ToList();
+
+                // Convert follower IDs to appropriate DTOs
+                var followerDtos = followers.Select(f => new FollowingResponseWithUserDto
+                {
+                    Following = _userService.Get(f).Value,
+                    FollowingPerson = _personService.Get(f).Value,
+
+                }).ToList();
+                _logger.LogInformation($"FOLLOWINGS: {followerDtos?.ToString()}");
+
+                return Ok(followerDtos);
             }
             else
             {
-                return null;
+                return StatusCode((int)response.StatusCode);
             }
         }
 

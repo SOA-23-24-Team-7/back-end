@@ -4,7 +4,6 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
-using FluentResults;
 using System.Text.Json;
 
 namespace Explorer.Stakeholders.Core.UseCases
@@ -25,10 +24,10 @@ namespace Explorer.Stakeholders.Core.UseCases
         public async Task<string> GetFollowers(string encodedIds, int page, int pageSize)
         {
             // Decode the JSON string to get the list of IDs
-            var ids = JsonSerializer.Deserialize<List<long>>(encodedIds);
+            var users = JsonSerializer.Deserialize<List<UserSOADto>>(encodedIds);
 
-            // Convert the IDs to integers
-            var userIds = ids.Select(id => (int)id).ToList();
+            // Extract user IDs into a list
+            var userIds = users.Select(u => u.UserId).ToList();
 
             // Retrieve followers for the given user IDs
             var followers = new List<FollowerResponseWithUserDto>();
@@ -56,11 +55,10 @@ namespace Explorer.Stakeholders.Core.UseCases
         public async Task<string> GetFollowings(string encodedIds, int page, int pageSize)
         {
 
-            // Decode the JSON string to get the list of IDs
-            var ids = JsonSerializer.Deserialize<List<long>>(encodedIds);
+            var users = JsonSerializer.Deserialize<List<UserSOADto>>(encodedIds);
 
-            // Convert the IDs to integers
-            var userIds = ids.Select(id => (int)id).ToList();
+            // Extract user IDs into a list
+            var userIds = users.Select(u => u.UserId).ToList();
 
             // Retrieve followers for the given user IDs
             var followers = new List<FollowingResponseWithUserDto>();
