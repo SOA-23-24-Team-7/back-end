@@ -1,16 +1,11 @@
-﻿using Explorer.Blog.API.Dtos;
-using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.UseCases;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Security.Claims;
-using System.Text;
 
 namespace Explorer.API.Controllers
 {
@@ -20,7 +15,6 @@ namespace Explorer.API.Controllers
     {
         private readonly IFollowerService _followerService;
         private readonly IUserService _userService;
-
         private readonly IHttpClientService _httpClientService;
         public FollowerController(IFollowerService followerService, IUserService userService, IHttpClientService httpClientService)
         {
@@ -30,30 +24,40 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("followers/{id:long}")]
-        public ActionResult<PagedResult<FollowerResponseWithUserDto>> GetFollowers([FromQuery] int page, [FromQuery] int pageSize, long id)
+        public async Task<string> GetFollowers([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
-            long userId = id;
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null && identity.IsAuthenticated)
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowers/{id}");
+            var response = await _httpClientService.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
             {
-                userId = long.Parse(identity.FindFirst("id").Value);
+                var content = await response.Content.ReadAsStringAsync();
+                var result = await _followerService.GetFollowers(content, page, pageSize);
+
+                return result;
             }
-            var result = _followerService.GetFollowers(page, pageSize, userId);
-            return CreateResponse(result);
+            else
+            {
+                return null;
+            }
         }
 
 
         [HttpGet("followings/{id:long}")]
-        public ActionResult<PagedResult<FollowingResponseWithUserDto>> GetFollowings([FromQuery] int page, [FromQuery] int pageSize, long id)
+        public async Task<string> GetFollowings([FromQuery] int page, [FromQuery] int pageSize, long id)
         {
-            long userId = id;
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null && identity.IsAuthenticated)
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowings/{id}");
+            var response = await _httpClientService.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
             {
-                userId = long.Parse(identity.FindFirst("id").Value);
+                var content = await response.Content.ReadAsStringAsync();
+                var result = await _followerService.GetFollowings(content, page, pageSize);
+
+                return result;
             }
-            var result = _followerService.GetFollowings(page, pageSize, userId);
-            return CreateResponse(result);
+            else
+            {
+                return null;
+            }
         }
 
         [HttpDelete("{id:long}")]
@@ -86,9 +90,9 @@ namespace Explorer.API.Controllers
         [HttpPost("follow")]
         public async Task<ActionResult> Follow([FromBody] FollowerCreateDto follower)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8095, $"followers/follow/{follower.UserId}/{follower.FollowedById}");
-           
-            var response = await _httpClientService.PostAsync(uri,null);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/follow/{follower.UserId}/{follower.FollowedById}");
+
+            var response = await _httpClientService.PostAsync(uri, null);
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -106,7 +110,7 @@ namespace Explorer.API.Controllers
         [HttpPost("unfollow")]
         public async Task<ActionResult> Unfollow([FromBody] FollowerCreateDto follower)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8095, $"followers/unfollow/{follower.UserId}/{follower.FollowedById}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/unfollow/{follower.UserId}/{follower.FollowedById}");
 
             var response = await _httpClientService.PostAsync(uri, null);
             if (response.IsSuccessStatusCode)
@@ -124,7 +128,7 @@ namespace Explorer.API.Controllers
         [HttpGet("getFollowers/{id:long}")]
         public async Task<String> GetAllFollowers(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8095, $"followers/getFollowers/{id}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowers/{id}");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -154,6 +158,7 @@ namespace Explorer.API.Controllers
                 return null;
             }
         }
+
     }
 
 }

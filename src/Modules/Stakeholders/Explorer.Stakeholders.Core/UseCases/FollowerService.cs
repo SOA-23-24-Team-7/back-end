@@ -3,14 +3,9 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
@@ -27,23 +22,70 @@ namespace Explorer.Stakeholders.Core.UseCases
             _mapper = mapper;
         }
 
-        public Result<PagedResult<FollowerResponseWithUserDto>> GetFollowers(int page, int pageSize, long userId)
+        public async Task<string> GetFollowers(string encodedIds, int page, int pageSize)
         {
-            var result = _followerRepository.GetFollowersPagedById(page, pageSize, userId);
+            // Decode the JSON string to get the list of IDs
+            var ids = JsonSerializer.Deserialize<List<long>>(encodedIds);
 
-            var items = result.Results.Select(_mapper.Map<FollowerResponseWithUserDto>).ToList();
-            items.ForEach(x => x.FollowedByPerson = _mapper.Map<PersonResponseDto>(_personRepository.GetByUserId(x.FollowedBy.Id)));
+            // Convert the IDs to integers
+            var userIds = ids.Select(id => (int)id).ToList();
 
-            return new PagedResult<FollowerResponseWithUserDto>(items, result.TotalCount);
+            // Retrieve followers for the given user IDs
+            var followers = new List<FollowerResponseWithUserDto>();
+            foreach (var userId in userIds)
+            {
+                var follower = _personRepository.GetByUserId(userId);
+                if (follower != null)
+                {
+                    var followerDto = _mapper.Map<FollowerResponseWithUserDto>(follower);
+                    followerDto.FollowedByPerson = _mapper.Map<PersonResponseDto>(_personRepository.GetByUserId(followerDto.FollowedBy.Id));
+                    followers.Add(followerDto);
+                }
+            }
+
+            // Pagination logic
+            var totalCount = followers.Count;
+            var paginatedFollowers = followers.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            // Serialize the result to JSON string
+            var jsonResult = JsonSerializer.Serialize(new PagedResult<FollowerResponseWithUserDto>(paginatedFollowers, totalCount));
+
+            // Return the JSON string
+            return jsonResult;
         }
-        public Result<PagedResult<FollowingResponseWithUserDto>> GetFollowings(int page, int pageSize, long userId)
+        public async Task<string> GetFollowings(string encodedIds, int page, int pageSize)
         {
-            var result = _followerRepository.GetFollowingsPagedById(page, pageSize, userId);
 
-            var items = result.Results.Select(_mapper.Map<FollowingResponseWithUserDto>).ToList();
-            items.ForEach(x => x.FollowingPerson = _mapper.Map<PersonResponseDto>(_personRepository.GetByUserId(x.Following.Id)));
+            // Decode the JSON string to get the list of IDs
+            var ids = JsonSerializer.Deserialize<List<long>>(encodedIds);
 
-            return new PagedResult<FollowingResponseWithUserDto>(items, result.TotalCount); ;
+            // Convert the IDs to integers
+            var userIds = ids.Select(id => (int)id).ToList();
+
+            // Retrieve followers for the given user IDs
+            var followers = new List<FollowingResponseWithUserDto>();
+            foreach (var userId in userIds)
+            {
+                var follower = _personRepository.GetByUserId(userId);
+                if (follower != null)
+                {
+                    var followerDto = _mapper.Map<FollowingResponseWithUserDto>(follower);
+                    followerDto.FollowingPerson = _mapper.Map<PersonResponseDto>(_personRepository.GetByUserId(followerDto.Following.Id));
+                    followers.Add(followerDto);
+                }
+            }
+
+            // Pagination logic
+            var totalCount = followers.Count;
+            var paginatedFollowers = followers.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            // Serialize the result to JSON string
+            var jsonResult = JsonSerializer.Serialize(new PagedResult<FollowingResponseWithUserDto>(paginatedFollowers, totalCount));
+
+            // Return the JSON string
+            return jsonResult;
         }
+
+
     }
 }
