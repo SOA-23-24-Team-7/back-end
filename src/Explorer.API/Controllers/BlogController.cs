@@ -3,13 +3,17 @@ using Explorer.Blog.API.Public;
 using Explorer.Blog.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
+using Explorer.Tours.API.Dtos;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.Reflection.Metadata;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
@@ -23,13 +27,15 @@ namespace Explorer.API.Controllers
         private readonly IClubMemberManagementService _clubMemberManagmentService;
         private readonly IClubService _clubService;
         private readonly IHttpClientService _httpClientService;
+        private readonly ILogger<BlogController> _logger;
 
-        public BlogController(IBlogService authenticationService, IClubMemberManagementService clubMemberManagmentService, IClubService clubService, IHttpClientService httpClientService)
+        public BlogController(IBlogService authenticationService, IClubMemberManagementService clubMemberManagmentService, IClubService clubService, IHttpClientService httpClientService, ILogger<BlogController> logger)
         {
             _blogService = authenticationService;
             _clubMemberManagmentService = clubMemberManagmentService;
             _clubService = clubService;
             _httpClientService = httpClientService;
+            _logger = logger;
         }
 
 
@@ -38,7 +44,7 @@ namespace Explorer.API.Controllers
         public async Task<String> Create([FromBody] BlogCreationDto blog)
         {
             blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "blogs");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs");
             string jsonContent = System.Text.Json.JsonSerializer.Serialize(blog);
             var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             var response = await _httpClientService.PostAsync(uri, requestContent);
@@ -66,7 +72,7 @@ namespace Explorer.API.Controllers
         [HttpPatch("block/{id:long}")]
         public async Task<String> Block(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, $"blogs/{id}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
             var response = await _httpClientService.PatchAsync(uri, null);
             if (response.IsSuccessStatusCode)
             {
@@ -84,7 +90,7 @@ namespace Explorer.API.Controllers
         [HttpDelete("delete/{id:long}")]
         public async Task<String> Delete(int id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, $"blogs/{id}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
             var response = await _httpClientService.DeleteAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -101,7 +107,7 @@ namespace Explorer.API.Controllers
         [HttpGet]
         public async Task<String> GetAll()
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "blogs/published");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/published");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -118,7 +124,7 @@ namespace Explorer.API.Controllers
         [HttpGet("{id:long}")]
         public async Task<String> Get(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, $"blogs/{id}");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -169,7 +175,7 @@ namespace Explorer.API.Controllers
                 VoteType = "UPVOTE"
             };
 
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "blogs/votes");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/votes");
 
             try
             {
@@ -221,7 +227,7 @@ namespace Explorer.API.Controllers
                 VoteType = "DOWNVOTE"
             };
 
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "blogs/votes");
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/votes");
 
             try
             {
@@ -291,7 +297,7 @@ namespace Explorer.API.Controllers
         [HttpGet("type/{type}")]
         public async Task<String> GetWithType(string type)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8090, "blogs/type/" + type);
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/type/" + type);
 
 
             var response = await _httpClientService.GetAsync(uri);
@@ -306,6 +312,60 @@ namespace Explorer.API.Controllers
                 return null;
             }
         }
+
+        //NEW -RESTRICTING GET of all blogs- only followers can see blogs
+        [Authorize(Policy = "userPolicy")]
+        [HttpGet("following")]
+        public async Task<List<BlogResponseSOADto>> GetFollowingBlogs()
+        {
+            //pronalazenje blogova 
+
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/published");
+            var response = await _httpClientService.GetAsync(uri);
+            
+
+            //fetching followings of the logged in user
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var id = long.Parse(identity.FindFirst("id").Value);
+            string uriFollowing = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowing/{id}"); 
+            var responseFollowing = await _httpClientService.GetAsync(uriFollowing);
+
+
+            _logger.LogInformation($"Value of id: {id}");
+            
+
+
+            List<BlogResponseSOADto> returnValue = new List<BlogResponseSOADto>();
+            if (response.IsSuccessStatusCode && responseFollowing.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var allblogs = System.Text.Json.JsonSerializer.Deserialize<List<BlogResponseSOADto>>(content);
+                _logger.LogInformation($"Value of blogs: {allblogs?.ToString()}");
+
+                var contentFollowing = await responseFollowing.Content.ReadAsStringAsync();
+                var allFollowing = System.Text.Json.JsonSerializer.Deserialize<List<FollowerDto>>(contentFollowing);
+
+                //filtering blogs
+                foreach(BlogResponseSOADto blog in allblogs)
+                {
+                    if(allFollowing!= null &&( allFollowing.Find(f => f.UserId == blog.AuthorId) != null || blog.AuthorId == (int)id))
+                    {
+                        returnValue.Add(blog);
+                    }
+                    else if(blog.AuthorId == (int)id)
+                    {
+                        returnValue.Add(blog);
+                    }
+                }
+
+                return returnValue;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
     }
 

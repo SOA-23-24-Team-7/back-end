@@ -39,7 +39,7 @@ services:
         source: src/Resources/data.sql
         target: /tmp/explorer-init.sql
     ports:
-      - "5432:5432"
+      - "5434:5432"
   tour-service:
     build:
       dockerfile: Dockerfile
@@ -76,24 +76,44 @@ services:
       - blog-database
       - microservice
     ports:
-      - "8090:8087"
+      - "8088:8088"
     depends_on:
       - blog-database
   blog-database:
-    image: postgres:13
-    restart: always
+    image: mongo
+    container_name: blog-database
+    ports:
+      - 27018:27017
     networks:
       - blog-database
+    volumes:
+      - blog-data:/data/db
+  follower-service:
+    build:
+      dockerfile: Dockerfile
+      context: ../follower-service
+    restart: on-failure
+    networks:
+      - follower-database
+      - microservice
+    ports:
+      - "8095:8095"
+    depends_on:
+      - follower-database
+  follower-database:
+    image: neo4j:latest
+    restart: always
+    networks:
+      - follower-database
     environment:
-      POSTGRES_PASSWORD: super
-      POSTGRES_USER: postgres
-      POSTGRES_DB: soa-blog
+      NEO4J_AUTH: neo4j/password
     volumes:
       - type: volume
-        source: blog-data
-        target: /var/lib/postgresql/data
+        source: follower-data
+        target: /data
     ports:
-      - "5434:5432"
+      - "7474:7474"
+      - "7687:7687"
 
 volumes:
   database-data:
@@ -102,6 +122,8 @@ volumes:
     name: explorer-tours
   blog-data:
     name: explorer-blog
+  follower-data:
+    name: explorer-follower
 
 networks:
   database:
@@ -112,6 +134,9 @@ networks:
     driver: bridge
   blog-database:
     name: blog-database
+    driver: bridge
+  follower-database:
+    name: follower-database
     driver: bridge
   microservice:
     name: microservice
