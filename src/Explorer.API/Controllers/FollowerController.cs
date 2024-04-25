@@ -2,6 +2,7 @@
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,32 @@ namespace Explorer.API.Controllers
         {
             var result = _followerService.Create(follower);
             return CreateResponse(result);
+        }
+
+        [HttpGet("suggestions/{userId:long}")]
+        public async Task<ActionResult<User>> GetFollowerSuggestions(long userId)
+        {
+            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/suggestions/{userId}");
+            var response = await _httpClientService.GetAsync(uri);
+
+            _logger.LogInformation($"GETTING FOLLOWER SUGGESTIONS");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var users = JsonConvert.DeserializeObject<List<UserSOADto>>(content);
+
+                var followers = users.Select(u => u.UserId).ToList();
+
+                var followerDtos = followers.Select(f => _userService.Get(f).Value).ToList();
+                _logger.LogInformation($"FOLLOWER SUGGESTIONS: {followerDtos?.ToString()}");
+
+                return Ok(followerDtos);
+            }
+            else
+            {
+                return StatusCode((int)response.StatusCode);
+            }
         }
 
         [HttpGet("search/{searchUsername}")]
