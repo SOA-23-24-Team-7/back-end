@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <IncludeHttpRuleProtos>true</IncludeHttpRuleProtos>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,8 +37,19 @@
     <ProjectReference Include="..\Modules\Tours\Explorer.Tours.API\Explorer.Tours.API.csproj" />
     <ProjectReference Include="..\Modules\Tours\Explorer.Tours.Infrastructure\Explorer.Tours.Infrastructure.csproj" />
   </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
+		<PackageReference Include="Google.Protobuf" Version="3.26.1" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.52.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.62.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.AspNetCore.Grpc.JsonTranscoding" Version="7.0.17" />
+	</ItemGroup>
 
-  
-
-
+	<ItemGroup>
+		<Protobuf Include="Protos\authentication.proto" />
+	</ItemGroup>
+	
 </Project>

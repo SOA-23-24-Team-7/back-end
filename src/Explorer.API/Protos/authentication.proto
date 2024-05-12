@@ -1,0 +1,29 @@
+﻿
+syntax = "proto3";
+
+option csharp_namespace = "GrpcServiceTranscoding";
+import "Protos/google/api/annotations.proto";
+
+package Authorize;
+
+service Authorize {
+  rpc Authorize (Credentials) returns (AuthenticationTokens) {
+    option (google.api.http) = {
+      post: "/v1/authorize"
+      body: "*"
+    };
+  }
+}
+
+// The request message containing the user's name.
+message Credentials {
+
+  string Username = 1;
+  string Password = 2;
+}
+
+// The response message containing the greetings.
+message AuthenticationTokens {
+  int32 Id = 1;
+  string AccessToken = 2;
+}
