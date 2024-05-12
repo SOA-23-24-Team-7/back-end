@@ -25,10 +25,10 @@ public class AuthenticationService : IAuthenticationService
         _emailSender = emailSender;
     }
 
-    public Result<AuthenticationTokensDto> Login(CredentialsDto credentials)
+    public TokenInfoDto Login(CredentialsDto credentials)
     {
         var user = _userRepository.GetActiveByName(credentials.Username);
-        if (user == null || !(BC.BCrypt.Verify(credentials.Password, user.Password))) return Result.Fail(FailureCode.NotFound);
+        if (user == null || !(BC.BCrypt.Verify(credentials.Password, user.Password))) return null;
         long personId;
         try
         {
@@ -38,7 +38,7 @@ public class AuthenticationService : IAuthenticationService
         {
             personId = 0;
         }
-        return _tokenGenerator.GenerateAccessToken(user, personId);
+        return new TokenInfoDto(user.Id, personId,credentials.Username,user.GetPrimaryRoleName());
     }
 
     public Result<RegistrationConfirmationTokenDto> RegisterTourist(AccountRegistrationDto account)
