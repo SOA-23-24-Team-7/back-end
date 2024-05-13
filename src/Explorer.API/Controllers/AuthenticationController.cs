@@ -46,7 +46,7 @@ public class AuthenticationController : BaseApiController
         {
             return null;
         }
-        string uri = _httpClientService.BuildUri(Protocol.HTTP, "localhost", 8082, "token");
+        string uri = _httpClientService.BuildUri(Protocol.HTTP, "stakeholders-service", 8082, "token");
         string jsonContent = System.Text.Json.JsonSerializer.Serialize(result);
         var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
         var response = await _httpClientService.PostAsync(uri, requestContent);
