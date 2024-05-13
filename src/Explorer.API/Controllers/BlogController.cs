@@ -8,6 +8,7 @@ using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using FluentResults;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -122,9 +123,9 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("{id:long}")]
-        public async Task<String> Get(long id)
+        public async Task<BlogResponse> Get(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
+            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -135,7 +136,12 @@ namespace Explorer.API.Controllers
             else
             {
                 return null;
-            }
+            }*/
+
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.FindBlogById(new BlogIdRequest{ Id = id });
+            return reply;
         }
 
         [HttpPut("{id:int}")]

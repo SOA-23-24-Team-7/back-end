@@ -50,6 +50,7 @@
 
 	<ItemGroup>
 		<Protobuf Include="Protos\authentication.proto" />
+		<Protobuf Include="Protos\blogMicroservice.proto" GrpcServices="Client" />
 	</ItemGroup>
 	
 </Project>
