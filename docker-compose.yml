@@ -22,6 +22,7 @@ services:
       - database
       - tour-service
       - blog-service
+      - stakeholders-service
   database:
     image: postgres:13
     restart: always
@@ -114,7 +115,14 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
-
+  stakeholders-service:
+    build:
+      context: ../stakeholders-service
+    restart: on-failure
+    networks:
+      - microservice
+    ports:
+      - "8082:8082"
 volumes:
   database-data:
     name: explorer
