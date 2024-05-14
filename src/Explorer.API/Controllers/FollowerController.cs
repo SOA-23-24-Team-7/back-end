@@ -101,7 +101,7 @@ namespace Explorer.API.Controllers
                 return StatusCode(500, "Error following");
             }*/
 
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://localhost:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.FollowUser(new FollowRequest { UserID = follower.UserId, FollowerID=follower.FollowedById });
             return reply;
@@ -125,7 +125,7 @@ namespace Explorer.API.Controllers
             {
                 return StatusCode(500, "Error following");
             }*/
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://localhost:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.FollowUser(new FollowRequest { UserID = follower.UserId, FollowerID = follower.FollowedById });
             return reply;
@@ -163,7 +163,7 @@ namespace Explorer.API.Controllers
             {
                 return StatusCode((int)response.StatusCode);
             }*/
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://localhost:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.GetFollowers(new FollowerIdRequest { Id = id });
             return reply;
@@ -199,7 +199,7 @@ namespace Explorer.API.Controllers
             {
                 return StatusCode((int)response.StatusCode);
             }*/
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://localhost:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.GetFollowings(new FollowerIdRequest { Id = id });
             return reply;

@@ -93,7 +93,7 @@ namespace Explorer.API.Controllers.Tourist
 
 
         [HttpGet]
-        public async Task<CommentListResponse> GetAll()
+        public async Task<List<CommentResponse>> GetAll()
         {
             /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments");
             var response = await _httpClientService.GetAsync(uri);
@@ -110,7 +110,12 @@ namespace Explorer.API.Controllers.Tourist
             using var channel = GrpcChannel.ForAddress("http://localhost:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.GetAllComments(new Empty { });
-            return reply;
+            List<CommentResponse> comments = new List<CommentResponse>();
+            foreach (var comment in reply.Comments)
+            {
+                comments.Add(comment);
+            }
+            return comments;
         }
 
         [HttpPost]
@@ -216,7 +221,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("comments/blogComments/{id:long}")]
-        public async Task<CommentListResponse> GetAllBlogComments(long id)
+        public async Task<List<CommentResponse>> GetAllBlogComments(long id)
         {
             /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogComments/{id}");
             var response = await _httpClientService.GetAsync(uri);
@@ -233,7 +238,12 @@ namespace Explorer.API.Controllers.Tourist
             using var channel = GrpcChannel.ForAddress("http://localhost:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.GetAllBlogComments(new BlogIdRequest { Id = id });
-            return reply;
+            List<CommentResponse> comments = new List<CommentResponse>();
+            foreach (var comment in reply.Comments)
+            {
+                comments.Add(comment);
+            }
+            return comments;
         }
     }
 }
