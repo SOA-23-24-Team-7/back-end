@@ -140,44 +140,19 @@ namespace Explorer.API.Controllers
         //[Authorize(Policy = "userPolicy")]
 
         [HttpGet("upvote/{id:long}")]
-        public async Task<ActionResult> UpvoteBlog(long id)
+        public async Task<String> UpvoteBlog(long id)
         {
-
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
-            var voteRequest = new VoteCreateDto
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.Vote(new VoteRequest
             {
                 UserId = userId,
                 BlogId = id,
                 VoteType = "UPVOTE"
-            };
-
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/votes");
-
-            try
-            {
-                var json = JsonConvert.SerializeObject(voteRequest);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await _httpClientService.PostAsync(uri, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    var goCommentResponse = JsonConvert.DeserializeObject<CommentResponseDto>(responseString);
-
-                    return CreateResponse(Result.Ok(goCommentResponse));
-                }
-                else
-                {
-                    return StatusCode(500, "Error voting");
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error voting");
-            }
-
+            });
+            return reply.Message;
         }
 
         [Authorize(Policy = "userPolicy")]
@@ -192,44 +167,19 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("downvote/{id:long}")]
-        public async Task<ActionResult> DownvoteBlog(long id)
+        public async Task<String> DownvoteBlog(long id)
         {
-
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
-            var voteRequest = new VoteCreateDto
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.Vote(new VoteRequest
             {
                 UserId = userId,
                 BlogId = id,
                 VoteType = "DOWNVOTE"
-            };
-
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/votes");
-
-            try
-            {
-                var json = JsonConvert.SerializeObject(voteRequest);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await _httpClientService.PostAsync(uri, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    var goCommentResponse = JsonConvert.DeserializeObject<CommentResponseDto>(responseString);
-
-                    return CreateResponse(Result.Ok(goCommentResponse));
-                }
-                else
-                {
-                    return StatusCode(500, "Error voting");
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error voting");
-            }
-
+            });
+            return reply.Message;
         }
 
 
