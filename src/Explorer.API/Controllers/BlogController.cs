@@ -44,21 +44,15 @@ namespace Explorer.API.Controllers
         [HttpPost("create")]
         public async Task<String> Create([FromBody] BlogCreationDto blog)
         {
-            blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs");
-            string jsonContent = System.Text.Json.JsonSerializer.Serialize(blog);
-            var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClientService.PostAsync(uri, requestContent);
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
-            }
-            else
-            {
-                return null;
-            }
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.CreateBlog(new BlogCreationRequest { 
+                Title = blog.Title,
+                Description = blog.Description,
+                AuthorId = blog.AuthorId,
+                BlogTopic = blog.BlogTopic
+            });
+            return reply.Message;
         }
 
         [Authorize(Policy = "userPolicy")]
@@ -73,74 +67,51 @@ namespace Explorer.API.Controllers
         [HttpPatch("block/{id:long}")]
         public async Task<String> Block(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
-            var response = await _httpClientService.PatchAsync(uri, null);
-            if (response.IsSuccessStatusCode)
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.BlockBlog(new BlogIdRequest
             {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
-            }
-            else
-            {
-                return null;
-            }
+                Id = id
+            });
+            return reply.Message;
         }
 
         [Authorize(Policy = "userPolicy")]
         [HttpDelete("delete/{id:long}")]
         public async Task<String> Delete(int id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
-            var response = await _httpClientService.DeleteAsync(uri);
-            if (response.IsSuccessStatusCode)
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.DeleteBlog(new BlogIdRequest
             {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
-            }
-            else
-            {
-                return null;
-            }
+                Id = id
+            });
+            return reply.Message;
         }
 
         [HttpGet]
-        public async Task<String> GetAll()
+        public async Task<List<BlogResponse>> GetAll()
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/published");
-            var response = await _httpClientService.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.FindPublishedBlogs(new Empty{});
+            List<BlogResponse> blogs = new List<BlogResponse>();
+            foreach (var blog in reply.Blogs)
             {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
+                blogs.Add(blog);
             }
-            else
-            {
-                return null;
-            }
+            return blogs;
         }
 
         [HttpGet("{id:long}")]
         public async Task<BlogResponse> Get(long id)
         {
-            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
-            var response = await _httpClientService.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
-            }
-            else
-            {
-                return null;
-            }*/
-
             using var channel = GrpcChannel.ForAddress("http://localhost:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
-            var reply = client.FindBlogById(new BlogIdRequest{ Id = id });
+            var reply = client.FindBlogById(new BlogIdRequest
+            { 
+                Id = id 
+            });
             return reply;
         }
 
@@ -301,22 +272,19 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("type/{type}")]
-        public async Task<String> GetWithType(string type)
+        public async Task<List<BlogResponse>> GetWithType(string type)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/type/" + type);
-
-
-            var response = await _httpClientService.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.FindBlogsByType(new TypeRequest{
+                Type = type
+            });
+            List<BlogResponse> blogs = new List<BlogResponse>();
+            foreach (var blog in reply.Blogs)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                return content;
+                blogs.Add(blog);
             }
-
-            else
-            {
-                return null;
-            }
+            return blogs;
         }
 
         //NEW -RESTRICTING GET of all blogs- only followers can see blogs

@@ -7,11 +7,18 @@ import "google/protobuf/timestamp.proto";
 service BlogMicroservice {
     rpc FindBlogById(BlogIdRequest) returns (BlogResponse) {}
     rpc CreateBlog(BlogCreationRequest) returns (StringMessage) {}
+    rpc FindBlogsByType(TypeRequest) returns (BlogListResponse) {}
+    rpc FindPublishedBlogs(Empty) returns (BlogListResponse) {}
+    rpc FindBlogsByAuthor(AuthorIdRequest) returns (BlogListResponse) {}
+    rpc DeleteBlog(BlogIdRequest) returns (StringMessage) {}
+    rpc BlockBlog(BlogIdRequest) returns (StringMessage) {}
     rpc CreateComment(CommentCreationRequest) returns (CommentResponse) {}
     rpc UpdateComment(CommentUpdateRequest) returns (StringMessage) {}
     rpc DeleteComment(CommentIdRequest) returns (StringMessage) {}
     rpc GetAllComments(Empty) returns (CommentListResponse) {}
     rpc GetAllBlogComments(BlogIdRequest) returns (CommentListResponse) {}
+    rpc CreateReport(ReportRequest) returns (StringMessage) {}
+    rpc FindReportsByBlog(BlogIdRequest) returns (ReportListResponse) {}
 }
 
 message Empty {
@@ -25,8 +32,16 @@ message BlogIdRequest {
     int64 id = 1;
 }
 
+message AuthorIdRequest {
+    int64 id = 1;
+}
+
 message CommentIdRequest {
     int64 id = 1;
+}
+
+message TypeRequest {
+    string type = 1;
 }
 
 message BlogResponse {
@@ -44,6 +59,10 @@ message BlogResponse {
     int64 downvote_count = 12;
     string blog_topic = 13;
 }
+
+message BlogListResponse {
+    repeated BlogResponse blogs = 1;
+  }
 
 message CommentResponse {
     int32 id = 1;
@@ -82,4 +101,21 @@ message BlogCreationRequest {
     string description = 2;
     int64 author_id = 3;
     string blog_topic = 4;
+}
+
+message ReportRequest {
+    int64 blog_id = 1;
+    int64 user_id = 2;
+    string reason = 3;
+}
+
+message ReportResponse {
+    int64 id = 1;
+    int64 blog_id = 2;
+    int64 user_id = 3;
+    string reason = 4;
+}
+
+message ReportListResponse {
+    repeated ReportResponse reports = 1;
 }
