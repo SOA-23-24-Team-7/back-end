@@ -4,6 +4,7 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using FluentResults;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -84,9 +85,9 @@ namespace Explorer.API.Controllers
         }
 
         [HttpPost("follow")]
-        public async Task<ActionResult> Follow([FromBody] FollowerCreateDto follower)
+        public async Task<FollowerStringMessage> Follow([FromBody] FollowerCreateDto follower)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/follow/{follower.UserId}/{follower.FollowedById}");
+            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/follow/{follower.UserId}/{follower.FollowedById}");
 
             var response = await _httpClientService.PostAsync(uri, null);
             if (response.IsSuccessStatusCode)
@@ -98,15 +99,20 @@ namespace Explorer.API.Controllers
             else
             {
                 return StatusCode(500, "Error following");
-            }
+            }*/
+
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
+            var reply = client.FollowUser(new FollowRequest { UserID = follower.UserId, FollowerID=follower.FollowedById });
+            return reply;
         }
 
 
 
         [HttpPost("unfollow")]
-        public async Task<ActionResult> Unfollow([FromBody] FollowerCreateDto follower)
+        public async Task<FollowerStringMessage> Unfollow([FromBody] FollowerCreateDto follower)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/unfollow/{follower.UserId}/{follower.FollowedById}");
+           /* string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/unfollow/{follower.UserId}/{follower.FollowedById}");
 
             var response = await _httpClientService.PostAsync(uri, null);
             if (response.IsSuccessStatusCode)
@@ -118,14 +124,18 @@ namespace Explorer.API.Controllers
             else
             {
                 return StatusCode(500, "Error following");
-            }
+            }*/
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
+            var reply = client.FollowUser(new FollowRequest { UserID = follower.UserId, FollowerID = follower.FollowedById });
+            return reply;
         }
 
 
         [HttpGet("getFollowers/{id:long}")]
-        public async Task<IActionResult> GetFollowers(int id)
+        public async Task<FollowerListResponse> GetFollowers(int id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowers/{id}");
+            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowers/{id}");
             var response = await _httpClientService.GetAsync(uri);
 
             _logger.LogInformation($"GETTING FOLLOWERS");
@@ -152,12 +162,16 @@ namespace Explorer.API.Controllers
             else
             {
                 return StatusCode((int)response.StatusCode);
-            }
+            }*/
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
+            var reply = client.GetFollowers(new FollowerIdRequest { Id = id });
+            return reply;
         }
         [HttpGet("getFollowings/{id:long}")]
-        public async Task<IActionResult> GetFollowings(int id)
+        public async Task<FollowerListResponse> GetFollowings(int id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowing/{id}");
+            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowing/{id}");
             var response = await _httpClientService.GetAsync(uri);
 
             _logger.LogInformation($"GETTING FOLLOWINGS");
@@ -184,7 +198,11 @@ namespace Explorer.API.Controllers
             else
             {
                 return StatusCode((int)response.StatusCode);
-            }
+            }*/
+            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
+            var reply = client.GetFollowings(new FollowerIdRequest { Id = id });
+            return reply;
         }
 
     }
