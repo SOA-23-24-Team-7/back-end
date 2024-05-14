@@ -133,76 +133,30 @@ namespace Explorer.API.Controllers
 
 
         [HttpGet("getFollowers/{id:long}")]
-        public async Task<FollowerListResponse> GetFollowers(int id)
+        public async Task<List<FollowerResponse>> GetFollowers(int id)
         {
-            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowers/{id}");
-            var response = await _httpClientService.GetAsync(uri);
-
-            _logger.LogInformation($"GETTING FOLLOWERS");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                var users = JsonConvert.DeserializeObject<List<UserSOADto>>(content);
-
-                // Extract user IDs into a list
-                var followers = users.Select(u => u.UserId).ToList();
-
-                // Convert follower IDs to appropriate DTOs
-                var followerDtos = followers.Select(f => new FollowerResponseWithUserDto
-                {
-                    FollowedBy = _userService.Get(f).Value,
-                    FollowedByPerson = _personService.Get(f).Value,
-
-                }).ToList();
-                _logger.LogInformation($"FOLLOWERS: {followerDtos?.ToString()}");
-
-                return Ok(followerDtos);
-            }
-            else
-            {
-                return StatusCode((int)response.StatusCode);
-            }*/
             using var channel = GrpcChannel.ForAddress("http://localhost:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.GetFollowers(new FollowerIdRequest { Id = id });
-            return reply;
+            List<FollowerResponse> followers = new List<FollowerResponse>();
+            foreach (var follower in reply.Followers)
+            {
+                followers.Add(follower);
+            }
+            return followers;
         }
         [HttpGet("getFollowings/{id:long}")]
-        public async Task<FollowerListResponse> GetFollowings(int id)
+        public async Task<List<FollowerResponse>> GetFollowings(int id)
         {
-            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowing/{id}");
-            var response = await _httpClientService.GetAsync(uri);
-
-            _logger.LogInformation($"GETTING FOLLOWINGS");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                var users = JsonConvert.DeserializeObject<List<UserSOADto>>(content);
-
-                // Extract user IDs into a list
-                var followers = users.Select(u => u.UserId).ToList();
-
-                // Convert follower IDs to appropriate DTOs
-                var followerDtos = followers.Select(f => new FollowingResponseWithUserDto
-                {
-                    Following = _userService.Get(f).Value,
-                    FollowingPerson = _personService.Get(f).Value,
-
-                }).ToList();
-                _logger.LogInformation($"FOLLOWINGS: {followerDtos?.ToString()}");
-
-                return Ok(followerDtos);
-            }
-            else
-            {
-                return StatusCode((int)response.StatusCode);
-            }*/
             using var channel = GrpcChannel.ForAddress("http://localhost:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.GetFollowings(new FollowerIdRequest { Id = id });
-            return reply;
+            List<FollowerResponse> followers = new List<FollowerResponse>();
+            foreach (var follower in reply.Followers)
+            {
+                followers.Add(follower);
+            }
+            return followers;
         }
 
     }
