@@ -48,7 +48,7 @@ namespace Explorer.API.Controllers
         [HttpGet("suggestions/{userId:long}")]
         public async Task<ActionResult<User>> GetFollowerSuggestions(long userId)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/suggestions/{userId}");
+            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/suggestions/{userId}");
             var response = await _httpClientService.GetAsync(uri);
 
             _logger.LogInformation($"GETTING FOLLOWER SUGGESTIONS");
@@ -68,7 +68,19 @@ namespace Explorer.API.Controllers
             else
             {
                 return StatusCode((int)response.StatusCode);
+            }*/
+
+            using var channel = GrpcChannel.ForAddress("http://follower-service:8095");
+            var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
+            var reply = client.GetFollowerSuggestions(new FollowerIdRequest { Id = userId });
+            List<FollowerResponse> followers = new List<FollowerResponse>();
+            foreach (var follower in reply.Followers)
+            {
+                followers.Add(follower);
             }
+            var users = followers.Select(u => u.Id).ToList();
+            var followerDtos = users.Select(f => _userService.Get(f).Value).ToList();
+            return Ok(followerDtos);
         }
 
         [HttpGet("search/{searchUsername}")]
@@ -101,7 +113,7 @@ namespace Explorer.API.Controllers
                 return StatusCode(500, "Error following");
             }*/
 
-            using var channel = GrpcChannel.ForAddress("http://localhost:8095");
+            using var channel = GrpcChannel.ForAddress("http://follower-service:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.FollowUser(new FollowRequest { UserID = follower.UserId, FollowerID=follower.FollowedById });
             return reply;
@@ -125,7 +137,7 @@ namespace Explorer.API.Controllers
             {
                 return StatusCode(500, "Error following");
             }*/
-            using var channel = GrpcChannel.ForAddress("http://localhost:8095");
+            using var channel = GrpcChannel.ForAddress("http://follower-service:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.FollowUser(new FollowRequest { UserID = follower.UserId, FollowerID = follower.FollowedById });
             return reply;
@@ -135,7 +147,7 @@ namespace Explorer.API.Controllers
         [HttpGet("getFollowers/{id:long}")]
         public async Task<List<FollowerResponse>> GetFollowers(int id)
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:8095");
+            using var channel = GrpcChannel.ForAddress("http://follower-service:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.GetFollowers(new FollowerIdRequest { Id = id });
             List<FollowerResponse> followers = new List<FollowerResponse>();
@@ -148,7 +160,7 @@ namespace Explorer.API.Controllers
         [HttpGet("getFollowings/{id:long}")]
         public async Task<List<FollowerResponse>> GetFollowings(int id)
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:8095");
+            using var channel = GrpcChannel.ForAddress("http://follower-service:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.GetFollowings(new FollowerIdRequest { Id = id });
             List<FollowerResponse> followers = new List<FollowerResponse>();
