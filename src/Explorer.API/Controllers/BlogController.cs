@@ -44,7 +44,7 @@ namespace Explorer.API.Controllers
         [HttpPost("create")]
         public async Task<String> Create([FromBody] BlogCreationDto blog)
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.CreateBlog(new BlogCreationRequest { 
                 Title = blog.Title,
@@ -67,7 +67,7 @@ namespace Explorer.API.Controllers
         [HttpPatch("block/{id:long}")]
         public async Task<String> Block(long id)
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.BlockBlog(new BlogIdRequest
             {
@@ -80,7 +80,7 @@ namespace Explorer.API.Controllers
         [HttpDelete("delete/{id:long}")]
         public async Task<String> Delete(int id)
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.DeleteBlog(new BlogIdRequest
             {
@@ -92,7 +92,7 @@ namespace Explorer.API.Controllers
         [HttpGet]
         public async Task<List<BlogResponse>> GetAll()
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.FindPublishedBlogs(new Empty{});
             List<BlogResponse> blogs = new List<BlogResponse>();
@@ -106,7 +106,7 @@ namespace Explorer.API.Controllers
         [HttpGet("{id:long}")]
         public async Task<BlogResponse> Get(long id)
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.FindBlogById(new BlogIdRequest
             { 
@@ -144,7 +144,7 @@ namespace Explorer.API.Controllers
         {
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.Vote(new VoteRequest
             {
@@ -171,7 +171,7 @@ namespace Explorer.API.Controllers
         {
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.Vote(new VoteRequest
             {
@@ -224,7 +224,7 @@ namespace Explorer.API.Controllers
         [HttpGet("type/{type}")]
         public async Task<List<BlogResponse>> GetWithType(string type)
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.FindBlogsByType(new TypeRequest{
                 Type = type
@@ -240,54 +240,35 @@ namespace Explorer.API.Controllers
         //NEW -RESTRICTING GET of all blogs- only followers can see blogs
         [Authorize(Policy = "userPolicy")]
         [HttpGet("following")]
-        public async Task<List<BlogResponseSOADto>> GetFollowingBlogs()
+        public async Task<List<BlogResponse>> GetFollowingBlogs()
         {
-            //pronalazenje blogova 
 
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/published");
-            var response = await _httpClientService.GetAsync(uri);
-            
-
-            //fetching followings of the logged in user
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
-            string uriFollowing = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowing/{id}"); 
-            var responseFollowing = await _httpClientService.GetAsync(uriFollowing);
 
+            using var blogsChannel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var blogsClient = new BlogMicroservice.BlogMicroserviceClient(blogsChannel);
 
-            _logger.LogInformation($"Value of id: {id}");
-            
-
-
-            List<BlogResponseSOADto> returnValue = new List<BlogResponseSOADto>();
-            if (response.IsSuccessStatusCode && responseFollowing.IsSuccessStatusCode)
+            var blogsReply = blogsClient.FindPublishedBlogs(new Empty { });
+            List<BlogResponse> blogs = new List<BlogResponse>();
+            foreach (var blog in blogsReply.Blogs)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                var allblogs = System.Text.Json.JsonSerializer.Deserialize<List<BlogResponseSOADto>>(content);
-                _logger.LogInformation($"Value of blogs: {allblogs?.ToString()}");
-
-                var contentFollowing = await responseFollowing.Content.ReadAsStringAsync();
-                var allFollowing = System.Text.Json.JsonSerializer.Deserialize<List<FollowerDto>>(contentFollowing);
-
-                //filtering blogs
-                foreach(BlogResponseSOADto blog in allblogs)
-                {
-                    if(allFollowing!= null &&( allFollowing.Find(f => f.UserId == blog.AuthorId) != null || blog.AuthorId == (int)id))
-                    {
-                        returnValue.Add(blog);
-                    }
-                    else if(blog.AuthorId == (int)id)
-                    {
-                        returnValue.Add(blog);
-                    }
-                }
-
-                return returnValue;
+                blogs.Add(blog);
             }
-            else
+
+            using var followersChannel = GrpcChannel.ForAddress("http://follower-service:8095");
+            var followersClient = new FollowerMicroservice.FollowerMicroserviceClient(followersChannel);
+            var reply = followersClient.GetFollowings(new FollowerIdRequest { Id = id });
+            List<FollowerResponse> followings = new List<FollowerResponse>();
+            foreach (var following in reply.Followers)
             {
-                return null;
+                followings.Add(following);
             }
+
+            var followingIds = followings.Select(f => f.Id).ToHashSet();
+            var followinngBlogs = blogs.Where(b => followingIds.Contains(b.AuthorId)).ToList();
+
+            return followinngBlogs;
         }
 
 

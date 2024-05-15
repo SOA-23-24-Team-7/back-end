@@ -107,7 +107,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 return null;
             }*/
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.GetAllComments(new Empty { });
             List<CommentResponse> comments = new List<CommentResponse>();
@@ -151,7 +151,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 return StatusCode(500, "Error creating comment");
             }*/
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.CreateComment(new CommentCreationRequest { AuthorId = comment.AuthorId, BlogId = comment.BlogId, CreatedAt = Timestamp.FromDateTime(comment.CreatedAt), Text = comment.Text });
             return reply;
@@ -185,7 +185,7 @@ namespace Explorer.API.Controllers.Tourist
              {
                  return StatusCode(500, "Error updating comment");
              }*/
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.UpdateComment(new CommentUpdateRequest { Id = id , Text = comment.Text});
             return reply;
@@ -214,7 +214,7 @@ namespace Explorer.API.Controllers.Tourist
                 return StatusCode(500, $"Error deleting comment: {ex.Message}");
             }*/
 
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.DeleteComment(new CommentIdRequest { Id = id });
             return reply;
@@ -235,7 +235,7 @@ namespace Explorer.API.Controllers.Tourist
             {
                 return null;
             }*/
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.GetAllBlogComments(new BlogIdRequest { Id = id });
             List<CommentResponse> comments = new List<CommentResponse>();

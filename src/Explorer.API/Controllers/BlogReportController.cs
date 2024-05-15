@@ -21,7 +21,7 @@ namespace Explorer.API.Controllers
         [HttpGet("{id:long}")]
         public async Task<List<ReportResponse>> GetByBlog(long id)
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.FindReportsByBlog(new BlogIdRequest 
             {
@@ -38,7 +38,7 @@ namespace Explorer.API.Controllers
         [HttpPost]
         public async Task<String> Create([FromBody] BlogReportCreateDto report)
         {
-            using var channel = GrpcChannel.ForAddress("http://localhost:8088");
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
             var reply = client.CreateReport(new ReportRequest
             {
