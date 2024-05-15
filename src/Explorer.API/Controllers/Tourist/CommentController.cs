@@ -5,11 +5,14 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.HTTP;
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using FluentResults;
+using Google.Protobuf.WellKnownTypes;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using Google.Protobuf.WellKnownTypes;
 
 
 namespace Explorer.API.Controllers.Tourist
@@ -90,9 +93,9 @@ namespace Explorer.API.Controllers.Tourist
 
 
         [HttpGet]
-        public async Task<String> GetAll()
+        public async Task<List<CommentResponse>> GetAll()
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments");
+            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -103,14 +106,23 @@ namespace Explorer.API.Controllers.Tourist
             else
             {
                 return null;
+            }*/
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.GetAllComments(new Empty { });
+            List<CommentResponse> comments = new List<CommentResponse>();
+            foreach (var comment in reply.Comments)
+            {
+                comments.Add(comment);
             }
+            return comments;
         }
 
         [HttpPost]
         [Route("comments/new")]
-        public async Task<ActionResult<CommentResponseDto>> CreateComment([FromBody] CommentCreateDto comment)
+        public async Task<CommentResponse> CreateComment([FromBody] CommentCreateDto comment)
         {
-            var authorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            /*var authorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             comment.AuthorId = authorId;
             comment.CreatedAt = DateTime.UtcNow;
            
@@ -138,43 +150,52 @@ namespace Explorer.API.Controllers.Tourist
             catch (Exception ex)
             {
                 return StatusCode(500, "Error creating comment");
-            }
+            }*/
+            var authorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.CreateComment(new CommentCreationRequest { AuthorId = authorId, BlogId = comment.BlogId, CreatedAt = Timestamp.FromDateTime(DateTime.UtcNow), Text = comment.Text });
+            return reply;
         }
 
         [HttpPut("comments/update/{id:long}")]
-        public async Task<IActionResult> UpdateComment(long id, CommentUpdateDto comment)
+        public async Task<StringMessage> UpdateComment(long id, CommentUpdateDto comment)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments/"+id);
+            /* string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments/"+id);
 
-            try
-            {
-                var json = JsonConvert.SerializeObject(comment);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+             try
+             {
+                 var json = JsonConvert.SerializeObject(comment);
+                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClientService.PutAsync(uri, content);
+                 var response = await _httpClientService.PutAsync(uri, content);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    var goCommentResponse = JsonConvert.DeserializeObject<CommentResponseDto>(responseString);
+                 if (response.IsSuccessStatusCode)
+                 {
+                     var responseString = await response.Content.ReadAsStringAsync();
+                     var goCommentResponse = JsonConvert.DeserializeObject<CommentResponseDto>(responseString);
 
-                    return CreateResponse(Result.Ok(goCommentResponse));
-                }
-                else
-                {
-                    return StatusCode(500, "Error updating comment");
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error updating comment");
-            }
+                     return CreateResponse(Result.Ok(goCommentResponse));
+                 }
+                 else
+                 {
+                     return StatusCode(500, "Error updating comment");
+                 }
+             }
+             catch (Exception ex)
+             {
+                 return StatusCode(500, "Error updating comment");
+             }*/
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.UpdateComment(new CommentUpdateRequest { Id = id , Text = comment.Text});
+            return reply;
         }
 
         [HttpDelete("comments/delete/{id:long}")]
-        public async Task<IActionResult> DeleteComment(long id)
+        public async Task<StringMessage> DeleteComment(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments/" + id);
+            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "comments/" + id);
             try
             {
                 var response = await _httpClientService.DeleteAsync(uri);
@@ -192,13 +213,18 @@ namespace Explorer.API.Controllers.Tourist
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error deleting comment: {ex.Message}");
-            }
+            }*/
+
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.DeleteComment(new CommentIdRequest { Id = id });
+            return reply;
         }
 
         [HttpGet("comments/blogComments/{id:long}")]
-        public async Task<String> GetAllBlogComments(long id)
+        public async Task<List<CommentResponse>> GetAllBlogComments(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogComments/{id}");
+            /*string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogComments/{id}");
             var response = await _httpClientService.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
@@ -209,7 +235,16 @@ namespace Explorer.API.Controllers.Tourist
             else
             {
                 return null;
+            }*/
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.GetAllBlogComments(new BlogIdRequest { Id = id });
+            List<CommentResponse> comments = new List<CommentResponse>();
+            foreach (var comment in reply.Comments)
+            {
+                comments.Add(comment);
             }
+            return comments;
         }
     }
 }

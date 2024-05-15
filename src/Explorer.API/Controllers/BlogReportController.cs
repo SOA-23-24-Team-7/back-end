@@ -1,5 +1,7 @@
 ﻿using Explorer.Blog.API.Dtos;
+using Explorer.Blog.Core.Domain;
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -17,40 +19,34 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("{id:long}")]
-        public async Task<String> GetByBlog(long id)
+        public async Task<List<ReportResponse>> GetByBlog(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"reports/{id}");
-            var response = await _httpClientService.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.FindReportsByBlog(new BlogIdRequest 
             {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
-            }
-            else
+                Id = id
+            });
+            List<ReportResponse> reports = new List<ReportResponse>();
+            foreach (var report in reply.Reports)
             {
-                return null;
+                reports.Add(report);
             }
+            return reports;
         }
 
         [HttpPost]
         public async Task<String> Create([FromBody] BlogReportCreateDto report)
         {
-            report.UserId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "reports");
-            string jsonContent = System.Text.Json.JsonSerializer.Serialize(report);
-            var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClientService.PostAsync(uri, requestContent);
-            if (response.IsSuccessStatusCode)
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.CreateReport(new ReportRequest
             {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
-            }
-            else
-            {
-                return null;
-            }
+                BlogId = report.BlogId,
+                UserId = report.UserId,
+                Reason = report.Reason,
+            });
+            return reply.Message;
         }
     }
 }

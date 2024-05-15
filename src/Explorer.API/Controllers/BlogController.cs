@@ -8,6 +8,7 @@ using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using FluentResults;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -43,21 +44,15 @@ namespace Explorer.API.Controllers
         [HttpPost("create")]
         public async Task<String> Create([FromBody] BlogCreationDto blog)
         {
-            blog.AuthorId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs");
-            string jsonContent = System.Text.Json.JsonSerializer.Serialize(blog);
-            var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClientService.PostAsync(uri, requestContent);
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
-            }
-            else
-            {
-                return null;
-            }
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.CreateBlog(new BlogCreationRequest { 
+                Title = blog.Title,
+                Description = blog.Description,
+                AuthorId = blog.AuthorId,
+                BlogTopic = blog.BlogTopic
+            });
+            return reply.Message;
         }
 
         [Authorize(Policy = "userPolicy")]
@@ -72,70 +67,52 @@ namespace Explorer.API.Controllers
         [HttpPatch("block/{id:long}")]
         public async Task<String> Block(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
-            var response = await _httpClientService.PatchAsync(uri, null);
-            if (response.IsSuccessStatusCode)
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.BlockBlog(new BlogIdRequest
             {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
-            }
-            else
-            {
-                return null;
-            }
+                Id = id
+            });
+            return reply.Message;
         }
 
         [Authorize(Policy = "userPolicy")]
         [HttpDelete("delete/{id:long}")]
         public async Task<String> Delete(int id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
-            var response = await _httpClientService.DeleteAsync(uri);
-            if (response.IsSuccessStatusCode)
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.DeleteBlog(new BlogIdRequest
             {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
-            }
-            else
-            {
-                return null;
-            }
+                Id = id
+            });
+            return reply.Message;
         }
 
         [HttpGet]
-        public async Task<String> GetAll()
+        public async Task<List<BlogResponse>> GetAll()
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/published");
-            var response = await _httpClientService.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.FindPublishedBlogs(new Empty{});
+            List<BlogResponse> blogs = new List<BlogResponse>();
+            foreach (var blog in reply.Blogs)
             {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
+                blogs.Add(blog);
             }
-            else
-            {
-                return null;
-            }
+            return blogs;
         }
 
         [HttpGet("{id:long}")]
-        public async Task<String> Get(long id)
+        public async Task<BlogResponse> Get(long id)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, $"blogs/{id}");
-            var response = await _httpClientService.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-
-                return content;
-            }
-            else
-            {
-                return null;
-            }
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.FindBlogById(new BlogIdRequest
+            { 
+                Id = id 
+            });
+            return reply;
         }
 
         [HttpPut("{id:int}")]
@@ -163,44 +140,19 @@ namespace Explorer.API.Controllers
         //[Authorize(Policy = "userPolicy")]
 
         [HttpGet("upvote/{id:long}")]
-        public async Task<ActionResult> UpvoteBlog(long id)
+        public async Task<String> UpvoteBlog(long id)
         {
-
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
-            var voteRequest = new VoteCreateDto
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.Vote(new VoteRequest
             {
                 UserId = userId,
                 BlogId = id,
                 VoteType = "UPVOTE"
-            };
-
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/votes");
-
-            try
-            {
-                var json = JsonConvert.SerializeObject(voteRequest);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await _httpClientService.PostAsync(uri, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    var goCommentResponse = JsonConvert.DeserializeObject<CommentResponseDto>(responseString);
-
-                    return CreateResponse(Result.Ok(goCommentResponse));
-                }
-                else
-                {
-                    return StatusCode(500, "Error voting");
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error voting");
-            }
-
+            });
+            return reply.Message;
         }
 
         [Authorize(Policy = "userPolicy")]
@@ -215,44 +167,19 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("downvote/{id:long}")]
-        public async Task<ActionResult> DownvoteBlog(long id)
+        public async Task<String> DownvoteBlog(long id)
         {
-
             var userId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
-            var voteRequest = new VoteCreateDto
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.Vote(new VoteRequest
             {
                 UserId = userId,
                 BlogId = id,
                 VoteType = "DOWNVOTE"
-            };
-
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/votes");
-
-            try
-            {
-                var json = JsonConvert.SerializeObject(voteRequest);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await _httpClientService.PostAsync(uri, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    var goCommentResponse = JsonConvert.DeserializeObject<CommentResponseDto>(responseString);
-
-                    return CreateResponse(Result.Ok(goCommentResponse));
-                }
-                else
-                {
-                    return StatusCode(500, "Error voting");
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error voting");
-            }
-
+            });
+            return reply.Message;
         }
 
 
@@ -295,75 +222,53 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("type/{type}")]
-        public async Task<String> GetWithType(string type)
+        public async Task<List<BlogResponse>> GetWithType(string type)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/type/" + type);
-
-
-            var response = await _httpClientService.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
+            using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var client = new BlogMicroservice.BlogMicroserviceClient(channel);
+            var reply = client.FindBlogsByType(new TypeRequest{
+                Type = type
+            });
+            List<BlogResponse> blogs = new List<BlogResponse>();
+            foreach (var blog in reply.Blogs)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                return content;
+                blogs.Add(blog);
             }
-
-            else
-            {
-                return null;
-            }
+            return blogs;
         }
 
         //NEW -RESTRICTING GET of all blogs- only followers can see blogs
         [Authorize(Policy = "userPolicy")]
         [HttpGet("following")]
-        public async Task<List<BlogResponseSOADto>> GetFollowingBlogs()
+        public async Task<List<BlogResponse>> GetFollowingBlogs()
         {
-            //pronalazenje blogova 
 
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "blog-service", 8088, "blogs/published");
-            var response = await _httpClientService.GetAsync(uri);
-            
-
-            //fetching followings of the logged in user
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = long.Parse(identity.FindFirst("id").Value);
-            string uriFollowing = _httpClientService.BuildUri(Protocol.HTTP, "follower-service", 8095, $"followers/getFollowing/{id}"); 
-            var responseFollowing = await _httpClientService.GetAsync(uriFollowing);
 
+            using var blogsChannel = GrpcChannel.ForAddress("http://blog-service:8088");
+            var blogsClient = new BlogMicroservice.BlogMicroserviceClient(blogsChannel);
 
-            _logger.LogInformation($"Value of id: {id}");
-            
-
-
-            List<BlogResponseSOADto> returnValue = new List<BlogResponseSOADto>();
-            if (response.IsSuccessStatusCode && responseFollowing.IsSuccessStatusCode)
+            var blogsReply = blogsClient.FindPublishedBlogs(new Empty { });
+            List<BlogResponse> blogs = new List<BlogResponse>();
+            foreach (var blog in blogsReply.Blogs)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                var allblogs = System.Text.Json.JsonSerializer.Deserialize<List<BlogResponseSOADto>>(content);
-                _logger.LogInformation($"Value of blogs: {allblogs?.ToString()}");
-
-                var contentFollowing = await responseFollowing.Content.ReadAsStringAsync();
-                var allFollowing = System.Text.Json.JsonSerializer.Deserialize<List<FollowerDto>>(contentFollowing);
-
-                //filtering blogs
-                foreach(BlogResponseSOADto blog in allblogs)
-                {
-                    if(allFollowing!= null &&( allFollowing.Find(f => f.UserId == blog.AuthorId) != null || blog.AuthorId == (int)id))
-                    {
-                        returnValue.Add(blog);
-                    }
-                    else if(blog.AuthorId == (int)id)
-                    {
-                        returnValue.Add(blog);
-                    }
-                }
-
-                return returnValue;
+                blogs.Add(blog);
             }
-            else
+
+            using var followersChannel = GrpcChannel.ForAddress("http://follower-service:8095");
+            var followersClient = new FollowerMicroservice.FollowerMicroserviceClient(followersChannel);
+            var reply = followersClient.GetFollowings(new FollowerIdRequest { Id = id });
+            List<FollowerResponse> followings = new List<FollowerResponse>();
+            foreach (var following in reply.Followers)
             {
-                return null;
+                followings.Add(following);
             }
+
+            var followingIds = followings.Select(f => f.Id).ToHashSet();
+            var followinngBlogs = blogs.Where(b => followingIds.Contains(b.AuthorId)).ToList();
+
+            return followinngBlogs;
         }
 
 

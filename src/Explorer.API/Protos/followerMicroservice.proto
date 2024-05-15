@@ -1,0 +1,31 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Explorer.API";
+
+service FollowerMicroservice {
+    rpc FollowUser(FollowRequest) returns (FollowerStringMessage) {}
+    rpc UnfollowUser(FollowRequest) returns (FollowerStringMessage) {}
+    rpc GetFollowers(FollowerIdRequest) returns (FollowerListResponse) {}
+    rpc GetFollowings(FollowerIdRequest) returns (FollowerListResponse) {}
+    rpc GetFollowerSuggestions(FollowerIdRequest) returns (FollowerListResponse) {}
+}
+
+message FollowerStringMessage {
+    string message = 1;
+}
+
+message FollowRequest {
+    int64 userID = 1;
+    int64 followerID = 2;
+}
+
+message FollowerIdRequest {
+    int64 id = 1;
+}
+message FollowerResponse{
+    int64 id = 1;
+}
+
+message FollowerListResponse{
+    repeated FollowerResponse followers = 1;
+}
