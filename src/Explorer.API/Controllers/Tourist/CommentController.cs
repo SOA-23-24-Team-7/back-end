@@ -151,9 +151,10 @@ namespace Explorer.API.Controllers.Tourist
             {
                 return StatusCode(500, "Error creating comment");
             }*/
+            var authorId = long.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
             using var channel = GrpcChannel.ForAddress("http://blog-service:8088");
             var client = new BlogMicroservice.BlogMicroserviceClient(channel);
-            var reply = client.CreateComment(new CommentCreationRequest { AuthorId = comment.AuthorId, BlogId = comment.BlogId, CreatedAt = Timestamp.FromDateTime(comment.CreatedAt), Text = comment.Text });
+            var reply = client.CreateComment(new CommentCreationRequest { AuthorId = authorId, BlogId = comment.BlogId, CreatedAt = Timestamp.FromDateTime(DateTime.UtcNow), Text = comment.Text });
             return reply;
         }
 

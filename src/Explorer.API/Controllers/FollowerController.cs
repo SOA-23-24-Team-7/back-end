@@ -145,30 +145,53 @@ namespace Explorer.API.Controllers
 
 
         [HttpGet("getFollowers/{id:long}")]
-        public async Task<List<FollowerResponse>> GetFollowers(int id)
+        public async Task<IActionResult> GetFollowers(int id)
         {
             using var channel = GrpcChannel.ForAddress("http://follower-service:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.GetFollowers(new FollowerIdRequest { Id = id });
-            List<FollowerResponse> followers = new List<FollowerResponse>();
+            List<FollowerResponse> users = new List<FollowerResponse>();
             foreach (var follower in reply.Followers)
             {
-                followers.Add(follower);
+                users.Add(follower);
             }
-            return followers;
+            var followers = users.Select(u => u.Id).ToList();
+
+            // Convert follower IDs to appropriate DTOs
+            var followerDtos = followers.Select(f => new FollowerResponseWithUserDto
+            {
+                FollowedBy = _userService.Get(f).Value,
+                FollowedByPerson = _personService.Get(f).Value,
+
+            }).ToList();
+            _logger.LogInformation($"FOLLOWERS: {followerDtos?.ToString()}");
+
+            return Ok(followerDtos);
         }
+
         [HttpGet("getFollowings/{id:long}")]
-        public async Task<List<FollowerResponse>> GetFollowings(int id)
+        public async Task<IActionResult> GetFollowings(int id)
         {
             using var channel = GrpcChannel.ForAddress("http://follower-service:8095");
             var client = new FollowerMicroservice.FollowerMicroserviceClient(channel);
             var reply = client.GetFollowings(new FollowerIdRequest { Id = id });
-            List<FollowerResponse> followers = new List<FollowerResponse>();
+            List<FollowerResponse> users = new List<FollowerResponse>();
             foreach (var follower in reply.Followers)
             {
-                followers.Add(follower);
+                users.Add(follower);
             }
-            return followers;
+            var followers = users.Select(u => u.Id).ToList();
+
+            // Convert follower IDs to appropriate DTOs
+            var followerDtos = followers.Select(f => new FollowingResponseWithUserDto
+            {
+                Following = _userService.Get(f).Value,
+                FollowingPerson = _personService.Get(f).Value,
+
+            }).ToList();
+            _logger.LogInformation($"FOLLOWINGS: {followerDtos?.ToString()}");
+
+            return Ok(followerDtos);
         }
 
     }
