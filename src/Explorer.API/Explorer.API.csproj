@@ -51,8 +51,8 @@
 	<ItemGroup>
 		<Protobuf Include="Protos\authentication.proto" />
 		<Protobuf Include="Protos\blogMicroservice.proto" GrpcServices="Client" />
-
 		<Protobuf Include="Protos\followerMicroservice.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\tourMicroservice.proto" GrpcServices="Client" />
 	</ItemGroup>
 	 
 </Project>

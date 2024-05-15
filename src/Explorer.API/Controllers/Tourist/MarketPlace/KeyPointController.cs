@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text;
+using Grpc.Net.Client;
 
 namespace Explorer.API.Controllers.Tourist.MarketPlace
 {
@@ -23,21 +24,13 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
 
         [Authorize(Roles = "author, tourist")]
         [HttpGet("tours/{tourId:long}/key-points")]
-        public async Task<ActionResult<KeyPointResponseDto[]>> GetKeyPoints(long tourId)
+        public async Task<KeyPointResponse[]> GetKeyPoints(long tourId)
         {
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "tours/" + tourId + "/key-points");
+            using var channel = GrpcChannel.ForAddress("http://tour-service:8087");
+            var client = new TourMicroservice.TourMicroserviceClient(channel);
+            var reply = client.GetAllKeyPoints(new KeyPointsIdRequest{ TourId = tourId });
 
-            var response = await _httpClient.GetAsync(uri);
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                var jsonString = await response.Content.ReadAsStringAsync();
-                var res = JsonSerializer.Deserialize<KeyPointResponseDto[]>(jsonString);
-                return CreateResponse(FluentResults.Result.Ok(res));
-            }
-            else
-            {
-                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-            }
+            return reply.KeyPoints.ToArray();
         }
 
         [Authorize(Roles = "tourist")]

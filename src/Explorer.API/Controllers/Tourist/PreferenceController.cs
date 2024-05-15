@@ -9,6 +9,7 @@ using Explorer.Tours.Core.Domain.Tours;
 using System.Text.Json;
 using System.Text;
 using System.Security.Cryptography;
+using Grpc.Net.Client;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -24,7 +25,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet]
-        public async Task<ActionResult<PreferenceResponseDto>> Get()
+        public async Task<TourPreferenceResponse> Get()
         {
             int id = 0;
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -33,42 +34,23 @@ namespace Explorer.API.Controllers.Tourist
                 id = int.Parse(identity.FindFirst("id").Value);
             }
 
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "tourists/" + id + "/tour-preference");
+            using var channel = GrpcChannel.ForAddress("http://tour-service:8087");
+            var client = new TourMicroservice.TourMicroserviceClient(channel);
+            var reply = client.GetPreference(new TourPreferenceIdRequest { UserId = id });
 
-            var response = await _httpClient.GetAsync(uri);
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                var jsonString = await response.Content.ReadAsStringAsync();
-                var res = JsonSerializer.Deserialize<PreferenceResponseDto>(jsonString);
-                return CreateResponse(FluentResults.Result.Ok(res));
-            }
-            else
-            {
-                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-            }
+            return reply;
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<PreferenceResponseDto>> Create([FromBody] PreferenceCreateDto preference)
+        public async Task<TourPreferenceResponse> Create([FromBody] PreferenceCreateDto preference)
         {
             preference.UserId = int.Parse(HttpContext.User.Claims.First(i => i.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value);
 
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "tour-preferences");
+            using var channel = GrpcChannel.ForAddress("http://tour-service:8087");
+            var client = new TourMicroservice.TourMicroserviceClient(channel);
+            var reply = client.CreatePreference(new TourPreferenceCreationRequest { UserId = preference.UserId, BoatRating = preference.BoatRating, CarRating = preference.CarRating, CyclingRating = preference.CyclingRating, DifficultyLevel = preference.DifficultyLevel, SelectedTags = {preference.SelectedTags }, WalkingRating = preference.WalkingRating });
 
-            string requestBody = JsonSerializer.Serialize(preference);
-            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync(uri, content);
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                var jsonString = await response.Content.ReadAsStringAsync();
-                var res = JsonSerializer.Deserialize<PreferenceResponseDto>(jsonString);
-                return CreateResponse(FluentResults.Result.Ok(res));
-            }
-            else
-            {
-                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-            }
+            return reply;
         }
 
         [HttpDelete("{id:int}")]

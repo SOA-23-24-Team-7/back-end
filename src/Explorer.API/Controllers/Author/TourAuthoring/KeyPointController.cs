@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text;
+using Grpc.Net.Client;
 
 namespace Explorer.API.Controllers.Author.TourAuthoring;
 
@@ -23,26 +24,16 @@ public class KeyPointController : BaseApiController
 
     [Authorize(Roles = "author")]
     [HttpPost("tours/{tourId:long}/key-points")]
-    public async Task<ActionResult<KeyPointResponseDto>> CreateKeyPoint([FromRoute] long tourId, [FromBody] KeyPointCreateDto keyPoint)
+    public async Task<KeyPointResponse> CreateKeyPoint([FromRoute] long tourId, [FromBody] KeyPointCreateDto keyPoint)
     {
         keyPoint.TourId = tourId;
 
-        string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "key-points");
+        using var channel = GrpcChannel.ForAddress("http://tour-service:8087");
+        var client = new TourMicroservice.TourMicroserviceClient(channel);
+        var secret = keyPoint.Secret != null ? new KeyPointSecretCreationRequest{ Images = { keyPoint.Secret.Images }, Description = keyPoint.Secret.Description } : null;
+        var reply = client.CreateKeyPoint(new KeyPointCreationRequest{ Name = keyPoint.Name, Description = keyPoint.Description, ImagePath = keyPoint.ImagePath, Latitude = (float)keyPoint.Latitude, Longitude = (float)keyPoint.Longitude, LocationAddress = keyPoint.LocationAddress, Order = (int)keyPoint.Order, Secret = secret, TourId = keyPoint.TourId });
 
-        string requestBody = JsonSerializer.Serialize(keyPoint);
-        var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-
-        var response = await _httpClient.PostAsync(uri, content);
-        if (response != null && response.IsSuccessStatusCode)
-        {
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var res = JsonSerializer.Deserialize<KeyPointResponseDto>(jsonString);
-            return CreateResponse(FluentResults.Result.Ok(res));
-        }
-        else
-        {
-            return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-        }
+        return reply;
     }
 
     [Authorize(Roles = "author")]

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text;
+using Grpc.Net.Client;
 
 namespace Explorer.API.Controllers.Administrator.Administration
 {
@@ -25,49 +26,25 @@ namespace Explorer.API.Controllers.Administrator.Administration
         }
 
         [HttpGet]
-        public async  Task<ActionResult<PagedResult<EquipmentResponseDto>>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public async  Task<PagedResult<EquipmentResponse>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "tour-service", 8087, "equipment");
-            // http request to external service
-            var response = await _httpClientService.GetAsync(uri);
+            using var channel = GrpcChannel.ForAddress("http://tour-service:8087");
+            var client = new TourMicroservice.TourMicroserviceClient(channel);
+            var reply = client.GetAllEquipment(new EmptyTourMessage{});
+            
+            var resPaged = new PagedResult<EquipmentResponse>(reply.Equipment.ToList(), reply.Equipment.ToList().Count);
 
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                var jsonString = await response.Content.ReadAsStringAsync();
-                var res = JsonSerializer.Deserialize<List<EquipmentResponseDto>>(jsonString);
-                // u paged result
-                var resPaged = new PagedResult<EquipmentResponseDto>(res, res.Count);
-                return CreateResponse(FluentResults.Result.Ok(resPaged));
-            }
-            else
-            {
-                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-            }
-            //var result = _equipmentService.GetPaged(page, pageSize);
-            //return CreateResponse(result);
+            return resPaged;
         }
 
         [HttpPost]
-        public async Task<ActionResult<EquipmentResponseDto>> Create([FromBody] EquipmentCreateDto equipment)
+        public async Task<EquipmentResponse> Create([FromBody] EquipmentCreateDto equipment)
         {
+            using var channel = GrpcChannel.ForAddress("http://tour-service:8087");
+            var client = new TourMicroservice.TourMicroserviceClient(channel);
+            var reply = client.CreateEquipment(new EquipmentCreationRequest{ Name = equipment.Name, Description = equipment.Description });
 
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "tour-service", 8087, "equipment");
-            //preparation for contacting external application
-            string requestBody = JsonSerializer.Serialize(equipment);
-            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-            var response = await _httpClientService.PostAsync(uri, content);
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                var jsonString = await response.Content.ReadAsStringAsync();
-                var res = JsonSerializer.Deserialize<EquipmentResponseDto>(jsonString);
-                return CreateResponse(FluentResults.Result.Ok(res));
-            }
-            else
-            {
-                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-            }
-            //var result = _equipmentService.Create(equipment);
-            //return CreateResponse(result);
+            return reply;
         }
 
         [HttpPut("{id:long}")]

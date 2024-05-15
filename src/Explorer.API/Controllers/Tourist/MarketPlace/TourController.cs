@@ -3,9 +3,12 @@ using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain.Tours;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -35,38 +38,40 @@ namespace Explorer.API.Controllers.Tourist.MarketPlace
         }
 
         [HttpGet("tours/{tourId:long}")]
-        public async Task<ActionResult<PagedResult<TourResponseDto>>> GetById(long tourId)
+        public async Task<TourResponseDto> GetById(long tourId)
         {
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, $"tours/{tourId}");
-            var response = await _httpClient.GetAsync(uri);
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                var jsonString = await response.Content.ReadAsStringAsync();
-                var res = JsonSerializer.Deserialize<TourRespondeDtoNew>(jsonString);
+            using var channel = GrpcChannel.ForAddress("http://tour-service:8087");
+            var client = new TourMicroservice.TourMicroserviceClient(channel);
+            var reply = client.GetTour(new TourIdRequest{ Id = tourId });
+            var kpReply = client.GetAllKeyPoints(new KeyPointsIdRequest { TourId = tourId });
 
-                string keyPointUri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "tours/" + res.Id + "/key-points");
-
-                var keyPointResponse = await _httpClient.GetAsync(keyPointUri);
-                if (keyPointResponse != null && keyPointResponse.IsSuccessStatusCode)
-                {
-                    var keyPointJsonString = await keyPointResponse.Content.ReadAsStringAsync();
-                    var keyPointRes = JsonSerializer.Deserialize<KeyPointResponseDto[]>(keyPointJsonString);
-
-                    res.KeyPoints = new List<KeyPointResponseDto>(keyPointRes);
-                }
-                else
-                {
-                    return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-                }
-
-                return CreateResponse(FluentResults.Result.Ok(res));
-            }
-            else
-            {
-                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-            }
-            //var result = _tourService.GetById(tourId);
-            //return CreateResponse(result);
+            return new TourResponseDto {
+                Id = reply.Id,
+                AuthorId = reply.AuthorId,
+                Name = reply.Name,
+                Description = reply.Description,
+                Difficulty = reply.Difficulty,
+                Tags = reply.Tags.ToList(),
+                Status = (Tours.API.Dtos.TourStatus)reply.Status,
+                Price = reply.Price,
+                IsDeleted = reply.IsDeleted,
+                Distance = reply.Distance,
+                AverageRating = reply.AverageRating,
+                KeyPoints = kpReply.KeyPoints.Select(kp => new KeyPointResponseDto {
+                    Id = kp.Id,
+                    TourId = kp.TourId,
+                    Name = kp.Name,
+                    Description = kp.Description,
+                    Longitude = kp.Longitude,
+                    Latitude = kp.Latitude,
+                    LocationAddress = kp.LocationAddress,
+                    ImagePath = kp.ImagePath,
+                    Order = kp.Order,
+                    HaveSecret = kp.HaveSecret,
+                    Secret = kp.HaveSecret == true ? new KeyPointSecretDto { Images = kp.Secret.Images.ToList(), Description = kp.Secret.Description } : null
+                }).ToList(),
+                Category = (Tours.API.Dtos.TourCategory)reply.Category
+            };
         }
 
         [HttpGet("tours/can-be-rated/{tourId:long}")]

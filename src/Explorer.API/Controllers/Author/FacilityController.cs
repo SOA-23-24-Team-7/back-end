@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text;
+using Grpc.Net.Client;
 
 namespace Explorer.API.Controllers.Author
 {
@@ -30,28 +31,22 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpGet("authorsFacilities")]
-        public async Task<ActionResult<PagedResult<FacilityResponseDto>>> GetByAuthorId([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<PagedResult<FacilityResponse>> GetByAuthorId([FromQuery] int page, [FromQuery] int pageSize)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var loggedInAuthorId = int.Parse(identity.FindFirst("id").Value);
 
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "authors/" + loggedInAuthorId + "/facilities");
+            using var channel = GrpcChannel.ForAddress("http://tour-service:8087");
+            var client = new TourMicroservice.TourMicroserviceClient(channel);
+            var reply = client.GetAllFacilities(new FacilitiesIdRequest{ AuthorId = loggedInAuthorId });
 
-            var response = await _httpClient.GetAsync(uri);
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                var jsonString = await response.Content.ReadAsStringAsync();
-                var res = JsonSerializer.Deserialize<FacilityResponseDto[]>(jsonString);
-                return CreateResponse(FluentResults.Result.Ok(new PagedResult<FacilityResponseDto>(res.ToList(), res.Length)));
-            }
-            else
-            {
-                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-            }
+            var resPaged = new PagedResult<FacilityResponse>(reply.Facilities.ToList(), reply.Facilities.ToList().Count);
+
+            return resPaged;
         }
 
         [HttpPost]
-        public async Task<ActionResult<FacilityResponseDto>> Create([FromBody] FacilityCreateDto facility)
+        public async Task<FacilityResponse> Create([FromBody] FacilityCreateDto facility)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null && identity.IsAuthenticated)
@@ -59,22 +54,11 @@ namespace Explorer.API.Controllers.Author
                 facility.AuthorId = int.Parse(identity.FindFirst("id").Value);
             }
 
-            string uri = _httpClient.BuildUri(Protocol.HTTP, "tour-service", 8087, "facilities");
+            using var channel = GrpcChannel.ForAddress("http://tour-service:8087");
+            var client = new TourMicroservice.TourMicroserviceClient(channel);
+            var reply = client.CreateFacility(new FacilityCreationRequest{ AuthorId = facility.AuthorId, Category = (long)facility.Category, Description = facility.Description, ImagePath = facility.ImagePath, Latitude = (float)facility.Latitude, Longitude = (float)facility.Longitude, Name = facility.Name });
 
-            string requestBody = JsonSerializer.Serialize(facility);
-            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync(uri, content);
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                var jsonString = await response.Content.ReadAsStringAsync();
-                var res = JsonSerializer.Deserialize<FacilityResponseDto>(jsonString);
-                return CreateResponse(FluentResults.Result.Ok(res));
-            }
-            else
-            {
-                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-            }
+            return reply;
         }
 
         [HttpPut("{id:int}")]

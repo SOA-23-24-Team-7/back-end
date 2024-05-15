@@ -2,6 +2,7 @@
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -22,26 +23,15 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResult<EquipmentResponseDto>>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<ActionResult<PagedResult<EquipmentResponse>>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            string uri = _httpClientService.BuildUri(Protocol.HTTP, "tour-service", 8087, "equipment");
-            // http request to external service
-            var response = await _httpClientService.GetAsync(uri);
+            using var channel = GrpcChannel.ForAddress("http://tour-service:8087");
+            var client = new TourMicroservice.TourMicroserviceClient(channel);
+            var reply = client.GetAllEquipment(new EmptyTourMessage{});
 
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                var jsonString = await response.Content.ReadAsStringAsync();
-                var res = JsonSerializer.Deserialize<List<EquipmentResponseDto>>(jsonString);
-                // u paged result
-                var resPaged = new PagedResult<EquipmentResponseDto>(res, res.Count);
-                return CreateResponse(FluentResults.Result.Ok(resPaged));
-            }
-            else
-            {
-                return CreateResponse(FluentResults.Result.Fail(FailureCode.InvalidArgument));
-            }
-            //var result = _equipmentService.GetPaged(page, pageSize);
-            //return CreateResponse(result);
+            var resPaged = new PagedResult<EquipmentResponse>(reply.Equipment.ToList(), reply.Equipment.ToList().Count);
+
+            return resPaged;
         }
     }
 }
