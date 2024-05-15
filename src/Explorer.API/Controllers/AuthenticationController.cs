@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Explorer.BuildingBlocks.Infrastructure.HTTP.Interfaces;
 using Explorer.Blog.Core.Domain;
+using Grpc.Net.Client;
 
 namespace Explorer.API.Controllers;
 
@@ -39,27 +40,18 @@ public class AuthenticationController : BaseApiController
     }
 
     [HttpPost("login")]
-    public async Task<String> Login([FromBody] CredentialsDto credentials)
+    public async Task<TokenResponse> Login([FromBody] CredentialsDto credentials)
     {
         var result = _authenticationService.Login(credentials);
         if(result == null)
         {
             return null;
         }
-        string uri = _httpClientService.BuildUri(Protocol.HTTP, "stakeholders-service", 8082, "token");
-        string jsonContent = System.Text.Json.JsonSerializer.Serialize(result);
-        var requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-        var response = await _httpClientService.PostAsync(uri, requestContent);
-        if (response.IsSuccessStatusCode)
-        {
-            var content = await response.Content.ReadAsStringAsync();
-
-            return content;
-        }
-        else
-        {
-            return null;
-        }
+        using var channel = GrpcChannel.ForAddress("http://stakeholders-service:8082");
+        var client = new StakeholdersMicroservice.StakeholdersMicroserviceClient(channel);
+        var reply = client.GenerateAccessToken(new TokenRequest{ UserId = result.UserId, Username = result.Username, PersonId = result.PersonId, Role = result.Role });
+        
+        return reply;
     }
 
     [HttpPost("reset-password")]

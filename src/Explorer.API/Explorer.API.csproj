@@ -53,6 +53,7 @@
 		<Protobuf Include="Protos\blogMicroservice.proto" GrpcServices="Client" />
 		<Protobuf Include="Protos\followerMicroservice.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\tourMicroservice.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\stakeholdersMicroservice.proto" GrpcServices="Client" />
 	</ItemGroup>
 	 
 </Project>
