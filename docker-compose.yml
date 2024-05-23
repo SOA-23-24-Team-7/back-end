@@ -76,6 +76,7 @@ services:
     networks:
       - blog-database
       - microservice
+      - monitoring
     ports:
       - "8088:8088"
     depends_on:
@@ -162,6 +163,16 @@ services:
       - /dev/disk/:/dev/disk:ro
     networks:
       - monitoring
+  jaeger:
+    image: jaegertracing/all-in-one:1.37
+    container_name: jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"
+      - "4318:4318"
+    networks:
+      - monitoring
 volumes:
   database-data:
     name: explorer
@@ -175,6 +186,8 @@ volumes:
     name: prometheus
   grafana:
     name: grafana
+  jaeger:
+    name: jaeger
 
 networks:
   database:
