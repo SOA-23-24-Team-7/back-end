@@ -123,6 +123,46 @@ services:
       - microservice
     ports:
       - "8082:8082"
+  prometheus:
+    image: prom/prometheus:v2.35.0
+    restart: on-failure
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus:/var/lib/prometheus
+    networks:
+      - monitoring
+  grafana:
+    image: grafana/grafana-enterprise
+    restart: on-failure
+    ports:
+     - "3000:3000"
+    volumes:
+      - grafana:/var/lib/grafana
+    networks:
+      - monitoring
+  #windows-exporter:
+  #  platform: windows/amd64
+  #  image: prometheuscommunity/windows-exporter:master
+  #  restart: on-failure
+  #  ports:
+  #    - "9070:9182"
+  #  networks:
+  #    - monitoring
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    ports:
+      - "9080:8080"
+    volumes:
+      - /:/rootfs:ro
+      #- /var/run:/var/run:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw #fix
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - monitoring
 volumes:
   database-data:
     name: explorer
@@ -132,6 +172,10 @@ volumes:
     name: explorer-blog
   follower-data:
     name: explorer-follower
+  prometheus:
+    name: prometheus
+  grafana:
+    name: grafana
 
 networks:
   database:
@@ -148,4 +192,7 @@ networks:
     driver: bridge
   microservice:
     name: microservice
+    driver: bridge
+  monitoring:
+    name: monitoring
     driver: bridge
