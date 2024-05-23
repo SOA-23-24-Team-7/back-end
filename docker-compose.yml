@@ -142,14 +142,13 @@ services:
       - grafana:/var/lib/grafana
     networks:
       - monitoring
-  #windows-exporter:
-  #  platform: windows/amd64
-  #  image: prometheuscommunity/windows-exporter:master
-  #  restart: on-failure
-  #  ports:
-  #    - "9070:9182"
-  #  networks:
-  #    - monitoring
+  node-exporter:
+    image: prom/node-exporter:v1.1.2
+    restart: on-failure
+    ports:
+      - "9100:9100"
+     networks:
+       - monitoring
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
     ports:
