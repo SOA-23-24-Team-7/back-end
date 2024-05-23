@@ -147,8 +147,8 @@ services:
     restart: on-failure
     ports:
       - "9100:9100"
-     networks:
-       - monitoring
+    networks:
+      - monitoring
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
     ports:
