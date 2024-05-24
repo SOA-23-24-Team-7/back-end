@@ -1,0 +1,75 @@
+version: '3.9'
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.35.0
+    restart: on-failure
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus:/var/lib/prometheus
+    networks:
+      - monitoring
+  grafana:
+    image: grafana/grafana:8.5.3
+    ports:
+      - "3000:3000"
+    environment:
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+      GF_LOG_FILTERS: rendering:debug
+    volumes:
+      - grafana:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - monitoring
+  renderer:
+    image: grafana/grafana-image-renderer:3.4.2
+    environment:
+      ENABLE_METRICS: "true"
+    networks:
+      - monitoring
+  node-exporter:
+    image: prom/node-exporter:v1.1.2
+    restart: on-failure
+    ports:
+      - "9100:9100"
+    networks:
+      - monitoring
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    ports:
+      - "9080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - monitoring
+  jaeger:
+    image: jaegertracing/all-in-one:1.37
+    container_name: jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"
+      - "4318:4318"
+    networks:
+      - monitoring
+
+volumes:
+  prometheus:
+    name: prometheus
+  grafana:
+    name: grafana
+  jaeger:
+    name: jaeger
+
+networks:
+  monitoring:
+    name: monitoring
+    driver: bridge

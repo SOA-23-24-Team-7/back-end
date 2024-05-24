@@ -124,55 +124,7 @@ services:
       - microservice
     ports:
       - "8082:8082"
-  prometheus:
-    image: prom/prometheus:v2.35.0
-    restart: on-failure
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus:/etc/prometheus
-      - prometheus:/var/lib/prometheus
-    networks:
-      - monitoring
-  grafana:
-    image: grafana/grafana-enterprise
-    restart: on-failure
-    ports:
-     - "3000:3000"
-    volumes:
-      - grafana:/var/lib/grafana
-    networks:
-      - monitoring
-  node-exporter:
-    image: prom/node-exporter:v1.1.2
-    restart: on-failure
-    ports:
-      - "9100:9100"
-    networks:
-      - monitoring
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor
-    ports:
-      - "9080:8080"
-    volumes:
-      - /:/rootfs:ro
-      #- /var/run:/var/run:ro
-      - /var/run/docker.sock:/var/run/docker.sock:rw #fix
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-    networks:
-      - monitoring
-  jaeger:
-    image: jaegertracing/all-in-one:1.37
-    container_name: jaeger
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-    ports:
-      - "16686:16686"
-      - "4318:4318"
-    networks:
-      - monitoring
+
 volumes:
   database-data:
     name: explorer
@@ -182,12 +134,6 @@ volumes:
     name: explorer-blog
   follower-data:
     name: explorer-follower
-  prometheus:
-    name: prometheus
-  grafana:
-    name: grafana
-  jaeger:
-    name: jaeger
 
 networks:
   database:
@@ -204,7 +150,4 @@ networks:
     driver: bridge
   microservice:
     name: microservice
-    driver: bridge
-  monitoring:
-    name: monitoring
     driver: bridge
