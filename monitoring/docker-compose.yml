@@ -1,4 +1,8 @@
 services:
+  loki:
+    image: grafana/loki:main-5206e3a
+    networks:
+      - monitoring
   prometheus:
     image: prom/prometheus:v2.35.0
     restart: on-failure
@@ -56,6 +60,18 @@ services:
     ports:
       - "16686:16686"
       - "4318:4318"
+    networks:
+      - monitoring
+
+  fluent-bit:
+    image: grafana/fluent-bit-plugin-loki:main-5206e3a-amd64
+    environment:
+      - LOKI_URL=http://loki:3100/loki/api/v1/push
+    volumes:
+      - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
     networks:
       - monitoring
 
