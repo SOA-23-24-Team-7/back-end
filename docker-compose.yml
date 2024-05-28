@@ -1,7 +1,7 @@
 x-logging: &fluent-bit
   driver: fluentd
   options:
-    fluentd-address: 172.18.0.9:24224
+    fluentd-address: 172.18.0.8:24224
 
 services:
   explorer:
@@ -27,6 +27,7 @@ services:
       - tour-service
       - blog-service
       - stakeholders-service
+      - nats
   database:
     image: postgres:13
     restart: always
@@ -84,6 +85,7 @@ services:
       - blog-database
       - microservice
       - monitoring
+      - nats
     ports:
       - "8088:8088"
     logging: *fluent-bit
@@ -107,6 +109,7 @@ services:
     networks:
       - follower-database
       - microservice
+      - nats
     ports:
       - "8095:8095"
     depends_on:
@@ -136,6 +139,14 @@ services:
     ports:
       - "8082:8082"
     logging: *fluent-bit
+  nats:
+      image: 'nats:latest'
+      expose:
+        - "4222"
+      ports:
+        - "4222:4222"
+      networks:
+        - nats
 
 volumes:
   database-data:
@@ -165,4 +176,7 @@ networks:
     driver: bridge
   monitoring:
     name: monitoring
+    driver: bridge
+  nats:
+    name: nats
     driver: bridge
